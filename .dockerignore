@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.local
+.state
+__pycache__
+*.pyc
+.venv
+venv
+k6
+tests
+deploy
+scripts
+docs
+*.md
+.dockerignore
+docker-compose.yml

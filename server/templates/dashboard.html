@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card metric-card" id="card-customers">
+        <h3>Total Customers</h3>
+        <div class="metric-value" id="metric-customers">—</div>
+    </div>
+    <div class="card metric-card" id="card-orders">
+        <h3>Total Orders</h3>
+        <div class="metric-value" id="metric-orders">—</div>
+    </div>
+    <div class="card metric-card" id="card-revenue">
+        <h3>Total Revenue</h3>
+        <div class="metric-value" id="metric-revenue">—</div>
+    </div>
+    <div class="card metric-card" id="card-tickets">
+        <h3>Open Tickets</h3>
+        <div class="metric-value" id="metric-tickets">—</div>
+    </div>
+</div>
+
+<div class="dashboard-row">
+    <div class="card" id="card-top-customers">
+        <h3>Top Customers by Revenue</h3>
+        <table class="data-table" id="top-customers-table">
+            <thead><tr><th>Name</th><th>Revenue</th><th>Orders</th></tr></thead>
+            <tbody id="top-customers-body"></tbody>
+        </table>
+    </div>
+    <div class="card" id="card-recent-orders">
+        <h3>Recent Orders</h3>
+        <table class="data-table" id="recent-orders-table">
+            <thead><tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody id="recent-orders-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="dashboard-row">
+    <div class="card" id="card-simulation">
+        <h3>Issue Simulation Controls</h3>
+        <div class="simulation-controls">
+            <button onclick="triggerSimulation('db-latency')" class="btn btn-warning">DB Latency</button>
+            <button onclick="triggerSimulation('db-disconnect')" class="btn btn-danger">DB Disconnect</button>
+            <button onclick="triggerSimulation('error-burst')" class="btn btn-danger">Error Burst</button>
+            <button onclick="loadSlowQuery()" class="btn btn-warning">Slow Query</button>
+            <button onclick="loadNPlusOne()" class="btn btn-warning">N+1 Demo</button>
+            <button onclick="resetSimulation()" class="btn btn-secondary">Reset All</button>
+        </div>
+        <div id="simulation-output" class="code-output"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadDashboard() {
+    try {
+        const resp = await fetch('/api/dashboard/summary');
+        const data = await resp.json();
+        document.getElementById('metric-customers').textContent = data.customers.total;
+        document.getElementById('metric-orders').textContent = data.orders.total;
+        document.getElementById('metric-revenue').textContent = '$' + Number(data.orders.revenue).toLocaleString();
+        const openTickets = (data.tickets.open || 0) + (data.tickets.in_progress || 0);
+        document.getElementById('metric-tickets').textContent = openTickets;
+
+        const tcBody = document.getElementById('top-customers-body');
+        tcBody.innerHTML = data.top_customers.map(c =>
+            `<tr><td>${c.customer || c.name}</td><td>$${Number(c.revenue).toLocaleString()}</td><td>${c.order_count}</td></tr>`
+        ).join('');
+
+        const roBody = document.getElementById('recent-orders-body');
+        roBody.innerHTML = data.recent_orders.map(o =>
+            `<tr><td>#${o.id}</td><td>${o.customer_name || '—'}</td><td>$${Number(o.total).toLocaleString()}</td><td><span class="badge badge-${o.status}">${o.status}</span></td></tr>`
+        ).join('');
+    } catch (e) {
+        console.error('Dashboard load failed:', e);
+    }
+}
+
+async function triggerSimulation(type) {
+    const body = type === 'error-burst' ? {count: 10} : {delay_seconds: 3};
+    const resp = await fetch(`/api/simulate/${type}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+    const data = await resp.json();
+    document.getElementById('simulation-output').textContent = JSON.stringify(data, null, 2);
+}
+
+async function loadSlowQuery() {
+    document.getElementById('simulation-output').textContent = 'Running slow query (2s)...';
+    const resp = await fetch('/api/dashboard/slow-query?delay=2');
+    const data = await resp.json();
+    document.getElementById('simulation-output').textContent = JSON.stringify(data, null, 2);
+}
+
+async function loadNPlusOne() {
+    document.getElementById('simulation-output').textContent = 'Running N+1 demo...';
+    const resp = await fetch('/api/dashboard/n-plus-one');
+    const data = await resp.json();
+    document.getElementById('simulation-output').textContent = JSON.stringify(data, null, 2);
+}
+
+async function resetSimulation() {
+    const resp = await fetch('/api/simulate/reset', {method: 'POST'});
+    const data = await resp.json();
+    document.getElementById('simulation-output').textContent = JSON.stringify(data, null, 2);
+}
+
+loadDashboard();
+</script>
+{% endblock %}

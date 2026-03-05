@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: enterprise-crm-portal
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://crm_user:crm_password@postgres:5432/crm_db
+      - DATABASE_SYNC_URL=postgresql://crm_user:crm_password@postgres:5432/crm_db
+      - APP_RUNTIME=${APP_RUNTIME:-docker}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; r=httpx.get('http://localhost:8080/health'); r.raise_for_status()"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - crm-net
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: crm-postgres
+    environment:
+      POSTGRES_DB: crm_db
+      POSTGRES_USER: crm_user
+      POSTGRES_PASSWORD: crm_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./server/db_init.sql:/docker-entrypoint-initdb.d/01_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm_user -d crm_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - crm-net
+
+volumes:
+  pgdata:
+
+networks:
+  crm-net:
+    driver: bridge

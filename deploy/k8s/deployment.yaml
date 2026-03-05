@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-crm-portal
+  namespace: default
+  labels:
+    app: enterprise-crm-portal
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: enterprise-crm-portal
+  template:
+    metadata:
+      labels:
+        app: enterprise-crm-portal
+    spec:
+      containers:
+        - name: app
+          image: ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/enterprise-crm-portal:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_RUNTIME
+              value: "oke"
+            - name: DATABASE_URL
+              value: "postgresql+asyncpg://crm_user:crm_password@crm-postgres:5432/crm_db"
+            - name: DATABASE_SYNC_URL
+              value: "postgresql://crm_user:crm_password@crm-postgres:5432/crm_db"
+          envFrom:
+            - secretRef:
+                name: crm-portal-secrets
+                optional: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-postgres
+  namespace: default
+  labels:
+    app: crm-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crm-postgres
+  template:
+    metadata:
+      labels:
+        app: crm-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: crm_db
+            - name: POSTGRES_USER
+              value: crm_user
+            - name: POSTGRES_PASSWORD
+              value: crm_password
+          volumeMounts:
+            - name: init-sql
+              mountPath: /docker-entrypoint-initdb.d
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "crm_user", "-d", "crm_db"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: init-sql
+          configMap:
+            name: crm-db-init
+        - name: pgdata
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: enterprise-crm-portal
+  namespace: default
+  labels:
+    app: enterprise-crm-portal
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: enterprise-crm-portal
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-postgres
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: crm-postgres

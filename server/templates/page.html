@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-container" data-module="{{ module }}">
+    <div class="toolbar">
+        <input type="text" id="search-input" placeholder="Search {{ title }}..." class="search-input">
+        <button onclick="loadData()" class="btn btn-primary">Refresh</button>
+        <button onclick="showCreateForm()" class="btn btn-success">+ New</button>
+    </div>
+    <div class="card">
+        <table class="data-table" id="data-table">
+            <thead id="table-head"></thead>
+            <tbody id="table-body">
+                <tr><td colspan="10">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="detail-panel" class="detail-panel hidden">
+        <div class="detail-header">
+            <h3 id="detail-title">Details</h3>
+            <button onclick="closeDetail()" class="btn-close">&times;</button>
+        </div>
+        <div id="detail-body"></div>
+    </div>
+    <div id="create-form" class="create-form hidden">
+        <div class="detail-header">
+            <h3>Create New {{ title }}</h3>
+            <button onclick="closeCreateForm()" class="btn-close">&times;</button>
+        </div>
+        <form id="new-item-form" onsubmit="createItem(event)">
+            <div id="form-fields"></div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const MODULE = '{{ module }}';
+
+const MODULE_CONFIG = {
+    customers: {
+        endpoint: '/api/customers',
+        columns: ['id', 'name', 'email', 'company', 'industry', 'revenue'],
+        searchParam: 'search',
+        createFields: ['name', 'email', 'phone', 'company', 'industry', 'revenue', 'notes'],
+        dataKey: 'customers',
+    },
+    orders: {
+        endpoint: '/api/orders',
+        columns: ['id', 'customer_name', 'total', 'status', 'created_at'],
+        searchParam: 'status',
+        createFields: ['customer_id', 'total', 'notes', 'shipping_address'],
+        dataKey: 'orders',
+    },
+    products: {
+        endpoint: '/api/products',
+        columns: ['id', 'name', 'sku', 'price', 'stock', 'category'],
+        searchParam: 'category',
+        createFields: ['name', 'sku', 'description', 'price', 'stock', 'category'],
+        dataKey: 'products',
+    },
+    invoices: {
+        endpoint: '/api/invoices',
+        columns: ['id', 'invoice_number', 'customer_name', 'amount', 'tax', 'status', 'due_date'],
+        searchParam: 'status',
+        dataKey: 'invoices',
+    },
+    tickets: {
+        endpoint: '/api/tickets',
+        columns: ['id', 'subject', 'customer_name', 'priority', 'status', 'assigned_to'],
+        searchParam: 'search',
+        createFields: ['customer_id', 'subject', 'description', 'priority', 'assigned_to'],
+        dataKey: 'tickets',
+    },
+    reports: {
+        endpoint: '/api/reports',
+        columns: ['id', 'name', 'report_type', 'created_at'],
+        createFields: ['name', 'report_type', 'query'],
+        dataKey: 'reports',
+    },
+    admin: {
+        endpoint: '/api/admin/users',
+        columns: ['id', 'username', 'email', 'role', 'is_active', 'last_login'],
+        dataKey: 'users',
+    },
+    files: {
+        endpoint: '/api/files',
+        columns: ['filename', 'size', 'type'],
+        dataKey: 'files',
+    },
+    settings: {
+        endpoint: '/api/simulate/status',
+        columns: [],
+        dataKey: 'simulation',
+    },
+};
+
+const config = MODULE_CONFIG[MODULE] || {};
+
+function loadData() {
+    const search = document.getElementById('search-input').value;
+    let url = config.endpoint || '/api/' + MODULE;
+    if (search && config.searchParam) {
+        url += `?${config.searchParam}=${encodeURIComponent(search)}`;
+    }
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            const items = data[config.dataKey] || [];
+            const cols = config.columns || Object.keys(items[0] || {});
+            document.getElementById('table-head').innerHTML =
+                '<tr>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
+            document.getElementById('table-body').innerHTML = Array.isArray(items) ?
+                items.map(item =>
+                    '<tr onclick="showDetail(' + (item.id || 0) + ')">' +
+                    cols.map(c => {
+                        let v = item[c];
+                        if (typeof v === 'number' && c.match(/price|total|revenue|amount|tax/))
+                            v = '$' + Number(v).toLocaleString();
+                        if (c === 'status')
+                            v = `<span class="badge badge-${v}">${v}</span>`;
+                        return `<td>${v ?? '—'}</td>`;
+                    }).join('') + '</tr>'
+                ).join('') : `<tr><td colspan="${cols.length}"><pre>${JSON.stringify(items, null, 2)}</pre></td></tr>`;
+        })
+        .catch(e => {
+            document.getElementById('table-body').innerHTML = `<tr><td>Error: ${e.message}</td></tr>`;
+        });
+}
+
+function showDetail(id) {
+    fetch(`${config.endpoint}/${id}`)
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('detail-title').textContent = `${MODULE} #${id}`;
+            document.getElementById('detail-body').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            document.getElementById('detail-panel').classList.remove('hidden');
+        });
+}
+
+function closeDetail() {
+    document.getElementById('detail-panel').classList.add('hidden');
+}
+
+function showCreateForm() {
+    if (!config.createFields) return;
+    const fields = config.createFields.map(f =>
+        `<label>${f}</label><input type="text" name="${f}" class="form-input">`
+    ).join('');
+    document.getElementById('form-fields').innerHTML = fields;
+    document.getElementById('create-form').classList.remove('hidden');
+}
+
+function closeCreateForm() {
+    document.getElementById('create-form').classList.add('hidden');
+}
+
+function createItem(e) {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const body = {};
+    form.forEach((v, k) => { body[k] = v; });
+    fetch(config.endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+    })
+    .then(r => r.json())
+    .then(data => {
+        closeCreateForm();
+        loadData();
+    });
+}
+
+document.getElementById('search-input').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') loadData();
+});
+
+loadData();
+</script>
+{% endblock %}

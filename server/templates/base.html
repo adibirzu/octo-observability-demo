@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} — {{ app_name }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    {% if rum_configured %}
+    <!-- OCI APM Real User Monitoring (RUM) -->
+    <script>
+        window.apmrum = (window.apmrum || {});
+        window.apmrum.serviceName = '{{ app_name }}';
+        window.apmrum.webApplication = '{{ app_name }}-frontend';
+        window.apmrum.ociDataUploadEndpoint = '{{ rum_endpoint }}';
+        window.apmrum.OracleAPMPublicDataKey = '{{ rum_public_key }}';
+    </script>
+    <script async crossorigin="anonymous"
+        src="{{ rum_endpoint }}/static/jslib/apmrum.min.js"></script>
+    {% endif %}
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>Enterprise CRM</h2>
+            <span class="version">v1.0</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="/" class="{% if title == 'Dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="/customers" class="{% if title == 'Customers' %}active{% endif %}">Customers</a></li>
+            <li><a href="/orders" class="{% if title == 'Orders' %}active{% endif %}">Orders</a></li>
+            <li><a href="/products" class="{% if title == 'Products' %}active{% endif %}">Products</a></li>
+            <li><a href="/invoices" class="{% if title == 'Invoices' %}active{% endif %}">Invoices</a></li>
+            <li><a href="/tickets" class="{% if title == 'Support Tickets' %}active{% endif %}">Support</a></li>
+            <li><a href="/reports" class="{% if title == 'Reports' %}active{% endif %}">Reports</a></li>
+            <li><a href="/files" class="{% if title == 'File Manager' %}active{% endif %}">Files</a></li>
+            <li class="separator"></li>
+            <li><a href="/admin" class="{% if title == 'Admin Panel' %}active{% endif %}">Admin</a></li>
+            <li><a href="/settings" class="{% if title == 'Settings' %}active{% endif %}">Settings</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <span id="user-info">Not logged in</span>
+            <a href="/login" class="btn-login">Login</a>
+        </div>
+    </nav>
+    <main class="content">
+        <header class="content-header">
+            <h1>{{ title }}</h1>
+            <div class="header-actions">
+                {% block header_actions %}{% endblock %}
+            </div>
+        </header>
+        <div class="content-body">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <script src="/static/js/app.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
