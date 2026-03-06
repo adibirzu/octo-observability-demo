@@ -22,6 +22,7 @@ from server.observability.otel_setup import init_otel, get_tracer
 from server.observability.logging_sdk import push_log
 from server.middleware.tracing import TracingMiddleware
 from server.middleware.chaos import ChaosMiddleware
+from server.middleware.geo_latency import GeoLatencyMiddleware
 
 # Module routers
 from server.modules.auth import router as auth_router
@@ -36,6 +37,10 @@ from server.modules.files import router as files_router
 from server.modules.dashboard import router as dashboard_router
 from server.modules.api_keys import router as api_keys_router
 from server.modules.simulation import router as simulation_router
+from server.modules.campaigns import router as campaigns_router
+from server.modules.shipping import router as shipping_router
+from server.modules.analytics import router as analytics_router
+from server.modules.integrations import router as integrations_router
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +80,7 @@ FastAPIInstrumentor.instrument_app(app)
 app.add_middleware(CORSMiddleware,
     allow_origins=["*"], allow_methods=["*"],
     allow_headers=["*"], allow_credentials=True)
+app.add_middleware(GeoLatencyMiddleware)
 app.add_middleware(ChaosMiddleware)
 app.add_middleware(TracingMiddleware)
 
@@ -102,6 +108,10 @@ app.include_router(files_router)
 app.include_router(dashboard_router)
 app.include_router(api_keys_router)
 app.include_router(simulation_router)
+app.include_router(campaigns_router)
+app.include_router(shipping_router)
+app.include_router(analytics_router)
+app.include_router(integrations_router)
 
 
 # ── Health & readiness endpoints ─────────────────────────────────
@@ -110,6 +120,35 @@ app.include_router(simulation_router)
 async def health():
     """Liveness probe — fast, no I/O."""
     return {"status": "ok", "service": cfg.app_name}
+
+
+@app.get("/api/modules")
+async def list_modules():
+    """Return the application module graph with inter-module dependencies."""
+    return {
+        "modules": [
+            {"name": "customers", "label": "Customers", "endpoints": 4, "related_to": ["orders", "tickets", "leads", "invoices"]},
+            {"name": "orders", "label": "Orders", "endpoints": 4, "related_to": ["customers", "products", "invoices", "shipping"]},
+            {"name": "products", "label": "Products", "endpoints": 4, "related_to": ["orders"]},
+            {"name": "invoices", "label": "Invoices", "endpoints": 3, "related_to": ["orders"]},
+            {"name": "tickets", "label": "Support Tickets", "endpoints": 4, "related_to": ["customers"]},
+            {"name": "campaigns", "label": "Campaigns", "endpoints": 6, "related_to": ["leads", "customers", "analytics"]},
+            {"name": "leads", "label": "Leads", "endpoints": 3, "related_to": ["campaigns", "customers"]},
+            {"name": "shipping", "label": "Shipping", "endpoints": 6, "related_to": ["orders", "warehouses", "analytics"]},
+            {"name": "warehouses", "label": "Warehouses", "endpoints": 1, "related_to": ["shipping"]},
+            {"name": "analytics", "label": "Analytics", "endpoints": 6, "related_to": ["customers", "orders", "campaigns", "shipping", "leads"]},
+            {"name": "reports", "label": "Reports", "endpoints": 3, "related_to": ["customers", "orders", "products"]},
+            {"name": "admin", "label": "Admin", "endpoints": 3, "related_to": ["users", "audit_logs"]},
+            {"name": "files", "label": "Files", "endpoints": 4, "related_to": ["admin"]},
+            {"name": "dashboard", "label": "Dashboard", "endpoints": 4, "related_to": ["customers", "orders", "invoices", "tickets"]},
+            {"name": "simulation", "label": "Simulation", "endpoints": 5, "related_to": ["dashboard"]},
+            {"name": "integrations", "label": "Integrations", "endpoints": 5,
+             "related_to": ["customers", "orders", "mushop-cloudnative"],
+             "cross_service": True},
+        ],
+        "total_modules": 16,
+        "total_endpoints": 65,
+    }
 
 
 @app.get("/ready")
@@ -205,6 +244,31 @@ async def files_page(request: Request):
 @app.get("/settings", response_class=HTMLResponse)
 async def settings_page(request: Request):
     return _render_page(request, "page", "Settings", module="settings")
+
+
+@app.get("/campaigns", response_class=HTMLResponse)
+async def campaigns_page(request: Request):
+    return _render_page(request, "page", "Campaigns", module="campaigns")
+
+
+@app.get("/shipping", response_class=HTMLResponse)
+async def shipping_page(request: Request):
+    return _render_page(request, "page", "Shipping & Logistics", module="shipping")
+
+
+@app.get("/analytics", response_class=HTMLResponse)
+async def analytics_page(request: Request):
+    return _render_page(request, "page", "Analytics", module="analytics")
+
+
+@app.get("/leads", response_class=HTMLResponse)
+async def leads_page(request: Request):
+    return _render_page(request, "page", "Lead Management", module="leads")
+
+
+@app.get("/warehouses", response_class=HTMLResponse)
+async def warehouses_page(request: Request):
+    return _render_page(request, "page", "Warehouses", module="warehouses")
 
 
 @app.get("/login", response_class=HTMLResponse)

@@ -26,12 +26,15 @@ class _JSONFormatter(logging.Formatter):
         }
         if hasattr(record, "extra_fields"):
             log_entry.update(record.extra_fields)
-        # Inject trace context
+        # Inject trace context for OCI Log Analytics correlation
         span = trace.get_current_span()
         if span and span.is_recording():
             ctx = span.get_span_context()
-            log_entry["trace_id"] = format(ctx.trace_id, "032x")
+            trace_id_hex = format(ctx.trace_id, "032x")
+            log_entry["trace_id"] = trace_id_hex
             log_entry["span_id"] = format(ctx.span_id, "016x")
+            # OCI Log Analytics uses this field for APM ↔ Log correlation
+            log_entry["oracleApmTraceId"] = trace_id_hex
         return json.dumps(log_entry, default=str)
 
 
@@ -51,12 +54,18 @@ def _get_oci_logging_client():
         return None
     try:
         import oci
-        if cfg.oci_auth_mode == "instance_principal":
+        auth_mode = cfg.oci_auth_mode
+        if auth_mode == "instance_principal":
             signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
             _oci_logging_client = oci.loggingingestion.LoggingClient(config={}, signer=signer)
         else:
-            config = oci.config.from_file()
-            _oci_logging_client = oci.loggingingestion.LoggingClient(config)
+            # Try resource principal first (OKE workload identity), fall back to config
+            try:
+                signer = oci.auth.signers.get_resource_principals_signer()
+                _oci_logging_client = oci.loggingingestion.LoggingClient(config={}, signer=signer)
+            except Exception:
+                config = oci.config.from_file()
+                _oci_logging_client = oci.loggingingestion.LoggingClient(config)
         return _oci_logging_client
     except Exception:
         return None
@@ -64,12 +73,14 @@ def _get_oci_logging_client():
 
 def push_log(level: str, message: str, **kwargs):
     """Push a structured log to OCI Logging and optionally Splunk."""
-    # Inject trace context
+    # Inject trace context (oracleApmTraceId for Log Analytics ↔ APM correlation)
     span = trace.get_current_span()
     if span and span.is_recording():
         ctx = span.get_span_context()
-        kwargs["trace_id"] = format(ctx.trace_id, "032x")
+        trace_id_hex = format(ctx.trace_id, "032x")
+        kwargs["trace_id"] = trace_id_hex
         kwargs["span_id"] = format(ctx.span_id, "016x")
+        kwargs["oracleApmTraceId"] = trace_id_hex
 
     kwargs["app.service"] = f"{cfg.otel_service_name}-{cfg.app_runtime}"
     kwargs["app.runtime"] = cfg.app_runtime
