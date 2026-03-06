@@ -21,8 +21,8 @@ A deliberately vulnerable CRM/ERP application designed for security testing and 
                                     +--------+---------+
                                              |
                                     +--------v---------+
-                                    |  PostgreSQL 16    |
-                                    |  (Port 5432)      |
+                                    |  ATP / DB Backend |
+                                    |  (OCI-DEMO)       |
                                     +-------------------+
 
     Telemetry outputs:
@@ -88,7 +88,7 @@ cd enterprise-crm-portal
 # Copy environment
 cp .env.example .env
 
-# Run with Docker Compose
+# Run locally with Docker Compose
 docker compose up -d
 
 # Access
@@ -147,6 +147,12 @@ RUM JavaScript is injected into all HTML pages.
 Set `OCI_LOG_ID` and `OCI_LOG_GROUP_ID`.
 All security events and app logs are pushed to OCI Logging.
 
+### OCI-DEMO topology
+Set `MUSHOP_CLOUDNATIVE_URL`, `OCI_DEMO_CONTROL_PLANE_URL`, `OCI_DEMO_BACKEND_URL`,
+`ATP_OCID`, `ATP_CONNECTION_NAME`, `APM_CONSOLE_URL`, `OPSI_CONSOLE_URL`,
+`DB_MANAGEMENT_CONSOLE_URL`, and `LOG_ANALYTICS_CONSOLE_URL` to expose cross-product
+drilldowns and health checks in the UI.
+
 ### Splunk HEC
 Set `SPLUNK_HEC_URL` and `SPLUNK_HEC_TOKEN`.
 Security events are forwarded to Splunk in fire-and-forget mode.
@@ -159,6 +165,9 @@ kubectl create configmap crm-db-init --from-file=server/db_init.sql
 
 # Deploy
 kubectl apply -f deploy/k8s/deployment.yaml
+
+# Deploy against OCI-DEMO / ATP-backed services
+kubectl apply -f deploy/k8s/deployment-atp.yaml
 
 # Check status
 kubectl get pods -l app=enterprise-crm-portal

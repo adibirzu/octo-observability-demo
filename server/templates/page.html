@@ -89,10 +89,43 @@ const MODULE_CONFIG = {
         columns: ['filename', 'size', 'type'],
         dataKey: 'files',
     },
+    campaigns: {
+        endpoint: '/api/campaigns',
+        columns: ['id', 'name', 'campaign_type', 'status', 'budget', 'spent', 'lead_count'],
+        searchParam: 'status',
+        createFields: ['name', 'campaign_type', 'status', 'budget', 'target_audience', 'start_date', 'end_date'],
+        dataKey: 'campaigns',
+    },
+    shipping: {
+        endpoint: '/api/shipping',
+        columns: ['id', 'tracking_number', 'carrier', 'status', 'origin_region', 'destination_region'],
+        searchParam: 'status',
+        createFields: ['order_id', 'tracking_number', 'carrier', 'origin_region', 'destination_region', 'weight_kg', 'shipping_cost'],
+        dataKey: 'shipments',
+    },
+    analytics: {
+        endpoint: '/api/analytics/revenue-by-region',
+        columns: ['destination_region', 'order_count', 'total_revenue', 'total_shipping_cost'],
+        dataKey: 'regions',
+        allowDetail: false,
+    },
+    leads: {
+        endpoint: '/api/campaigns/1/leads',
+        columns: ['id', 'email', 'name', 'source', 'status', 'score'],
+        dataKey: 'leads',
+        allowDetail: false,
+    },
+    warehouses: {
+        endpoint: '/api/shipping/warehouses',
+        columns: ['id', 'name', 'region', 'capacity', 'current_stock', 'is_active'],
+        dataKey: 'warehouses',
+        allowDetail: false,
+    },
     settings: {
         endpoint: '/api/simulate/status',
         columns: [],
         dataKey: 'simulation',
+        allowDetail: false,
     },
 };
 
@@ -113,7 +146,7 @@ function loadData() {
                 '<tr>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
             document.getElementById('table-body').innerHTML = Array.isArray(items) ?
                 items.map(item =>
-                    '<tr onclick="showDetail(' + (item.id || 0) + ')">' +
+                    `<tr ${config.allowDetail === false ? '' : `onclick="showDetail(${item.id || 0})"`}>` +
                     cols.map(c => {
                         let v = item[c];
                         if (typeof v === 'number' && c.match(/price|total|revenue|amount|tax/))
@@ -130,6 +163,7 @@ function loadData() {
 }
 
 function showDetail(id) {
+    if (config.allowDetail === false) return;
     fetch(`${config.endpoint}/${id}`)
         .then(r => r.json())
         .then(data => {

@@ -8,6 +8,7 @@ from starlette.responses import Response
 
 from server.observability.otel_setup import get_tracer
 from server.observability.logging_sdk import push_log
+from server.observability.correlation import build_correlation_id, current_trace_context
 
 
 class TracingMiddleware(BaseHTTPMiddleware):
@@ -22,12 +23,14 @@ class TracingMiddleware(BaseHTTPMiddleware):
         tracer = get_tracer()
         start = time.time()
         client_ip = request.client.host if request.client else "unknown"
+        request_id = request.headers.get("x-correlation-id", "")
 
         with tracer.start_as_current_span("middleware.entry") as entry_span:
             entry_span.set_attribute("http.client_ip", client_ip)
             entry_span.set_attribute("http.user_agent", request.headers.get("user-agent", ""))
             entry_span.set_attribute("http.url.path", request.url.path)
             entry_span.set_attribute("http.method", request.method)
+            request.state.correlation_id = build_correlation_id(request_id)
 
             # Span 2: Auth context extraction
             with tracer.start_as_current_span("auth.check") as auth_span:
@@ -49,13 +52,33 @@ class TracingMiddleware(BaseHTTPMiddleware):
                 val_span.set_attribute("request.content_length", content_length)
 
             # Call the actual route handler (generates its own spans)
-            response = await call_next(request)
+            try:
+                response = await call_next(request)
+            except Exception as exc:
+                push_log("ERROR", "Unhandled request exception", **{
+                    "http.url.path": request.url.path,
+                    "http.method": request.method,
+                    "http.client_ip": client_ip,
+                    "error.message": str(exc),
+                    "correlation.id": request.state.correlation_id,
+                })
+                raise
 
             # Span 4: Response finalization
             with tracer.start_as_current_span("response.finalize") as resp_span:
                 duration = time.time() - start
                 resp_span.set_attribute("http.status_code", response.status_code)
                 resp_span.set_attribute("http.response_time_ms", round(duration * 1000, 2))
+                resp_span.set_attribute("correlation.id", request.state.correlation_id)
+
+                trace_ctx = current_trace_context()
+                request.state.trace_id = trace_ctx["trace_id"]
+                request.state.span_id = trace_ctx["span_id"]
+                response.headers["X-Correlation-Id"] = request.state.correlation_id
+                if trace_ctx["trace_id"]:
+                    response.headers["X-Trace-Id"] = trace_ctx["trace_id"]
+                if trace_ctx["span_id"]:
+                    response.headers["X-Span-Id"] = trace_ctx["span_id"]
 
                 # Log slow requests
                 if duration > 2.0:
@@ -64,6 +87,15 @@ class TracingMiddleware(BaseHTTPMiddleware):
                         "http.response_time_ms": round(duration * 1000, 2),
                         "http.client_ip": client_ip,
                         "performance.slow_request": True,
+                        "correlation.id": request.state.correlation_id,
+                    })
+                else:
+                    push_log("INFO", "Request completed", **{
+                        "http.url.path": request.url.path,
+                        "http.method": request.method,
+                        "http.status_code": response.status_code,
+                        "http.response_time_ms": round(duration * 1000, 2),
+                        "correlation.id": request.state.correlation_id,
                     })
 
             return response

@@ -21,6 +21,7 @@ const errorRate = new Rate('errors');
 const loginDuration = new Trend('login_duration');
 const dashboardDuration = new Trend('dashboard_duration');
 const searchDuration = new Trend('search_duration');
+const geoLatency = new Trend('geo_latency');
 const apiCalls = new Counter('api_calls');
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
@@ -50,6 +51,14 @@ export const options = {
             preAllocatedVUs: 10,
             maxVUs: 30,
             startTime: '30s', // start after browse ramp-up
+        },
+        // Geo-distributed browsing (simulates users from different regions)
+        geo_browse: {
+            executor: 'per-vu-iterations',
+            vus: 6,
+            iterations: 20,
+            startTime: '15s',
+            exec: 'geo_browse',
         },
         // Attack simulation (SQLi, XSS probes)
         security_probes: {
@@ -161,7 +170,31 @@ export default function() {
             sleep(1);
         });
 
-        // 10. Health check
+        // 10. Campaigns
+        group('Campaigns', () => {
+            const res = http.get(`${BASE_URL}/api/campaigns`);
+            check(res, { 'campaigns list loads': (r) => r.status === 200 });
+            apiCalls.add(1);
+            sleep(1);
+        });
+
+        // 11. Shipping
+        group('Shipping', () => {
+            const res = http.get(`${BASE_URL}/api/shipping`);
+            check(res, { 'shipping list loads': (r) => r.status === 200 });
+            apiCalls.add(1);
+            sleep(1);
+        });
+
+        // 12. Analytics overview
+        group('Analytics', () => {
+            const res = http.get(`${BASE_URL}/api/analytics/overview`);
+            check(res, { 'analytics loads': (r) => r.status === 200 });
+            apiCalls.add(1);
+            sleep(1);
+        });
+
+        // 13. Health check
         group('Health', () => {
             const res = http.get(`${BASE_URL}/health`);
             check(res, { 'health ok': (r) => r.status === 200 });
@@ -180,6 +213,12 @@ export function api_load() {
         '/api/products',
         '/api/invoices',
         '/api/tickets',
+        '/api/campaigns',
+        '/api/shipping',
+        '/api/shipping/warehouses',
+        '/api/analytics/overview',
+        '/api/analytics/funnel',
+        '/api/modules',
         '/health',
         '/ready',
     ];
@@ -216,6 +255,22 @@ export function security_probes() {
             body: JSON.stringify({ url: 'http://192.0.2.40/latest/meta-data/' }),
         },
 
+        // Analytics SQLi (geo endpoint)
+        { url: `/api/analytics/geo?region=' OR '1'='1`, name: 'sqli_analytics_geo' },
+        { url: `/api/analytics/geo?region=us-east-1' UNION SELECT * FROM users--`, name: 'sqli_analytics_union' },
+
+        // Campaign XSS via lead notes
+        {
+            url: `/api/campaigns/1/leads`,
+            name: 'xss_lead_notes',
+            method: 'POST',
+            body: JSON.stringify({ email: 'test@evil.com', name: 'Test', notes: '<script>document.cookie</script>' }),
+        },
+
+        // IDOR on campaigns and shipping
+        { url: `/api/campaigns/999`, name: 'idor_campaign' },
+        { url: `/api/shipping/999`, name: 'idor_shipment' },
+
         // Admin access (no auth)
         { url: `/api/admin/config`, name: 'admin_config_access' },
         { url: `/api/admin/users`, name: 'admin_user_list' },
@@ -237,4 +292,75 @@ export function security_probes() {
 
     apiCalls.add(1);
     sleep(0.5);
+}
+
+// ── Geo-distributed Browsing Scenario ─────────────────────────
+
+const REGIONS = [
+    'eu-central-1',    // Frankfurt (local)
+    'us-east-1',       // Virginia
+    'us-west-2',       // Oregon
+    'ap-southeast-1',  // Singapore
+    'ap-northeast-1',  // Tokyo
+    'sa-east-1',       // São Paulo
+    'af-south-1',      // Cape Town
+    'me-south-1',      // Bahrain
+    'ap-southeast-2',  // Sydney
+];
+
+export function geo_browse() {
+    // Each VU simulates a user from a random region
+    const region = REGIONS[Math.floor(Math.random() * REGIONS.length)];
+    const headers = { 'X-Client-Region': region };
+
+    group(`Geo Browse [${region}]`, () => {
+        // 1. Dashboard from this region
+        const start1 = Date.now();
+        const dash = http.get(`${BASE_URL}/api/dashboard/summary`, { headers });
+        geoLatency.add(Date.now() - start1, { region: region });
+        check(dash, { 'geo dashboard loads': (r) => r.status === 200 });
+        apiCalls.add(1);
+        sleep(0.5);
+
+        // 2. Analytics overview
+        const start2 = Date.now();
+        const analytics = http.get(`${BASE_URL}/api/analytics/overview`, { headers });
+        geoLatency.add(Date.now() - start2, { region: region });
+        check(analytics, { 'geo analytics loads': (r) => r.status === 200 });
+        apiCalls.add(1);
+        sleep(0.5);
+
+        // 3. Shipping by region
+        const start3 = Date.now();
+        const shipping = http.get(`${BASE_URL}/api/shipping/by-region?region=${region}`, { headers });
+        geoLatency.add(Date.now() - start3, { region: region });
+        check(shipping, { 'geo shipping loads': (r) => r.status === 200 });
+        apiCalls.add(1);
+        sleep(0.5);
+
+        // 4. Performance stats for this region
+        const start4 = Date.now();
+        const perf = http.get(`${BASE_URL}/api/analytics/performance?region=${region}`, { headers });
+        geoLatency.add(Date.now() - start4, { region: region });
+        check(perf, { 'geo performance loads': (r) => r.status === 200 });
+        apiCalls.add(1);
+        sleep(0.5);
+
+        // 5. Track a page view from this region
+        http.post(`${BASE_URL}/api/analytics/track`,
+            JSON.stringify({
+                page: '/dashboard',
+                visitor_region: region,
+                load_time_ms: Date.now() - start1,
+            }),
+            { headers: { ...headers, 'Content-Type': 'application/json' } }
+        );
+        apiCalls.add(1);
+
+        // 6. Campaigns
+        const camps = http.get(`${BASE_URL}/api/campaigns`, { headers });
+        check(camps, { 'geo campaigns loads': (r) => r.status === 200 });
+        apiCalls.add(1);
+        sleep(0.5);
+    });
 }

@@ -7,9 +7,9 @@ import time
 from datetime import datetime, timezone
 
 import httpx
-from opentelemetry import trace
 
 from server.config import cfg
+from server.observability.correlation import current_trace_context, service_metadata
 
 _security_logger = logging.getLogger("security.events")
 _security_logger.setLevel(logging.INFO)
@@ -24,17 +24,16 @@ class _JSONFormatter(logging.Formatter):
             "logger": record.name,
             "message": record.getMessage(),
         }
+        log_entry.update(service_metadata())
         if hasattr(record, "extra_fields"):
             log_entry.update(record.extra_fields)
-        # Inject trace context for OCI Log Analytics correlation
-        span = trace.get_current_span()
-        if span and span.is_recording():
-            ctx = span.get_span_context()
-            trace_id_hex = format(ctx.trace_id, "032x")
-            log_entry["trace_id"] = trace_id_hex
-            log_entry["span_id"] = format(ctx.span_id, "016x")
-            # OCI Log Analytics uses this field for APM ↔ Log correlation
-            log_entry["oracleApmTraceId"] = trace_id_hex
+        trace_ctx = current_trace_context()
+        if trace_ctx["trace_id"]:
+            log_entry["trace_id"] = trace_ctx["trace_id"]
+            log_entry["span_id"] = trace_ctx["span_id"]
+            log_entry["traceparent"] = trace_ctx["traceparent"]
+            log_entry["oracleApmTraceId"] = trace_ctx["trace_id"]
+            log_entry["oracleApmSpanId"] = trace_ctx["span_id"]
         return json.dumps(log_entry, default=str)
 
 
@@ -73,17 +72,21 @@ def _get_oci_logging_client():
 
 def push_log(level: str, message: str, **kwargs):
     """Push a structured log to OCI Logging and optionally Splunk."""
-    # Inject trace context (oracleApmTraceId for Log Analytics ↔ APM correlation)
-    span = trace.get_current_span()
-    if span and span.is_recording():
-        ctx = span.get_span_context()
-        trace_id_hex = format(ctx.trace_id, "032x")
-        kwargs["trace_id"] = trace_id_hex
-        kwargs["span_id"] = format(ctx.span_id, "016x")
-        kwargs["oracleApmTraceId"] = trace_id_hex
+    trace_ctx = current_trace_context()
+    if trace_ctx["trace_id"]:
+        kwargs["trace_id"] = trace_ctx["trace_id"]
+        kwargs["span_id"] = trace_ctx["span_id"]
+        kwargs["traceparent"] = trace_ctx["traceparent"]
+        kwargs["oracleApmTraceId"] = trace_ctx["trace_id"]
+        kwargs["oracleApmSpanId"] = trace_ctx["span_id"]
 
-    kwargs["app.service"] = f"{cfg.otel_service_name}-{cfg.app_runtime}"
-    kwargs["app.runtime"] = cfg.app_runtime
+    kwargs.update(service_metadata())
+    kwargs["app.service"] = cfg.otel_service_name
+    kwargs["db.target"] = cfg.database_target_label
+    if cfg.atp_ocid:
+        kwargs["db.ocid"] = cfg.atp_ocid
+    if cfg.atp_connection_name:
+        kwargs["db.connection_name"] = cfg.atp_connection_name
 
     # Write to structured logger (stdout)
     record = logging.LogRecord(
@@ -114,8 +117,9 @@ def _push_to_oci_logging(level: str, message: str, extra: dict):
         )
         batch = LogEntryBatch(
             defaultloglevel=level.upper(),
-            source=f"{cfg.otel_service_name}-{cfg.app_runtime}",
-            type="enterprise-crm-portal",
+            source=cfg.otel_service_name,
+            type=cfg.app_name,
+            subject=cfg.brand_name,
             entries=[entry],
         )
         client.put_logs(

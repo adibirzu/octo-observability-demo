@@ -66,9 +66,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Enterprise CRM Portal",
-    description="CRM/ERP application with full observability stack (OCI APM, RUM, Logging, Splunk)",
-    version="1.0.0",
+    title=cfg.brand_name,
+    description="CRM/ERP application with full observability stack and OCI-DEMO cross-service correlation",
+    version=cfg.app_version,
     lifespan=lifespan,
 )
 
@@ -142,12 +142,12 @@ async def list_modules():
             {"name": "files", "label": "Files", "endpoints": 4, "related_to": ["admin"]},
             {"name": "dashboard", "label": "Dashboard", "endpoints": 4, "related_to": ["customers", "orders", "invoices", "tickets"]},
             {"name": "simulation", "label": "Simulation", "endpoints": 5, "related_to": ["dashboard"]},
-            {"name": "integrations", "label": "Integrations", "endpoints": 5,
+            {"name": "integrations", "label": "Integrations", "endpoints": 6,
              "related_to": ["customers", "orders", "mushop-cloudnative"],
              "cross_service": True},
         ],
         "total_modules": 16,
-        "total_endpoints": 65,
+        "total_endpoints": 66,
     }
 
 
@@ -167,6 +167,9 @@ async def ready():
         result = {
             "ready": db_ok,
             "database": "connected" if db_ok else "disconnected",
+            "database_target": cfg.database_target_label,
+            "atp_ocid": cfg.atp_ocid or None,
+            "atp_connection_name": cfg.atp_connection_name or None,
             "apm_configured": cfg.apm_configured,
             "rum_configured": cfg.rum_configured,
             "logging_configured": cfg.logging_configured,
@@ -191,6 +194,13 @@ def _render_page(request: Request, page: str, title: str, **context):
             "rum_public_key": cfg.oci_apm_rum_public_datakey,
             "rum_configured": cfg.rum_configured,
             "app_name": cfg.app_name,
+            "brand_name": cfg.brand_name,
+            "service_name": cfg.otel_service_name,
+            "app_version": cfg.app_version,
+            "apm_console_url": cfg.apm_console_url,
+            "opsi_console_url": cfg.opsi_console_url,
+            "db_management_console_url": cfg.db_management_console_url,
+            "log_analytics_console_url": cfg.log_analytics_console_url,
             **context,
         }
     )
@@ -198,82 +208,87 @@ def _render_page(request: Request, page: str, title: str, **context):
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return _render_page(request, "dashboard", "Dashboard")
+    return _render_page(request, "dashboard", "Dashboard", nav_key="dashboard")
 
 
 @app.get("/customers", response_class=HTMLResponse)
 async def customers_page(request: Request):
-    return _render_page(request, "page", "Customers", module="customers")
+    return _render_page(request, "page", "Customers", module="customers", nav_key="customers")
 
 
 @app.get("/orders", response_class=HTMLResponse)
 async def orders_page(request: Request):
-    return _render_page(request, "page", "Orders", module="orders")
+    return _render_page(request, "page", "Orders", module="orders", nav_key="orders")
 
 
 @app.get("/products", response_class=HTMLResponse)
 async def products_page(request: Request):
-    return _render_page(request, "page", "Products", module="products")
+    return _render_page(request, "page", "Products", module="products", nav_key="products")
 
 
 @app.get("/invoices", response_class=HTMLResponse)
 async def invoices_page(request: Request):
-    return _render_page(request, "page", "Invoices", module="invoices")
+    return _render_page(request, "page", "Invoices", module="invoices", nav_key="invoices")
 
 
 @app.get("/tickets", response_class=HTMLResponse)
 async def tickets_page(request: Request):
-    return _render_page(request, "page", "Support Tickets", module="tickets")
+    return _render_page(request, "page", "Support Tickets", module="tickets", nav_key="tickets")
 
 
 @app.get("/reports", response_class=HTMLResponse)
 async def reports_page(request: Request):
-    return _render_page(request, "page", "Reports", module="reports")
+    return _render_page(request, "page", "Reports", module="reports", nav_key="reports")
 
 
 @app.get("/admin", response_class=HTMLResponse)
 async def admin_page(request: Request):
-    return _render_page(request, "page", "Admin Panel", module="admin")
+    return _render_page(request, "page", "Admin Panel", module="admin", nav_key="admin")
 
 
 @app.get("/files", response_class=HTMLResponse)
 async def files_page(request: Request):
-    return _render_page(request, "page", "File Manager", module="files")
+    return _render_page(request, "page", "File Manager", module="files", nav_key="files")
 
 
 @app.get("/settings", response_class=HTMLResponse)
 async def settings_page(request: Request):
-    return _render_page(request, "page", "Settings", module="settings")
+    return _render_page(request, "page", "Settings", module="settings", nav_key="settings")
 
 
 @app.get("/campaigns", response_class=HTMLResponse)
 async def campaigns_page(request: Request):
-    return _render_page(request, "page", "Campaigns", module="campaigns")
+    return _render_page(request, "page", "Campaigns", module="campaigns", nav_key="campaigns")
 
 
 @app.get("/shipping", response_class=HTMLResponse)
 async def shipping_page(request: Request):
-    return _render_page(request, "page", "Shipping & Logistics", module="shipping")
+    return _render_page(request, "page", "Shipping & Logistics", module="shipping", nav_key="shipping")
 
 
 @app.get("/analytics", response_class=HTMLResponse)
 async def analytics_page(request: Request):
-    return _render_page(request, "page", "Analytics", module="analytics")
+    return _render_page(request, "page", "Analytics", module="analytics", nav_key="analytics")
 
 
 @app.get("/leads", response_class=HTMLResponse)
 async def leads_page(request: Request):
-    return _render_page(request, "page", "Lead Management", module="leads")
+    return _render_page(request, "page", "Lead Management", module="leads", nav_key="campaigns")
 
 
 @app.get("/warehouses", response_class=HTMLResponse)
 async def warehouses_page(request: Request):
-    return _render_page(request, "page", "Warehouses", module="warehouses")
+    return _render_page(request, "page", "Warehouses", module="warehouses", nav_key="shipping")
+
+
+@app.get("/integrations", response_class=HTMLResponse)
+async def integrations_page(request: Request):
+    return _render_page(request, "integrations", "Integrations", nav_key="integrations")
 
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
-    return _render_page(request, "login", "Login")
+    return _render_page(request, "login", "Login", nav_key="login")
 
 
 # ── Error handlers ───────────────────────────────────────────────
@@ -285,6 +300,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         "error.message": str(exc),
         "http.url.path": request.url.path,
         "http.method": request.method,
+        "correlation.id": getattr(request.state, "correlation_id", ""),
     })
     # VULN: Verbose error in non-production (but also in production — intentional)
     return JSONResponse(
@@ -293,5 +309,6 @@ async def global_exception_handler(request: Request, exc: Exception):
             "error": str(exc),
             "type": type(exc).__name__,
             "path": request.url.path,
+            "correlation_id": getattr(request.state, "correlation_id", ""),
         }
     )

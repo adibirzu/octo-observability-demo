@@ -109,6 +109,79 @@ CREATE TABLE IF NOT EXISTS reports (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Campaigns
+CREATE TABLE IF NOT EXISTS campaigns (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    campaign_type VARCHAR(50) DEFAULT 'email',
+    status VARCHAR(50) DEFAULT 'draft',
+    budget FLOAT DEFAULT 0.0,
+    spent FLOAT DEFAULT 0.0,
+    target_audience TEXT,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    created_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Leads
+CREATE TABLE IF NOT EXISTS leads (
+    id SERIAL PRIMARY KEY,
+    campaign_id INTEGER REFERENCES campaigns(id),
+    customer_id INTEGER REFERENCES customers(id),
+    email VARCHAR(200) NOT NULL,
+    name VARCHAR(200),
+    source VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'new',
+    score INTEGER DEFAULT 0,
+    notes TEXT,
+    converted_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Shipments
+CREATE TABLE IF NOT EXISTS shipments (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(id),
+    tracking_number VARCHAR(100),
+    carrier VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'processing',
+    origin_region VARCHAR(50),
+    destination_region VARCHAR(50),
+    weight_kg FLOAT DEFAULT 0.0,
+    shipping_cost FLOAT DEFAULT 0.0,
+    estimated_delivery TIMESTAMP,
+    actual_delivery TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Page Views (analytics)
+CREATE TABLE IF NOT EXISTS page_views (
+    id SERIAL PRIMARY KEY,
+    page VARCHAR(200) NOT NULL,
+    visitor_ip VARCHAR(50),
+    visitor_region VARCHAR(50),
+    user_agent VARCHAR(500),
+    load_time_ms INTEGER,
+    referrer VARCHAR(500),
+    session_id VARCHAR(64),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Warehouses
+CREATE TABLE IF NOT EXISTS warehouses (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    region VARCHAR(50) NOT NULL,
+    address TEXT,
+    capacity INTEGER DEFAULT 10000,
+    current_stock INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- ── Seed Data ────────────────────────────────────────────────────
 
 -- Default users (passwords are bcrypt hashes of the plaintext shown in comments)
@@ -194,4 +267,65 @@ INSERT INTO support_tickets (customer_id, subject, description, priority, status
     (1, 'Billing discrepancy', 'Invoice amount does not match order total', 'high', 'open', 'manager'),
     (6, 'Custom report builder', 'Report builder crashes on large datasets', 'critical', 'in_progress', 'admin'),
     (7, 'Migration stuck at 80%', 'Data migration process hung', 'critical', 'open', 'user1')
+ON CONFLICT DO NOTHING;
+
+-- Campaigns
+INSERT INTO campaigns (name, campaign_type, status, budget, spent, target_audience, start_date, end_date, created_by) VALUES
+    ('Q1 Product Launch', 'email', 'completed', 50000, 48500, 'Enterprise customers', '2024-01-01', '2024-03-31', 1),
+    ('Summer Sale 2024', 'social', 'active', 30000, 12000, 'SMB segment', '2024-06-01', '2024-08-31', 1),
+    ('Security Webinar Series', 'email', 'active', 15000, 8200, 'CISOs and security teams', '2024-04-01', '2024-12-31', 3),
+    ('Cloud Migration Guide', 'ppc', 'paused', 25000, 18900, 'IT decision makers', '2024-03-01', '2024-06-30', 1),
+    ('Partner Referral Program', 'referral', 'active', 100000, 35000, 'Channel partners', '2024-01-01', '2024-12-31', 3),
+    ('APAC Market Entry', 'social', 'draft', 75000, 0, 'APAC enterprise segment', '2024-09-01', '2025-03-31', 1)
+ON CONFLICT DO NOTHING;
+
+-- Leads
+INSERT INTO leads (campaign_id, customer_id, email, name, source, status, score, notes) VALUES
+    (1, 1, 'new-lead@acme.com', 'John Smith', 'web', 'qualified', 85, 'Interested in enterprise tier'),
+    (1, NULL, 'prospect@techcorp.com', 'Jane Doe', 'referral', 'contacted', 60, 'Referred by Globex'),
+    (2, 2, 'sales@globex.com', 'Bob Wilson', 'social', 'converted', 95, 'Upgraded to professional'),
+    (2, NULL, 'info@newco.com', 'Alice Brown', 'paid', 'new', 30, 'Downloaded whitepaper'),
+    (3, 4, 'security@umbrella.com', 'Eve Chen', 'web', 'qualified', 78, 'Attended 2 webinars'),
+    (3, NULL, 'ciso@bigbank.com', 'Frank Lee', 'referral', 'contacted', 65, 'Follow-up scheduled'),
+    (4, NULL, 'it@startup.io', 'Grace Kim', 'paid', 'lost', 40, 'Went with competitor'),
+    (5, 5, 'partner@stark.com', 'Tony Stark', 'referral', 'converted', 100, 'Became reseller partner'),
+    (5, 6, 'partner@wayne.com', 'Bruce Wayne', 'referral', 'qualified', 88, 'Evaluating partnership'),
+    (2, NULL, 'buyer@smallbiz.com', 'Dave Miller', 'social', 'new', 25, 'Clicked ad on LinkedIn')
+ON CONFLICT DO NOTHING;
+
+-- Shipments
+INSERT INTO shipments (order_id, tracking_number, carrier, status, origin_region, destination_region, weight_kg, shipping_cost, estimated_delivery) VALUES
+    (1, 'FDX-2024-001', 'fedex', 'delivered', 'us-east-1', 'us-east-1', 2.5, 29.99, '2024-01-20'),
+    (2, 'UPS-2024-001', 'ups', 'in_transit', 'us-west-2', 'us-west-2', 1.8, 24.99, '2024-03-15'),
+    (3, 'DHL-2024-001', 'dhl', 'shipped', 'eu-central-1', 'us-east-1', 3.2, 89.99, '2024-02-28'),
+    (4, 'FDX-2024-002', 'fedex', 'delivered', 'us-east-1', 'eu-central-1', 0.5, 45.99, '2024-04-10'),
+    (5, 'UPS-2024-002', 'ups', 'in_transit', 'us-west-2', 'ap-northeast-1', 4.1, 149.99, '2024-05-20'),
+    (6, 'FDX-2024-003', 'fedex', 'delivered', 'us-east-1', 'us-east-1', 0.3, 15.99, '2024-03-20'),
+    (7, 'DHL-2024-002', 'dhl', 'processing', 'eu-central-1', 'us-east-1', 5.5, 129.99, '2024-06-15'),
+    (8, 'USPS-2024-001', 'usps', 'shipped', 'us-east-1', 'ap-southeast-1', 1.2, 79.99, '2024-07-01')
+ON CONFLICT DO NOTHING;
+
+-- Warehouses
+INSERT INTO warehouses (name, region, address, capacity, current_stock, is_active) VALUES
+    ('US East Hub', 'us-east-1', '100 Fulfillment Way, Virginia', 50000, 32000, true),
+    ('US West Hub', 'us-west-2', '200 Distribution Ave, Oregon', 35000, 18500, true),
+    ('EU Central Hub', 'eu-central-1', '50 Logistics Str., Frankfurt', 40000, 27000, true),
+    ('APAC Hub', 'ap-southeast-1', '88 Warehouse Rd, Singapore', 25000, 12000, true),
+    ('APAC Northeast', 'ap-northeast-1', '1-2-3 Logistics, Tokyo', 20000, 8500, true),
+    ('South America', 'sa-east-1', 'Rua Logistica 100, São Paulo', 15000, 5200, true),
+    ('Middle East', 'me-south-1', 'Industrial City, Bahrain', 10000, 3200, false)
+ON CONFLICT DO NOTHING;
+
+-- Page Views (seed some demo data for analytics)
+INSERT INTO page_views (page, visitor_ip, visitor_region, load_time_ms, session_id) VALUES
+    ('/dashboard', '10.0.1.1', 'eu-central-1', 120, 'sess-001'),
+    ('/customers', '10.0.1.1', 'eu-central-1', 95, 'sess-001'),
+    ('/orders', '10.0.2.1', 'us-east-1', 180, 'sess-002'),
+    ('/dashboard', '10.0.3.1', 'ap-northeast-1', 450, 'sess-003'),
+    ('/products', '10.0.3.1', 'ap-northeast-1', 380, 'sess-003'),
+    ('/dashboard', '10.0.4.1', 'us-west-2', 210, 'sess-004'),
+    ('/analytics', '10.0.5.1', 'ap-southeast-1', 520, 'sess-005'),
+    ('/dashboard', '10.0.6.1', 'sa-east-1', 680, 'sess-006'),
+    ('/customers', '10.0.7.1', 'af-south-1', 890, 'sess-007'),
+    ('/tickets', '10.0.1.2', 'eu-central-1', 110, 'sess-008')
 ON CONFLICT DO NOTHING;

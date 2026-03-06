@@ -162,3 +162,80 @@ class Report(Base):
     parameters = Column(Text)
     created_by = Column(Integer)
     created_at = Column(DateTime, server_default=func.now())
+
+
+class Campaign(Base):
+    __tablename__ = "campaigns"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200), nullable=False)
+    campaign_type = Column(String(50), default="email")  # email, sms, social, ppc
+    status = Column(String(50), default="draft")  # draft, active, paused, completed
+    budget = Column(Float, default=0.0)
+    spent = Column(Float, default=0.0)
+    target_audience = Column(Text)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    created_by = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    leads = relationship("Lead", back_populates="campaign")
+
+
+class Lead(Base):
+    __tablename__ = "leads"
+    id = Column(Integer, primary_key=True)
+    campaign_id = Column(Integer, ForeignKey("campaigns.id"))
+    customer_id = Column(Integer, ForeignKey("customers.id"), nullable=True)
+    email = Column(String(200), nullable=False)
+    name = Column(String(200))
+    source = Column(String(100))  # web, referral, social, paid
+    status = Column(String(50), default="new")  # new, contacted, qualified, converted, lost
+    score = Column(Integer, default=0)
+    notes = Column(Text)
+    converted_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
+    campaign = relationship("Campaign", back_populates="leads")
+    customer = relationship("Customer")
+
+
+class Shipment(Base):
+    __tablename__ = "shipments"
+    id = Column(Integer, primary_key=True)
+    order_id = Column(Integer, ForeignKey("orders.id"))
+    tracking_number = Column(String(100))
+    carrier = Column(String(100))  # fedex, ups, dhl, usps
+    status = Column(String(50), default="processing")  # processing, shipped, in_transit, delivered, returned
+    origin_region = Column(String(50))  # us-east, eu-west, ap-southeast, etc.
+    destination_region = Column(String(50))
+    weight_kg = Column(Float, default=0.0)
+    shipping_cost = Column(Float, default=0.0)
+    estimated_delivery = Column(DateTime)
+    actual_delivery = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    order = relationship("Order")
+
+
+class PageView(Base):
+    __tablename__ = "page_views"
+    id = Column(Integer, primary_key=True)
+    page = Column(String(200), nullable=False)
+    visitor_ip = Column(String(50))
+    visitor_region = Column(String(50))  # detected from header or GeoIP
+    user_agent = Column(String(500))
+    load_time_ms = Column(Integer)
+    referrer = Column(String(500))
+    session_id = Column(String(64))
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class Warehouse(Base):
+    __tablename__ = "warehouses"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200), nullable=False)
+    region = Column(String(50), nullable=False)  # us-east-1, eu-west-1, ap-southeast-1
+    address = Column(Text)
+    capacity = Column(Integer, default=10000)
+    current_stock = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, server_default=func.now())

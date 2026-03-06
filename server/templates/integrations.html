@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block header_actions %}
+<button class="btn btn-secondary" onclick="refreshTopology()">Refresh</button>
+{% endblock %}
+{% block content %}
+<section class="hero-panel compact">
+    <div>
+        <p class="hero-kicker">Cross-service topology</p>
+        <h2>Trace the CRM through MuShop, OCI-DEMO services, and ATP observability.</h2>
+        <p class="hero-copy">Every dependency card below carries the same correlation context used for traces, structured logs, and drilldown navigation.</p>
+    </div>
+</section>
+
+<div class="dashboard-row dashboard-row-wide">
+    <div class="card">
+        <h3>Current Correlation Context</h3>
+        <pre id="integration-correlation" class="code-output">Loading...</pre>
+    </div>
+    <div class="card">
+        <h3>Telemetry State</h3>
+        <div class="status-grid" id="telemetry-state">
+            <div class="status-card">Loading telemetry...</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Dependencies</h3>
+    <div class="integration-grid" id="integration-grid">
+        <div class="status-card">Loading dependencies...</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Console Drilldowns</h3>
+    <div class="drilldown-grid" id="integration-drilldowns">
+        <div class="drilldown-card">Loading drilldowns...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function refreshTopology() {
+    const response = await fetch('/api/integrations/topology');
+    const data = await response.json();
+
+    document.getElementById('integration-correlation').textContent = JSON.stringify(data.correlation || {}, null, 2);
+    document.getElementById('telemetry-state').innerHTML = Object.entries(data.telemetry || {}).map(([key, value]) => `
+        <div class="status-card">
+            <span class="status-label">${key.replaceAll('_', ' ')}</span>
+            <strong class="status-value-pill ${value ? 'is-healthy' : 'is-unhealthy'}">${String(value)}</strong>
+        </div>
+    `).join('');
+
+    document.getElementById('integration-grid').innerHTML = (data.dependencies || []).map(dep => `
+        <div class="integration-card">
+            <div class="integration-card-head">
+                <div>
+                    <span class="status-label">${dep.type}</span>
+                    <h4>${dep.display_name}</h4>
+                </div>
+                <span class="status-value-pill is-${normalizeStatus(dep.status)}">${dep.status || 'unknown'}</span>
+            </div>
+            <p>${dep.url || dep.connection_name || dep.database_target || 'No target configured'}</p>
+            <div class="integration-meta">
+                <span>Drilldown: ${dep.drilldown_product || 'n/a'}</span>
+                ${dep.status_code ? `<span>HTTP ${dep.status_code}</span>` : ''}
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('integration-drilldowns').innerHTML = (data.drilldowns || []).map(target => `
+        <a class="drilldown-card ${target.configured ? '' : 'is-disabled'}" ${target.configured ? `href="${target.url}" target="_blank" rel="noreferrer"` : ''}>
+            <span>${target.name}</span>
+            <strong>${target.configured ? 'Open console' : 'Not configured'}</strong>
+        </a>
+    `).join('');
+}
+
+function normalizeStatus(status) {
+    const value = String(status || '').toLowerCase();
+    if (value.includes('healthy') || value === 'connected' || value === 'configured') return 'healthy';
+    if (value.includes('degraded')) return 'degraded';
+    return 'unhealthy';
+}
+
+refreshTopology();
+</script>
+{% endblock %}
