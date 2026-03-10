@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block header_actions %}
+<div class="toolbar">
+    <select id="category-filter" class="search-input" onchange="loadProducts()">
+        <option value="">All Categories</option>
+    </select>
+    <button onclick="loadProducts()" class="btn btn-primary">Refresh</button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="product-stats" id="product-stats"></div>
+    <div class="product-grid" id="product-grid">
+        <div class="card" style="grid-column: 1/-1; text-align:center; padding:40px;">
+            Loading catalog...
+        </div>
+    </div>
+    <div id="detail-panel" class="detail-panel hidden">
+        <div class="detail-header">
+            <h3 id="detail-title">Product Details</h3>
+            <button onclick="closeDetail()" class="btn-close">&times;</button>
+        </div>
+        <div id="detail-body"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let allProducts = [];
+
+function loadProducts() {
+    const cat = document.getElementById('category-filter').value;
+    let url = '/api/products';
+    if (cat) url += '?category=' + encodeURIComponent(cat);
+
+    _fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            allProducts = data.products || [];
+            renderGrid(allProducts);
+            buildCategoryFilter(allProducts);
+            renderStats(allProducts);
+        })
+        .catch(e => {
+            document.getElementById('product-grid').innerHTML =
+                `<div class="card" style="grid-column:1/-1;padding:40px;text-align:center;color:var(--danger)">Error loading products: ${e.message}</div>`;
+        });
+}
+
+function buildCategoryFilter(products) {
+    const sel = document.getElementById('category-filter');
+    const current = sel.value;
+    const cats = [...new Set(products.map(p => p.category).filter(Boolean))].sort();
+    if (sel.options.length <= 1) {
+        cats.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            if (c === current) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    }
+}
+
+function renderStats(products) {
+    const cats = {};
+    let totalStock = 0;
+    let totalValue = 0;
+    products.forEach(p => {
+        cats[p.category] = (cats[p.category] || 0) + 1;
+        totalStock += (p.stock || 0);
+        totalValue += (p.price || 0) * (p.stock || 0);
+    });
+
+    document.getElementById('product-stats').innerHTML = `
+        <div class="dashboard-grid">
+            <div class="card metric-card">
+                <h3>Total Products</h3>
+                <div class="metric-value">${products.length}</div>
+            </div>
+            <div class="card metric-card">
+                <h3>Categories</h3>
+                <div class="metric-value">${Object.keys(cats).length}</div>
+            </div>
+            <div class="card metric-card">
+                <h3>Total Stock</h3>
+                <div class="metric-value">${totalStock.toLocaleString()}</div>
+            </div>
+            <div class="card metric-card">
+                <h3>Inventory Value</h3>
+                <div class="metric-value">$${totalValue.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:0})}</div>
+            </div>
+        </div>
+    `;
+}
+
+function renderGrid(products) {
+    if (!products.length) {
+        document.getElementById('product-grid').innerHTML =
+            '<div class="card" style="grid-column:1/-1;padding:40px;text-align:center;">No products found</div>';
+        return;
+    }
+
+    document.getElementById('product-grid').innerHTML = products.map(p => `
+        <div class="product-card" onclick="showProductDetail(${p.id})">
+            <div class="product-image">
+                ${p.image_url
+                    ? `<img src="${p.image_url}" alt="${p.name}" loading="lazy">`
+                    : `<div class="product-image-placeholder">${p.name.charAt(0)}</div>`}
+            </div>
+            <div class="product-info">
+                <span class="product-category">${p.category || 'Uncategorized'}</span>
+                <h4 class="product-name">${p.name}</h4>
+                <p class="product-sku">${p.sku || ''}</p>
+                <div class="product-footer">
+                    <span class="product-price">$${Number(p.price).toLocaleString(undefined, {minimumFractionDigits:2})}</span>
+                    <span class="product-stock ${p.stock < 60 ? 'low-stock' : ''}">${p.stock} in stock</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showProductDetail(id) {
+    _fetch('/api/products/' + id)
+        .then(r => r.json())
+        .then(data => {
+            const p = data.product;
+            if (!p) return;
+            document.getElementById('detail-title').textContent = p.name;
+            document.getElementById('detail-body').innerHTML = `
+                <div class="product-detail-view">
+                    <div class="product-detail-image">
+                        ${p.image_url
+                            ? `<img src="${p.image_url}" alt="${p.name}">`
+                            : `<div class="product-image-placeholder" style="height:200px;font-size:3rem">${p.name.charAt(0)}</div>`}
+                    </div>
+                    <div class="detail-stack">
+                        <div class="detail-grid">
+                            <div>
+                                <span class="status-label">SKU</span>
+                                <p style="margin-top:4px">${p.sku}</p>
+                            </div>
+                            <div>
+                                <span class="status-label">Category</span>
+                                <p style="margin-top:4px">${p.category || '—'}</p>
+                            </div>
+                            <div>
+                                <span class="status-label">Price</span>
+                                <p style="margin-top:4px;color:var(--accent-strong);font-size:1.3rem;font-weight:700">$${Number(p.price).toLocaleString(undefined, {minimumFractionDigits:2})}</p>
+                            </div>
+                            <div>
+                                <span class="status-label">Stock</span>
+                                <p style="margin-top:4px" class="${p.stock < 60 ? 'low-stock' : ''}">${p.stock} units</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-label">Description</span>
+                            <p style="margin-top:6px;color:var(--text-secondary);line-height:1.6">${p.description || 'No description available.'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detail-panel').classList.remove('hidden');
+        });
+}
+
+function closeDetail() {
+    document.getElementById('detail-panel').classList.add('hidden');
+}
+
+loadProducts();
+</script>
+{% endblock %}

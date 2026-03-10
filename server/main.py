@@ -256,7 +256,7 @@ async def orders_page(request: Request):
 
 @app.get("/products", response_class=HTMLResponse)
 async def products_page(request: Request):
-    return _render_page(request, "page", "Products", module="products", nav_key="products")
+    return _render_page(request, "products", "Product Catalog", nav_key="products")
 
 
 @app.get("/invoices", response_class=HTMLResponse)

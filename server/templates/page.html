@@ -137,7 +137,7 @@ function loadData() {
     if (search && config.searchParam) {
         url += `?${config.searchParam}=${encodeURIComponent(search)}`;
     }
-    fetch(url)
+    _fetch(url)
         .then(r => r.json())
         .then(data => {
             const items = data[config.dataKey] || [];
@@ -164,7 +164,7 @@ function loadData() {
 
 function showDetail(id) {
     if (config.allowDetail === false) return;
-    fetch(`${config.endpoint}/${id}`)
+    _fetch(`${config.endpoint}/${id}`)
         .then(r => r.json())
         .then(data => {
             document.getElementById('detail-title').textContent = `${MODULE} #${id}`;
@@ -195,7 +195,7 @@ function createItem(e) {
     const form = new FormData(e.target);
     const body = {};
     form.forEach((v, k) => { body[k] = v; });
-    fetch(config.endpoint, {
+    _fetch(config.endpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body),

@@ -2,7 +2,7 @@
 FROM python:3.11-slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc libpq-dev && \
+    gcc && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
@@ -12,9 +12,8 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 # ── Runtime stage: slim image with non-root user ────────────────
 FROM python:3.11-slim
 
-# Only runtime libraries needed (libpq for psycopg2-binary fallback)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl libpq5 && \
+    curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Non-root user for container security

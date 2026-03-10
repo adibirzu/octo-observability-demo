@@ -71,7 +71,7 @@
 {% block scripts %}
 <script>
 async function loadSummary() {
-    const data = await fetch('/api/orders/security/summary').then(r => r.json());
+    const data = await _fetch('/api/orders/security/summary').then(r => r.json());
     document.getElementById('orders-total').textContent = data.total_orders ?? 0;
     document.getElementById('orders-backlog').textContent = data.backlog_orders ?? 0;
     document.getElementById('orders-stale').textContent = data.stale_backlog_orders ?? 0;
@@ -79,7 +79,7 @@ async function loadSummary() {
 }
 
 async function loadOrders() {
-    const data = await fetch('/api/orders').then(r => r.json());
+    const data = await _fetch('/api/orders').then(r => r.json());
     const rows = data.orders || [];
     document.getElementById('orders-db-target').textContent = data.database_target || 'database';
     document.getElementById('orders-table-body').innerHTML = rows.map(order => `
@@ -123,7 +123,7 @@ async function showOrder(id) {
 }
 
 async function syncOrders() {
-    const result = await fetch('/api/orders/sync', {method: 'POST'}).then(r => r.json());
+    const result = await _fetch('/api/orders/sync', {method: 'POST'}).then(r => r.json());
     document.getElementById('order-correlation-pill').textContent = result.correlation_id || 'sync complete';
     await loadSummary();
     await loadOrders();

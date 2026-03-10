@@ -36,9 +36,7 @@ class Config:
     service_instance_id: str = field(default_factory=lambda: _env("SERVICE_INSTANCE_ID", _env("HOSTNAME", "local-dev")))
     demo_stack_name: str = field(default_factory=lambda: _env("DEMO_STACK_NAME", "octo-apm"))
 
-    # Database — PostgreSQL (default for local dev) or Oracle ATP (OKE production)
-    _pg_url: str = field(default_factory=lambda: _env("DATABASE_URL", ""))
-    _pg_sync_url: str = field(default_factory=lambda: _env("DATABASE_SYNC_URL", ""))
+    # Database — Oracle ATP
     db_pool_size: int = field(default_factory=lambda: _env_int("DB_POOL_SIZE", 10))
     db_max_overflow: int = field(default_factory=lambda: _env_int("DB_MAX_OVERFLOW", 20))
     db_pool_timeout: int = field(default_factory=lambda: _env_int("DB_POOL_TIMEOUT", 30))
@@ -102,33 +100,14 @@ class Config:
     simulate_slow_queries: bool = field(default_factory=lambda: _env_bool("SIMULATE_SLOW_QUERIES"))
 
     @property
-    def use_postgres(self) -> bool:
-        """True when PostgreSQL is the backend (default for local dev)."""
-        if self.oracle_dsn:
-            return False
-        return bool(self._pg_url)
-
-    @property
     def database_url(self) -> str:
-        """Async database URL for SQLAlchemy."""
-        if self.use_postgres:
-            url = self._pg_url
-            if url.startswith("postgresql://"):
-                return url.replace("postgresql://", "postgresql+asyncpg://", 1)
-            return url
-        if self.oracle_dsn:
-            return f"oracle+oracledb_async://{self.oracle_user}:{self.oracle_password}@"
-        # Fallback: local dev PostgreSQL
-        return "postgresql+asyncpg://crm_user:crm_password@localhost:5432/crm_db"
+        """Async database URL for SQLAlchemy (Oracle ATP)."""
+        return f"oracle+oracledb_async://{self.oracle_user}:{self.oracle_password}@"
 
     @property
     def database_sync_url(self) -> str:
         """Synchronous database URL for OTel and bootstrap."""
-        if self.use_postgres:
-            return self._pg_sync_url or self._pg_url
-        if self.oracle_dsn:
-            return f"oracle+oracledb://{self.oracle_user}:{self.oracle_password}@"
-        return "postgresql://crm_user:crm_password@localhost:5432/crm_db"
+        return f"oracle+oracledb://{self.oracle_user}:{self.oracle_password}@"
 
     @property
     def apm_configured(self) -> bool:
@@ -149,11 +128,7 @@ class Config:
 
     @property
     def database_target_label(self) -> str:
-        if self.oracle_dsn or self.atp_ocid:
-            return "oracle-atp"
-        if self.use_postgres:
-            return "postgresql"
-        return "custom"
+        return "oracle-atp"
 
 
 cfg = Config()

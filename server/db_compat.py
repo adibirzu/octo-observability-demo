@@ -17,9 +17,10 @@ IS_POSTGRES = not IS_ORACLE
 # Health-check query
 HEALTH_CHECK_SQL = "SELECT 1 FROM dual" if IS_ORACLE else "SELECT 1"
 
-# Boolean literals (Oracle uses Integer 1/0, PostgreSQL uses true/false)
-BOOL_TRUE = "1" if IS_ORACLE else "true"
-BOOL_FALSE = "0" if IS_ORACLE else "false"
+# Boolean literals — ORM uses Integer (not Boolean) for Oracle compatibility,
+# so always compare with 1/0 on both dialects.
+BOOL_TRUE = "1"
+BOOL_FALSE = "0"
 
 # Database version query
 DB_VERSION_SQL = (

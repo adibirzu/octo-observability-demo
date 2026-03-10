@@ -27,38 +27,27 @@ _engine_kwargs = {
     "echo": False,
 }
 
-if cfg.use_postgres or not cfg.oracle_dsn:
-    logger.info("Using PostgreSQL backend")
-    engine = create_async_engine(cfg.database_url, **_engine_kwargs)
-    sync_engine = create_engine(cfg.database_sync_url)
-else:
-    try:
-        import oracledb
-    except ModuleNotFoundError as exc:
-        raise RuntimeError(
-            "Oracle ATP mode requires 'oracledb' package. "
-            "Set DATABASE_URL for PostgreSQL or install oracledb."
-        ) from exc
+import oracledb
 
-    oracledb.defaults.config_dir = cfg.oracle_wallet_dir or ""
-    oracledb.defaults.fetch_lobs = False
+oracledb.defaults.config_dir = cfg.oracle_wallet_dir or ""
+oracledb.defaults.fetch_lobs = False
 
-    _connect_args = {}
-    if cfg.oracle_wallet_dir:
-        _connect_args["config_dir"] = cfg.oracle_wallet_dir
-        _connect_args["wallet_location"] = cfg.oracle_wallet_dir
-        _connect_args["wallet_password"] = cfg.oracle_wallet_password
+_connect_args: dict = {"dsn": cfg.oracle_dsn}
+if cfg.oracle_wallet_dir:
+    _connect_args["config_dir"] = cfg.oracle_wallet_dir
+    _connect_args["wallet_location"] = cfg.oracle_wallet_dir
+    _connect_args["wallet_password"] = cfg.oracle_wallet_password
 
-    engine = create_async_engine(
-        cfg.database_url,
-        connect_args={"dsn": cfg.oracle_dsn, **_connect_args},
-        **_engine_kwargs,
-    )
-    sync_engine = create_engine(
-        cfg.database_sync_url,
-        connect_args={"dsn": cfg.oracle_dsn, **_connect_args},
-    )
-    logger.info("Using Oracle ATP backend (DSN: %s)", cfg.oracle_dsn)
+engine = create_async_engine(
+    cfg.database_url,
+    connect_args=_connect_args,
+    **_engine_kwargs,
+)
+sync_engine = create_engine(
+    cfg.database_sync_url,
+    connect_args=_connect_args,
+)
+logger.info("Using Oracle ATP backend (DSN: %s)", cfg.oracle_dsn)
 
 async_session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -112,6 +101,7 @@ class Product(Base):
     price = Column(Float, nullable=False)
     stock = Column(Integer, default=0)
     category = Column(String(100))
+    image_url = Column(String(500))
     is_active = Column(Integer, default=1)
     created_at = Column(DateTime, server_default=func.now())
 

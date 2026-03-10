@@ -8,11 +8,18 @@
 
     {% if rum_configured %}
     <script>
+        window.__nativeFetch = window.fetch.bind(window);
+        window.__NativeXHR = window.XMLHttpRequest;
+        window._fetch = window.__nativeFetch;
         window.apmrum = (window.apmrum || {});
         window.apmrum.serviceName = '{{ service_name }}';
         window.apmrum.webApplication = '{{ app_name }}-frontend';
         window.apmrum.ociDataUploadEndpoint = '{{ rum_endpoint }}';
         window.apmrum.OracleAPMPublicDataKey = '{{ rum_public_key }}';
+        /* Prevent RUM from adding tracing headers to app API calls */
+        window.apmrum.traceSupportingEndpoints = [
+            { hostPattern: '.*', headers: [] }
+        ];
     </script>
     <script async crossorigin="anonymous" src="{{ rum_endpoint }}/static/jslib/apmrum.min.js"></script>
     {% endif %}

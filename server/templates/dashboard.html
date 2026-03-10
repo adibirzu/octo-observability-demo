@@ -174,7 +174,7 @@ function normalizeStatus(status) {
 
 async function triggerSimulation(type) {
     const body = type === 'error-burst' ? {count: 10} : {delay_seconds: 3};
-    const resp = await fetch(`/api/simulate/${type}`, {
+    const resp = await _fetch(`/api/simulate/${type}`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body),
@@ -184,18 +184,18 @@ async function triggerSimulation(type) {
 
 async function loadSlowQuery() {
     document.getElementById('simulation-output').textContent = 'Running slow query (2s)...';
-    const resp = await fetch('/api/dashboard/slow-query?delay=2');
+    const resp = await _fetch('/api/dashboard/slow-query?delay=2');
     document.getElementById('simulation-output').textContent = JSON.stringify(await resp.json(), null, 2);
 }
 
 async function loadNPlusOne() {
     document.getElementById('simulation-output').textContent = 'Running N+1 demo...';
-    const resp = await fetch('/api/dashboard/n-plus-one');
+    const resp = await _fetch('/api/dashboard/n-plus-one');
     document.getElementById('simulation-output').textContent = JSON.stringify(await resp.json(), null, 2);
 }
 
 async function resetSimulation() {
-    const resp = await fetch('/api/simulate/reset', {method: 'POST'});
+    const resp = await _fetch('/api/simulate/reset', {method: 'POST'});
     document.getElementById('simulation-output').textContent = JSON.stringify(await resp.json(), null, 2);
 }
 

@@ -31,6 +31,7 @@ async def bootstrap_database() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         await conn.run_sync(_ensure_order_columns)
+        await conn.run_sync(_ensure_product_columns)
 
     from server.database import async_session_factory
 
@@ -57,10 +58,22 @@ async def bootstrap_database() -> None:
         session.add_all(customers)
 
         products = [
-            Product(name="Enterprise License", sku="ENT-001", description="Full enterprise software license", price=99999.0, stock=100, category="License"),
-            Product(name="Professional License", sku="PRO-001", description="Professional tier license", price=29999.0, stock=500, category="License"),
-            Product(name="Premium Support", sku="SUP-001", description="24/7 premium support package", price=14999.0, stock=200, category="Support"),
-            Product(name="Cloud Hosting", sku="CLD-001", description="Managed cloud hosting per year", price=19999.0, stock=300, category="Infrastructure"),
+            # Racing Drones
+            Product(name="Phantom Racer X1", sku="OCTO-001", description="Engineered for blistering speed and unmatched agility. Lightweight carbon fiber frame ensures maximum durability in high-speed maneuvers.", price=499.99, stock=150, category="Racing Drones", image_url="/static/img/products/octo-001.svg"),
+            Product(name="Vortex Pro FPV", sku="OCTO-002", description="Immersive first-person view racing with exceptional control and a robust design, perfect for competitive pilots.", price=629.50, stock=120, category="Racing Drones", image_url="/static/img/products/octo-002.svg"),
+            Product(name="Ignite Micro Racer", sku="OCTO-003", description="Designed for indoor racing fun and tight obstacle courses. Small size doesn't compromise on speed or responsiveness.", price=179.00, stock=250, category="Racing Drones", image_url="/static/img/products/octo-003.svg"),
+            # Camera Drones
+            Product(name="SkyLens 4K Pro", sku="OCTO-004", description="Capture breathtaking aerial footage with a 3-axis gimbal and advanced flight modes. Extended battery for longer creative sessions.", price=1299.99, stock=80, category="Camera Drones", image_url="/static/img/products/octo-004.svg"),
+            Product(name="AeroFold Mini", sku="OCTO-005", description="Your perfect travel companion, easily folding down to fit in any bag. Crisp 1080p video and stable flight.", price=349.95, stock=180, category="Camera Drones", image_url="/static/img/products/octo-005.svg"),
+            Product(name="CinemaFly Xtreme", sku="OCTO-006", description="Designed for professional filmmakers with interchangeable lenses and unparalleled stability for cinematic productions.", price=3500.00, stock=60, category="Camera Drones", image_url="/static/img/products/octo-006.svg"),
+            # Industrial Drones
+            Product(name="TerraSurvey RTK", sku="OCTO-007", description="Precision mapping and surveying with RTK GPS for centimeter-level accuracy. Streamlines data collection for construction.", price=9500.00, stock=50, category="Industrial Drones", image_url="/static/img/products/octo-007.svg"),
+            Product(name="InspectMaster Thermal", sku="OCTO-008", description="Detailed inspections with high-resolution thermal camera and advanced obstacle avoidance for infrastructure assessments.", price=7200.00, stock=70, category="Industrial Drones", image_url="/static/img/products/octo-008.svg"),
+            Product(name="AgriSprayer Pro", sku="OCTO-009", description="Optimize crop health with efficient and precise payload application. Robust design handles large fields with ease.", price=11000.00, stock=55, category="Industrial Drones", image_url="/static/img/products/octo-009.svg"),
+            # Accessories
+            Product(name="Extra Flight Battery Pack", sku="OCTO-010", description="Extend your flight time with an additional high-capacity LiPo battery. Compatible with Phantom Racer and SkyLens series.", price=49.99, stock=400, category="Accessories", image_url="/static/img/products/octo-010.svg"),
+            Product(name="Propeller Guard Set", sku="OCTO-011", description="Protect your drone and surroundings with this durable propeller guard set. Easy to install, essential for beginners.", price=19.95, stock=500, category="Accessories", image_url="/static/img/products/octo-011.svg"),
+            Product(name="Rugged Carrying Case", sku="OCTO-012", description="Safely transport your drone with this custom-fitted rugged carrying case. Superior protection against impacts.", price=120.00, stock=200, category="Accessories", image_url="/static/img/products/octo-012.svg"),
         ]
         session.add_all(products)
         await session.flush()
@@ -197,3 +210,18 @@ def _ensure_order_columns(sync_conn) -> None:
     tables = set(inspector.get_table_names())
     if "order_sync_audit" not in tables:
         OrderSyncAudit.__table__.create(sync_conn, checkfirst=True)
+
+
+def _ensure_product_columns(sync_conn) -> None:
+    """Add image_url column to products table if missing."""
+    inspector = inspect(sync_conn)
+    if "products" not in inspector.get_table_names():
+        return
+    existing = {col["name"] for col in inspector.get_columns("products")}
+    if "image_url" not in existing:
+        dialect = sync_conn.dialect.name
+        col_type = "VARCHAR2(500 CHAR)" if dialect == "oracle" else "VARCHAR(500)"
+        sync_conn.execute(
+            text(f"ALTER TABLE products ADD ({col_type})" if dialect == "oracle"
+                 else f"ALTER TABLE products ADD COLUMN image_url {col_type}")
+        )
