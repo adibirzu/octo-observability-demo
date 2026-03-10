@@ -14,7 +14,7 @@ from server.genai_service import chat_with_documents, genai_configured
 from server.modules.integrations import sync_customers_from_crm, sync_order_to_crm
 from server.observability.logging_sdk import push_log
 from server.observability.otel_setup import get_tracer
-from server.store_service import ensure_customer, fetch_cart_items, place_order
+from server.store_service import ensure_customer, fetch_cart_items, place_order, resolve_direct_items
 from server.storefront import build_grounding_documents, enrich_product, fallback_product_answer
 
 router = APIRouter(prefix="/api/shop", tags=["shop"])
@@ -139,6 +139,8 @@ async def checkout(payload: dict, request: Request):
         crm_customer_sync = await sync_customers_from_crm(force=False, limit=200, source="shop_checkout")
         async with get_db() as db:
             items = await fetch_cart_items(db, session_id)
+            if not items and payload.get("items"):
+                items = await resolve_direct_items(db, payload["items"])
             if not items:
                 return {"error": "Cart is empty", "session_id": session_id}
 

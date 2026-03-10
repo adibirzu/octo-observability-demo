@@ -1,4 +1,4 @@
-"""Database engine, session, models, and initialization for ATP-only runtime."""
+"""Database engine, session, models, and initialization (PostgreSQL or Oracle ATP)."""
 
 import logging
 import os
@@ -36,14 +36,16 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 10999.00,
         "stock": 25,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_001.jpg",
     },
     {
         "name": "Parrot ANAFI Ai",
         "sku": "DRN-002",
-        "description": "4G-connected robotic drone, 4K HDR camera, 32min flight. NATO-approved platform. Made in France.",
+        "description": "4G-connected robotic drone, 4K HDR camera, 32min flight. Defense-grade platform. Made in France.",
         "price": 4499.00,
         "stock": 40,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_002.jpg",
     },
     {
         "name": "Autel EVO II Pro V3",
@@ -52,6 +54,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 1899.00,
         "stock": 60,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_003.jpg",
     },
     {
         "name": "Wingtra WingtraOne GEN II",
@@ -60,6 +63,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 24900.00,
         "stock": 8,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_004.jpg",
     },
     {
         "name": "Quantum-Systems Trinity F90+",
@@ -68,6 +72,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 28500.00,
         "stock": 6,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_005.jpg",
     },
     {
         "name": "Flyability ELIOS 3",
@@ -76,6 +81,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 39900.00,
         "stock": 4,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_006.jpg",
     },
     {
         "name": "Parrot ANAFI USA",
@@ -84,6 +90,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 7499.00,
         "stock": 15,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_007.jpg",
     },
     {
         "name": "Freefly Astro",
@@ -92,6 +99,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 12495.00,
         "stock": 10,
         "category": "Complete Drones",
+        "image_url": "/static/img/products/drn_008.jpg",
     },
     {
         "name": "Holybro X500 V2 Frame Kit",
@@ -100,6 +108,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 299.00,
         "stock": 120,
         "category": "Frames",
+        "image_url": "/static/img/products/frm_001.jpg",
     },
     {
         "name": "IFlight Chimera7 Pro Frame",
@@ -108,6 +117,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 89.99,
         "stock": 200,
         "category": "Frames",
+        "image_url": "/static/img/products/frm_002.jpg",
     },
     {
         "name": "KDE Direct 4215XF-465 Motor",
@@ -116,6 +126,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 189.99,
         "stock": 150,
         "category": "Motors & ESCs",
+        "image_url": "/static/img/products/mot_001.jpg",
     },
     {
         "name": "Holybro Tekko32 F4 4-in-1 ESC",
@@ -124,6 +135,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 69.99,
         "stock": 180,
         "category": "Motors & ESCs",
+        "image_url": "/static/img/products/esc_001.jpg",
     },
     {
         "name": "Holybro Pixhawk 6X",
@@ -132,6 +144,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 399.99,
         "stock": 75,
         "category": "Flight Controllers",
+        "image_url": "/static/img/products/flc_001.jpg",
     },
     {
         "name": "CUAV X7+ Pro",
@@ -140,6 +153,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 549.00,
         "stock": 45,
         "category": "Flight Controllers",
+        "image_url": "/static/img/products/flc_002.jpg",
     },
     {
         "name": "Freefly MoVI Carbon Gimbal",
@@ -148,6 +162,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 5995.00,
         "stock": 12,
         "category": "Cameras & Gimbals",
+        "image_url": "/static/img/products/gmb_001.jpg",
     },
     {
         "name": "Phase One P3 Payload",
@@ -156,6 +171,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 52000.00,
         "stock": 3,
         "category": "Cameras & Gimbals",
+        "image_url": "/static/img/products/cam_001.jpg",
     },
     {
         "name": "Tattu 6S 10000mAh LiPo",
@@ -164,6 +180,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 179.99,
         "stock": 250,
         "category": "Batteries",
+        "image_url": "/static/img/products/bat_001.jpg",
     },
     {
         "name": "EcoFlow DELTA Mini",
@@ -172,6 +189,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 799.00,
         "stock": 30,
         "category": "Batteries",
+        "image_url": "/static/img/products/bat_002.jpg",
     },
     {
         "name": "KDE Direct CF 15.5x5.3 Props (pair)",
@@ -180,6 +198,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 89.99,
         "stock": 300,
         "category": "Propellers",
+        "image_url": "/static/img/products/prp_001.jpg",
     },
     {
         "name": "Master Airscrew 13x4.5 Silent (set of 4)",
@@ -188,6 +207,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 29.99,
         "stock": 500,
         "category": "Propellers",
+        "image_url": "/static/img/products/prp_002.jpg",
     },
     {
         "name": "Orqa FPV.One Pilot Goggles",
@@ -196,6 +216,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 549.00,
         "stock": 50,
         "category": "FPV Gear",
+        "image_url": "/static/img/products/fpv_001.jpg",
     },
     {
         "name": "TBS Crossfire Nano TX",
@@ -204,6 +225,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 69.99,
         "stock": 100,
         "category": "FPV Gear",
+        "image_url": "/static/img/products/fpv_002.jpg",
     },
     {
         "name": "Hoodman Drone Launch Pad (5ft)",
@@ -212,6 +234,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 89.99,
         "stock": 200,
         "category": "Accessories",
+        "image_url": "/static/img/products/acc_001.jpg",
     },
     {
         "name": "Lowepro DroneGuard BP 450 AW",
@@ -220,6 +243,7 @@ DRONE_CATALOG_PRODUCTS = [
         "price": 249.99,
         "stock": 80,
         "category": "Accessories",
+        "image_url": "/static/img/products/acc_002.jpg",
     },
 ]
 
@@ -317,36 +341,35 @@ _engine_kwargs = {
     "pool_pre_ping": True,
 }
 
-try:
-    import oracledb
-except ModuleNotFoundError as exc:
-    raise RuntimeError(
-        "The 'oracledb' package is required to run OCTO Drone Shop. "
-        "Install prerequisites with 'python -m pip install -r requirements.txt' before starting the app."
-    ) from exc
+if cfg.use_postgres:
+    logger.info("Using PostgreSQL backend: %s", cfg.masked_database_url())
+    engine = create_async_engine(cfg.database_url, **_engine_kwargs)
+    sync_engine = create_engine(cfg.sync_database_url)
+else:
+    try:
+        import oracledb
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "Oracle ATP mode requires 'oracledb' package. "
+            "Set DATABASE_URL for PostgreSQL or install oracledb."
+        ) from exc
 
-# Use thin mode (pure-Python, no Oracle Instant Client needed)
-oracledb.defaults.config_dir = cfg.oracle_wallet_dir or ""
-oracledb.defaults.fetch_lobs = False
+    oracledb.defaults.config_dir = cfg.oracle_wallet_dir or ""
+    oracledb.defaults.fetch_lobs = False
 
-_connect_args = {}
-if cfg.oracle_wallet_dir:
-    _connect_args["config_dir"] = cfg.oracle_wallet_dir
-    _connect_args["wallet_location"] = cfg.oracle_wallet_dir
-    _connect_args["wallet_password"] = cfg.oracle_wallet_password
+    _connect_args = {}
+    if cfg.oracle_wallet_dir:
+        _connect_args["config_dir"] = cfg.oracle_wallet_dir
+        _connect_args["wallet_location"] = cfg.oracle_wallet_dir
+        _connect_args["wallet_password"] = cfg.oracle_wallet_password
 
-engine = create_async_engine(
-    cfg.database_url,
-    connect_args={
-        "dsn": cfg.oracle_dsn,
-        **_connect_args,
-    },
-    **_engine_kwargs,
-)
-# Sync engine for schema and seed operations.
-_sync_url = f"oracle+oracledb://{cfg.oracle_user}:{cfg.oracle_password}@"
-_sync_connect = {"dsn": cfg.oracle_dsn, **_connect_args}
-sync_engine = create_engine(_sync_url, connect_args=_sync_connect)
+    engine = create_async_engine(
+        cfg.database_url,
+        connect_args={"dsn": cfg.oracle_dsn, **_connect_args},
+        **_engine_kwargs,
+    )
+    _sync_url = f"oracle+oracledb://{cfg.oracle_user}:{cfg.oracle_password}@"
+    sync_engine = create_engine(_sync_url, connect_args={"dsn": cfg.oracle_dsn, **_connect_args})
 
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
@@ -411,6 +434,8 @@ class Order(Base):
     customer_id = Column(Integer, ForeignKey("customers.id"))
     total = Column(Float, nullable=False)
     status = Column(String(50), default="pending")
+    payment_method = Column(String(50), default="credit_card")
+    payment_status = Column(String(50), default="pending")
     notes = Column(Text)
     shipping_address = Column(Text)
     created_at = Column(DateTime, server_default=func.now())
@@ -624,7 +649,7 @@ class AssistantMessage(Base):
 # ── Database Initialization ──────────────────────────────────────
 
 def init_tables():
-    """Create all tables and reconcile Oracle identity-column compatibility."""
+    """Create all tables and seed if needed."""
     if sync_engine is None:
         logger.warning("No sync engine — skipping table creation")
         return
@@ -632,9 +657,8 @@ def init_tables():
         insp = inspect(sync_engine)
         existing_tables = insp.get_table_names()
 
-        if "users" in existing_tables:
-            # Check if users table is empty — if so, drop all and recreate
-            # (fixes tables created without IDENTITY columns)
+        if "users" in existing_tables and not cfg.use_postgres:
+            # Oracle-specific: check if tables need Identity column fix
             from sqlalchemy.orm import Session
             with Session(sync_engine) as session:
                 count = session.execute(text("SELECT COUNT(*) FROM users")).scalar()
@@ -643,10 +667,83 @@ def init_tables():
                     Base.metadata.drop_all(sync_engine)
 
         Base.metadata.create_all(sync_engine, checkfirst=True)
-        logger.info("Database tables created/verified (backend: oracle_atp)")
+        _ensure_missing_columns(sync_engine)
+        backend = "postgresql" if cfg.use_postgres else "oracle_atp"
+        logger.info("Database tables created/verified (backend: %s)", backend)
     except Exception as e:
         logger.error("Failed to create tables: %s", e)
         raise
+
+
+def _ensure_missing_columns(engine) -> None:
+    """Add columns that were introduced after initial table creation."""
+    insp = inspect(engine)
+    if "products" not in insp.get_table_names():
+        return
+    existing = {col["name"] for col in insp.get_columns("products")}
+    dialect = engine.dialect.name
+    migrations = {
+        "image_url": "VARCHAR2(500 CHAR)" if dialect == "oracle" else "VARCHAR(500)",
+    }
+    with engine.begin() as conn:
+        for col_name, col_type in migrations.items():
+            if col_name not in existing:
+                stmt = (
+                    f"ALTER TABLE products ADD ({col_name} {col_type})"
+                    if dialect == "oracle"
+                    else f"ALTER TABLE products ADD COLUMN {col_name} {col_type}"
+                )
+                conn.execute(text(stmt))
+                logger.info("Added missing column products.%s", col_name)
+
+    # Orders table migrations
+    if "orders" in insp.get_table_names():
+        order_cols = {col["name"] for col in insp.get_columns("orders")}
+        order_migrations = {
+            "payment_method": "VARCHAR2(50 CHAR)" if dialect == "oracle" else "VARCHAR(50)",
+            "payment_status": "VARCHAR2(50 CHAR)" if dialect == "oracle" else "VARCHAR(50)",
+        }
+        for col_name, col_type in order_migrations.items():
+            if col_name not in order_cols:
+                try:
+                    with engine.begin() as conn:
+                        stmt = (
+                            f"ALTER TABLE orders ADD ({col_name} {col_type})"
+                            if dialect == "oracle"
+                            else f"ALTER TABLE orders ADD COLUMN {col_name} {col_type}"
+                        )
+                        conn.execute(text(stmt))
+                        logger.info("Added missing column orders.%s", col_name)
+                except Exception:
+                    logger.debug("Column orders.%s may already exist (concurrent DDL)", col_name)
+
+    # Ensure 'shops' table exists (not in ORM, needed for /api/shop/locations)
+    if "shops" not in insp.get_table_names():
+        ddl = (
+            "CREATE TABLE shops ("
+            "id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY, "
+            "name VARCHAR2(200 CHAR) NOT NULL, "
+            "address CLOB NOT NULL, "
+            "coordinates VARCHAR2(100 CHAR), "
+            "contact_email VARCHAR2(200 CHAR), "
+            "contact_phone VARCHAR2(50 CHAR), "
+            "is_active NUMBER(1) DEFAULT 1, "
+            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+            if dialect == "oracle"
+            else
+            "CREATE TABLE shops ("
+            "id SERIAL PRIMARY KEY, "
+            "name VARCHAR(200) NOT NULL, "
+            "address TEXT NOT NULL, "
+            "coordinates VARCHAR(100), "
+            "contact_email VARCHAR(200), "
+            "contact_phone VARCHAR(50), "
+            "is_active INTEGER DEFAULT 1, "
+            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+        )
+        with engine.begin() as conn:
+            conn.execute(text(ddl))
+            logger.info("Created missing 'shops' table")
 
 
 def _reconcile_product_catalog(session) -> None:
@@ -656,8 +753,17 @@ def _reconcile_product_catalog(session) -> None:
     for sku, payload in desired_by_sku.items():
         existing = existing_products.get(sku)
         if existing is None:
-            session.add(Product(**payload))
-            continue
+            try:
+                nested = session.begin_nested()
+                session.add(Product(**payload))
+                nested.commit()
+            except Exception:
+                # Another replica likely inserted it — fetch and update instead
+                existing = session.query(Product).filter_by(sku=sku).first()
+                if not existing:
+                    continue
+            else:
+                continue
 
         existing.name = payload["name"]
         existing.description = payload["description"]
@@ -673,6 +779,31 @@ def _reconcile_product_catalog(session) -> None:
     )
 
 
+def _reconcile_services(session) -> None:
+    desired_by_sku = {svc["sku"]: svc for svc in SEED_SERVICES}
+    existing_services = {svc.sku: svc for svc in session.query(Service).all()}
+
+    for sku, payload in desired_by_sku.items():
+        existing = existing_services.get(sku)
+        if existing is None:
+            try:
+                nested = session.begin_nested()
+                session.add(Service(**payload))
+                nested.commit()
+            except Exception:
+                existing = session.query(Service).filter_by(sku=sku).first()
+                if not existing:
+                    continue
+            else:
+                continue
+
+        existing.name = payload["name"]
+        existing.description = payload["description"]
+        existing.price = payload["price"]
+        existing.category = payload["category"]
+        existing.is_active = 1
+
+
 def _reconcile_seed_users(session) -> None:
     desired_by_username = {user["username"]: user for user in SEED_USERS}
     existing_users = {user.username: user for user in session.query(User).all()}
@@ -680,8 +811,16 @@ def _reconcile_seed_users(session) -> None:
     for username, payload in desired_by_username.items():
         existing = existing_users.get(username)
         if existing is None:
-            session.add(User(**payload))
-            continue
+            try:
+                nested = session.begin_nested()
+                session.add(User(**payload))
+                nested.commit()
+            except Exception:
+                existing = session.query(User).filter_by(username=username).first()
+                if not existing:
+                    continue
+            else:
+                continue
 
         existing.email = payload["email"]
         existing.password_hash = payload["password_hash"]
@@ -699,8 +838,9 @@ def seed_data():
             if session.query(User).count() > 0:
                 _reconcile_seed_users(session)
                 _reconcile_product_catalog(session)
+                _reconcile_services(session)
                 session.commit()
-                logger.info("Database already seeded — reconciled users and storefront catalog")
+                logger.info("Database already seeded — reconciled users, catalog, and services")
                 return
 
             # Users
@@ -906,6 +1046,25 @@ def seed_data():
                 AuditLog(user_id=3, action="create_order", resource="orders", details="Order #1 created"),
                 AuditLog(user_id=1, action="view_audit_logs", resource="admin", details="Viewed audit trail"),
             ])
+
+            # Seed shops table (raw SQL — no ORM model)
+            try:
+                shop_count = session.execute(text("SELECT COUNT(*) FROM shops")).scalar()
+                if shop_count == 0:
+                    session.execute(text(
+                        "INSERT INTO shops (name, address, coordinates, contact_email, contact_phone) VALUES "
+                        "('OCTO Drone Shop - Flagship', '100 Cloud Way, Silicon Valley, CA', '37.3875,-122.0575', 'store.sv@octodrones.com', '+1-555-0810')"
+                    ))
+                    session.execute(text(
+                        "INSERT INTO shops (name, address, coordinates, contact_email, contact_phone) VALUES "
+                        "('OCTO Defense Systems - East', '50 Defense Blvd, Arlington, VA', '38.8816,-77.0910', 'tactical@octodrones.com', '+1-555-0820')"
+                    ))
+                    session.execute(text(
+                        "INSERT INTO shops (name, address, coordinates, contact_email, contact_phone) VALUES "
+                        "('OCTO Industrial - EU', '15 Industrialweg, Frankfurt, Germany', '50.1109,8.6821', 'eu.sales@octodrones.com', '+49-69-555-0830')"
+                    ))
+            except Exception:
+                logger.warning("shops table not yet available for seeding")
 
             session.commit()
             logger.info("Database seeded with initial data")

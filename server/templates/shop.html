@@ -343,13 +343,24 @@
 
 {% block scripts %}
 <script>
+/* Restore native fetch — APM RUM agent patches fetch/XHR and can break API calls */
+const _fetch = window.__nativeFetch || window.fetch.bind(window);
+
+/* crypto.randomUUID() requires secure context (HTTPS) — fallback for HTTP */
+function _uuid() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+}
+
 const state = {
     products: [],
     filtered: [],
     cart: [],
     category: 'All',
-    sessionId: localStorage.getItem('octo-session-id') || crypto.randomUUID(),
-    assistantSessionId: localStorage.getItem('octo-assistant-session-id') || crypto.randomUUID(),
+    sessionId: localStorage.getItem('octo-session-id') || _uuid(),
+    assistantSessionId: localStorage.getItem('octo-assistant-session-id') || _uuid(),
 };
 localStorage.setItem('octo-session-id', state.sessionId);
 localStorage.setItem('octo-assistant-session-id', state.assistantSessionId);
@@ -446,7 +457,7 @@ function applyFilters() {
 
 /* ── Storefront load ─────────────────────────────────────────── */
 async function loadStorefront() {
-    const res = await fetch('/api/shop/storefront');
+    const res = await _fetch('/api/shop/storefront');
     if (!res.ok) throw new Error(`Storefront ${res.status}`);
     const data = await res.json();
     state.products = data.products || [];
@@ -461,7 +472,7 @@ async function loadStorefront() {
 
 /* ── Cart ────────────────────────────────────────────────────── */
 async function loadCart() {
-    const res = await fetch(`/api/cart?session_id=${encodeURIComponent(state.sessionId)}`);
+    const res = await _fetch(`/api/cart?session_id=${encodeURIComponent(state.sessionId)}`);
     if (!res.ok) return;
     const data = await res.json();
     state.cart = data.items || [];
@@ -489,7 +500,7 @@ async function loadCart() {
 }
 
 async function addToCart(productId) {
-    const res = await fetch('/api/cart/add', {
+    const res = await _fetch('/api/cart/add', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({session_id: state.sessionId, product_id: productId, quantity: 1}),
@@ -503,19 +514,24 @@ async function addToCart(productId) {
 }
 
 async function removeCartItem(itemId) {
-    await fetch(`/api/cart/${itemId}`, {method: 'DELETE'});
+    await _fetch(`/api/cart/${itemId}`, {method: 'DELETE'});
     await loadCart();
 }
 
 /* ── Checkout ────────────────────────────────────────────────── */
 async function submitCheckout(e) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const payload = {...Object.fromEntries(form.entries()), session_id: state.sessionId};
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
+    const payload = {
+        ...Object.fromEntries(form.entries()),
+        session_id: state.sessionId,
+        items: state.cart.map(i => ({product_id: i.product_id, quantity: i.quantity})),
+    };
     const status = document.getElementById('checkoutStatus');
     status.textContent = 'Placing order…';
     try {
-        const res = await fetch('/api/shop/checkout', {
+        const res = await _fetch('/api/shop/checkout', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload),
@@ -525,8 +541,8 @@ async function submitCheckout(e) {
             status.textContent = result.error || `Checkout failed (${res.status})`;
             return;
         }
-        status.textContent = `Order #${result.order_id} placed. Tracking: ${result.tracking_number}`;
-        e.currentTarget.reset();
+        status.textContent = `Order #${result.order_id} placed! Tracking: ${result.tracking_number} — Total: $${result.total.toLocaleString()}`;
+        formEl.reset();
         await Promise.all([loadCart(), loadStorefront()]);
     } catch (err) {
         status.textContent = `Request failed: ${err.message}`;
@@ -536,7 +552,7 @@ async function submitCheckout(e) {
 /* ── Dealers ─────────────────────────────────────────────────── */
 async function loadShops() {
     try {
-        const res = await fetch('/api/shop/locations');
+        const res = await _fetch('/api/shop/locations');
         const data = await res.json();
         const shops = data.shops || [];
         document.getElementById('shopCount').textContent = `${shops.length} locations`;
@@ -568,7 +584,7 @@ async function submitAssistant(e) {
     if (!message) return;
     appendMsg('You', message);
     e.currentTarget.reset();
-    const res = await fetch('/api/shop/assistant/query', {
+    const res = await _fetch('/api/shop/assistant/query', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -585,7 +601,7 @@ async function submitAssistant(e) {
 
 /* ── Analytics ───────────────────────────────────────────────── */
 async function trackPageView() {
-    await fetch('/api/analytics/track', {
+    await _fetch('/api/analytics/track', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

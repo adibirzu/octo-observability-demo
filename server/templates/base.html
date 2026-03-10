@@ -309,7 +309,7 @@
     <div class="shell">
       <header class="topbar">
         <div class="brand-area">
-          <img src="/static/img/octo-logo.svg" alt="OCTO logo" />
+          <img src="/static/img/octo-logo.png" alt="OCTO logo" />
           <div class="brand-copy">
             <strong>OCTO Drone Commerce</strong>
             <span>Professional platforms and payload configurations</span>
@@ -331,12 +331,18 @@
 
     {% if rum_configured and rum_endpoint and rum_public_key %}
     <script>
+      window.__nativeFetch = window.fetch.bind(window);
+      window.__NativeXHR = window.XMLHttpRequest;
       window.apmrum = window.apmrum || {};
       window.apmrum.serviceName = "{{ app_name }}";
       window.apmrum.webApplication = "{{ rum_web_application }}";
       window.apmrum.ociDataUploadEndpoint = "{{ rum_endpoint }}";
       window.apmrum.OracleAPMPublicDataKey = "{{ rum_public_key }}";
       window.apmrum.route = window.location.pathname;
+      /* Prevent RUM from adding tracing headers to app API calls (avoids CORS preflight issues) */
+      window.apmrum.traceSupportingEndpoints = [
+        { hostPattern: '.*', headers: [] }
+      ];
     </script>
     <script
       async

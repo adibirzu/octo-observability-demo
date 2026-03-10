@@ -134,8 +134,8 @@ async def create_user(request: Request, payload: dict):
             )
             # Log the action in the audit table
             await db.execute(
-                text("INSERT INTO audit_logs (user_id, action, resource, details) VALUES (:user_id, 'create_user', 'users', :details)"),
-                {"user_id": admin_user["id"], "details": f"Created user {username}"}
+                text("INSERT INTO audit_logs (user_id, action, details) VALUES (:user_id, 'create_user', :details)"),
+                {"user_id": admin_user["id"], "details": f"resource=users; Created user {username}"}
             )
             
         push_log("INFO", f"Admin {admin_user['username']} created new user {username}", **{"admin.target_user": username})
@@ -170,8 +170,8 @@ async def create_partner(request: Request, payload: dict):
             )
             # Log the action
             await db.execute(
-                text("INSERT INTO audit_logs (user_id, action, resource, details) VALUES (:user_id, 'create_partner', 'shops', :details)"),
-                {"user_id": admin_user["id"], "details": f"Created partner location {name}"}
+                text("INSERT INTO audit_logs (user_id, action, details) VALUES (:user_id, 'create_partner', :details)"),
+                {"user_id": admin_user["id"], "details": f"resource=shops; Created partner location {name}"}
             )
             
         push_log("INFO", f"Admin {admin_user['username']} created new partner {name}", **{"admin.target_partner": name})
