@@ -330,3 +330,55 @@ async def _collect_dependency_status(correlation_id: str) -> list[dict]:
     for dependency in _configured_dependencies():
         results.append(await _dependency_health(dependency, correlation_id))
     return results
+
+
+# ── Browser Remote Access (Guacamole via Control Plane) ──────
+
+@router.get("/console/connections")
+async def console_connections(request: Request):
+    """Fetch Guacamole connections from the Control Plane and return auto-login URLs."""
+    import base64
+
+    cp_url = cfg.oci_demo_control_plane_url
+    if not cp_url:
+        return {"connections": [], "error": "Control Plane not configured"}
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.get(f"{cp_url.rstrip('/')}/api/guacamole/connections")
+            if resp.status_code != 200:
+                return {"connections": [], "error": f"Control Plane returned {resp.status_code}"}
+            data = resp.json()
+    except Exception as exc:
+        return {"connections": [], "error": str(exc)}
+
+    guac_url = data.get("guacamole_url", "")
+    connections = data.get("connections", [])
+    result = []
+    for conn in connections:
+        conn_id = conn.get("id", conn.get("identifier", ""))
+        name = conn.get("name", "")
+        protocol = conn.get("protocol", "ssh")
+        hostname = conn.get("parameters", {}).get("hostname", "") if isinstance(conn.get("parameters"), dict) else ""
+        client_id = f"{conn_id}\0c\0postgresql"
+        encoded = base64.b64encode(client_id.encode()).decode()
+        client_url = f"{guac_url}/#/client/{encoded}" if guac_url else ""
+        result.append({
+            "identifier": conn_id,
+            "name": name,
+            "protocol": protocol,
+            "hostname": hostname,
+            "client_url": client_url,
+        })
+
+    return {"connections": result, "guacamole_url": guac_url, "total": len(result)}
+
+
+@router.get("/console/config")
+async def console_config():
+    """Check if Browser Remote Access is available."""
+    cp_url = cfg.oci_demo_control_plane_url
+    return {
+        "available": bool(cp_url),
+        "control_plane_url": cp_url or None,
+    }

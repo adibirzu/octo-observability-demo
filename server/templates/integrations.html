@@ -87,7 +87,7 @@
                 <rect width="170" height="80" rx="16" fill="rgba(101,212,168,0.06)" stroke="rgba(101,212,168,0.35)" stroke-width="2"/>
                 <text x="85" y="28" text-anchor="middle" fill="var(--success)" font-size="10" letter-spacing="0.1em">ORACLE CLOUD</text>
                 <text x="85" y="48" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">ATP Database</text>
-                <text x="85" y="66" text-anchor="middle" fill="var(--text-muted)" font-size="10">Shared · ocidemoatp_low</text>
+                <text x="85" y="66" text-anchor="middle" fill="var(--text-muted)" font-size="10" id="atp-label">Shared · {{ atp_connection_name or 'atp' }}</text>
                 <circle cx="158" cy="12" r="5" class="health-dot" id="health-atp"/>
             </g>
 
@@ -193,6 +193,15 @@
     <p class="card-subtitle">One-click pivot from application context to OCI native tooling</p>
     <div class="drilldown-grid" id="integration-drilldowns">
         <div class="drilldown-card">Loading drilldowns...</div>
+    </div>
+</div>
+
+<!-- ── Browser Remote Access ────────────────────────────── -->
+<div class="card" id="console-access-card">
+    <h3>Browser Remote Access</h3>
+    <p class="card-subtitle">One-click SSH/RDP sessions via Apache Guacamole — auto-authenticated, no separate login</p>
+    <div id="console-access-content">
+        <div class="status-card">Checking availability...</div>
     </div>
 </div>
 
@@ -310,6 +319,51 @@
     display: inline-block;
     margin: 2px 3px 2px 0;
     padding: 2px 7px;
+}
+
+/* Console access grid */
+.console-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.console-conn {
+    align-items: center;
+    background: rgba(4,14,23,0.56);
+    border: 1px solid rgba(117,217,227,0.12);
+    border-radius: 14px;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.15s;
+}
+.console-conn:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+.console-conn .cc-icon {
+    align-items: center;
+    border-radius: 10px;
+    display: flex;
+    font-size: 1.3rem;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+.console-conn .cc-icon.is-ssh { background: rgba(117,217,227,0.12); color: var(--accent); }
+.console-conn .cc-icon.is-rdp { background: rgba(100,149,237,0.12); color: cornflowerblue; }
+.console-conn .cc-name { font-size: 0.9rem; font-weight: 600; }
+.console-conn .cc-meta { color: var(--text-muted); font-size: 0.72rem; font-family: "JetBrains Mono", "SF Mono", monospace; }
+.console-conn .cc-arrow { color: var(--text-muted); font-size: 0.8rem; margin-left: auto; transition: color 0.2s; }
+.console-conn:hover .cc-arrow { color: var(--accent); }
+.console-not-configured {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
 }
 
 /* Integration cards — enhanced */
@@ -490,5 +544,49 @@ document.querySelectorAll('.arch-node').forEach(node => {
 });
 
 refreshTopology();
+
+// ── Browser Remote Access ──
+async function loadConsoleAccess() {
+    const container = document.getElementById('console-access-content');
+    try {
+        const cfgResp = await _fetch('/api/integrations/console/config');
+        const cfgData = await cfgResp.json();
+        if (!cfgData.available) {
+            container.innerHTML = '<div class="console-not-configured">Control Plane not configured — set <code>OCI_DEMO_CONTROL_PLANE_URL</code> to enable Browser Remote Access.</div>';
+            return;
+        }
+
+        const connResp = await _fetch('/api/integrations/console/connections');
+        const connData = await connResp.json();
+        const conns = connData.connections || [];
+
+        if (!conns.length) {
+            container.innerHTML = '<div class="console-not-configured">No Guacamole connections available. Deploy C0 (DevOps Bastion) with Guacamole first.</div>';
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="console-grid">
+                ${conns.map(c => `
+                    <a class="console-conn" href="${c.client_url}" target="_blank" rel="noopener" title="Open ${c.protocol.toUpperCase()} session to ${c.name}">
+                        <div class="cc-icon is-${c.protocol}">${c.protocol === 'rdp' ? '🖥' : '⌨'}</div>
+                        <div>
+                            <div class="cc-name">${c.name}</div>
+                            <div class="cc-meta">${c.protocol.toUpperCase()}${c.hostname ? ' · ' + c.hostname : ''}</div>
+                        </div>
+                        <span class="cc-arrow">→</span>
+                    </a>
+                `).join('')}
+            </div>
+            ${connData.guacamole_url ? `<div style="margin-top:12px;font-size:0.75rem;color:var(--text-muted);">
+                <strong>Tip:</strong> Use <kbd style="background:rgba(117,217,227,0.1);padding:1px 5px;border-radius:4px;">Ctrl+Shift+Alt</kbd> inside Guacamole for clipboard.
+                <a href="${connData.guacamole_url}" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);">Open Guacamole directly →</a>
+            </div>` : ''}
+        `;
+    } catch (err) {
+        container.innerHTML = `<div class="console-not-configured">Failed to load console access: ${err.message}</div>`;
+    }
+}
+loadConsoleAccess();
 </script>
 {% endblock %}

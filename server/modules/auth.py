@@ -6,13 +6,19 @@ Vulnerabilities:
 - JWT with weak secret
 - Session fixation via cookie
 - Username enumeration through different error messages
+
+Includes IDCS SSO integration via OIDC Authorization Code + PKCE.
 """
 
+import base64
 import hashlib
+import secrets
 import time
-from datetime import datetime, timezone
+from urllib.parse import urlencode
 
+import httpx
 from fastapi import APIRouter, Request, Response
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy import text
 
@@ -28,6 +34,7 @@ tracer_fn = get_tracer
 # In-memory session store (intentionally insecure — no server-side validation)
 _sessions: dict[str, dict] = {}
 _login_attempts: dict[str, list[float]] = {}
+import hmac
 
 
 class LoginRequest(BaseModel):
@@ -169,3 +176,187 @@ def _check_bcrypt(password: str, hash_str: str) -> bool:
         return bcrypt.verify(password, hash_str)
     except Exception:
         return False
+
+
+# ── IDCS SSO (OIDC Authorization Code + PKCE) ────────────────────
+# PKCE state is stored in a signed cookie so it works across replicas.
+
+
+def _sign_value(value: str) -> str:
+    """Create HMAC signature for a value using the app secret."""
+    sig = hmac.new(cfg.app_secret_key.encode(), value.encode(), hashlib.sha256).hexdigest()[:16]
+    return f"{value}.{sig}"
+
+
+def _verify_signed(signed: str) -> str | None:
+    """Verify and extract value from signed string."""
+    if "." not in signed:
+        return None
+    value, sig = signed.rsplit(".", 1)
+    expected = hmac.new(cfg.app_secret_key.encode(), value.encode(), hashlib.sha256).hexdigest()[:16]
+    if not hmac.compare_digest(sig, expected):
+        return None
+    return value
+
+
+@router.get("/sso/login")
+async def sso_login():
+    """Initiate OIDC Authorization Code flow with PKCE to IDCS."""
+    if not cfg.idcs_configured:
+        return {"error": "SSO not configured"}
+
+    state = secrets.token_urlsafe(32)
+    code_verifier = secrets.token_urlsafe(64)
+    code_challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(code_verifier.encode()).digest()
+    ).rstrip(b"=").decode()
+
+    params = {
+        "response_type": "code",
+        "client_id": cfg.idcs_client_id,
+        "redirect_uri": cfg.idcs_redirect_uri,
+        "scope": "openid profile email",
+        "state": state,
+        "code_challenge": code_challenge,
+        "code_challenge_method": "S256",
+    }
+    auth_url = f"{cfg.idcs_domain_url}/oauth2/v1/authorize?{urlencode(params)}"
+
+    # Store code_verifier + state in a signed cookie (works across replicas)
+    cookie_value = _sign_value(f"{state}:{code_verifier}")
+    redirect = RedirectResponse(url=auth_url)
+    redirect.set_cookie("_sso_pkce", cookie_value, httponly=True, max_age=600, samesite="lax")
+    return redirect
+
+
+@router.get("/sso/callback")
+async def sso_callback(request: Request, code: str = "", state: str = "", error: str = ""):
+    """OIDC callback — exchange authorization code for tokens."""
+    tracer = tracer_fn()
+
+    if error:
+        push_log("WARN", f"SSO callback error: {error}")
+        return RedirectResponse(url=f"/login?error={error}")
+
+    # Recover code_verifier from signed cookie
+    pkce_cookie = request.cookies.get("_sso_pkce", "")
+    pkce_data = _verify_signed(pkce_cookie) if pkce_cookie else None
+    if not pkce_data or ":" not in pkce_data:
+        push_log("WARN", "SSO callback with missing PKCE cookie")
+        return RedirectResponse(url="/login?error=invalid_state")
+
+    stored_state, code_verifier = pkce_data.split(":", 1)
+    if not hmac.compare_digest(stored_state, state):
+        push_log("WARN", "SSO callback with mismatched state")
+        return RedirectResponse(url="/login?error=invalid_state")
+
+    with tracer.start_as_current_span("auth.sso_callback") as span:
+        # Exchange authorization code for tokens
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            token_resp = await client.post(
+                f"{cfg.idcs_domain_url}/oauth2/v1/token",
+                data={
+                    "grant_type": "authorization_code",
+                    "code": code,
+                    "redirect_uri": cfg.idcs_redirect_uri,
+                    "code_verifier": code_verifier,
+                },
+                auth=(cfg.idcs_client_id, cfg.idcs_client_secret),
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+
+        if token_resp.status_code != 200:
+            span.set_attribute("auth.sso_error", token_resp.text[:500])
+            push_log("ERROR", f"SSO token exchange failed: {token_resp.status_code}", **{
+                "auth.sso_status": token_resp.status_code,
+                "auth.sso_error": token_resp.text[:200],
+            })
+            return RedirectResponse(url="/login?error=token_exchange_failed")
+
+        tokens = token_resp.json()
+        id_token = tokens.get("id_token", "")
+
+        # Decode ID token claims (unverified — demo app)
+        claims = _decode_jwt_claims(id_token)
+        if not claims:
+            return RedirectResponse(url="/login?error=invalid_token")
+
+        email = claims.get("email", claims.get("sub", ""))
+        display_name = claims.get("name", claims.get("preferred_username", email.split("@")[0]))
+        idcs_sub = claims.get("sub", "")
+        username = display_name.lower().replace(" ", ".") if display_name else email.split("@")[0]
+
+        span.set_attribute("auth.sso_email", email)
+        span.set_attribute("auth.sso_sub", idcs_sub)
+
+        # Auto-provision or lookup user in CRM database
+        async with get_db() as db:
+            result = await db.execute(
+                text("SELECT id, username, role FROM users WHERE email = :email"),
+                {"email": email}
+            )
+            user = result.fetchone()
+
+            if user is None:
+                await db.execute(
+                    text("INSERT INTO users (username, email, password_hash, role) VALUES (:u, :e, :p, :r)"),
+                    {"u": username, "e": email, "p": f"sso:{idcs_sub}", "r": "user"}
+                )
+                result = await db.execute(
+                    text("SELECT id, username, role FROM users WHERE email = :email"),
+                    {"email": email}
+                )
+                user = result.fetchone()
+                push_log("INFO", f"SSO auto-provisioned user: {username}", **{
+                    "auth.method": "idcs_sso",
+                    "auth.username": username,
+                    "auth.email": email,
+                })
+
+        # Create session (same format as local login)
+        session_id = hashlib.md5(f"{user.username}{time.time()}".encode()).hexdigest()
+        _sessions[session_id] = {
+            "user_id": user.id,
+            "username": user.username,
+            "role": user.role,
+            "created_at": time.time(),
+            "auth_method": "sso",
+        }
+
+        push_log("INFO", f"SSO login: {user.username}", **{
+            "auth.username": user.username,
+            "auth.method": "idcs_sso",
+            "auth.idcs_sub": idcs_sub,
+            "auth.role": user.role,
+        })
+
+        redirect = RedirectResponse(url="/", status_code=302)
+        redirect.set_cookie("session_id", session_id, httponly=False, samesite="none")
+        redirect.delete_cookie("_sso_pkce")
+        return redirect
+
+
+@router.get("/sso/status")
+async def sso_status():
+    """Check if SSO is configured."""
+    return {
+        "configured": cfg.idcs_configured,
+        "provider": "OCI Identity Domain (IDCS)" if cfg.idcs_configured else None,
+        "domain_url": cfg.idcs_domain_url if cfg.idcs_configured else None,
+    }
+
+
+def _decode_jwt_claims(token: str) -> dict | None:
+    """Decode JWT claims without signature verification (demo app)."""
+    try:
+        parts = token.split(".")
+        if len(parts) != 3:
+            return None
+        # Decode the payload (second part)
+        payload = parts[1]
+        # Add padding
+        payload += "=" * (4 - len(payload) % 4)
+        import json
+        return json.loads(base64.urlsafe_b64decode(payload))
+    except Exception:
+        return None
