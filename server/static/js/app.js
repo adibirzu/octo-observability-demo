@@ -22,17 +22,26 @@ async function checkSession() {
         const resp = await _fetch('/api/auth/session');
         const data = await resp.json();
         const userInfo = document.getElementById('user-info');
+        const authBtn = document.getElementById('auth-btn');
         if (data.authenticated && userInfo) {
             userInfo.textContent = `${data.username} (${data.role})`;
-            const loginBtn = document.querySelector('.btn-login');
-            if (loginBtn) {
-                loginBtn.textContent = 'Logout';
-                loginBtn.href = '#';
-                loginBtn.onclick = async (event) => {
+            if (authBtn) {
+                authBtn.textContent = 'Logout';
+                authBtn.href = '#';
+                authBtn.className = 'btn-logout';
+                authBtn.onclick = async (event) => {
                     event.preventDefault();
                     await _fetch('/api/auth/logout', {method: 'POST'});
                     window.location.href = '/login';
                 };
+            }
+        } else if (userInfo) {
+            userInfo.textContent = 'Not logged in';
+            if (authBtn) {
+                authBtn.textContent = 'Login';
+                authBtn.href = '/login';
+                authBtn.className = 'btn-login';
+                authBtn.onclick = null;
             }
         }
     } catch (error) {

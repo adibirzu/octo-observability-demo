@@ -92,6 +92,12 @@ class Config:
     session_timeout_seconds: int = field(default_factory=lambda: _env_int("SESSION_TIMEOUT_SECONDS", 3600))
     max_login_attempts: int = field(default_factory=lambda: _env_int("MAX_LOGIN_ATTEMPTS", 5))
 
+    # IDCS / OCI Identity Domain SSO
+    idcs_domain_url: str = field(default_factory=lambda: _env("IDCS_DOMAIN_URL"))
+    idcs_client_id: str = field(default_factory=lambda: _env("IDCS_CLIENT_ID"))
+    idcs_client_secret: str = field(default_factory=lambda: _env("IDCS_CLIENT_SECRET"))
+    idcs_redirect_uri: str = field(default_factory=lambda: _env("IDCS_REDIRECT_URI", "http://localhost:8080/api/auth/sso/callback"))
+
     # Chaos / Issue simulation
     simulate_db_latency: bool = field(default_factory=lambda: _env_bool("SIMULATE_DB_LATENCY"))
     simulate_db_disconnect: bool = field(default_factory=lambda: _env_bool("SIMULATE_DB_DISCONNECT"))
@@ -108,6 +114,10 @@ class Config:
     def database_sync_url(self) -> str:
         """Synchronous database URL for OTel and bootstrap."""
         return f"oracle+oracledb://{self.oracle_user}:{self.oracle_password}@"
+
+    @property
+    def idcs_configured(self) -> bool:
+        return bool(self.idcs_domain_url and self.idcs_client_id and self.idcs_client_secret)
 
     @property
     def apm_configured(self) -> bool:
