@@ -62,8 +62,10 @@
                 {% if db_management_console_url %}<a href="{{ db_management_console_url }}" target="_blank" rel="noreferrer">DBMan</a>{% endif %}
                 {% if log_analytics_console_url %}<a href="{{ log_analytics_console_url }}" target="_blank" rel="noreferrer">Logs</a>{% endif %}
             </div>
-            <span id="user-info">Not logged in</span>
-            <a href="/login" class="btn-login">Login</a>
+            <div class="sidebar-user-area">
+                <span id="user-info">Not logged in</span>
+                <a href="/login" class="btn-login" id="auth-btn">Login</a>
+            </div>
         </div>
     </nav>
 

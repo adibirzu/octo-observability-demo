@@ -234,6 +234,7 @@ def _render_page(request: Request, page: str, title: str, **context):
             "opsi_console_url": cfg.opsi_console_url,
             "db_management_console_url": cfg.db_management_console_url,
             "log_analytics_console_url": cfg.log_analytics_console_url,
+            "atp_connection_name": cfg.atp_connection_name,
             **context,
         }
     )
@@ -321,7 +322,7 @@ async def integrations_page(request: Request):
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
-    return _render_page(request, "login", "Login", nav_key="login")
+    return _render_page(request, "login", "Login", nav_key="login", idcs_configured=cfg.idcs_configured)
 
 
 # ── Error handlers ───────────────────────────────────────────────
