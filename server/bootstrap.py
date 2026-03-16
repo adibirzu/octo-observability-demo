@@ -35,17 +35,34 @@ async def bootstrap_database() -> None:
 
     from server.database import async_session_factory
 
+    _DEMO_USERS = {
+        "admin": ("admin123", "admin", "admin@crm-enterprise.local"),
+        "user1": ("password1", "user", "user1@crm-enterprise.local"),
+        "manager": ("password1", "manager", "manager@crm-enterprise.local"),
+        "viewer": ("viewer123", "viewer", "viewer@crm-enterprise.local"),
+    }
+
+    from server.database import async_session_factory
+
     async with async_session_factory() as session:
         existing_user = await session.scalar(select(User.id).limit(1))
         if existing_user:
+            # Reconcile demo passwords so they always match expected credentials
+            for username, (password, role, email) in _DEMO_USERS.items():
+                await session.execute(
+                    text(
+                        "UPDATE users SET password_hash = :hash, role = :role "
+                        "WHERE username = :user"
+                    ),
+                    {"hash": bcrypt.hash(password), "role": role, "user": username},
+                )
+            await session.commit()
             return
 
         now = datetime.utcnow()
         users = [
-            User(username="admin", email="admin@crm-enterprise.local", password_hash=bcrypt.hash("admin123"), role="admin"),
-            User(username="user1", email="user1@crm-enterprise.local", password_hash=bcrypt.hash("password1"), role="user"),
-            User(username="manager", email="manager@crm-enterprise.local", password_hash=bcrypt.hash("password1"), role="manager"),
-            User(username="viewer", email="viewer@crm-enterprise.local", password_hash=bcrypt.hash("viewer123"), role="viewer"),
+            User(username=u, email=e, password_hash=bcrypt.hash(p), role=r)
+            for u, (p, r, e) in _DEMO_USERS.items()
         ]
         session.add_all(users)
 
