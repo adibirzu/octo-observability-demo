@@ -10,7 +10,12 @@ from starlette.requests import Request
 from starlette.responses import RedirectResponse, JSONResponse
 
 # Paths that never require auth
-_PUBLIC_PREFIXES = ("/login", "/static/", "/health", "/ready", "/api/auth/", "/favicon")
+_PUBLIC_PREFIXES = (
+    "/login", "/static/", "/health", "/ready", "/api/auth/", "/favicon",
+    # Cross-service endpoints used by octo-drone-shop and internal integrations
+    "/api/customers", "/api/invoices", "/api/tickets", "/api/orders",
+    "/api/integrations",
+)
 
 
 class SessionGateMiddleware(BaseHTTPMiddleware):
