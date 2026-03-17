@@ -17,6 +17,7 @@ import httpx
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import log_security_event, push_log
+from server.observability import business_metrics
 
 router = APIRouter(prefix="/api/files", tags=["File Management"])
 tracer_fn = get_tracer
@@ -49,6 +50,7 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         with open(filepath, "wb") as f:
             f.write(content)
 
+        business_metrics.record_file_upload(content_type=file.content_type or "unknown")
         push_log("INFO", f"File uploaded: {file.filename}", **{
             "files.filename": file.filename,
             "files.size_bytes": len(content),
@@ -74,6 +76,7 @@ async def download_file(request: Request, path: str = Query(description="File pa
                     source_ip=client_ip, payload=path)
 
         # VULN: Direct file access without path validation
+        business_metrics.record_file_download()
         filepath = os.path.join(UPLOAD_DIR, path)
         if os.path.exists(filepath):
             return FileResponse(filepath)

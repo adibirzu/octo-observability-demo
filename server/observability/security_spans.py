@@ -97,4 +97,10 @@ def security_span(
             for k, v in extra_attrs.items():
                 span.set_attribute(k, v)
         span.set_status(StatusCode.ERROR, f"Security event: {vuln_type}")
+        # Record security event as a metric for alerting
+        try:
+            from server.observability.business_metrics import record_security_event
+            record_security_event(vuln_type, severity)
+        except Exception:
+            pass  # metrics not yet initialized during startup
         yield span

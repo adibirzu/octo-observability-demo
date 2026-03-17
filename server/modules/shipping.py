@@ -14,6 +14,7 @@ from sqlalchemy import text
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import push_log
+from server.observability import business_metrics
 from server.database import Shipment, get_db
 
 router = APIRouter(prefix="/api/shipping", tags=["Shipping"])
@@ -197,6 +198,14 @@ async def create_shipment(request: Request):
                 await db.flush()
                 shipment_id = shipment.id
 
+        business_metrics.record_shipment_created(
+            carrier=body.get("carrier", ""),
+            origin_region=body.get("origin_region", ""),
+            destination_region=body.get("destination_region", ""),
+        )
+        cost = float(body.get("shipping_cost", 0))
+        if cost > 0:
+            business_metrics.record_shipping_cost_value(cost, carrier=body.get("carrier", ""))
         push_log("INFO", f"Shipment #{shipment_id} created", **{
             "shipping.id": shipment_id,
             "shipping.carrier": body.get("carrier", ""),
@@ -235,6 +244,8 @@ async def update_shipment_status(shipment_id: int, request: Request):
                 update_sql += " WHERE id = :sid"
                 await db.execute(text(update_sql), params)
 
+        if new_status == "delivered":
+            business_metrics.record_shipment_delivered()
         push_log("INFO", f"Shipment #{shipment_id} status updated to '{new_status}'", **{
             "shipping.id": shipment_id,
             "shipping.new_status": new_status,

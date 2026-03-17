@@ -15,6 +15,7 @@ from server.database import PageView
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import log_security_event, push_log
+from server.observability import business_metrics
 from server.database import get_db
 
 router = APIRouter(prefix="/api/analytics", tags=["Analytics"])
@@ -258,6 +259,7 @@ async def track_page_view(request: Request):
                 await db.flush()
                 pv_id = pv.id
 
+        business_metrics.record_page_view(page=page, region=visitor_region, load_time_ms=load_time_ms)
         push_log("INFO", f"Page view tracked: {page}", **{
             "analytics.page_view_id": pv_id,
             "analytics.page": page,

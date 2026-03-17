@@ -14,6 +14,7 @@ from server.observability.correlation import build_correlation_id, current_trace
 from server.observability.logging_sdk import log_security_event, push_log
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
+from server.observability import business_metrics
 from server.order_sync import list_backlog_orders, order_security_summary, sync_external_orders
 
 router = APIRouter(prefix="/api/orders", tags=["Orders"])
@@ -114,6 +115,9 @@ async def sync_orders(request: Request):
         span.set_attribute("orders.sync.created", result.get("created", 0))
         span.set_attribute("orders.sync.updated", result.get("updated", 0))
         span.set_attribute("orders.sync.failed", result.get("failed", 0))
+        business_metrics.record_order_sync(
+            result.get("created", 0), result.get("updated", 0), result.get("failed", 0)
+        )
         return result
 
 
@@ -271,6 +275,7 @@ async def create_order(request: Request):
                 )
             await db.flush()
 
+        business_metrics.record_order_created(computed_total, source="enterprise-crm")
         push_log(
             "INFO",
             f"Order #{order.id} created",

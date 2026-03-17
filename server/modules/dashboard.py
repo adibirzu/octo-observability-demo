@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 from server.database import Customer, Invoice, Order, SupportTicket, get_db
 from server.observability.logging_sdk import push_log
 from server.observability.otel_setup import get_tracer
+from server.observability import business_metrics
 from server.order_sync import order_security_summary
 
 router = APIRouter(prefix="/api/dashboard", tags=["Dashboard"])
@@ -22,6 +23,7 @@ async def dashboard_summary(request: Request):
     tracer = tracer_fn()
 
     with tracer.start_as_current_span("dashboard.summary"):
+        business_metrics.record_dashboard_load()
         async with get_db() as db:
             with tracer.start_as_current_span("db.query.customer_count"):
                 customer_count = int((await db.scalar(select(func.count(Customer.id)))) or 0)

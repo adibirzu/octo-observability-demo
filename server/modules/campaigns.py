@@ -17,6 +17,7 @@ from sqlalchemy import text
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import log_security_event, push_log
+from server.observability import business_metrics
 from server.database import Campaign, Lead, get_db
 
 router = APIRouter(prefix="/api/campaigns", tags=["Campaigns"])
@@ -151,6 +152,7 @@ async def create_campaign(request: Request):
                 await db.flush()
                 campaign_id = campaign.id
 
+        business_metrics.record_campaign_created(campaign_type=body.get("campaign_type", "email"))
         push_log("INFO", f"Campaign #{campaign_id} created", **{
             "campaign.id": campaign_id,
             "campaign.name": body.get("name", ""),
@@ -227,6 +229,7 @@ async def create_lead(campaign_id: int, request: Request):
                 await db.flush()
                 lead_id = lead.id
 
+        business_metrics.record_lead_captured(source=body.get("source", "web"))
         push_log("INFO", f"Lead #{lead_id} created for campaign #{campaign_id}", **{
             "lead.id": lead_id,
             "campaign.id": campaign_id,
@@ -279,6 +282,8 @@ async def update_lead_status(campaign_id: int, lead_id: int, request: Request):
                     params
                 )
 
+        if new_status in ("qualified", "converted"):
+            business_metrics.record_lead_converted(new_status=new_status)
         push_log("INFO", f"Lead #{lead_id} status updated to '{new_status}'", **{
             "lead.id": lead_id,
             "campaign.id": campaign_id,

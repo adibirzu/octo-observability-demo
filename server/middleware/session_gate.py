@@ -11,10 +11,10 @@ from starlette.responses import RedirectResponse, JSONResponse
 
 # Paths that never require auth
 _PUBLIC_PREFIXES = (
-    "/login", "/static/", "/health", "/ready", "/api/auth/", "/favicon",
+    "/login", "/static/", "/health", "/ready", "/metrics", "/api/auth/", "/favicon",
     # Cross-service endpoints used by octo-drone-shop and internal integrations
     "/api/customers", "/api/invoices", "/api/tickets", "/api/orders",
-    "/api/integrations",
+    "/api/integrations", "/api/observability/",
 )
 
 
