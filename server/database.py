@@ -56,6 +56,11 @@ from server.observability.db_spans import register_db_span_events
 register_db_span_events(engine)
 register_db_span_events(sync_engine)
 
+# Tag Oracle sessions with MODULE/ACTION/CLIENT_IDENTIFIER for OPSI + DB Management correlation
+from server.observability.db_session_tagging import register_session_tagging
+register_session_tagging(engine)
+register_session_tagging(sync_engine)
+
 
 @asynccontextmanager
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
