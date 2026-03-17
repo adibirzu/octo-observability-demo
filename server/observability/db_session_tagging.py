@@ -32,7 +32,7 @@ def set_db_context(action: str = "", client_identifier: str = ""):
     _db_client_id.set(client_identifier[:64])  # CLIENT_IDENTIFIER limit: 64 chars
 
 
-def _tag_connection(dbapi_connection, connection_record):
+def _tag_connection(dbapi_connection, connection_record, connection_proxy):
     """SQLAlchemy pool checkout event — tag the Oracle session."""
     try:
         action = _db_action.get("")
