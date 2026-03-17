@@ -10,6 +10,7 @@ from server.observability.otel_setup import get_tracer
 from server.observability.logging_sdk import log_security_event, push_log
 from server.observability.correlation import build_correlation_id, current_trace_context
 from server.observability.security_spans import security_span
+from server.observability.db_session_tagging import set_db_context
 
 
 class TracingMiddleware(BaseHTTPMiddleware):
@@ -71,6 +72,13 @@ class TracingMiddleware(BaseHTTPMiddleware):
                             payload=f"waf_score={waf_score}, waf_action={waf_action}",
                             correlation_id=request.state.correlation_id,
                         )
+
+            # Tag Oracle DB sessions with request context for OPSI/DB Management correlation
+            trace_ctx_for_db = current_trace_context()
+            set_db_context(
+                action=f"{request.method} {request.url.path}"[:64],
+                client_identifier=trace_ctx_for_db["trace_id"],
+            )
 
             # Call the actual route handler (generates its own spans)
             try:
