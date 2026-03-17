@@ -26,6 +26,7 @@ from server.config import cfg
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import log_security_event, push_log
+from server.observability import business_metrics
 from server.database import get_db
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
@@ -79,6 +80,7 @@ async def login(req: LoginRequest, request: Request, response: Response):
 
             if user is None:
                 span.set_attribute("auth.result", "user_not_found")
+                business_metrics.record_login_failure(reason="user_not_found")
                 return {"error": "User not found", "status": "failed"}  # VULN: enumeration
 
             # VULN: Weak password check (md5 fallback)
@@ -86,6 +88,7 @@ async def login(req: LoginRequest, request: Request, response: Response):
                 md5_hash = hashlib.md5(req.password.encode()).hexdigest()
                 if user.password_hash != md5_hash and not _check_bcrypt(req.password, user.password_hash):
                     span.set_attribute("auth.result", "invalid_password")
+                    business_metrics.record_login_failure(reason="invalid_password")
                     return {"error": "Invalid password", "status": "failed"}  # VULN: enumeration
 
             # Create session in ATP — shared across all OKE replicas
@@ -100,6 +103,7 @@ async def login(req: LoginRequest, request: Request, response: Response):
 
             response.set_cookie("session_id", session_id, httponly=False, samesite="none", secure=True)
 
+            business_metrics.record_login_success(method="password", role=user.role or "user")
             push_log("INFO", f"User {req.username} logged in", **{
                 "auth.username": req.username,
                 "auth.role": user.role,
@@ -168,6 +172,7 @@ async def logout(request: Request, response: Response):
     if session_id:
         async with get_db() as db:
             await db.execute(text("DELETE FROM user_sessions WHERE session_id = :sid"), {"sid": session_id})
+        business_metrics.record_logout()
     response.delete_cookie("session_id")
     return {"status": "logged_out"}
 
@@ -363,6 +368,7 @@ async def sso_callback(request: Request, code: str = "", state: str = "", error:
                 {"sid": session_id, "uid": user.id, "uname": user.username, "role": user.role},
             )
 
+        business_metrics.record_login_success(method="sso", role=user.role or "user")
         push_log("INFO", f"SSO login: {user.username}", **{
             "auth.username": user.username,
             "auth.method": "idcs_sso",

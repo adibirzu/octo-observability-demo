@@ -23,7 +23,9 @@ from server.database import engine, get_db
 from server.db_compat import HEALTH_CHECK_SQL
 from server.observability.otel_setup import init_otel, get_tracer
 from server.observability.logging_sdk import push_log
+from server.observability.metrics import init_metrics, runtime_metrics
 from server.middleware.tracing import TracingMiddleware
+from server.middleware.metrics_mw import MetricsMiddleware
 from server.middleware.chaos import ChaosMiddleware
 from server.middleware.geo_latency import GeoLatencyMiddleware
 from server.middleware.session_gate import SessionGateMiddleware
@@ -46,6 +48,7 @@ from server.modules.campaigns import router as campaigns_router
 from server.modules.shipping import router as shipping_router
 from server.modules.analytics import router as analytics_router
 from server.modules.integrations import router as integrations_router
+from server.modules.observability_frontend import router as observability_router
 
 logger = logging.getLogger(__name__)
 
@@ -63,13 +66,15 @@ def _sync_database_url() -> str:
 _sync_url = _sync_database_url()
 _sync_engine = create_engine(_sync_url) if _sync_url else None
 init_otel(sync_engine=_sync_engine)
+init_metrics()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application startup and shutdown."""
-    logger.info("Enterprise CRM Portal starting — APM: %s, RUM: %s, Logging: %s",
+    logger.info("Enterprise CRM Portal starting — APM: %s, RUM: %s, Logging: %s, Metrics: enabled",
                 cfg.apm_configured, cfg.rum_configured, cfg.logging_configured)
+    runtime_metrics.setup()
     await bootstrap_database()
     sync_task = None
     if cfg.orders_sync_enabled:
@@ -117,6 +122,7 @@ app.add_middleware(CORSMiddleware,
 app.add_middleware(GeoLatencyMiddleware)
 app.add_middleware(ChaosMiddleware)
 app.add_middleware(SessionGateMiddleware)
+app.add_middleware(MetricsMiddleware)
 app.add_middleware(TracingMiddleware)
 
 # ── Mount static files and templates ─────────────────────────────
@@ -147,6 +153,16 @@ app.include_router(campaigns_router)
 app.include_router(shipping_router)
 app.include_router(analytics_router)
 app.include_router(integrations_router)
+app.include_router(observability_router)
+
+
+# ── Prometheus /metrics endpoint ──────────────────────────────────
+try:
+    from prometheus_client import make_asgi_app as _make_prom_app
+    app.mount("/metrics", _make_prom_app())
+    logger.info("Prometheus /metrics endpoint mounted")
+except ImportError:
+    logger.info("prometheus_client not installed — /metrics not available")
 
 
 # ── Health & readiness endpoints ─────────────────────────────────

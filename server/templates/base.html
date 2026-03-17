@@ -39,21 +39,21 @@
             </div>
         </div>
         <ul class="nav-menu">
-            <li><a href="/" class="{% if nav_key == 'dashboard' %}active{% endif %}">Dashboard</a></li>
-            <li><a href="/customers" class="{% if nav_key == 'customers' %}active{% endif %}">Customers</a></li>
-            <li><a href="/orders" class="{% if nav_key == 'orders' %}active{% endif %}">Orders</a></li>
-            <li><a href="/products" class="{% if nav_key == 'products' %}active{% endif %}">Products</a></li>
-            <li><a href="/invoices" class="{% if nav_key == 'invoices' %}active{% endif %}">Invoices</a></li>
-            <li><a href="/tickets" class="{% if nav_key == 'tickets' %}active{% endif %}">Support</a></li>
-            <li><a href="/campaigns" class="{% if nav_key == 'campaigns' %}active{% endif %}">Campaigns</a></li>
-            <li><a href="/shipping" class="{% if nav_key == 'shipping' %}active{% endif %}">Shipping</a></li>
-            <li><a href="/analytics" class="{% if nav_key == 'analytics' %}active{% endif %}">Analytics</a></li>
-            <li><a href="/integrations" class="{% if nav_key == 'integrations' %}active{% endif %}">Integrations</a></li>
+            <li><a href="/" data-journey="nav_dashboard" class="{% if nav_key == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="/customers" data-journey="nav_customers" class="{% if nav_key == 'customers' %}active{% endif %}">Customers</a></li>
+            <li><a href="/orders" data-journey="nav_orders" class="{% if nav_key == 'orders' %}active{% endif %}">Orders</a></li>
+            <li><a href="/products" data-journey="nav_products" class="{% if nav_key == 'products' %}active{% endif %}">Products</a></li>
+            <li><a href="/invoices" data-journey="nav_invoices" class="{% if nav_key == 'invoices' %}active{% endif %}">Invoices</a></li>
+            <li><a href="/tickets" data-journey="nav_tickets" class="{% if nav_key == 'tickets' %}active{% endif %}">Support</a></li>
+            <li><a href="/campaigns" data-journey="nav_campaigns" class="{% if nav_key == 'campaigns' %}active{% endif %}">Campaigns</a></li>
+            <li><a href="/shipping" data-journey="nav_shipping" class="{% if nav_key == 'shipping' %}active{% endif %}">Shipping</a></li>
+            <li><a href="/analytics" data-journey="nav_analytics" class="{% if nav_key == 'analytics' %}active{% endif %}">Analytics</a></li>
+            <li><a href="/integrations" data-journey="nav_integrations" class="{% if nav_key == 'integrations' %}active{% endif %}">Integrations</a></li>
             <li class="separator"></li>
-            <li><a href="/reports" class="{% if nav_key == 'reports' %}active{% endif %}">Reports</a></li>
-            <li><a href="/files" class="{% if nav_key == 'files' %}active{% endif %}">Files</a></li>
-            <li><a href="/admin" class="{% if nav_key == 'admin' %}active{% endif %}">Admin</a></li>
-            <li><a href="/settings" class="{% if nav_key == 'settings' %}active{% endif %}">Simulation</a></li>
+            <li><a href="/reports" data-journey="nav_reports" class="{% if nav_key == 'reports' %}active{% endif %}">Reports</a></li>
+            <li><a href="/files" data-journey="nav_files" class="{% if nav_key == 'files' %}active{% endif %}">Files</a></li>
+            <li><a href="/admin" data-journey="nav_admin" class="{% if nav_key == 'admin' %}active{% endif %}">Admin</a></li>
+            <li><a href="/settings" data-journey="nav_simulation" class="{% if nav_key == 'settings' %}active{% endif %}">Simulation</a></li>
         </ul>
         <div class="sidebar-footer">
             <div class="sidebar-links">
@@ -96,6 +96,7 @@
         };
     </script>
     <script src="/static/js/app.js"></script>
+    <script src="/static/js/observability.js" defer></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
