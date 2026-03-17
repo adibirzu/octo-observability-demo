@@ -49,6 +49,7 @@ from server.modules.shipping import router as shipping_router
 from server.modules.analytics import router as analytics_router
 from server.modules.integrations import router as integrations_router
 from server.modules.observability_frontend import router as observability_router
+from server.modules.observability_dashboard import router as observability_dashboard_router
 
 logger = logging.getLogger(__name__)
 
@@ -154,6 +155,7 @@ app.include_router(shipping_router)
 app.include_router(analytics_router)
 app.include_router(integrations_router)
 app.include_router(observability_router)
+app.include_router(observability_dashboard_router)
 
 
 # ── Prometheus /metrics endpoint ──────────────────────────────────
@@ -196,9 +198,12 @@ async def list_modules():
             {"name": "integrations", "label": "Integrations", "endpoints": 6,
              "related_to": ["customers", "orders", "drone-shop-portal"],
              "cross_service": True},
+            {"name": "observability", "label": "360 Monitoring", "endpoints": 5,
+             "related_to": ["integrations", "dashboard", "analytics"],
+             "cross_service": True},
         ],
-        "total_modules": 16,
-        "total_endpoints": 68,
+        "total_modules": 17,
+        "total_endpoints": 73,
     }
 
 
@@ -336,6 +341,11 @@ async def warehouses_page(request: Request):
 @app.get("/integrations", response_class=HTMLResponse)
 async def integrations_page(request: Request):
     return _render_page(request, "integrations", "Integrations", nav_key="integrations")
+
+
+@app.get("/observability", response_class=HTMLResponse)
+async def observability_page(request: Request):
+    return _render_page(request, "observability", "360 Monitoring", nav_key="observability")
 
 
 @app.get("/login", response_class=HTMLResponse)
