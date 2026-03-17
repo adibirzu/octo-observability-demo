@@ -5,7 +5,8 @@ from __future__ import annotations
 import asyncio
 
 from fastapi import APIRouter, Query, Request
-from sqlalchemy import func, select, text
+from sqlalchemy import Float, func, select, text
+from sqlalchemy.sql.expression import cast
 from sqlalchemy.orm import selectinload
 
 from server.database import Customer, Invoice, Order, SupportTicket, get_db
@@ -29,10 +30,19 @@ async def dashboard_summary(request: Request):
                 customer_count = int((await db.scalar(select(func.count(Customer.id)))) or 0)
 
             with tracer.start_as_current_span("db.query.order_stats"):
+                # Cast AVG to Float to prevent oracledb driver from failing
+                # on Decimal string parsing (KB: Oracle thin driver can't
+                # auto-cast high-precision NUMBER to Python int)
                 order_row = (
-                    await db.execute(select(func.count(Order.id), func.coalesce(func.sum(Order.total), 0), func.coalesce(func.avg(Order.total), 0)))
+                    await db.execute(select(
+                        func.count(Order.id),
+                        func.coalesce(cast(func.sum(Order.total), Float), 0),
+                        func.coalesce(cast(func.avg(Order.total), Float), 0),
+                    ))
                 ).one()
-                order_count, total_revenue, avg_order = order_row
+                order_count = int(order_row[0] or 0)
+                total_revenue = float(order_row[1] or 0)
+                avg_order = float(order_row[2] or 0)
 
             with tracer.start_as_current_span("db.query.ticket_stats"):
                 ticket_rows = (
@@ -43,7 +53,7 @@ async def dashboard_summary(request: Request):
             with tracer.start_as_current_span("db.query.invoice_stats"):
                 invoice_rows = (
                     await db.execute(
-                        select(Invoice.status, func.count(Invoice.id), func.coalesce(func.sum(Invoice.amount), 0)).group_by(Invoice.status)
+                        select(Invoice.status, func.count(Invoice.id), func.coalesce(cast(func.sum(Invoice.amount), Float), 0)).group_by(Invoice.status)
                     )
                 ).all()
                 invoice_stats = [
@@ -89,9 +99,9 @@ async def dashboard_summary(request: Request):
         return {
             "customers": {"total": customer_count},
             "orders": {
-                "total": int(order_count or 0),
-                "revenue": float(total_revenue or 0),
-                "average": float(avg_order or 0),
+                "total": order_count,
+                "revenue": total_revenue,
+                "average": round(avg_order, 2),
             },
             "tickets": ticket_stats,
             "invoices": invoice_stats,
