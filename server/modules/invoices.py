@@ -13,6 +13,7 @@ from sqlalchemy import text
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import log_security_event, push_log
+from server.observability import business_metrics
 from server.database import get_db
 
 router = APIRouter(prefix="/api/invoices", tags=["Invoices"])
@@ -99,6 +100,7 @@ async def pay_invoice(invoice_id: int, request: Request):
                     {"id": invoice_id}
                 )
 
+        business_metrics.record_invoice_paid(invoice_id)
         push_log("INFO", f"Invoice #{invoice_id} marked as paid", **{
             "invoices.id": invoice_id,
             "invoices.action": "payment",

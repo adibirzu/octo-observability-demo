@@ -14,6 +14,7 @@ from sqlalchemy import text
 from server.observability.otel_setup import get_tracer
 from server.observability.security_spans import security_span
 from server.observability.logging_sdk import log_security_event, push_log
+from server.observability import business_metrics
 from server.database import SupportTicket, get_db
 
 router = APIRouter(prefix="/api/tickets", tags=["Support Tickets"])
@@ -96,6 +97,7 @@ async def create_ticket(request: Request):
                 await db.flush()
                 ticket_id = ticket.id
 
+        business_metrics.record_ticket_created(priority=body.get("priority", "medium"))
         push_log("INFO", f"Ticket #{ticket_id} created: {body.get('subject', '')}",
                  **{"tickets.id": ticket_id, "tickets.priority": body.get("priority", "medium")})
         return {"status": "created", "ticket_id": ticket_id}
