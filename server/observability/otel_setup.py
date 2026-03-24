@@ -5,8 +5,15 @@ APM exporters, process metrics) to shared.observability_lib. Falls back to
 local implementation for standalone use.
 """
 
+from __future__ import annotations
+
 import logging
+from typing import TYPE_CHECKING
+
 from opentelemetry import trace
+
+if TYPE_CHECKING:
+    from opentelemetry.sdk.resources import Resource
 
 from server.config import cfg
 
