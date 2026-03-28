@@ -104,7 +104,15 @@ async def login(req: LoginRequest, request: Request, response: Response):
                 {"sid": session_id, "uid": user.id, "uname": user.username, "role": user.role},
             )
 
-            response.set_cookie("session_id", session_id, httponly=False, samesite="none", secure=True)
+            # Derive secure flag from the request scheme so the cookie works
+            # over plain HTTP (OKE LBs without TLS) as well as HTTPS.
+            is_https = request.url.scheme == "https" or request.headers.get("x-forwarded-proto") == "https"
+            response.set_cookie(
+                "session_id", session_id,
+                httponly=False,
+                samesite="none" if is_https else "lax",
+                secure=is_https,
+            )
 
             business_metrics.record_login_success(method="password", role=user.role or "user")
             push_log("INFO", f"User {req.username} logged in", **{
