@@ -451,7 +451,7 @@ async function refreshTopology() {
     updateHealthDot('health-atp', ready.database === 'connected' ? 'healthy' : 'unhealthy');
 
     const deps = data.dependencies || [];
-    const droneShop = deps.find(d => d.name === 'octo-drone-shop');
+    const droneShop = deps.find(d => d.name === 'drone-shop-portal') || deps.find(d => d.name === 'octo-drone-shop');
     const backends = deps.find(d => d.name === 'oci-demo-control-plane') || deps.find(d => d.name === 'oci-demo-backend');
     updateHealthDot('health-drone-shop', droneShop ? droneShop.status : 'unknown');
     updateHealthDot('health-backends', backends ? backends.status : 'unknown');

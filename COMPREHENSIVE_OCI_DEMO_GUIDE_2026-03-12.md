@@ -23,7 +23,7 @@
 ## 1. Ops Portal API Endpoints
 
 ### Core API Surface
-The Ops Portal (`http://ops.octodemo.cloud`) proxies to the Control Plane API (`https://92.5.59.227.sslip.io`) providing:
+The Control Plane (`https://cp.octodemo.cloud`) is the canonical operator surface for the demo. Any optional Ops Portal workflow proxies to the same Control Plane API and provides:
 
 #### Demo Event Control
 - **GET /api/demo-events/presets** — List available event trigger presets
@@ -79,7 +79,7 @@ The Ops Portal (`http://ops.octodemo.cloud`) proxies to the Control Plane API (`
 ## 2. Control Plane API Endpoints
 
 ### Overview
-Control Plane (`https://92.5.59.227.sslip.io`) is the authoritative API backing Ops Portal. Accessible via Bearer token auth (`Authorization: Bearer <token>`).
+Control Plane (`https://cp.octodemo.cloud`) is the authoritative API backing demo operations. Accessible via Bearer token auth (`Authorization: Bearer <token>`).
 
 ### 31 Router Modules
 The Control Plane API is organized into 31 specialized router modules:
@@ -290,12 +290,12 @@ All monitors share these common settings:
 | Application | Target URL | Monitor Name | Monitor ID Env Var |
 |---|---|---|---|
 | C22 Seven Kingdoms Portal | `http://portal.octodemo.cloud/` | C22-Seven-Kingdoms-Portal | C22_APM_MONITOR_OCID |
-| C27 Enterprise CRM | `http://crm.octodemo.cloud/` | C27-Enterprise-CRM-Portal | C27_APM_MONITOR_OCID |
-| C28 OCTO Drone Shop | `http://shop.octodemo.cloud/` | C28-OCTO-Drone-Shop | C28_APM_MONITOR_OCID |
-| C11 Control Plane | `https://92.5.59.227.sslip.io/api/health` | C11-Control-Plane | C11_APM_MONITOR_OCID |
+| C27 Enterprise CRM | `https://crm.octodemo.cloud/` | C27-Enterprise-CRM-Portal | C27_APM_MONITOR_OCID |
+| C28 OCTO Drone Shop | `https://shop.octodemo.cloud/` | C28-OCTO-Drone-Shop | C28_APM_MONITOR_OCID |
+| C11 Control Plane | `https://cp.octodemo.cloud/api/health` | C11-Control-Plane | C11_APM_MONITOR_OCID |
 | C12 GenAI Portal | `http://genai.octodemo.cloud/` | C12-GenAI-Portal | C12_APM_MONITOR_OCID |
 | C30 Apex Portal | `http://apex.octodemo.cloud/` | C30-Apex-Portal | C30_APM_MONITOR_OCID |
-| C31 Ops Portal | `http://ops.octodemo.cloud/` | C31-Ops-Portal | C31_APM_MONITOR_OCID |
+| C31 Ops Portal | `https://cp.octodemo.cloud/` | C31-Ops-Portal | C31_APM_MONITOR_OCID |
 
 ### Availability Alarms
 For each monitor, an alarm is automatically created:
@@ -710,7 +710,7 @@ Response: {
 #### Requirement 5: No RDP/SSH Requirement for Demo Team
 - **Status**: ✓ COMPLETE
 - **Evidence**:
-  - Ops Portal (web-based): `http://ops.octodemo.cloud`
+  - Control Plane (web-based): `https://cp.octodemo.cloud`
   - All controls: event trigger, app stop, stress start/stop, flow log toggle
   - Guacamole: `https://guacamole.octodemo.cloud:8443/guacamole/` (backup path, not primary flow)
 
@@ -733,7 +733,7 @@ Response: {
 ##### Runbook: Trigger Demo Event Sequence
 ```bash
 # 1. Login to Ops Portal
-open http://ops.octodemo.cloud
+open https://cp.octodemo.cloud
 
 # 2. Select Preset: "cpu_spike"
 # (Portal generates POST /api/demo-events/trigger {"preset": "cpu_spike"})
@@ -797,10 +797,10 @@ oci apm-synthetics monitor-results list \
 ```
 
 ### Known Limitations & Workarounds
-1. **cp.octodemo.cloud DNS Inconsistency**
-   - Issue: DNS sometimes resolves, sometimes fails
-   - Workaround: Use IP-based fallback `https://92.5.59.227.sslip.io`
-   - Status: Document both URLs in demo guide
+1. **cp.octodemo.cloud DNS Propagation Window**
+   - Issue: after a C11B LB refresh, some recursive resolvers can briefly cache the previous IP during TTL rollover
+   - Canonical public URL: `https://cp.octodemo.cloud`
+   - Status: C11B now triggers C0A DNS refresh automatically; do not document alternate public URLs
 
 2. **apex.octodemo.cloud & genai.octodemo.cloud Not Public**
    - Issue: These subdomains not resolving externally
