@@ -25,6 +25,15 @@ def _utcnow() -> datetime:
     return datetime.utcnow()
 
 
+def _coerce_float(value: Any, default: float = 0.0) -> float:
+    try:
+        if value in (None, ""):
+            return float(default)
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
 def external_orders_base_url() -> str:
     return cfg.external_orders_url or cfg.octo_drone_shop_url or cfg.mushop_cloudnative_url or cfg.octo_apm_cloudnative_url
 
@@ -82,18 +91,19 @@ async def sync_external_orders(correlation_id: str = "", limit: int = 200) -> di
                     continue
 
                 try:
-                    customer = await _resolve_customer(session, normalized)
-                    sync_action, order = await _upsert_order(session, customer, normalized, correlation_id)
-                    await _replace_order_items(session, order, normalized["items"], product_cache)
-                    await _record_audit(
-                        session,
-                        source_order_id=normalized["source_order_id"],
-                        action=sync_action,
-                        status="success",
-                        message=f"{sync_action} order from {cfg.orders_sync_source_name}",
-                        correlation_id=correlation_id,
-                        trace_id=trace_ctx["trace_id"],
-                    )
+                    async with session.begin_nested():
+                        customer = await _resolve_customer(session, normalized)
+                        sync_action, order = await _upsert_order(session, customer, normalized, correlation_id)
+                        await _replace_order_items(session, order, normalized["items"], product_cache)
+                        await _record_audit(
+                            session,
+                            source_order_id=normalized["source_order_id"],
+                            action=sync_action,
+                            status="success",
+                            message=f"{sync_action} order from {cfg.orders_sync_source_name}",
+                            correlation_id=correlation_id,
+                            trace_id=trace_ctx["trace_id"],
+                        )
                     sync_result[sync_action] += 1
                     sync_result["orders"].append(
                         {
@@ -216,7 +226,7 @@ def _normalize_external_order(raw_order: dict[str, Any]) -> dict[str, Any]:
     computed_total = 0.0
     for item in items:
         quantity = int(item.get("quantity") or item.get("qty") or 1)
-        unit_price = float(item.get("unit_price") or item.get("price") or 0.0)
+        unit_price = _coerce_float(item.get("unit_price") or item.get("price") or 0.0)
         computed_total += quantity * unit_price
         normalized_items.append(
             {
@@ -227,12 +237,34 @@ def _normalize_external_order(raw_order: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
-    declared_total = float(raw_order.get("total") or raw_order.get("amount") or computed_total or 0.0)
-    if normalized_items and abs(declared_total - computed_total) > 0.01:
+    discount = _coerce_float(
+        raw_order.get("discount")
+        or raw_order.get("discount_amount")
+        or (raw_order.get("coupon") or {}).get("discount")
+        or 0.0
+    )
+    shipping_cost = float(raw_order.get("shipping_cost") or 0.0)
+    if shipping_cost <= 0.0:
+        shipping_cost = _coerce_float(
+            raw_order.get("shipping_amount")
+            or (raw_order.get("shipment") or {}).get("shipping_cost")
+            or 0.0
+        )
+    expected_total = round(max(computed_total - discount, 0.0) + shipping_cost, 2)
+    declared_total = _coerce_float(raw_order.get("total") or raw_order.get("amount") or expected_total or 0.0)
+    if normalized_items and declared_total > expected_total + 0.01:
         with security_span(
             "mass_assignment",
             severity="high",
-            payload=json.dumps({"declared_total": declared_total, "computed_total": computed_total})[:512],
+            payload=json.dumps(
+                {
+                    "declared_total": declared_total,
+                    "computed_total": computed_total,
+                    "discount": discount,
+                    "shipping_cost": shipping_cost,
+                    "expected_total": expected_total,
+                }
+            )[:512],
         ):
             log_security_event(
                 "mass_assignment",
@@ -302,22 +334,33 @@ async def _upsert_order(session, customer: Customer, normalized: dict[str, Any],
             source_system=cfg.orders_sync_source_name,
             source_order_id=normalized["source_order_id"],
             created_at=normalized["created_at"],
+            customer_id=customer.id,
+            total=normalized["total"],
+            status=normalized["status"],
+            notes=normalized["notes"],
+            shipping_address=normalized["shipping_address"],
+            source_customer_email=normalized["customer_email"],
+            sync_status="synced",
+            backlog_status=normalized["backlog_status"],
+            sync_error="",
+            source_payload=json.dumps(normalized["payload"], default=str),
+            last_synced_at=normalized["last_synced_at"],
+            correlation_id=correlation_id,
         )
         session.add(order)
-        await session.flush()
-
-    order.customer_id = customer.id
-    order.total = normalized["total"]
-    order.status = normalized["status"]
-    order.notes = normalized["notes"]
-    order.shipping_address = normalized["shipping_address"]
-    order.source_customer_email = normalized["customer_email"]
-    order.sync_status = "synced"
-    order.backlog_status = normalized["backlog_status"]
-    order.sync_error = ""
-    order.source_payload = json.dumps(normalized["payload"], default=str)
-    order.last_synced_at = normalized["last_synced_at"]
-    order.correlation_id = correlation_id
+    else:
+        order.customer_id = customer.id
+        order.total = normalized["total"]
+        order.status = normalized["status"]
+        order.notes = normalized["notes"]
+        order.shipping_address = normalized["shipping_address"]
+        order.source_customer_email = normalized["customer_email"]
+        order.sync_status = "synced"
+        order.backlog_status = normalized["backlog_status"]
+        order.sync_error = ""
+        order.source_payload = json.dumps(normalized["payload"], default=str)
+        order.last_synced_at = normalized["last_synced_at"]
+        order.correlation_id = correlation_id
     await session.flush()
     return action, order
 

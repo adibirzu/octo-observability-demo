@@ -148,10 +148,11 @@ Set `OCI_LOG_ID` and `OCI_LOG_GROUP_ID`.
 All security events and app logs are pushed to OCI Logging.
 
 ### OCI-DEMO topology
-Set `MUSHOP_CLOUDNATIVE_URL`, `OCI_DEMO_CONTROL_PLANE_URL`, `OCI_DEMO_BACKEND_URL`,
+Set `OCTO_DRONE_SHOP_URL`, `OCI_DEMO_CONTROL_PLANE_URL`, `OCI_DEMO_BACKEND_URL`,
 `ATP_OCID`, `ATP_CONNECTION_NAME`, `APM_CONSOLE_URL`, `OPSI_CONSOLE_URL`,
 `DB_MANAGEMENT_CONSOLE_URL`, and `LOG_ANALYTICS_CONSOLE_URL` to expose cross-product
-drilldowns and health checks in the UI.
+drilldowns and health checks in the UI. `MUSHOP_CLOUDNATIVE_URL` remains accepted as a
+legacy compatibility alias but should not be used in new deployments.
 
 ### Splunk HEC
 Set `SPLUNK_HEC_URL` and `SPLUNK_HEC_TOKEN`.

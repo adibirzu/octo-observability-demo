@@ -66,7 +66,7 @@
       "name": "CRM-360: Drone Shop Integration Health",
       "description": "Integration calls to Drone Shop portal with latency and error tracking",
       "category": "Integration",
-      "query": "'Log Source' = 'enterprise-crm-portal' and 'integration.target_service' = 'mushop-cloudnative' or 'integration.target_service' = 'drone-shop-portal' | stats count as Calls by 'integration.type' | sort -Calls",
+      "query": "'Log Source' = 'enterprise-crm-portal' and ('integration.target_service' = 'drone-shop-portal' or 'integration.target_service' = 'octo-drone-shop') | stats count as Calls by 'integration.type' | sort -Calls",
       "visualization": "bar",
       "fields": ["integration.target_service", "integration.type", "integration.error", "correlation.id", "trace_id"]
     },

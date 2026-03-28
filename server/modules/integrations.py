@@ -33,10 +33,10 @@ def _service_name_from_url(url: str) -> str:
     return host.split(":")[0]
 
 
-def _dns_url(subdomain: str) -> str:
-    """Return https://<subdomain>.<domain> if DNS_DOMAIN is set, else empty."""
+def _dns_url(subdomain: str, scheme: str = "https") -> str:
+    """Return <scheme>://<subdomain>.<domain> if DNS_DOMAIN is set, else empty."""
     if cfg.dns_domain:
-        return f"https://{subdomain}.{cfg.dns_domain}"
+        return f"{scheme}://{subdomain}.{cfg.dns_domain}"
     return ""
 
 
@@ -46,7 +46,7 @@ def _configured_dependencies() -> list[dict]:
             "name": "drone-shop-portal",
             "display_name": "Drone Shop Portal",
             "type": "application",
-            "url": _dns_url("shop") or cfg.octo_drone_shop_url or cfg.mushop_cloudnative_url or cfg.octo_apm_cloudnative_url,
+            "url": cfg.octo_drone_shop_url or cfg.mushop_cloudnative_url or cfg.octo_apm_cloudnative_url or _dns_url("shop"),
             "health_paths": ["/health", "/ready"],
             "drilldown_product": "APM",
         },
@@ -54,7 +54,7 @@ def _configured_dependencies() -> list[dict]:
             "name": "seven-kingdoms-portal",
             "display_name": "Seven Kingdoms Portal",
             "type": "application",
-            "url": _dns_url("portal") or cfg.c22_skp_url,
+            "url": cfg.c22_skp_url or _dns_url("portal", scheme="http"),
             "health_paths": ["/health", "/ready"],
             "drilldown_product": "APM / Log Analytics",
         },
@@ -63,6 +63,7 @@ def _configured_dependencies() -> list[dict]:
             "display_name": "OCI-DEMO Control Plane",
             "type": "backend",
             "url": _dns_url("cp") or cfg.oci_demo_control_plane_url,
+            "probe_url": cfg.oci_demo_backend_url or cfg.oci_demo_control_plane_url or _dns_url("cp"),
             "health_paths": ["/health", "/api/health", "/ready"],
             "drilldown_product": "APM",
         },
@@ -71,6 +72,7 @@ def _configured_dependencies() -> list[dict]:
             "display_name": "OCI-DEMO Backends",
             "type": "backend",
             "url": cfg.oci_demo_backend_url or _dns_url("cp"),
+            "probe_url": cfg.oci_demo_backend_url or cfg.oci_demo_control_plane_url or _dns_url("cp"),
             "health_paths": ["/health", "/api/health", "/ready"],
             "drilldown_product": "Log Analytics",
         },
@@ -107,7 +109,8 @@ async def _dependency_health(dep: dict, correlation_id: str) -> dict:
         }
 
     url = dep.get("url") or ""
-    configured = bool(url)
+    probe_url = dep.get("probe_url") or url
+    configured = bool(url or probe_url)
     result = {**dep, "configured": configured}
     if not configured:
         result["status"] = "not_configured"
@@ -121,12 +124,12 @@ async def _dependency_health(dep: dict, correlation_id: str) -> dict:
         try:
             async with httpx.AsyncClient(timeout=5.0, headers=outbound_headers(correlation_id)) as client:
                 for path in dep.get("health_paths", ["/health"]):
-                    probe_url = f"{url.rstrip('/')}{path}"
-                    response = await client.get(probe_url)
+                    health_url = f"{probe_url.rstrip('/')}{path}"
+                    response = await client.get(health_url)
                     if response.status_code < 500:
                         span.set_attribute("integration.status_code", response.status_code)
                         result["status"] = "healthy" if response.status_code < 400 else "degraded"
-                        result["health_url"] = probe_url
+                        result["health_url"] = health_url
                         result["status_code"] = response.status_code
                         return result
             result["status"] = "unhealthy"
@@ -189,17 +192,18 @@ def _order_source_url() -> str:
     return external_orders_base_url()
 
 
+@router.get("/drone-shop/product-catalog", response_model=None)
 @router.get("/mushop/product-catalog", response_model=None)
 async def mushop_product_catalog(category: str = "", request: Request = None):
-    """Fetch MuShop catalog with propagated trace context."""
+    """Fetch Drone Shop catalog with propagated trace context."""
     tracer = get_tracer()
     mushop = _mushop_url()
     correlation_id = build_correlation_id(getattr(getattr(request, "state", None), "correlation_id", ""))
     if not mushop:
-        return {"error": "MuShop not configured", "products": []}
+        return {"error": "Drone Shop not configured", "products": []}
 
-    with tracer.start_as_current_span("integration.mushop.product_catalog") as span:
-        span.set_attribute("integration.target_service", "mushop-cloudnative")
+    with tracer.start_as_current_span("integration.drone_shop.product_catalog") as span:
+        span.set_attribute("integration.target_service", "drone-shop-portal")
         span.set_attribute("integration.category", category)
         span.set_attribute("integration.mushop_url", mushop)
         set_peer_service(span, "drone-shop-portal", mushop)
@@ -210,35 +214,36 @@ async def mushop_product_catalog(category: str = "", request: Request = None):
             span.set_attribute("integration.mushop.status_code", resp.status_code)
             if resp.status_code == 200:
                 data = resp.json()
-                push_log("INFO", "MuShop product catalog fetched", **{
+                push_log("INFO", "Drone Shop product catalog fetched", **{
                     "integration.type": "product_catalog",
-                    "integration.target_service": "mushop-cloudnative",
+                    "integration.target_service": "drone-shop-portal",
                     "integration.product_count": len(data.get("products", [])),
                     "correlation.id": correlation_id,
                 })
                 return {
                     "products": data.get("products", []),
-                    "source": "mushop-cloudnative",
+                    "source": "drone-shop-portal",
                     "category": category,
                     "correlation_id": correlation_id,
                 }
-            return {"products": [], "reason": f"MuShop returned {resp.status_code}", "correlation_id": correlation_id}
+            return {"products": [], "reason": f"Drone Shop returned {resp.status_code}", "correlation_id": correlation_id}
         except Exception as exc:
             span.set_attribute("integration.error", str(exc))
             return {"products": [], "reason": str(exc), "correlation_id": correlation_id}
 
 
+@router.get("/drone-shop/order-history", response_model=None)
 @router.get("/mushop/order-history", response_model=None)
 async def mushop_order_history(customer_email: str = "", request: Request = None):
-    """Fetch MuShop orders for a CRM customer."""
+    """Fetch Drone Shop orders for a CRM customer."""
     tracer = get_tracer()
     mushop = _order_source_url()
     correlation_id = build_correlation_id(getattr(getattr(request, "state", None), "correlation_id", ""))
     if not mushop:
-        return {"error": "MuShop not configured"}
+        return {"error": "Drone Shop not configured"}
 
-    with tracer.start_as_current_span("integration.mushop.order_history") as span:
-        span.set_attribute("integration.target_service", "mushop-cloudnative")
+    with tracer.start_as_current_span("integration.drone_shop.order_history") as span:
+        span.set_attribute("integration.target_service", "drone-shop-portal")
         span.set_attribute("integration.customer_email", customer_email)
         set_peer_service(span, "drone-shop-portal", mushop)
         try:
@@ -251,27 +256,28 @@ async def mushop_order_history(customer_email: str = "", request: Request = None
                     orders = [order for order in orders if order.get("customer_email") == customer_email]
                 return {
                     "orders": orders,
-                    "source": "mushop-cloudnative",
+                    "source": "drone-shop-portal",
                     "customer_email": customer_email,
                     "correlation_id": correlation_id,
                 }
-            return {"orders": [], "reason": f"MuShop returned {response.status_code}", "correlation_id": correlation_id}
+            return {"orders": [], "reason": f"Drone Shop returned {response.status_code}", "correlation_id": correlation_id}
         except Exception as exc:
             span.set_attribute("integration.error", str(exc))
             return {"orders": [], "reason": str(exc), "correlation_id": correlation_id}
 
 
+@router.post("/drone-shop/recommend-products")
 @router.post("/mushop/recommend-products")
 async def mushop_recommend_products(payload: dict, request: Request):
-    """Recommend MuShop products based on CRM context."""
+    """Recommend Drone Shop products based on CRM context."""
     tracer = get_tracer()
     mushop = _mushop_url()
     correlation_id = build_correlation_id(getattr(getattr(request, "state", None), "correlation_id", ""))
     if not mushop:
-        return {"error": "MuShop not configured"}
+        return {"error": "Drone Shop not configured"}
 
-    with tracer.start_as_current_span("integration.mushop.recommend_products") as span:
-        span.set_attribute("integration.target_service", "mushop-cloudnative")
+    with tracer.start_as_current_span("integration.drone_shop.recommend_products") as span:
+        span.set_attribute("integration.target_service", "drone-shop-portal")
         ticket_id = payload.get("ticket_id")
         customer_id = payload.get("customer_id")
         span.set_attribute("integration.ticket_id", ticket_id or 0)
@@ -282,9 +288,9 @@ async def mushop_recommend_products(payload: dict, request: Request):
             span.set_attribute("integration.mushop.status_code", response.status_code)
             if response.status_code == 200:
                 data = response.json()
-                push_log("INFO", "MuShop product recommendations fetched", **{
+                push_log("INFO", "Drone Shop product recommendations fetched", **{
                     "integration.type": "recommend_products",
-                    "integration.target_service": "mushop-cloudnative",
+                    "integration.target_service": "drone-shop-portal",
                     "integration.product_count": len(data.get("products", [])),
                     "integration.ticket_id": ticket_id,
                     "integration.customer_id": customer_id,
@@ -292,19 +298,20 @@ async def mushop_recommend_products(payload: dict, request: Request):
                 })
                 return {
                     "recommendations": data.get("products", []),
-                    "source": "mushop-cloudnative",
+                    "source": "drone-shop-portal",
                     "context": {"ticket_id": ticket_id, "customer_id": customer_id},
                     "correlation_id": correlation_id,
                 }
-            return {"recommendations": [], "reason": f"MuShop returned {response.status_code}", "correlation_id": correlation_id}
+            return {"recommendations": [], "reason": f"Drone Shop returned {response.status_code}", "correlation_id": correlation_id}
         except Exception as exc:
             span.set_attribute("integration.error", str(exc))
             return {"recommendations": [], "reason": str(exc), "correlation_id": correlation_id}
 
 
+@router.get("/drone-shop/health", response_model=None)
 @router.get("/mushop/health", response_model=None)
 async def mushop_health(request: Request = None):
-    """Check MuShop service health with current correlation context."""
+    """Check Drone Shop service health with current correlation context."""
     correlation_id = build_correlation_id(getattr(getattr(request, "state", None), "correlation_id", ""))
     status = await _dependency_health(_configured_dependencies()[0], correlation_id)
     status["correlation_id"] = correlation_id
