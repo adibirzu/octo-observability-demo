@@ -54,4 +54,25 @@ class ChaosMiddleware(BaseHTTPMiddleware):
                 span.set_attribute("chaos.delay_seconds", round(delay, 2))
                 await asyncio.sleep(delay)
 
+        # Error rate injection (configurable via /api/simulate/configure)
+        # Skip simulation endpoints so the reset/configure APIs themselves still work.
+        from server.modules.simulation import get_sim_state
+        sim = get_sim_state()
+        error_rate = sim.get("error_rate", 0.0)
+        if error_rate > 0 and not request.url.path.startswith("/api/simulate"):
+            if random.random() < error_rate:
+                with tracer.start_as_current_span("chaos.error_rate") as span:
+                    span.set_attribute("chaos.type", "error_rate")
+                    span.set_attribute("chaos.error_rate", error_rate)
+                    span.set_attribute("otel.status_code", "ERROR")
+                    push_log("ERROR", "Chaos: simulated error (error_rate injection)", **{
+                        "chaos.type": "error_rate",
+                        "chaos.error_rate": error_rate,
+                        "http.url.path": request.url.path,
+                    })
+                    return JSONResponse(
+                        {"error": "Chaos: simulated error burst", "chaos": True},
+                        status_code=500,
+                    )
+
         return await call_next(request)
