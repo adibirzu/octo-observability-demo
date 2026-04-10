@@ -23,14 +23,21 @@ def _env_int(key: str, default: int = 0) -> int:
 
 
 def _auto_redirect_uri() -> str:
-    """Derive SSO callback URI from DNS_DOMAIN or CRM_BASE_URL."""
-    dns = os.getenv("DNS_DOMAIN", "")
-    if dns:
-        return f"https://crm.{dns}/api/auth/sso/callback"
+    """Derive SSO callback URI from DNS_DOMAIN or CRM_BASE_URL.
+
+    Returns empty string if neither is set — this makes `idcs_configured`
+    evaluate to False, which disables the SSO button in the login page.
+    We intentionally do NOT fall back to localhost because a misconfigured
+    redirect URI would cause SSO to silently fail after IDCS auth (the
+    callback would redirect to the wrong origin).
+    """
     base = os.getenv("CRM_BASE_URL", "")
     if base:
         return f"{base.rstrip('/')}/api/auth/sso/callback"
-    return "http://localhost:8080/api/auth/sso/callback"
+    dns = os.getenv("DNS_DOMAIN", "")
+    if dns:
+        return f"https://crm.{dns}/api/auth/sso/callback"
+    return ""
 
 
 @dataclass(frozen=True)
@@ -67,7 +74,7 @@ class Config:
     oracle_password: str = field(default_factory=lambda: _env("ORACLE_PASSWORD"))
     oracle_wallet_dir: str = field(default_factory=lambda: _env("ORACLE_WALLET_DIR"))
     oracle_wallet_password: str = field(default_factory=lambda: _env("ORACLE_WALLET_PASSWORD"))
-    atp_ocid: str = field(default_factory=lambda: _env("ATP_OCID", _env("C28_ATP_OCID")))
+    atp_ocid: str = field(default_factory=lambda: _env("ATP_OCID"))
     database_observability_enabled: bool = field(default_factory=lambda: _env_bool("DATABASE_OBSERVABILITY_ENABLED", True))
 
     # OCI APM
@@ -92,17 +99,23 @@ class Config:
     splunk_hec_token: str = field(default_factory=lambda: _env("SPLUNK_HEC_TOKEN"))
 
     # Cross-service integration
-    mushop_cloudnative_url: str = field(default_factory=lambda: _env("MUSHOP_CLOUDNATIVE_URL", _env("C28_MUSHOP_URL")))
-    octo_apm_cloudnative_url: str = field(default_factory=lambda: _env("OCTO_APM_CLOUDNATIVE_URL", _env("C28_MUSHOP_URL")))
-    octo_drone_shop_url: str = field(default_factory=lambda: _env("OCTO_DRONE_SHOP_URL", _env("MUSHOP_CLOUDNATIVE_URL", _env("C28_MUSHOP_URL"))))
+    # When running inside OCI-DEMO, the deploy script (c27_deploy_enterprise_crm.sh)
+    # resolves C28_*/C22_* env vars to concrete URLs and injects them as the
+    # primary env vars below. The app itself has NO knowledge of OCI-DEMO
+    # component numbers — it only reads the generic env var names.
+    # When running standalone, set OCTO_DRONE_SHOP_URL directly (or leave empty
+    # to disable the integration).
+    mushop_cloudnative_url: str = field(default_factory=lambda: _env("MUSHOP_CLOUDNATIVE_URL"))
+    octo_apm_cloudnative_url: str = field(default_factory=lambda: _env("OCTO_APM_CLOUDNATIVE_URL"))
+    octo_drone_shop_url: str = field(default_factory=lambda: _env("OCTO_DRONE_SHOP_URL", _env("MUSHOP_CLOUDNATIVE_URL")))
     oci_demo_control_plane_url: str = field(default_factory=lambda: _env("OCI_DEMO_CONTROL_PLANE_URL"))
     oci_demo_backend_url: str = field(default_factory=lambda: _env("OCI_DEMO_BACKEND_URL"))
     opsi_console_url: str = field(default_factory=lambda: _env("OPSI_CONSOLE_URL"))
     db_management_console_url: str = field(default_factory=lambda: _env("DB_MANAGEMENT_CONSOLE_URL"))
     log_analytics_console_url: str = field(default_factory=lambda: _env("LOG_ANALYTICS_CONSOLE_URL"))
     apm_console_url: str = field(default_factory=lambda: _env("APM_CONSOLE_URL"))
-    c22_skp_url: str = field(default_factory=lambda: _env("C22_SKP_URL", _env("C22_URL")))
-    external_orders_url: str = field(default_factory=lambda: _env("EXTERNAL_ORDERS_URL", _env("OCTO_DRONE_SHOP_URL", _env("MUSHOP_CLOUDNATIVE_URL", _env("C28_MUSHOP_URL")))))
+    c22_skp_url: str = field(default_factory=lambda: _env("C22_SKP_URL"))
+    external_orders_url: str = field(default_factory=lambda: _env("EXTERNAL_ORDERS_URL", _env("OCTO_DRONE_SHOP_URL")))
     external_orders_path: str = field(default_factory=lambda: _env("EXTERNAL_ORDERS_PATH", "/api/orders"))
     orders_sync_enabled: bool = field(default_factory=lambda: _env_bool("ORDERS_SYNC_ENABLED", True))
     orders_sync_interval_seconds: int = field(default_factory=lambda: _env_int("ORDERS_SYNC_INTERVAL_SECONDS", 300))
