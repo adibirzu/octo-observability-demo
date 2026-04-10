@@ -26,6 +26,19 @@ from server.order_sync import sync_external_orders, external_orders_base_url
 
 logger = logging.getLogger(__name__)
 
+
+async def _safe_json(request: Request) -> dict:
+    """Parse request body as JSON, returning {} on empty/malformed bodies."""
+    if not request.headers.get("content-type", "").startswith("application/json"):
+        return {}
+    try:
+        body = await request.body()
+        if not body or body.strip() == b"":
+            return {}
+        return await request.json()
+    except Exception:
+        return {}
+
 router = APIRouter(prefix="/api/simulate", tags=["Issue Simulation"])
 tracer_fn = get_tracer
 
@@ -95,7 +108,7 @@ async def reset_simulation(request: Request):
 async def trigger_db_latency(request: Request):
     """Manually trigger a DB latency spike (one-shot)."""
     tracer = tracer_fn()
-    body = await request.json()
+    body = await _safe_json(request)
     delay = min(body.get("delay_seconds", 3.0), 30.0)
 
     with tracer.start_as_current_span("simulation.db_latency") as span:
@@ -127,7 +140,7 @@ async def trigger_db_disconnect(request: Request):
 async def trigger_error_burst(request: Request):
     """Generate a burst of errors for log/APM testing."""
     tracer = tracer_fn()
-    body = await request.json()
+    body = await _safe_json(request)
     count = min(body.get("count", 10), 100)
 
     with tracer.start_as_current_span("simulation.error_burst") as span:
@@ -148,14 +161,17 @@ async def trigger_error_burst(request: Request):
 async def trigger_slow_query(request: Request):
     """One-shot slow query: executes a real DB call with artificial delay."""
     tracer = tracer_fn()
-    body = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    body = await _safe_json(request)
     delay = min(body.get("delay_seconds", 2.0), 10.0)
 
     with tracer.start_as_current_span("simulation.slow_query") as span:
         span.set_attribute("simulation.delay_seconds", delay)
+        # Use Python-side sleep + a real DB round-trip instead of DBMS_LOCK.SLEEP
+        # which requires EXECUTE privilege not available on Oracle ATP by default.
+        await asyncio.sleep(delay)
         async with async_session_factory() as session:
             await session.execute(
-                text(f"SELECT /*+ simulation.slow_query */ 1 FROM DUAL WHERE 1 = SYS.DBMS_LOCK.SLEEP({delay})")
+                text("SELECT /*+ simulation.slow_query */ COUNT(*) FROM orders")
             )
         push_log("WARNING", f"Simulated slow query: {delay}s")
         return {"status": "completed", "type": "slow_query", "delay": delay}
@@ -165,7 +181,7 @@ async def trigger_slow_query(request: Request):
 async def trigger_n_plus_one(request: Request):
     """Simulate an N+1 query problem by executing N individual SELECTs."""
     tracer = tracer_fn()
-    body = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    body = await _safe_json(request)
     n = min(body.get("count", 50), 200)
 
     with tracer.start_as_current_span("simulation.n_plus_one") as span:
@@ -260,7 +276,7 @@ async def _random_product() -> tuple[int, float] | None:
 async def generate_orders(request: Request):
     """Generate random orders for demo/stress testing."""
     tracer = tracer_fn()
-    body = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    body = await _safe_json(request)
     count = max(1, min(body.get("count", 5), 50))
     customer_id = body.get("customer_id")
     product_id = body.get("product_id")
@@ -336,7 +352,7 @@ async def generate_orders(request: Request):
 async def generate_backlog(request: Request):
     """Generate orders stuck in backlog state."""
     tracer = tracer_fn()
-    body = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    body = await _safe_json(request)
     count = max(1, min(body.get("count", 5), 20))
 
     with tracer.start_as_current_span("simulation.generate_backlog") as span:
@@ -392,7 +408,7 @@ async def generate_backlog(request: Request):
 async def high_value_order(request: Request):
     """Generate a suspiciously high-value order to trigger anomaly detection."""
     tracer = tracer_fn()
-    body = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    body = await _safe_json(request)
 
     with tracer.start_as_current_span("simulation.high_value_order") as span:
         cid = body.get("customer_id") or await _random_customer_id()
