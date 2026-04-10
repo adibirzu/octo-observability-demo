@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: shop.<DNS_DOMAIN>
+    - host: "${SHOP_HOST}"
       http:
         paths:
           - path: /workflow(/|$)(.*)
@@ -23,5 +23,5 @@ spec:
                   number: 8090
   tls:
     - hosts:
-        - shop.<DNS_DOMAIN>
-      secretName: octodemo-tls
+        - "${SHOP_HOST}"
+      secretName: "${TLS_SECRET_NAME}"
