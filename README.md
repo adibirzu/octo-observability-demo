@@ -1,216 +1,192 @@
 # Enterprise CRM Portal
 
-A deliberately vulnerable CRM/ERP application designed for security testing and full-stack observability demonstrations. Part of the OCI-DEMO project.
+Cloud-native CRM application built for **OCI Observability** demonstration. Showcases APM, Stack Monitoring, Logging, Log Analytics, Operations Insights, and DB Management integration as modular add-ons.
+
+**OCI-DEMO Component: C27** — Enterprise CRM Portal (OKE)
 
 ## Architecture
 
 ```
-                                    +------------------+
-                                    |  OCI Load        |
-    Users ──────────────────────────│  Balancer        │
-                                    +--------+---------+
-                                             |
-                                    +--------v---------+
-                                    |  FastAPI App      |
-                                    |  (Port 8080)      |
-                                    |                   |
-                                    |  - 10+ CRM pages  |
-                                    |  - REST APIs      |
-                                    |  - OTel spans     |
-                                    |  - RUM injection  |
-                                    +--------+---------+
-                                             |
-                                    +--------v---------+
-                                    |  ATP / DB Backend |
-                                    |  (OCI-DEMO)       |
-                                    +-------------------+
+                                +------------------+
+    Users ──────────────────────│  OCI Load        │
+                                │  Balancer        │
+                                +--------+---------+
+                                         |
+                                +--------v---------+
+                                |  FastAPI App      |
+                                |  (Port 8080)      |
+                                |                   |
+                                |  - 12 CRM modules |
+                                |  - 73 API routes  |
+                                |  - 8+ spans/req   |
+                                |  - RUM injection  |
+                                +--------+---------+
+                                         |
+                                +--------v---------+
+                                |  Oracle ATP       |
+                                |  (shared w/ Shop) |
+                                +-------------------+
 
-    Telemetry outputs:
-    ├── OCI APM (OTel OTLP) ──── Traces (8+ spans/request)
-    ├── OCI APM RUM ──────────── Browser performance
-    ├── OCI Logging SDK ──────── Structured logs
-    ├── Splunk HEC ───────────── Security events
-    └── stdout (JSON) ────────── Container logs
+    OCI Observability (modular add-ons):
+    ├── OCI APM ──────────── Traces, Topology, Trace Explorer
+    ├── OCI APM RUM ──────── Real User Monitoring
+    ├── OCI Logging ──────── Structured logs → Log Analytics
+    ├── OCI Monitoring ───── Custom metrics + Alarms
+    ├── Stack Monitoring ─── Application topology + health
+    ├── DB Management ────── Performance Hub, SQL Monitor
+    ├── Ops Insights ─────── SQL Warehouse, capacity planning
+    └── Prometheus ────────── /metrics endpoint (always on)
 ```
 
-## Pages (10+)
+## OCI Observability Add-Ons
 
-| # | Page | Route | Module | OWASP Vulnerabilities |
-|---|------|-------|--------|----------------------|
-| 1 | Dashboard | `/` | dashboard | N+1 queries, slow query simulation |
-| 2 | Customers | `/customers` | customers | SQLi, Stored XSS, IDOR |
-| 3 | Orders | `/orders` | orders | Price manipulation, IDOR, business logic bypass |
-| 4 | Products | `/products` | products | SQLi, verbose errors, no validation |
-| 5 | Invoices | `/invoices` | invoices | CSRF, SSTI, sensitive data exposure |
-| 6 | Support Tickets | `/tickets` | tickets | Reflected XSS, log injection, open redirect |
-| 7 | Reports | `/reports` | reports | Arbitrary SQL, command injection, insecure deserialization |
-| 8 | File Manager | `/files` | files | Path traversal, XXE, SSRF, unrestricted upload |
-| 9 | Admin Panel | `/admin` | admin | No auth, privilege escalation, config exposure |
-| 10 | Settings | `/settings` | simulation | Chaos engineering controls |
-| 11 | Login | `/login` | auth | Brute force, mass assignment, weak hashing, session fixation |
-| 12 | API Keys | — | api_keys | Weak key generation, timing attack, key enumeration |
+Each observability service is **independently activatable** — deploy the app first, enable observability later. No code changes required.
 
-## OWASP Top 10 (2021) Coverage
+| Add-On | Env Vars to Set | What You Get |
+|--------|----------------|--------------|
+| **APM (Traces)** | `OCI_APM_ENDPOINT`, `OCI_APM_PRIVATE_DATAKEY` | 8+ spans/request, distributed traces, topology |
+| **APM (RUM)** | `OCI_APM_RUM_ENDPOINT`, `OCI_APM_RUM_PUBLIC_DATAKEY` | Browser performance, session explorer |
+| **Logging** | `OCI_LOG_ID`, `OCI_LOG_GROUP_ID` | Structured JSON logs with trace correlation |
+| **Log Analytics** | Enable via OCI Console on log group | Search by `oracleApmTraceId`, saved searches |
+| **Stack Monitoring** | Enable via OCI Console | Application topology, health dashboard |
+| **DB Management** | `ensure_db_observability.sh` | Performance Hub, SQL Monitor, AWR |
+| **Ops Insights** | `ensure_db_observability.sh` | SQL Warehouse, capacity planning |
+| **Monitoring** | `OCI_COMPARTMENT_ID` | Custom metrics, alarms, health checks |
+| **Prometheus** | Always enabled | `/metrics` endpoint for Grafana |
+| **Splunk HEC** | `SPLUNK_HEC_URL`, `SPLUNK_HEC_TOKEN` | External SIEM forwarding |
 
-| OWASP | Category | Implemented In |
-|-------|----------|---------------|
-| A01 | Broken Access Control | customers, orders, invoices, admin, files |
-| A02 | Cryptographic Failures | auth, invoices, api_keys |
-| A03 | Injection (SQLi, XSS, XXE) | customers, products, tickets, reports, files |
-| A04 | Insecure Design | orders, invoices, files |
-| A05 | Security Misconfiguration | products, admin |
-| A07 | Identification & Auth Failures | auth, api_keys |
-| A08 | Software & Data Integrity | reports (deserialization) |
-| A09 | Logging & Monitoring Failures | tickets (log injection) |
-| A10 | SSRF | files |
+### Minimal Deploy (No Observability)
 
-## Trace Depth (8+ Spans)
+```bash
+# Works with just database — all observability is optional
+export ORACLE_DSN="myatp_low"
+export ORACLE_PASSWORD="<password>"
+docker compose up -d
+```
 
-Each request generates 8+ spans:
-1. `middleware.entry` — IP, user-agent, URL
-2. `auth.check` — session/token validation
-3. `request.validate` — content type/length
-4. `{module}.{action}` — route handler (auto-instrumented)
-5. `db.query.*` — SQLAlchemy auto-instrumented
-6. `ATTACK:{TYPE}` — security span (if attack detected)
-7. `response.finalize` — status code, duration
-8. `health.readiness` — dependency checks
+### Full Observability Deploy
 
-Dashboard summary generates 10+ spans (6 DB queries + middleware).
+```bash
+# Add observability progressively
+export OCI_APM_ENDPOINT="https://<apm-endpoint>"
+export OCI_APM_PRIVATE_DATAKEY="<key>"
+export OCI_LOG_ID="ocid1.log...."
+export OCI_COMPARTMENT_ID="ocid1.compartment...."
+# Restart — observability activates automatically
+```
+
+## CRM Modules (12)
+
+| Module | Prefix | Routes | Functionality |
+|--------|--------|--------|---------------|
+| `auth` | `/api/auth` | 7 | Login, register, session, SSO (IDCS OIDC + PKCE) |
+| `customers` | `/api/customers` | 4 | Customer CRUD with search and filter |
+| `orders` | `/api/orders` | 6 | Order management, backlog tracking, external sync |
+| `products` | `/api/products` | 3 | Product catalog management |
+| `invoices` | `/api/invoices` | 4 | Invoicing, PDF generation, payment |
+| `tickets` | `/api/tickets` | 4 | Support ticket management |
+| `reports` | `/api/reports` | 3 | Custom report builder |
+| `files` | `/api/files` | 5 | File upload/download management |
+| `admin` | `/api/admin` | 6 | User management, audit logs, config |
+| `campaigns` | `/api/campaigns` | 6 | Campaign + lead management |
+| `shipping` | `/api/shipping` | 6 | Shipment tracking, warehouse management |
+| `analytics` | `/api/analytics` | 6 | Overview, geo, funnel, revenue |
+| `simulation` | `/api/simulate` | 15+ | Chaos engineering, data generation |
+| `integrations` | `/api/integrations` | 6 | Cross-service topology, health probes |
+| `observability` | `/api/observability` | 6 | 360 dashboard, console URLs |
+
+## Trace Depth (8+ Spans per Request)
+
+```
+middleware.entry ─── IP, user-agent, URL
+  ├── auth.check ─── session/token validation
+  ├── request.validate ─── content type, WAF headers
+  ├── {module}.{action} ─── route handler (auto-instrumented)
+  │   └── db.query.* ─── SQLAlchemy (auto) + SQL_ID
+  ├── ATTACK:{TYPE} ─── security span (if detected)
+  └── response.finalize ─── status code, duration, correlation_id
+```
+
+## Cross-Service Integration
+
+Integrates with [OCTO Drone Shop](https://github.com/adibirzu/octo-drone-shop) via:
+- **Order sync** — one-way sync (Shop → CRM) with audit trail
+- **Distributed traces** — W3C `traceparent` propagation
+- **Shared ATP** — same Oracle ATP instance, session-tagged for OPSI
+- **Simulation proxy** — cross-service chaos engineering
 
 ## Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/adibirzu/enterprise-crm-portal.git
 cd enterprise-crm-portal
-
-# Copy environment
 cp .env.example .env
-
-# Run locally with Docker Compose
 docker compose up -d
-
-# Access
 open http://localhost:8080
 ```
 
 ## Load Testing (k6)
 
 ```bash
-# Local test
 k6 run --env BASE_URL=http://localhost:8080 k6/load_test.js
-
-# Multi-location (k6 Cloud)
-k6 cloud k6/load_test.js
 ```
 
-The k6 test includes 3 scenarios:
-- **browse**: Simulates real user journeys (ramp 1→25 VUs)
-- **api_load**: Constant 20 req/s API throughput test
-- **security_probes**: SQLi, XSS, SSRF, path traversal probes
+3 scenarios: user browsing (ramp 1→25 VUs), API throughput (20 req/s), security probes.
 
-## Issue Simulation
-
-Toggle infrastructure issues at runtime:
+## Chaos Engineering
 
 ```bash
-# Simulate DB latency
-curl -X POST http://localhost:8080/api/simulate/db-latency \
-  -H 'Content-Type: application/json' -d '{"delay_seconds": 3}'
+# Toggle DB latency, error rate, slow queries
+curl -X POST http://localhost:8080/api/simulate/configure \
+  -H 'Content-Type: application/json' \
+  -d '{"db_latency": true, "error_rate": 0.3}'
 
-# Simulate DB disconnect (auto-resets after 10s)
-curl -X POST http://localhost:8080/api/simulate/db-disconnect
-
-# Error burst (for log/APM testing)
-curl -X POST http://localhost:8080/api/simulate/error-burst \
-  -H 'Content-Type: application/json' -d '{"count": 50}'
-
-# N+1 query demo
-curl http://localhost:8080/api/dashboard/n-plus-one
-
-# Reset all
+# Reset
 curl -X POST http://localhost:8080/api/simulate/reset
 ```
 
-## OCI Integration
+## Security Testing Add-On
 
-### APM (OpenTelemetry)
-Set `OCI_APM_ENDPOINT` and `OCI_APM_PRIVATE_DATAKEY` in `.env`.
-Traces are exported via OTLP/HTTP to OCI APM.
+> **Optional module** — the CRM includes intentional OWASP Top 10 vulnerabilities for security training and detection testing. These are disabled by default in production and can be enabled for security workshops.
 
-### RUM (Real User Monitoring)
-Set `OCI_APM_RUM_ENDPOINT` and `OCI_APM_RUM_PUBLIC_DATAKEY`.
-RUM JavaScript is injected into all HTML pages.
-
-### Logging SDK
-Set `OCI_LOG_ID` and `OCI_LOG_GROUP_ID`.
-All security events and app logs are pushed to OCI Logging.
-
-### OCI-DEMO topology
-Set `OCTO_DRONE_SHOP_URL`, `OCI_DEMO_CONTROL_PLANE_URL`, `OCI_DEMO_BACKEND_URL`,
-`ATP_OCID`, `ATP_CONNECTION_NAME`, `APM_CONSOLE_URL`, `OPSI_CONSOLE_URL`,
-`DB_MANAGEMENT_CONSOLE_URL`, and `LOG_ANALYTICS_CONSOLE_URL` to expose cross-product
-drilldowns and health checks in the UI. `MUSHOP_CLOUDNATIVE_URL` remains accepted as a
-legacy compatibility alias but should not be used in new deployments.
-
-### Splunk HEC
-Set `SPLUNK_HEC_URL` and `SPLUNK_HEC_TOKEN`.
-Security events are forwarded to Splunk in fire-and-forget mode.
+When enabled, security probes generate `ATTACK:{TYPE}` spans with MITRE ATT&CK classification, visible in OCI APM Trace Explorer. See [Security Testing Guide](docs/security-testing.md) for details.
 
 ## Kubernetes Deployment
 
 ```bash
-# Create DB init ConfigMap
-kubectl create configmap crm-db-init --from-file=server/db_init.sql
-
-# Deploy
-kubectl apply -f deploy/k8s/deployment.yaml
-
-# Deploy against OCI-DEMO / ATP-backed services
-kubectl apply -f deploy/k8s/deployment-atp.yaml
-
-# Check status
-kubectl get pods -l app=enterprise-crm-portal
-kubectl get svc enterprise-crm-portal
+kubectl apply -f deploy/k8s/deployment.yaml       # Standard
+kubectl apply -f deploy/k8s/deployment-atp.yaml    # ATP-backed
 ```
+
+## Documentation
+
+| Document | Coverage |
+|----------|----------|
+| [Platform Docs](https://adibirzu.github.io/octo-drone-shop/) | Full platform documentation (both repos) |
+| [OCI Observability Add-Ons](https://adibirzu.github.io/octo-drone-shop/observability/) | How to enable each OCI service |
+| [Database Integration](https://adibirzu.github.io/octo-drone-shop/architecture/database-integration/) | Shared ATP architecture |
+| [Security Testing Guide](docs/security-testing.md) | Optional OWASP vulnerability testing |
 
 ## Project Structure
 
 ```
 enterprise-crm-portal/
 ├── server/
-│   ├── main.py              # FastAPI app entry point
-│   ├── config.py             # Environment configuration
-│   ├── database.py           # SQLAlchemy models + async engine
-│   ├── db_init.sql           # PostgreSQL seed data
-│   ├── modules/              # CRM modules (12 routers)
-│   │   ├── auth.py           # Authentication (A07)
-│   │   ├── customers.py      # Customer CRUD (A01, A03)
-│   │   ├── orders.py         # Order management (A01, A04)
-│   │   ├── products.py       # Product catalog (A03, A05)
-│   │   ├── invoices.py       # Invoice management (A02, A04)
-│   │   ├── tickets.py        # Support tickets (A03, A09)
-│   │   ├── reports.py        # Custom reports (A03, A08)
-│   │   ├── admin.py          # Admin panel (A01, A05)
-│   │   ├── files.py          # File management (A01, A10)
-│   │   ├── dashboard.py      # Analytics + perf demos
-│   │   ├── api_keys.py       # API key management (A02)
-│   │   └── simulation.py     # Chaos engineering
-│   ├── middleware/
-│   │   ├── tracing.py        # OTel custom span middleware
-│   │   └── chaos.py          # Chaos injection middleware
-│   ├── observability/
-│   │   ├── otel_setup.py     # OCI APM OTel init
-│   │   ├── security_spans.py # MITRE ATT&CK + OWASP spans
-│   │   └── logging_sdk.py    # OCI Logging + Splunk HEC
-│   ├── templates/            # Jinja2 HTML (with RUM)
-│   └── static/               # CSS + JS
+│   ├── main.py              # FastAPI app (73 routes, 12 modules)
+│   ├── config.py            # Environment configuration
+│   ├── database.py          # SQLAlchemy ORM + async engine
+│   ├── order_sync.py        # External order sync (Drone Shop)
+│   ├── modules/             # 12+ CRM modules
+│   ├── middleware/           # 5 middleware layers
+│   ├── observability/       # OTel + OCI APM + Logging SDK
+│   ├── templates/           # Jinja2 HTML (RUM injection)
+│   └── static/              # CSS + JS + product images
 ├── deploy/
-│   └── k8s/                  # Kubernetes manifests
-├── k6/
-│   └── load_test.js          # k6 multi-scenario load test
-├── docker-compose.yml        # App + PostgreSQL
-├── Dockerfile
+│   ├── k8s/                 # Kubernetes manifests
+│   └── observability/       # OTel Collector, SLO rules
+├── k6/                      # Load testing (3 suites)
+├── docs/                    # Additional documentation
+├── Dockerfile               # Multi-stage build
+├── docker-compose.yml       # App + PostgreSQL
 └── requirements.txt
 ```
