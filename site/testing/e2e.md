@@ -27,8 +27,8 @@
 === "Against Live OKE"
 
     ```bash
-    SHOP_URL=https://shop.<DNS_DOMAIN> \
-    CRM_URL=https://crm.<DNS_DOMAIN> \
+    SHOP_URL=https://shop.example.cloud \
+    CRM_URL=https://crm.example.cloud \
     npm run test:e2e
     ```
 

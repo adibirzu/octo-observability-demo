@@ -17,7 +17,7 @@
 
 | URL | Status |
 |---|---|
-| [crm.<DNS_DOMAIN>](https://crm.<DNS_DOMAIN>) | Production (OKE) |
+| [crm.example.cloud](https://crm.example.cloud) | Production (OKE) |
 
 ## Observability-First Design
 
