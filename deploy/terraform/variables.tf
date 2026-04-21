@@ -10,25 +10,25 @@ variable "compartment_id" {
 
 variable "shop_domain" {
   type        = string
-  default     = "shop.<DNS_DOMAIN>"
+  default     = "shop.example.cloud"
   description = "Public hostname for the drone shop frontend."
 }
 
 variable "crm_domain" {
   type        = string
-  default     = "crm.<DNS_DOMAIN>"
+  default     = "crm.example.cloud"
   description = "Public hostname for the CRM portal."
 }
 
 variable "ops_domain" {
   type        = string
-  default     = "ops.<DNS_DOMAIN>"
+  default     = "ops.example.cloud"
   description = "Public hostname for the internal ops/cp console."
 }
 
 variable "coordinator_domain" {
   type        = string
-  default     = "coordinator.<DNS_DOMAIN>"
+  default     = "coordinator.example.cloud"
   description = "Public hostname for the OCI Coordinator UI/API."
 }
 
