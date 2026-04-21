@@ -18,8 +18,8 @@
 
 | URL | Status |
 |---|---|
-| [shop.<DNS_DOMAIN>](https://shop.<DNS_DOMAIN>) | Production (OKE) |
-| [shop.<DNS_DOMAIN>/api/observability/360](https://shop.<DNS_DOMAIN>/api/observability/360) | 360 Dashboard |
+| [shop.example.cloud](https://shop.example.cloud) | Production (OKE) |
+| [shop.example.cloud/api/observability/360](https://shop.example.cloud/api/observability/360) | 360 Dashboard |
 
 ## Current Boundary
 

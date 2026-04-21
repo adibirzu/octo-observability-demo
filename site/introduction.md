@@ -23,8 +23,8 @@ Both services integrate with the full OCI observability stack through modular ad
 
 ## Current Runtime Model
 
-- **Shop frontend**: `https://shop.<DNS_DOMAIN>`
-- **CRM frontend**: `https://crm.<DNS_DOMAIN>`
+- **Shop frontend**: `https://shop.example.cloud`
+- **CRM frontend**: `https://crm.example.cloud`
 - **Shared database**: Oracle ATP
 - **Catalog source of truth**: CRM
 - **Browser-visible CRM links**: public URL only
