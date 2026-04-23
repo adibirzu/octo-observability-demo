@@ -10,15 +10,16 @@
  *      `source_system` + `source_order_id`; a retry with the same token
  *      does NOT create a duplicate record on the CRM side.
  *
- * Designed for a nightly CI run against drone.<DNS_DOMAIN> /
- * backend.<DNS_DOMAIN>; opt in with CROSS_SERVICE_E2E_ENABLED=1.
+ * Designed for a nightly CI run against shop.cyber-sec.ro /
+ * crm.cyber-sec.ro in DEFAULT/oci4cca; override via env for other
+ * tenancies. Opt in with CROSS_SERVICE_E2E_ENABLED=1.
  */
 
 import { expect, test, type APIRequestContext } from '@playwright/test';
 
 const ENABLED = process.env.CROSS_SERVICE_E2E_ENABLED === '1';
-const SHOP = process.env.SHOP_BASE_URL || 'https://drone.<DNS_DOMAIN>';
-const CRM = process.env.CRM_BASE_URL || 'https://backend.<DNS_DOMAIN>';
+const SHOP = process.env.SHOP_BASE_URL || 'https://shop.cyber-sec.ro';
+const CRM = process.env.CRM_BASE_URL || 'https://crm.cyber-sec.ro';
 const INTERNAL_KEY = process.env.INTERNAL_SERVICE_KEY || '';
 
 async function getJson(request: APIRequestContext, url: string): Promise<any> {
