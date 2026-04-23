@@ -75,7 +75,7 @@ OCI Monitoring alarm fires
 OCI Notifications topic `octo-alarms`
       ↓
 HTTPS subscription →
-      https://backend.<DNS_DOMAIN>/remediator/events/alarm
+      https://crm.example.tld/remediator/events/alarm
       ↓
 remediator matches playbook → auto-apply (LOW) or propose (MEDIUM/HIGH)
 ```

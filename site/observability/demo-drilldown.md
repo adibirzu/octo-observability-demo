@@ -1,17 +1,17 @@
 # OCI Observability Demo Drill-Down
 
 One-page script for showing MELTS + Stack Monitoring drill-down against
-the live `shop.<DNS_DOMAIN>` + `crm.<DNS_DOMAIN>` deployment.
+the live `shop.example.tld` + `crm.example.tld` deployment.
 
 ## Pre-demo (30 s)
 
 ```bash
 # Generate traffic so fresh trace/log/metric data lands during the walk-through
 for i in {1..30}; do
-    curl -sS -o /dev/null https://shop.<DNS_DOMAIN>/                      # dashboard
-    curl -sS -o /dev/null https://shop.<DNS_DOMAIN>/shop                  # catalog
-    curl -sS -o /dev/null https://shop.<DNS_DOMAIN>/api/products          # API
-    curl -sS -o /dev/null https://shop.<DNS_DOMAIN>/api/platform/status   # cross-service aggregator
+    curl -sS -o /dev/null https://shop.example.tld/                      # dashboard
+    curl -sS -o /dev/null https://shop.example.tld/shop                  # catalog
+    curl -sS -o /dev/null https://shop.example.tld/api/products          # API
+    curl -sS -o /dev/null https://shop.example.tld/api/platform/status   # cross-service aggregator
     sleep 1
 done
 ```
@@ -155,7 +155,7 @@ magic moment — one click spans three services.
   - MEDIUM → wait for confirmation in Slack
   - HIGH → page on-call
 
-Demo: `curl -X POST https://shop.<DNS_DOMAIN>/api/admin/chaos/apply \
+Demo: `curl -X POST https://shop.example.tld/api/admin/chaos/apply \
   -d '{"scenario_id":"payment-timeout"}'` → watch remediator react.
 
 ## 7. End-to-end scenario — "slow checkout"
