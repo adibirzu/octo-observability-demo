@@ -1,7 +1,7 @@
 [project]
 name = "octo-traffic-generator"
 version = "1.0.0"
-description = "Realistic synthetic traffic for octo-apm-demo — drone.<DNS_DOMAIN> + backend.<DNS_DOMAIN>"
+description = "Realistic synthetic traffic for octo-apm-demo — shop.${DNS_DOMAIN} + crm.${DNS_DOMAIN}"
 requires-python = ">=3.11"
 dependencies = [
     "httpx[http2]>=0.27",
