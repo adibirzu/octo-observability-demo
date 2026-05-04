@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 async def handle(event: Event) -> None:
     payload: dict[str, Any] = event.payload
-    crm_url = os.getenv("OCTO_WORKER_CRM_BASE_URL", "https://backend.<DNS_DOMAIN>")
+    crm_url = os.getenv("OCTO_WORKER_CRM_BASE_URL", "https://crm.cyber-sec.ro")
     key = os.getenv("OCTO_WORKER_INTERNAL_SERVICE_KEY", "")
 
     headers: dict[str, str] = {
