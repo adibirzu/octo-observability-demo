@@ -11,7 +11,7 @@ from __future__ import annotations
 import time
 import logging
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from fastapi import APIRouter, Query, Request
@@ -182,7 +182,7 @@ async def payment_gateway_event_drilldown(
             },
         )
         return {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "correlation": {
                 "trace_id": trace_ctx["trace_id"],
                 "span_id": trace_ctx["span_id"],
