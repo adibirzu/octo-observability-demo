@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from hashlib import sha256
 from typing import Any
 
@@ -330,5 +330,5 @@ def _coerce_month_year(month_raw: object, year_raw: object) -> tuple[int | None,
 def _expired(month: int | None, year: int | None) -> bool:
     if month is None or year is None:
         return False
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     return (int(year), int(month)) < (now.year, now.month)
