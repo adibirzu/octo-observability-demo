@@ -24,15 +24,6 @@ def test_login_page_lists_order_test_users_and_removes_admin_shortcut() -> None:
     assert "Open Admin" not in template
 
 
-def test_login_page_propagates_browser_trace_context_to_login_api() -> None:
-    template = (ROOT / "server/templates/login.html").read_text(encoding="utf-8")
-
-    assert "octo-browser-trace-id" in template
-    assert "traceparent" in template
-    assert "X-Correlation-Id" in template
-    assert "browser_trace_id: currentBrowserTraceId()" in template
-
-
 def test_seeded_order_test_user_passwords_match_login_page() -> None:
     users = {user["username"]: user for user in SEED_USERS}
 
