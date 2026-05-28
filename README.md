@@ -86,8 +86,9 @@ The documentation site is the canonical entry point. Direct links by audience:
 - **New to the platform?** Start at [Introduction](site/introduction.md) and the [Getting Started overview](site/getting-started/index.md).
 - **Want a working stack fast?** Follow [Quickstart](site/getting-started/quickstart.md) and the [Prerequisites](site/getting-started/prerequisites.md) checklist.
 - **Deploying to a fresh OCI tenancy?** Use the [New Tenancy bootstrap](site/getting-started/new-tenancy.md).
-- **Single-VM private Compute deployment?** See [Compute Deployment](site/getting-started/compute-deployment.md) and `deploy/compute/`.
+- **Two-instance Compute deployment?** Splitting services across a public LB/WAF, private Shop and CRM Compute instances, private ATP (see [Compute Deployment](site/getting-started/compute-deployment.md) and `deploy/compute/`).
 - **OKE / Kubernetes deployment?** See [OKE Deployment](site/getting-started/oke-deployment.md), `deploy/oke/`, and `deploy/helm/`.
+- **OCI Resource Manager stack?** [Deploy to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-apm-demo/releases/download/resource-manager-stack/octo-stack.zip) directly from the Console.
 - **Want to understand the architecture first?** Read [Platform Overview](site/architecture/platform-overview.md), [Service Inventory](site/architecture/service-inventory.md), and [Correlation Contract](site/architecture/correlation-contract.md).
 - **Want hands-on labs?** Work through the [Workshop](site/workshop/index.md) — ten labs from first trace through chaos drill.
 
@@ -165,6 +166,14 @@ octo-apm-demo/
 ## Documentation site
 
 Full documentation is published at **https://&lt;github-username&gt;.github.io/octo-apm-demo** and is built from `site/` via GitHub Actions (`.github/workflows/mkdocs-deploy.yml`). The mkdocs-material configuration lives in `mkdocs.yml`. To preview locally, run `mkdocs serve` after installing `requirements-docs.txt`.
+
+### Private Demo Environment
+
+For private demo rollouts (such as the standard `private-demo` topology), standard testing endpoints are configured under `example.test`:
+- Storefront: `https://shop.example.test`
+- CRM Portal: `https://crm.example.test`
+
+See the [Private Demo Observability Reference Diagram](site/architecture/diagrams/private-demo-observability-reference.svg) (`private-demo-observability-reference`) for detailed telemetry routing.
 
 ## Status & license
 

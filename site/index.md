@@ -232,6 +232,14 @@ belong in public docs or diagrams. Use variables in scripts and placeholders
 (`${DNS_DOMAIN}`, `<COMPARTMENT_OCID>`, `<github-username>`) in published
 material.
 
+### Private Demo standard configuration
+
+For the pre-configured `private-demo` topology, standard testing endpoints are resolved under `example.test`:
+- Storefront: `https://shop.example.test`
+- CRM Portal: `https://crm.example.test`
+
+Detailed trace and log routes are illustrated in the [Private Demo Observability Reference](architecture/diagrams/private-demo-observability-reference.svg) (`private-demo-observability-reference`).
+
 ---
 
 ## Status & support
