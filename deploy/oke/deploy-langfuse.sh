@@ -331,7 +331,7 @@ if [[ -n "${APP_LANGFUSE_PUBLIC_KEY:-}" && -n "${APP_LANGFUSE_SECRET_KEY:-}" ]];
         --from-literal=langfuse-project-name="${LANGFUSE_PROJECT_NAME}" \
         --from-literal=langfuse-public-key="${APP_LANGFUSE_PUBLIC_KEY}" \
         --from-literal=langfuse-secret-key="${APP_LANGFUSE_SECRET_KEY}" \
-        --from-literal=langfuse-otel-export-enabled=true \
+        --from-literal=langfuse-otel-export-enabled=false \
         --dry-run=client -o yaml | kubectl apply -f - >/dev/null
     echo "Updated octo-llmetry secret in ${K8S_NAMESPACE_SHOP}."
 else
