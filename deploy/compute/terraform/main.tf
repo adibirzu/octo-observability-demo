@@ -137,7 +137,7 @@ locals {
       LANGFUSE_PROJECT_NAME          = var.langfuse_project_name
       LANGFUSE_PUBLIC_KEY            = var.langfuse_public_key
       LANGFUSE_SECRET_KEY            = var.langfuse_secret_key
-      LANGFUSE_OTEL_EXPORT_ENABLED   = "true"
+      LANGFUSE_OTEL_EXPORT_ENABLED   = "false"
       LANGFUSE_TIMEOUT_SECONDS       = "2.0"
       LANGFUSE_INGESTION_VERSION     = "4"
       SERVICE_CRM_URL                = local.crm_private_service_url

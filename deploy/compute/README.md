@@ -294,6 +294,7 @@ export LANGFUSE_HOST='https://langfuse.example.test'
 export LANGFUSE_PROJECT_NAME='drones.<DNS_DOMAIN>'
 export LANGFUSE_PUBLIC_KEY='<optional Langfuse project public key>'
 export LANGFUSE_SECRET_KEY='<optional Langfuse project secret key>'
+export LANGFUSE_OTEL_EXPORT_ENABLED=false
 export OCIR_USERNAME='<optional OCIR username>'
 export OCIR_AUTH_TOKEN='<optional OCIR auth token>'
 
@@ -332,9 +333,11 @@ container without being world-readable.
 For the assistant demo, the Shop runtime reads `OCI_GENAI_ENDPOINT`,
 `OCI_GENAI_MODEL_ID`, `LLMETRY_*`, and `LANGFUSE_*` from the same
 container env file. Leave Langfuse disabled until a project has been
-created and project ingestion keys are available. Raw prompt/response
-capture stays off by default; the app exports hashes, token counts,
-guardrail results, trace IDs, and session IDs.
+created and project ingestion keys are available. Keep
+`LANGFUSE_OTEL_EXPORT_ENABLED=false` on the shared Compute/OKE demo path so
+Langfuse receives traces only through the approved collector route. Raw
+prompt/response capture stays off by default; the app exports hashes, token
+counts, guardrail results, trace IDs, and session IDs.
 
 Decode the wallet once:
 

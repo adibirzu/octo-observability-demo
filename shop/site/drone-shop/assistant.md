@@ -29,7 +29,7 @@ LANGFUSE_HOST="https://langfuse.example.test"
 LANGFUSE_PROJECT_NAME="drones.<DNS_DOMAIN>"
 LANGFUSE_PUBLIC_KEY="<project-public-key>"
 LANGFUSE_SECRET_KEY="<project-secret-key>"
-LANGFUSE_OTEL_EXPORT_ENABLED=true
+LANGFUSE_OTEL_EXPORT_ENABLED=false
 ```
 
 Falls back to local product-matching logic if GenAI is not configured.

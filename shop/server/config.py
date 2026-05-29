@@ -138,14 +138,14 @@ class Config:
     # Raw prompts/responses are not emitted by default. When enabled, the
     # LLMetry helper still redacts PII before attaching previews.
     llmetry_capture_content = _env_bool("LLMETRY_CAPTURE_CONTENT", False)
-    langfuse_enabled = _env_bool("LANGFUSE_ENABLED", True)
+    langfuse_enabled = _env_bool("LANGFUSE_ENABLED", False)
     langfuse_host = _env_value(
         "LANGFUSE_HOST",
         _env_value("LANGFUSE_BASE_URL", _env_value("LANGFUSE_PUBLIC_URL", "")),
     ).rstrip("/")
     langfuse_public_key = _env_secret("LANGFUSE_PUBLIC_KEY", "")
     langfuse_secret_key = _env_secret("LANGFUSE_SECRET_KEY", "")
-    langfuse_otel_export_enabled = _env_bool("LANGFUSE_OTEL_EXPORT_ENABLED", True)
+    langfuse_otel_export_enabled = _env_bool("LANGFUSE_OTEL_EXPORT_ENABLED", False)
     langfuse_timeout_seconds = _env_float("LANGFUSE_TIMEOUT_SECONDS", 2.0)
     langfuse_ingestion_version = _env_value("LANGFUSE_INGESTION_VERSION", "4")
 
