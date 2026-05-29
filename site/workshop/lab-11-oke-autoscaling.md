@@ -18,8 +18,8 @@ correlation is reused here for stress correlation; the contract is
 identical (Phase 5 audit-event shape; OBS-02 parser).
 
 You will also visit the four external operator-owned drilldown
-surfaces (D-20): `lm.<DNS_DOMAIN>`, `phoenix.<DNS_DOMAIN>`,
-`openlit.<DNS_DOMAIN>`, `grafana.<DNS_DOMAIN>`.
+surfaces (D-20): `lm.example.test`, `phoenix.example.test`,
+`openlit.example.test`, `grafana.example.test`.
 
 ## Time budget
 
@@ -140,7 +140,7 @@ the ceiling).
 ### 5. Drill into APM (2 min)
 
 Open APM Trace Explorer (and link out to
-[`phoenix.<DNS_DOMAIN>`](https://phoenix.<DNS_DOMAIN>) for the
+[`phoenix.example.test`](https://phoenix.example.test) for the
 external trace-store view, if your tenancy has it configured).
 
 Run the four Phase 7 APM saved queries (plan 07-07), all scoped to
@@ -202,18 +202,18 @@ descent. Within 5 minutes you should be back at 2 shop pods and
 While the live run is in flight, the same `run_id` is propagated to
 four operator-owned external surfaces:
 
-- **[lm.<DNS_DOMAIN>](https://lm.<DNS_DOMAIN>)** — Langfuse /
+- **[lm.example.test](https://lm.example.test)** — Langfuse /
   LLMetry external view. Use when you want to see LLM/agent-side
   traces correlated with the stress window (the shop's AI assistant
   emits LLMetry spans).
-- **[phoenix.<DNS_DOMAIN>](https://phoenix.<DNS_DOMAIN>)** —
+- **[phoenix.example.test](https://phoenix.example.test)** —
   Arize Phoenix external trace store. Use when you want a second
   perspective on traces alongside APM Trace Explorer — Phoenix
   bucketing is different.
-- **[openlit.<DNS_DOMAIN>](https://openlit.<DNS_DOMAIN>)** —
+- **[openlit.example.test](https://openlit.example.test)** —
   OpenLIT external dashboard. Use when you want to inspect token /
   cost / model-side metrics for LLM calls inside the stress run.
-- **[grafana.<DNS_DOMAIN>](https://grafana.<DNS_DOMAIN>)** —
+- **[grafana.example.test](https://grafana.example.test)** —
   Grafana external dashboards. Use when you want to overlay the
   Phase 7 RPS / pod-count metrics on top of standard
   cluster-autoscaler Grafana panels (`cluster-autoscaler`
@@ -251,7 +251,7 @@ PASS — Lab 11 complete
 | Cluster Autoscaler does not add a node | Add-on not enabled, or node pool already at `max=4` | Re-run `configure-cluster-autoscaler.sh --dry-run` to confirm config |
 | Saturation alarm does not fire | OCI Monitoring custom-metrics emitter not publishing | Check `shop/server/observability/oci_monitoring.py` is wired (Phase 7 plan 07-08) |
 | Stop button does nothing | `stress-runner` pod was rescheduled mid-run; the lock is gone | Re-issue **Stop stress run** — it is idempotent (D-14) |
-| Pods stuck in `ImagePullBackOff` after scale-up | OCIR pull secret missing on the new namespace | Re-run `deploy/oke/bootstrap-demo-secrets.sh` |
+| Pods stuck in `ImagePullBackOff` after scale-up | OCIR pull secret missing on the new namespace | Re-create the OCIR image-pull secret for the new namespace (see the bootstrap script under `deploy/oke/`) |
 
 ## Read more
 

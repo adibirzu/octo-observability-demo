@@ -182,10 +182,10 @@ parallel-run period.
 
 | Container | Image | Default resources | Observability role |
 |---|---|---|---|
-| Shop | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:${IMAGE_TAG}` | 2 replicas, `250m/512Mi` request, `1 CPU/1536Mi` limit | Storefront, checkout, RUM, OCI Logging SDK, Log Analytics fields |
-| Admin/CRM | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/enterprise-crm-portal:${IMAGE_TAG}` | 2 replicas, `250m/512Mi` request, `1 CPU/1536Mi` limit | Admin operations, orders, CRM links, OCI Coordinator scope |
-| Java payment gateway | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-apm-java-demo:${IMAGE_TAG}` | 2 replicas, `100m/384Mi` request, `500m/768Mi` limit | Java app-server, antifraud, processor, and network authorization spans |
-| Workflow Gateway | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-workflow-gateway:${IMAGE_TAG}` | 1 replica, `100m/128Mi` request, `500m/512Mi` limit | Admin-scoped Select AI/workflow proxy, ATP SQL spans, and workflow logs |
+| Shop | `<region>.ocir.io/<tenancy-namespace>/octo-drone-shop:${IMAGE_TAG}` | 2 replicas, `250m/512Mi` request, `1 CPU/1536Mi` limit | Storefront, checkout, RUM, OCI Logging SDK, Log Analytics fields |
+| Admin/CRM | `<region>.ocir.io/<tenancy-namespace>/enterprise-crm-portal:${IMAGE_TAG}` | 2 replicas, `250m/512Mi` request, `1 CPU/1536Mi` limit | Admin operations, orders, CRM links, OCI Coordinator scope |
+| Java payment gateway | `<region>.ocir.io/<tenancy-namespace>/octo-apm-java-demo:${IMAGE_TAG}` | 2 replicas, `100m/384Mi` request, `500m/768Mi` limit | Java app-server, antifraud, processor, and network authorization spans |
+| Workflow Gateway | `<region>.ocir.io/<tenancy-namespace>/octo-workflow-gateway:${IMAGE_TAG}` | 1 replica, `100m/128Mi` request, `500m/512Mi` limit | Admin-scoped Select AI/workflow proxy, ATP SQL spans, and workflow logs |
 
 ## Image build + push
 

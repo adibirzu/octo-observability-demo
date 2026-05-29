@@ -67,22 +67,22 @@ rsync -az --exclude '.git' --exclude '__pycache__' \
 TAG=$(date +%Y%m%d%H%M%S)
 ssh remote-builder "cd /tmp/octo-apm-demo-shop && \
   docker build -f shop/Dockerfile \
-    -t ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:${TAG} \
-    -t ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:latest ."
+    -t <region>.ocir.io/<tenancy-namespace>/octo-drone-shop:${TAG} \
+    -t <region>.ocir.io/<tenancy-namespace>/octo-drone-shop:latest ."
 ```
 
 ### 3. Push to OCIR
 
 ```bash
-ssh remote-builder "docker push ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:${TAG} && \
-  docker push ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:latest"
+ssh remote-builder "docker push <region>.ocir.io/<tenancy-namespace>/octo-drone-shop:${TAG} && \
+  docker push <region>.ocir.io/<tenancy-namespace>/octo-drone-shop:latest"
 ```
 
 ### 4. Rollout on OKE
 
 ```bash
 kubectl set image deployment/octo-drone-shop \
-  app=${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:${TAG} -n octo-drone-shop
+  app=<region>.ocir.io/<tenancy-namespace>/octo-drone-shop:${TAG} -n octo-drone-shop
 
 kubectl rollout status deployment/octo-drone-shop -n octo-drone-shop
 ```
