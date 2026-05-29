@@ -44,6 +44,7 @@ from server.modules.services import router as services_router
 from server.modules.observability_dashboard import router as observability_dashboard_router
 from server.modules.synthetic_users import router as synthetic_users_router
 from server.modules.workflow_gateway import router as workflow_gateway_router
+from server.modules.ai_studio import router as ai_studio_router
 
 # New modules (Phase 2 + 11 + platform status)
 from server.modules.payments.webhooks import router as payments_webhooks_router
@@ -179,6 +180,7 @@ app.include_router(services_router)
 app.include_router(observability_dashboard_router)
 app.include_router(synthetic_users_router)
 app.include_router(workflow_gateway_router)
+app.include_router(ai_studio_router)
 
 # Phase 2 — payment gateway webhook ingestion
 app.include_router(payments_webhooks_router)
@@ -323,6 +325,7 @@ def _render_page(request: Request, page: str, title: str, **ctx):
          "payment_gateway_simulation_enabled": cfg.payment_gateway_simulation_enabled,
          "idcs_configured": cfg.idcs_configured,
          "genai_configured": cfg.genai_configured,
+         "ai_studio_configured": cfg.ai_studio_configured,
          "app_name": cfg.app_name, **ctx},
     )
 
@@ -340,6 +343,11 @@ async def shop_page(request: Request):
 @app.get("/services", response_class=HTMLResponse)
 async def services_page(request: Request):
     return _render_page(request, "services", "Services & Support", module="services")
+
+
+@app.get("/ai-studio", response_class=HTMLResponse)
+async def ai_studio_page(request: Request):
+    return _render_page(request, "ai_studio", "AI Studio", module="ai_studio")
 
 
 @app.get("/catalogue", response_class=HTMLResponse)

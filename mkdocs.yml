@@ -107,6 +107,7 @@ nav:
     - Modules: drone-shop/modules.md
     - Checkout Flow: drone-shop/checkout.md
     - AI Assistant: drone-shop/assistant.md
+    - AI Studio (GenAI agents): drone-shop/ai-studio.md
   - Enterprise CRM:
     - crm/index.md
     - Modules: crm/modules.md
@@ -149,6 +150,7 @@ nav:
     - WAF observability: observability-v2/waf-observability.md
     - Auto-remediation flow: observability-v2/autoremediation-flow.md
     - Code Knowledge Map: observability-v2/code-knowledge-map.md
+    - GenAI monitoring (AI Studio): observability-v2/ai-studio-genai-monitoring.md
     - Demo script: observability-v2/demo-script.md
   - Integrations:
     - integrations/index.md
