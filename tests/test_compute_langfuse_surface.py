@@ -78,5 +78,11 @@ def test_compute_runtime_exposes_langfuse_export_settings_without_values() -> No
 
     assert "LANGFUSE_PUBLIC_KEY=\n" in runtime_template
     assert "LANGFUSE_SECRET_KEY=\n" in runtime_template
+    assert "LANGFUSE_OTEL_EXPORT_ENABLED=false" in runtime_template
+    assert (
+        '"LANGFUSE_OTEL_EXPORT_ENABLED": '
+        'os.environ.get("LANGFUSE_OTEL_EXPORT_ENABLED", "false")'
+    ) in render
+    assert "LANGFUSE_OTEL_EXPORT_ENABLED   = \"false\"" in compute_tf
     assert "OCI_GENAI_ENDPOINT" in runtime_template
     assert "OCI_GENAI_MODEL_ID" in runtime_template
