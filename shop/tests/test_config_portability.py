@@ -9,7 +9,6 @@ Covers:
 from __future__ import annotations
 
 import importlib
-import os
 from typing import Iterator
 
 import pytest
@@ -56,6 +55,7 @@ def env(monkeypatch: pytest.MonkeyPatch) -> Iterator[pytest.MonkeyPatch]:
         "LANGFUSE_PUBLIC_KEY_FILE",
         "LANGFUSE_SECRET_KEY",
         "LANGFUSE_SECRET_KEY_FILE",
+        "LANGFUSE_OTEL_EXPORT_ENABLED",
     ]
     for k in keys:
         monkeypatch.delenv(k, raising=False)
@@ -176,6 +176,11 @@ class TestPublicUrlsNoFabrication:
 
 @pytest.mark.unit
 class TestAssistantTelemetryConfig:
+    def test_langfuse_direct_export_defaults_off(self, env):
+        cfg = _fresh_config(env)
+        assert cfg.langfuse_enabled is False
+        assert cfg.langfuse_otel_export_enabled is False
+
     def test_langfuse_project_defaults_to_shop_hostname(self, env):
         env.setenv("SHOP_PUBLIC_URL", "https://drones.<DNS_DOMAIN>")
         cfg = _fresh_config(env)

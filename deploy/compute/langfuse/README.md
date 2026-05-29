@@ -52,12 +52,14 @@ LANGFUSE_HOST=${LANGFUSE_PUBLIC_URL}
 LANGFUSE_PROJECT_NAME=drones.<DNS_DOMAIN>
 LANGFUSE_PUBLIC_KEY=<project-public-key>
 LANGFUSE_SECRET_KEY_FILE=/opt/octo/secrets/langfuse-secret-key
-LANGFUSE_OTEL_EXPORT_ENABLED=true
+LANGFUSE_OTEL_EXPORT_ENABLED=false
 ```
 
-The Drone Shop exports the same assistant spans to OCI APM and, when these
-values are present, to Langfuse's OTLP endpoint. The span payload contains
-session IDs, token counts, guardrail outcomes, and prompt/response hashes;
-raw prompts and responses stay disabled unless `LLMETRY_CAPTURE_CONTENT=true`
-is explicitly set for a controlled demo.
+The Drone Shop exports assistant spans to OCI APM. Keep direct Langfuse OTLP
+export disabled on the shared demo path and fan out to Langfuse through the
+approved OTel collector route. Direct app-to-Langfuse export should only be
+enabled for an isolated comparison run. The span payload contains session IDs,
+token counts, guardrail outcomes, and prompt/response hashes; raw prompts and
+responses stay disabled unless `LLMETRY_CAPTURE_CONTENT=true` is explicitly set
+for a controlled demo.
 - The public hostname deliberately does not reuse the shop/admin app service. Public routing should be added as a separate LB backend path/hostname so `${SHOP_PUBLIC_URL}` and `${CRM_PUBLIC_URL}` continue unchanged.
