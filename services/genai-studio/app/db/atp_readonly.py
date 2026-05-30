@@ -79,14 +79,28 @@ def _query_postgres(limit: int) -> list[dict[str, Any]]:
 
 
 def top_categories(limit: int = 5) -> dict[str, Any]:
-    """Return top product categories by revenue with the data source label."""
+    """Return top product categories by revenue with the data source label.
+
+    On any failure the synthetic dataset is returned, but the root cause is
+    logged AND returned as ``fallback_reason`` so the Sales Analyst span and the
+    operator can see *why* live ATP data was not used (instead of a silent swap).
+    """
     settings = get_settings()
     safe_limit = max(1, min(int(limit), 20))
+    if settings.db_kind in {"oracle", "postgres"} and not settings.db_configured:
+        logger.warning(
+            "STUDIO_DB_KIND=%s but DB is not fully configured (dsn/user/password missing); "
+            "using synthetic data",
+            settings.db_kind,
+        )
+        return {**_SYNTHETIC, "fallback_reason": "db_not_configured"}
     try:
         if settings.db_kind == "oracle" and settings.db_configured:
             return {"rows": _query_oracle(safe_limit), "source": "oracle_atp"}
         if settings.db_kind == "postgres" and settings.db_configured:
             return {"rows": _query_postgres(safe_limit), "source": "postgres"}
     except Exception as exc:  # pragma: no cover - falls back to synthetic
-        logger.warning("Sales query failed, using synthetic data: %s", exc)
+        reason = f"{exc.__class__.__name__}: {str(exc)[:200]}"
+        logger.warning("Sales query failed (%s); using synthetic data", reason)
+        return {**_SYNTHETIC, "fallback_reason": reason}
     return _SYNTHETIC

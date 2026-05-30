@@ -347,6 +347,17 @@ async def services_page(request: Request):
 
 @app.get("/ai-studio", response_class=HTMLResponse)
 async def ai_studio_page(request: Request):
+    # Admin-only surface: AI Studio is a back-office GenAI console, not a public
+    # storefront page. Gate server-side on the admin role (session cookie or
+    # bearer); non-admins are redirected to login rather than seeing the page.
+    from fastapi import HTTPException
+
+    from server.auth_security import require_role
+
+    try:
+        require_role(request, "admin")
+    except HTTPException:
+        return RedirectResponse(url="/login", status_code=302)
     return _render_page(request, "ai_studio", "AI Studio", module="ai_studio")
 
 
