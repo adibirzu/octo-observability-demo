@@ -34,6 +34,15 @@ spec:
               value: "octo-drone-shop"
             - name: OCI_AUTH_TYPE
               value: "INSTANCE_PRINCIPAL"
+            # Region + monitoring compartment for the Langfuse->OCI Monitoring sync
+            # (PostMetricData targets the telemetry-ingestion endpoint of this region).
+            - name: OCI_REGION
+              value: "${OCI_REGION}"
+            - name: OCI_MONITORING_COMPARTMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: octo-oci-config
+                  key: compartment-id
             - name: STUDIO_INTERNAL_SERVICE_KEY
               valueFrom:
                 secretKeyRef:

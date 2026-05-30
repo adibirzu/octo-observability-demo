@@ -38,6 +38,16 @@ OCI_REGION = os.getenv("OCI_REGION", "")
 SERVICE_NAME = os.getenv("OTEL_SERVICE_NAME", "octo-genai-studio")
 
 
+def _ingestion_endpoint(region: str) -> str | None:
+    """OCI Monitoring has separate read vs WRITE endpoints. PostMetricData must
+    target telemetry-INGESTION.<region>.oraclecloud.com or it 404s (KB-456).
+    Returns None when region is unknown so the SDK default applies."""
+    region = (region or "").strip()
+    if not region:
+        return None
+    return f"https://telemetry-ingestion.{region}.oraclecloud.com"
+
+
 # ── Langfuse REST (read-only) ──────────────────────────────────────────────
 def _langfuse_datetime(hours: float) -> str:
     """UTC ISO timestamp `hours` ago with a Z suffix (Langfuse v4 rejects +00:00)."""
@@ -135,13 +145,21 @@ def publish_to_oci_monitoring(metrics: dict[str, float]) -> bool:
     try:
         if auth_type == "INSTANCE_PRINCIPAL":
             signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-            client = oci.monitoring.MonitoringClient({}, signer=signer)
+            region = OCI_REGION or getattr(signer, "region", "") or ""
+            client = oci.monitoring.MonitoringClient(
+                {}, signer=signer, service_endpoint=_ingestion_endpoint(region)
+            )
         elif auth_type == "RESOURCE_PRINCIPAL":
             signer = oci.auth.signers.get_resource_principals_signer()
-            client = oci.monitoring.MonitoringClient({}, signer=signer)
+            region = OCI_REGION or os.getenv("OCI_RESOURCE_PRINCIPAL_REGION", "")
+            client = oci.monitoring.MonitoringClient(
+                {}, signer=signer, service_endpoint=_ingestion_endpoint(region)
+            )
         else:
             cfg = oci.config.from_file(profile_name=os.getenv("OCI_CONFIG_PROFILE", "DEFAULT"))
-            client = oci.monitoring.MonitoringClient(cfg)
+            client = oci.monitoring.MonitoringClient(
+                cfg, service_endpoint=_ingestion_endpoint(OCI_REGION or cfg.get("region", ""))
+            )
     except Exception as exc:  # pragma: no cover
         logger.warning("Could not build OCI Monitoring client: %s", exc)
         return False
