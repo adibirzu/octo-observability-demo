@@ -132,6 +132,7 @@ octo-apm-demo/
 ├── services/             Supporting microservices
 │   ├── apm-java-demo/    Spring Boot payment sidecar with OCI APM Java agent
 │   ├── genai-studio/     AI Studio — LangGraph multi-agent GenAI on OCI (APM + Langfuse)
+│   ├── observability-stack/  External GenAI obs backends — Langfuse + Grafana on OKE (optional)
 │   ├── otel-gateway/     OpenTelemetry collector
 │   ├── async-worker/     Background job runner
 │   ├── auto-remediator/  OCI Functions auto-remediation

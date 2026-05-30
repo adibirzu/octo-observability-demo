@@ -29,6 +29,12 @@ labelled `app.kubernetes.io/part-of: octo-demo-observability` and deployed into 
 | Grafana deploy script | `deploy/oke/deploy-grafana.sh` |
 | Config contract (placeholders only) | `services/observability-stack/.env.example` |
 
+> **Tenancy discipline:** stand this up in the **staging** tenancy first
+> (`OCI_PROFILE` → staging). Promote to **production** only after a green staging
+> run. The deploy scripts refuse an OKE cluster outside the project VCN unless
+> `ALLOW_DIFFERENT_VCN=true`. All secrets are generated at deploy time / read from
+> OCI — never committed.
+
 ## Preflight
 
 ```bash

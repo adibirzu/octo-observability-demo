@@ -32,6 +32,9 @@ below is what makes those pivots clickable.
 | `assistant.session_id` | LLM span + log + ATP row | `uuid4` or caller-provided session ID | Drone Shop assistant |
 | `llm.prompt.hash` | LLM span + log + ATP row | SHA-256 hex | LLMetry helper |
 | `llm.response.hash` | LLM span + log + ATP row | SHA-256 hex | LLMetry helper |
+| `studio.run_id` | AI Studio span + log (+ `session.id`) | `uuid4` | AI Studio — one per agentic brief; joins the run across APM, Langfuse, OCI Monitoring |
+| `gen_ai.request.model` | AI Studio LLM span | OCI GenAI model id | AI Studio `call_llm` |
+| `gen_ai.usage.input_tokens` / `output_tokens` / `cost_usd` | AI Studio LLM span (+ `octo_genai` metric) | int / USD | AI Studio token capture + cost processor |
 | `service.name` | OTel resource | kebab-case short name | Deployment env |
 | `service.namespace` | OTel resource | `octo` | fixed |
 | `deployment.environment` | OTel resource | `production` \| `staging` \| `dev` | Deployment env |
@@ -56,6 +59,11 @@ below is what makes those pivots clickable.
 - **`assistant.session_id` + `llm.*.hash`** join OCI APM spans, OCI
   Logging rows, ATP `llmetry_events`, and Langfuse observations without
   logging raw prompts or responses.
+- **`studio.run_id` + `gen_ai.*`** are the AI Studio (agentic GenAI) keys:
+  one `run_id` per brief joins the distributed APM trace, the Langfuse trace,
+  and the `octo_genai` OCI Monitoring metrics (tokens, `cost_usd`, judge
+  scores). The same tracer exports to APM and Langfuse, so the trace id is
+  identical in both panes.
 ## Payment field dictionary
 
 Checkout, payment gateway, processor, CRM order, and payment log records

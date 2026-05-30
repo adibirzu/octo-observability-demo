@@ -424,9 +424,38 @@ Expected telemetry:
 - `gen_ai.*` attributes on every model span; `studio.agents_run` on `studio.brief`.
 - The same run visible in Langfuse via the agent-path span-prefix filter.
 
+### 12b.1 Log Analytics drill for the GenAI run
+
+Console path:
+
+```text
+OCI Console -> Observability & Management -> Log Analytics -> Log Explorer
+```
+
+1. Set the time window around the brief you generated.
+2. Filter by `oracleApmTraceId = <trace_id>` (the trace id shown with the brief)
+   or `'Log Source' = 'octo-genai-studio'`.
+3. Pin these fields so the GenAI run reads cleanly:
+   - `Trace ID`, `Span ID`, `Service`
+   - `gen_ai.request.model` (Model)
+   - `gen_ai.usage.input_tokens` / `gen_ai.usage.output_tokens` / `gen_ai.usage.cost_usd`
+   - `studio.run_id`, `studio.data_source`
+4. Open the saved search **`genai-token-cost`** (token & cost by run / model / agent).
+5. From any log row, use `oracleApmTraceId` to pivot back to APM Trace Explorer —
+   closing the loop APM ↔ Log Analytics ↔ Langfuse on one `trace_id`.
+
+This is the same join contract as the rest of the platform (Section 11): the
+GenAI run is correlated by `oracleApmTraceId`, not re-keyed.
+
 This scene maps directly onto the OCI Enterprise AI multi-agent pattern
 (Supervisor + Sales Analyst + Evidence/RAG + Code Interpreter + Product Copy +
 Presenter) — the difference here is that every hop is observable.
+
+!!! warning "Tenancy discipline"
+    Validate AI Studio + the observability stack in the **staging** tenancy first.
+    Promote to the **production** tenancy only after the staging run is green and
+    reviewed. The Sales Analyst ATP user is **read-only**; all GenAI / Langfuse /
+    APM secrets come from OCI Vault or environment, never from git.
 
 ## 13. Close The Story
 
