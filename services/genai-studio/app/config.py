@@ -64,6 +64,7 @@ class Settings:
     db_user: str = field(default_factory=lambda: _env("STUDIO_DB_USER"))
     db_password: str = field(default_factory=lambda: _env("STUDIO_DB_PASSWORD"))
     oracle_wallet_dir: str = field(default_factory=lambda: _env("STUDIO_ORACLE_WALLET_DIR"))
+    oracle_wallet_password: str = field(default_factory=lambda: _env("STUDIO_ORACLE_WALLET_PASSWORD"))
 
     # Evidence agent
     web_search_enabled: bool = field(default_factory=lambda: _env_bool("STUDIO_WEB_SEARCH_ENABLED", False))

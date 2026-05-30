@@ -48,13 +48,19 @@ def _query_oracle(limit: int) -> list[dict[str, Any]]:
     import oracledb  # local import keeps the dependency optional
 
     settings = get_settings()
+    # Thin mode (no Instant Client in the slim image): connect to ATP with the
+    # wallet via config_dir/wallet_location + wallet_password (mTLS).
+    connect_kwargs: dict[str, Any] = {
+        "user": settings.db_user,
+        "password": settings.db_password,
+        "dsn": settings.db_dsn,
+    }
     if settings.oracle_wallet_dir:
-        oracledb.init_oracle_client(config_dir=settings.oracle_wallet_dir)
-    with oracledb.connect(
-        user=settings.db_user,
-        password=settings.db_password,
-        dsn=settings.db_dsn,
-    ) as conn:
+        connect_kwargs["config_dir"] = settings.oracle_wallet_dir
+        connect_kwargs["wallet_location"] = settings.oracle_wallet_dir
+    if settings.oracle_wallet_password:
+        connect_kwargs["wallet_password"] = settings.oracle_wallet_password
+    with oracledb.connect(**connect_kwargs) as conn:
         with conn.cursor() as cur:
             cur.execute(_TOP_CATEGORIES_SQL, lim=limit)
             cols = [c[0].lower() for c in cur.description]
