@@ -1,0 +1,763 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "updated_at", "text": "Updated At", "type": "time" },
+            { "selector": "requests_total", "text": "Requests", "type": "number" },
+            { "selector": "errors_total", "text": "Errors", "type": "number" },
+            { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" },
+            { "selector": "avg_latency_ms", "text": "Avg Latency ms", "type": "number" },
+            { "selector": "p95_latency_ms", "text": "P95 Latency ms", "type": "number" },
+            { "selector": "total_tokens", "text": "Total Tokens", "type": "number" },
+            { "selector": "total_cost_usd", "text": "Cost USD", "type": "number" },
+            { "selector": "projected_monthly_usd", "text": "Projected Monthly USD", "type": "number" },
+            { "selector": "apm_services_count", "text": "APM Services", "type": "number" },
+            { "selector": "coordinator_agents_count", "text": "Coordinator Agents", "type": "number" },
+            { "selector": "mcp_servers_count", "text": "MCP Servers", "type": "number" },
+            { "selector": "mcp_tools_count", "text": "MCP Tools", "type": "number" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/summary",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "GenAI Runtime Summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "id": 2,
+      "targets": [
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "throughput", "text": "Throughput", "type": "number" },
+            { "selector": "latency_avg_ms", "text": "Latency Avg ms", "type": "number" },
+            { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" },
+            { "selector": "token_usage", "text": "Token Usage", "type": "number" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/runtime-series",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "GenAI Runtime Series",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "id": 3,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "service", "text": "Service", "type": "string" },
+            { "selector": "traces", "text": "Traces", "type": "number" },
+            { "selector": "errors", "text": "Errors", "type": "number" },
+            { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" },
+            { "selector": "avg_duration_ms", "text": "Avg Duration ms", "type": "number" },
+            { "selector": "health", "text": "Health", "type": "string" },
+            { "selector": "status", "text": "Status", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/apm-services",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "APM Services",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 15
+      },
+      "id": 4,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "role", "text": "Role", "type": "string" },
+            { "selector": "display_name", "text": "Display Name", "type": "string" },
+            { "selector": "status", "text": "Status", "type": "string" },
+            { "selector": "tools_count", "text": "Tools", "type": "number" },
+            { "selector": "models", "text": "Models", "type": "string" },
+            { "selector": "description", "text": "Description", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/coordinator-agents",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Coordinator Agents",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 15
+      },
+      "id": 5,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "name", "text": "Name", "type": "string" },
+            { "selector": "status", "text": "Status", "type": "string" },
+            { "selector": "connected", "text": "Connected", "type": "boolean" },
+            { "selector": "tool_count", "text": "Tool Count", "type": "number" },
+            { "selector": "transport", "text": "Transport", "type": "string" },
+            { "selector": "endpoint", "text": "Endpoint", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/mcp-servers",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "MCP Servers",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 15
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "tool_name", "text": "Tool", "type": "string" },
+            { "selector": "invocations", "text": "Invocations", "type": "number" },
+            { "selector": "success_rate_pct", "text": "Success Rate %", "type": "number" },
+            { "selector": "avg_latency_ms", "text": "Avg Latency ms", "type": "number" },
+            { "selector": "max_latency_ms", "text": "Max Latency ms", "type": "number" },
+            { "selector": "last_used", "text": "Last Used", "type": "time" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/agent-tools",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Tool Leaderboard",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 7,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "source_section", "text": "Section", "type": "string" },
+            { "selector": "category", "text": "Category", "type": "string" },
+            { "selector": "count", "text": "Count", "type": "number" },
+            { "selector": "db_name", "text": "Database", "type": "string" },
+            { "selector": "sql_identifier", "text": "SQL Identifier", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/sql-insights",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "SQL Insights",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 8,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "log_source", "text": "Log Source", "type": "string" },
+            { "selector": "count", "text": "Count", "type": "number" },
+            { "selector": "source", "text": "Source", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/log-summary",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Log Source Summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 31
+      },
+      "id": 9,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "resources_total", "text": "Resources", "type": "number" },
+            { "selector": "resource_types_total", "text": "Types", "type": "number" },
+            { "selector": "active_total", "text": "Active", "type": "number" },
+            { "selector": "non_active_total", "text": "Non-Active", "type": "number" },
+            { "selector": "top_status", "text": "Top Status", "type": "string" },
+            { "selector": "top_resource_type", "text": "Top Resource Type", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/stack-summary",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Stack Monitoring Summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 31
+      },
+      "id": 10,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "name", "text": "Name", "type": "string" },
+            { "selector": "resource_type", "text": "Resource Type", "type": "string" },
+            { "selector": "status", "text": "Status", "type": "string" },
+            { "selector": "host_name", "text": "Host Name", "type": "string" },
+            { "selector": "external_id", "text": "External ID", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/stack-resources",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Stack Monitoring Resources",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 11,
+      "targets": [
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "executions", "text": "Executions", "type": "number" },
+            { "selector": "completed", "text": "Completed", "type": "number" },
+            { "selector": "failed", "text": "Failed", "type": "number" },
+            { "selector": "avg_duration_ms", "text": "Avg Duration ms", "type": "number" },
+            { "selector": "tool_calls", "text": "Tool Calls", "type": "number" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/agent-timeline",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Agent Execution Timeline",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      },
+      "id": 12,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "service", "text": "Service", "type": "string" },
+            { "selector": "operation", "text": "Operation", "type": "string" },
+            { "selector": "trace_count", "text": "Traces", "type": "number" },
+            { "selector": "error_count", "text": "Errors", "type": "number" },
+            { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" },
+            { "selector": "avg_duration_ms", "text": "Avg Duration ms", "type": "number" },
+            { "selector": "max_duration_ms", "text": "Max Duration ms", "type": "number" },
+            { "selector": "health", "text": "Health", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/apm-operations",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "APM Operations",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 55
+      },
+      "id": 13,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "time_ended", "text": "End Time", "type": "time" },
+            { "selector": "service", "text": "Service", "type": "string" },
+            { "selector": "operation", "text": "Operation", "type": "string" },
+            { "selector": "status", "text": "Status", "type": "string" },
+            { "selector": "duration_ms", "text": "Duration ms", "type": "number" },
+            { "selector": "span_count", "text": "Span Count", "type": "number" },
+            { "selector": "error_count", "text": "Errors", "type": "number" },
+            { "selector": "severity", "text": "Severity", "type": "string" },
+            { "selector": "trace_key", "text": "Trace Key", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/apm-traces",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "APM Traces",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 63
+      },
+      "id": 14,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "trace_key", "text": "Trace Key", "type": "string" },
+            { "selector": "span_key", "text": "Span Key", "type": "string" },
+            { "selector": "parent_span_key", "text": "Parent Span", "type": "string" },
+            { "selector": "service_name", "text": "Service", "type": "string" },
+            { "selector": "operation_name", "text": "Operation", "type": "string" },
+            { "selector": "kind", "text": "Kind", "type": "string" },
+            { "selector": "duration_ms", "text": "Duration ms", "type": "number" },
+            { "selector": "is_error", "text": "Error", "type": "boolean" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/apm-spans",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "APM Spans",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 71
+      },
+      "id": 15,
+      "targets": [
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "value", "text": "Value", "type": "number" },
+            { "selector": "series_name", "text": "Series", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/monitoring-series?namespace=oci_computeagent&query=CpuUtilization%5B5m%5D.mean()",
+          "url_options": {
+            "method": "GET"
+          }
+        },
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "value", "text": "Value", "type": "number" },
+            { "selector": "series_name", "text": "Series", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "B",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/monitoring-series?namespace=oci_oke&query=APIServerRequestCount%5B5m%5D.sum()",
+          "url_options": {
+            "method": "GET"
+          }
+        },
+        {
+          "columns": [
+            { "selector": "time", "text": "Time", "type": "time" },
+            { "selector": "value", "text": "Value", "type": "number" },
+            { "selector": "series_name", "text": "Series", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "C",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/monitoring-series?namespace=oci_lbaas&query=AcceptedConnections%5B5m%5D.sum()",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Live OCI Metrics via Control Plane",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "__INFINITY_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 79
+      },
+      "id": 16,
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "name", "text": "Namespace", "type": "string" },
+            { "selector": "label", "text": "Label", "type": "string" },
+            { "selector": "description", "text": "Description", "type": "string" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/monitoring-namespaces",
+          "url_options": {
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Monitoring Namespaces",
+      "type": "table"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["oci", "genai", "apm", "grafana", "mcp"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "OCI GenAI Observability",
+  "uid": "oci-genai-observability",
+  "version": 1,
+  "weekStart": ""
+}

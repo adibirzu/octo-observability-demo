@@ -1,0 +1,199 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        {
+          "columns": [{ "selector": "total_cost_usd", "text": "Total Cost (USD)", "type": "number" }],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-finops"
+        }
+      ],
+      "title": "Total Cost (24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        {
+          "columns": [{ "selector": "monthly_projected_usd", "text": "Monthly Projected (USD)", "type": "number" }],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-finops"
+        }
+      ],
+      "title": "Monthly Projected",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "id": 3,
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        {
+          "columns": [{ "selector": "total_tokens", "text": "Total Tokens", "type": "number" }],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-finops"
+        }
+      ],
+      "title": "Total Tokens (24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "id": 4,
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        {
+          "columns": [{ "selector": "total_generations", "text": "Generations", "type": "number" }],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-finops"
+        }
+      ],
+      "title": "LLM Generations",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+      "id": 5,
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        {
+          "columns": [{ "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" }],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-finops"
+        }
+      ],
+      "title": "Error Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 4 },
+      "id": 6,
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "agent", "text": "Agent", "type": "string" },
+            { "selector": "traces", "text": "Requests", "type": "number" },
+            { "selector": "total_tokens", "text": "Tokens", "type": "number" },
+            { "selector": "cost_usd", "text": "Cost (USD)", "type": "number" },
+            { "selector": "avg_latency_ms", "text": "Avg Latency ms", "type": "number" },
+            { "selector": "errors", "text": "Errors", "type": "number" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-agents"
+        }
+      ],
+      "title": "Cost by Agent",
+      "type": "table"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 4 },
+      "id": 7,
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "model", "text": "Model", "type": "string" },
+            { "selector": "generations", "text": "Calls", "type": "number" },
+            { "selector": "input_tokens", "text": "Input Tokens", "type": "number" },
+            { "selector": "output_tokens", "text": "Output Tokens", "type": "number" },
+            { "selector": "cost_usd", "text": "Cost (USD)", "type": "number" },
+            { "selector": "avg_latency_ms", "text": "Avg Latency ms", "type": "number" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-models"
+        }
+      ],
+      "title": "Cost by Model",
+      "type": "table"
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
+      "id": 8,
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "columns": [
+            { "selector": "trace_id", "text": "Trace ID", "type": "string" },
+            { "selector": "name", "text": "Name", "type": "string" },
+            { "selector": "status", "text": "Status", "type": "string" },
+            { "selector": "total_tokens", "text": "Tokens", "type": "number" },
+            { "selector": "cost_usd", "text": "Cost (USD)", "type": "number" },
+            { "selector": "latency_ms", "text": "Latency ms", "type": "number" },
+            { "selector": "timestamp", "text": "Time", "type": "time" }
+          ],
+          "format": "table",
+          "parser": "backend",
+          "refId": "A",
+          "source": "url",
+          "type": "json",
+          "url": "__CP_API_BASE__/api/grafana/genai/llm-traces"
+        }
+      ],
+      "title": "Recent Traces (Langfuse)",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["oci-demo", "genai", "langfuse", "finops"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "title": "LLM FinOps — Token Cost Attribution",
+  "uid": "oci-genai-llm-finops",
+  "version": 1
+}
