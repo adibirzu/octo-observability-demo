@@ -54,7 +54,9 @@ def _langfuse_datetime(hours: float) -> str:
     import datetime as _dt
 
     ts = _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=hours)
-    return ts.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    # Second-precision Z form. Some Langfuse builds 400 on the fractional `.000Z`
+    # variant, so keep it plain (verified against lf.octodemo.cloud).
+    return ts.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _langfuse_get(path: str, params: dict | None = None) -> Any:
