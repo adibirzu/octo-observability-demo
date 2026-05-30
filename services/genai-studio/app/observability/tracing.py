@@ -52,6 +52,12 @@ def init_tracing(
 
     provider.add_span_processor(ContextEnrichmentSpanProcessor())
 
+    # Stamp estimated USD cost on LLM spans from token counts so APM + Langfuse
+    # both show cost (added before the export processors).
+    from app.observability.cost import CostEnrichmentSpanProcessor
+
+    provider.add_span_processor(CostEnrichmentSpanProcessor())
+
     if apm_endpoint and apm_private_key:
         from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
