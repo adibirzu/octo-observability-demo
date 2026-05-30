@@ -186,6 +186,9 @@ nav:
     - "Lab 09 — Chaos drill": workshop/lab-09-chaos-drill.md
     - "Lab 10 — Failed checkout debug": workshop/lab-10-failed-checkout.md
     - "Lab 11 — OKE Autoscaling": workshop/lab-11-oke-autoscaling.md
+    - "Lab 12 — GenAI Agent Trace": workshop/lab-12-genai-agent-trace.md
+    - "Lab 13 — APM / Langfuse / Grafana Pivot": workshop/lab-13-apm-langfuse-grafana-pivot.md
+    - "Lab 14 — LLM-as-a-Judge": workshop/lab-14-llm-as-judge.md
 
 extra:
   social:
