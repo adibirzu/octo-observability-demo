@@ -31,7 +31,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 MANIFEST="${REPO_ROOT}/k8s/oke/grafana/grafana.yaml"
 DASHBOARD_DIR="${REPO_ROOT}/k8s/oke/grafana/dashboards"
-OUTPUTS_JSON="${OUTPUTS_JSON:-${REPO_ROOT}/../credentials/emdemo/outputs.json}"
+OUTPUTS_JSON="${OUTPUTS_JSON:-${REPO_ROOT}/../credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 
 command_exists() { command -v "$1" >/dev/null 2>&1; }
 require_cmd() { command_exists "$1" || { echo "Missing required command: $1" >&2; exit 1; }; }
@@ -99,7 +99,7 @@ fi
 
 if [[ -z "${COMPARTMENT_ID}" || -z "${TARGET_VCN_ID}" || -z "${OCI_LB_SUBNET_OCID}" ]]; then
     echo "Missing COMPARTMENT_ID, TARGET_VCN_ID, or OCI_LB_SUBNET_OCID." >&2
-    echo "Set them explicitly or provide OUTPUTS_JSON with emdemo network outputs." >&2
+    echo "Set them explicitly or provide OUTPUTS_JSON with the tenancy network outputs." >&2
     exit 2
 fi
 

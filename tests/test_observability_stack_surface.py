@@ -8,6 +8,7 @@ committed in the new external component.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -24,18 +25,41 @@ COMPONENT_FILES = [
 ]
 DASHBOARD_GLOB = "deploy/k8s/oke/grafana/dashboards/*.json"
 
-# Real tenancy identifiers / secrets that must never appear in committed files.
+# Structural patterns for sensitive data. These describe the *shape* of secrets
+# so the guard never has to hardcode (and thus commit) the very tenancy names /
+# namespaces it is meant to keep out of git.
 FORBIDDEN_PATTERNS = [
-    re.compile(r"\b<STAGING_TENANCY>\b"),
-    re.compile(r"\bemdemo\b"),
-    re.compile(r"\b(<OCIR_NAMESPACE>|<OCIR_NAMESPACE>|<OCIR_NAMESPACE>)\b"),  # OCIR namespaces
+    # Any tenancy OCID family.
     re.compile(r"ocid1\.(tenancy|compartment|apmdomain|loadbalancer|subnet|vcn)\.oc1"),
+    # OCIR object-storage namespace embedded in an image path (e.g. <region>.ocir.io/<ns>/...).
+    re.compile(r"ocir\.io/[a-z0-9]{8,}/"),
+    # Internal-infra public IP ranges.
     re.compile(r"\b(129\.153|130\.61|161\.153|144\.24|141\.147|82\.76|82\.77|109\.166)\.\d+\.\d+\b"),
+    # Langfuse ingestion keys.
     re.compile(r"\bpk-lf-[A-Za-z0-9]"),
     re.compile(r"\bsk-lf-[A-Za-z0-9]"),
+    # APM datakeys + the apm-agt upload host.
     re.compile(r"dataKey\s+[A-Za-z0-9+/]{20}"),
     re.compile(r"\.apm-agt\."),
 ]
+
+
+def _denylist_terms() -> list[str]:
+    """Exact tenancy/namespace literals to forbid, loaded WITHOUT committing them.
+
+    Sourced from the env var ``REDACTION_DENYLIST`` (comma-separated) or a
+    gitignored ``tests/redaction_denylist.local`` (one term per line). This keeps
+    the literal tenancy names (e.g. production/staging profile names, OCIR
+    namespaces) out of the repository while still enforcing them locally / in CI
+    where the secret list is provided.
+    """
+    terms: list[str] = []
+    env_terms = os.getenv("REDACTION_DENYLIST", "")
+    terms += [t.strip() for t in env_terms.split(",") if t.strip()]
+    local = ROOT / "tests" / "redaction_denylist.local"
+    if local.exists():
+        terms += [ln.strip() for ln in local.read_text().splitlines() if ln.strip() and not ln.startswith("#")]
+    return terms
 
 
 def _read(path: str) -> str:
@@ -74,17 +98,20 @@ def test_grafana_manifest_is_observability_labelled_and_templated() -> None:
     assert "admin-password" not in manifest.split("secretKeyRef")[0]
 
 
-@pytest.mark.parametrize("rel", COMPONENT_FILES)
-def test_component_files_have_no_sensitive_data(rel: str) -> None:
-    text = _read(rel)
+def _assert_clean(label: str, text: str) -> None:
     for pattern in FORBIDDEN_PATTERNS:
         match = pattern.search(text)
-        assert match is None, f"{rel} contains forbidden pattern: {match.group(0)!r}"
+        assert match is None, f"{label} contains forbidden pattern: {match.group(0)!r}"
+    lowered = text.lower()
+    for term in _denylist_terms():
+        assert term.lower() not in lowered, f"{label} contains denylisted literal"
+
+
+@pytest.mark.parametrize("rel", COMPONENT_FILES)
+def test_component_files_have_no_sensitive_data(rel: str) -> None:
+    _assert_clean(rel, _read(rel))
 
 
 def test_dashboards_have_no_sensitive_data() -> None:
     for dash in ROOT.glob(DASHBOARD_GLOB):
-        text = dash.read_text(encoding="utf-8")
-        for pattern in FORBIDDEN_PATTERNS:
-            match = pattern.search(text)
-            assert match is None, f"{dash.name} contains forbidden pattern: {match.group(0)!r}"
+        _assert_clean(dash.name, dash.read_text(encoding="utf-8"))
