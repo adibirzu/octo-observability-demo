@@ -2,7 +2,7 @@
 # Install Oracle's OCI Kubernetes Monitoring solution for the current cluster.
 #
 # This follows the oracle-quickstart/oci-kubernetes-monitoring Helm path while
-# keeping all resources scoped to the Octo emdemo compartment and existing Log
+# keeping all resources scoped to the Octo demo compartment and existing Log
 # Analytics namespace/log group.
 
 set -euo pipefail
@@ -13,7 +13,7 @@ Usage: deploy/oke/install-oci-kubernetes-monitoring.sh
 
 Installs or upgrades Oracle OCI Kubernetes Monitoring for the current OKE
 cluster. It creates/reuses the Log Analytics Kubernetes entity and a short-lived
-Management Agent install key, then applies the Helm chart with Octo emdemo
+Management Agent install key, then applies the Helm chart with Octo demo
 compartment and Log Analytics settings.
 
 Optional hardening:
@@ -125,7 +125,7 @@ CLUSTER_ID="$(oci ce cluster list --profile "${OCI_PROFILE}" --compartment-id "$
     jq -r --arg name "${OKE_CLUSTER_NAME}" '.data[] | select(.name == $name and ."lifecycle-state" == "ACTIVE") | .id' | head -1)"
 
 if [[ -z "${CLUSTER_ID}" ]]; then
-    echo "No ACTIVE cluster named ${OKE_CLUSTER_NAME} in the emdemo compartment." >&2
+    echo "No ACTIVE cluster named ${OKE_CLUSTER_NAME} in the demo compartment." >&2
     exit 1
 fi
 

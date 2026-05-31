@@ -47,7 +47,7 @@ APM_DOMAIN_ID=<APM_DOMAIN_OCID> \
 
 `APM_SAVED_QUERY_PROVIDER_ID` defaults to `apm-traces` and
 `APM_SAVED_QUERY_PROVIDER_NAME` defaults to `Application Performance
-Monitoring`. The `emdemo` tenancy currently exposes Trace Explorer saved
+Monitoring`. The `demo` tenancy currently exposes Trace Explorer saved
 queries through provider id/name `APM`, so apply there with:
 
 ```bash

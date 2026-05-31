@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Prepare the existing emdemo OCI Load Balancer for an OKE cutover.
+# Prepare the existing demo OCI Load Balancer for an OKE cutover.
 #
 # Default mode is dry-run. With --apply, this creates/updates dedicated OKE
 # backend sets and attaches current OKE worker private IPs on the NodePort

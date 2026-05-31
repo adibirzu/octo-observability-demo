@@ -65,7 +65,7 @@ the generated actions and confirming the target namespace/compartment.
 Verify the OCTO field map before parser/source import. The helper checks the
 target namespace and reuses existing fields by display name or internal field
 name. It only calls `upsert-field` for manifest entries explicitly marked
-`createIfMissing: true`; the current emdemo map has no required creates.
+`createIfMissing: true`; the current demo map has no required creates.
 
 ```bash
 OCI_CLI_PROFILE=<OCI_PROFILE> \
@@ -257,8 +257,8 @@ Live Connector Hub note:
 * `SOC Application Logs` remains the parser/source contract for direct
   Log Analytics ingestion and workshop data. It is not the source name shown
   for live OCI Logging connector records.
-* In emdemo, the approved live app-log route currently reuses an existing
-  Connector Hub path from the OCTO OCI Logging group to the `octo-emdemo-logs`
+* In demo, the approved live app-log route currently reuses an existing
+  Connector Hub path from the OCTO OCI Logging group to the `octo-demo-logs`
   Log Analytics group. Service Connector quota is still full
   (`used=7`, `available=0`), so new connector creation remains blocked.
 * OKE ONM logs do not use Connector Hub. The ONM Fluentd output writes
@@ -270,7 +270,7 @@ Live Connector Hub note:
   parser-friendly aliases such as `order_id`,
   `payment_gateway_request_id`, `payment_gateway_step`,
   `payment_processor_response_code`, and `java_apm_service_name`. The scoped
-  SOC parser/source refresh in emdemo promoted these through 138 field maps
+  SOC parser/source refresh in demo promoted these through 138 field maps
   without creating new Log Analytics fields.
 
 Cloud Guard OSQuery result ingestion:

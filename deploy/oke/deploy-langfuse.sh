@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Deploy a low-footprint Langfuse v3 test stack on OKE for OCTO-DEMO.
 #
-# Defaults are tuned for the emdemo compartment, the existing OCTO compute
+# Defaults are tuned for the demo compartment, the existing OCTO compute
 # VCN, and the requested hostname langfuse.octodemo.cloud. The script refuses
 # to deploy to an OKE cluster in a different VCN unless ALLOW_DIFFERENT_VCN=true.
 #
@@ -137,7 +137,7 @@ fi
 
 if [[ -z "${COMPARTMENT_ID}" || -z "${TARGET_VCN_ID}" || -z "${OCI_LB_SUBNET_OCID}" ]]; then
     echo "Missing COMPARTMENT_ID, TARGET_VCN_ID, or OCI_LB_SUBNET_OCID." >&2
-    echo "Set them explicitly or provide OUTPUTS_JSON with emdemo network outputs." >&2
+    echo "Set them explicitly or provide OUTPUTS_JSON with demo network outputs." >&2
     exit 2
 fi
 

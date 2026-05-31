@@ -71,7 +71,7 @@ if [[ "${SKIP_CONTEXT_CHECK}" != "true" ]]; then
     current_context="$(kubectl config current-context 2>/dev/null || true)"
     if [[ "${current_context}" != "${OKE_CLUSTER_NAME}" ]]; then
         echo "Current kubectl context is '${current_context:-unset}', expected '${OKE_CLUSTER_NAME}'." >&2
-        echo "Run deploy/oke/create-emdemo-small-cluster.sh or set SKIP_CONTEXT_CHECK=true after verifying the target cluster." >&2
+        echo "Run deploy/oke/create-demo-small-cluster.sh or set SKIP_CONTEXT_CHECK=true after verifying the target cluster." >&2
         exit 1
     fi
 fi
@@ -163,7 +163,7 @@ for ns in "${K8S_NAMESPACE_SHOP}" "${K8S_NAMESPACE_CRM}"; do
     optional_secret "${ns}" octo-llmetry
 done
 if [[ "${missing_required_secret}" == "true" && "${ALLOW_MISSING_SECRETS}" != "true" ]]; then
-    echo "Required Secrets are missing. Run deploy/oke/bootstrap-emdemo-secrets.sh, then retry." >&2
+    echo "Required Secrets are missing. Run deploy/oke/bootstrap-demo-secrets.sh, then retry." >&2
     echo "Set ALLOW_MISSING_SECRETS=true only for manifest-only validation." >&2
     exit 1
 fi

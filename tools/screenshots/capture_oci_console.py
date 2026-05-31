@@ -38,7 +38,7 @@ SCRUB_JS = r"""
     [/ocid1\.[a-z]+\.oc1\.[a-z0-9-]*\.[a-z0-9]{40,}/g, '<ocid>'],
     [/ocid1\.[a-z]+\.oc1\.\.[a-z0-9]+/g, '<ocid>'],
     [/ocid1\.[a-z]+\.[a-z0-9.-]+/g, '<ocid>'],
-    [/emdemo/gi, '<env-prefix>'],
+    [/demo/gi, '<env-prefix>'],
     [/octoatp_(low|medium|high)/g, '<atp-connection>'],
     [/octodemo\.cloud/g, 'example.com'],
     [/${OCIR_TENANCY}/g, '<tenancy-namespace>'],

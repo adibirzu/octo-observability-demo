@@ -1,6 +1,6 @@
 -- ============================================================================
 -- oke-onm-ingestion-health
--- Health view for OCI Kubernetes Monitoring ingestion. A healthy emdemo OKE
+-- Health view for OCI Kubernetes Monitoring ingestion. A healthy demo OKE
 -- cluster should show container, tcpconnect, and ONM collector records.
 -- ============================================================================
 ('Log Source' in ('Kubernetes Container Generic Logs','Kubernetes TCP Connect Logs','SOC Application Logs')

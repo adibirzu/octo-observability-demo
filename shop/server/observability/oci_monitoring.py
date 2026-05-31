@@ -62,7 +62,7 @@ def _resolve_monitoring_region() -> str:
     OKE can run in a different region than the APM/Monitoring home region, so
     do not derive this from OCIR or the cluster region. Prefer a dedicated
     Monitoring override, then infer from the APM endpoint, then fall back to
-    general OCI region env vars and finally Phoenix for the shared emdemo
+    general OCI region env vars and finally Phoenix for the shared demo
     deployment.
     """
     explicit = (os.getenv("OCI_MONITORING_REGION") or "").strip().lower()

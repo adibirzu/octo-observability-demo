@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Configure the OCI Cluster Autoscaler managed add-on for the octo-apm-demo OKE cluster.
 #
-# Phase 7 D-04: enable Cluster Autoscaler on the existing emdemo worker node pool
+# Phase 7 D-04: enable Cluster Autoscaler on the existing demo worker node pool
 # with min=2, max=4 nodes. Dry-run by default — only mutates OCI state when
 # invoked with --apply AND the operator confirms the cluster name interactively.
 #

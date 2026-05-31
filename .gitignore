@@ -48,7 +48,7 @@ config/local/
 .planning/intel/
 .planning/graphs/
 graphify-out/
-deploy/oke/bootstrap-emdemo-secrets.sh
+deploy/oke/bootstrap-demo-secrets.sh
 *.tfstate
 *.tfstate.*
 *.tfvars
