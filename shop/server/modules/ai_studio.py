@@ -63,7 +63,8 @@ def _validate_payload(content: bytes | None) -> dict:
         raise HTTPException(status_code=400, detail="AI Studio request must be JSON") from exc
     if not isinstance(payload, dict):
         raise HTTPException(status_code=400, detail="AI Studio request must be a JSON object")
-    if len(str(payload.get("request") or "")) > _MAX_REQUEST_CHARS:
+    field = str(payload.get("request") or payload.get("question") or "")
+    if len(field) > _MAX_REQUEST_CHARS:
         raise HTTPException(status_code=400, detail=f"request exceeds {_MAX_REQUEST_CHARS} characters")
     return payload
 
@@ -93,23 +94,22 @@ def _lift_upstream_attributes(span, upstream: httpx.Response) -> None:
         span.set_attribute("gen_ai.usage.output_tokens", int(usage["output"]))
 
 
-@router.post("/brief")
-async def studio_brief(request: Request) -> Response:
-    """Proxy a merchandising-brief run to the AI Studio service with trace context."""
+async def _proxy(request: Request, *, op: str, upstream_path: str) -> Response:
+    """Shared admin-gated, trace-propagating proxy to the AI Studio service."""
     principal = require_admin_or_internal_service(request)
     if not cfg.ai_studio_configured:
         raise HTTPException(status_code=503, detail="AI Studio is not configured")
 
     content = await request.body()
     _validate_payload(content)
-    target = f"{cfg.ai_studio_base_url}/api/studio/brief"
+    target = f"{cfg.ai_studio_base_url}{upstream_path}"
     tracer = get_tracer("octo-drone-shop.ai-studio")
 
-    with tracer.start_as_current_span("ai_studio.brief") as span:
+    with tracer.start_as_current_span(f"ai_studio.{op}") as span:
         span.set_attributes(
             {
                 "app.module": "admin-ai-studio",
-                "app.logical_endpoint": "admin.ai_studio.brief",
+                "app.logical_endpoint": f"admin.ai_studio.{op}",
                 "ai_studio.service_name": cfg.ai_studio_service_name,
                 "ai_studio.admin_required": True,
                 "http.request.method": "POST",
@@ -133,7 +133,7 @@ async def studio_brief(request: Request) -> Response:
 
     push_log(
         "INFO",
-        "AI Studio brief proxied",
+        f"AI Studio {op} proxied",
         **{
             "ai_studio.status_code": upstream.status_code,
             "ai_studio.service_name": cfg.ai_studio_service_name,
@@ -145,3 +145,15 @@ async def studio_brief(request: Request) -> Response:
     if content_type:
         headers["content-type"] = content_type
     return Response(content=upstream.content, status_code=upstream.status_code, headers=headers)
+
+
+@router.post("/brief")
+async def studio_brief(request: Request) -> Response:
+    """Proxy a merchandising-brief run to the AI Studio service with trace context."""
+    return await _proxy(request, op="brief", upstream_path="/api/studio/brief")
+
+
+@router.post("/ask")
+async def studio_ask(request: Request) -> Response:
+    """Proxy a free-form Data Q&A (orders/products/analytics) to AI Studio."""
+    return await _proxy(request, op="ask", upstream_path="/api/studio/ask")

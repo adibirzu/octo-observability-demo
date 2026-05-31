@@ -63,6 +63,12 @@ class BriefRequest(BaseModel):
     user: str = Field("", description="Requesting user (email or id)")
 
 
+class AskRequest(BaseModel):
+    question: str = Field(..., description="Free-form question about orders/products/analytics")
+    session_id: str = Field("", description="Conversation/session id for correlation")
+    user: str = Field("", description="Requesting user (email or id)")
+
+
 def _require_internal_key(provided: str | None) -> None:
     expected = get_settings().internal_service_key
     if not expected:
@@ -158,4 +164,76 @@ async def studio_brief(
                 "brief": final.get("brief", ""),
                 "chart_png_base64": final.get("chart", {}).get("chart_png_base64", ""),
                 "sales": final.get("sales", {}),
+            }
+
+
+@app.post("/api/studio/ask")
+async def studio_ask(
+    body: AskRequest,
+    request: Request,
+    x_internal_service_key: str | None = Header(default=None),
+) -> dict:
+    """Free-form Data Q&A over orders/products/analytics (single-agent path).
+
+    Distinct from /brief: routes to the Data Analyst agent which reads a read-only
+    ATP overview and answers the question. Traced under studio.ask with the same
+    gen_ai.* / studio.run_id conventions, so it appears in OCI APM and Langfuse
+    identically to a brief run.
+    """
+    _require_internal_key(x_internal_service_key)
+    settings = get_settings()
+
+    from app.agents.data_qa import answer_data_question
+
+    question = bounded(body.question, limit=settings.message_max_chars)
+    allowed, reason = scope_decision(question)
+    run_id = uuid.uuid4().hex
+    session_id = bounded(body.session_id, limit=64) or run_id
+    user = bounded(body.user, limit=200)
+
+    tracer = get_tracer()
+    with run_scope(run_id=run_id, session_id=session_id, user=user):
+        with tracer.start_as_current_span("studio.ask") as span:
+            span.set_attribute("studio.run_id", run_id)
+            span.set_attribute("studio.mode", "data_qa")
+            span.set_attribute("studio.guardrail.allowed", allowed)
+            span.set_attribute("studio.guardrail.reason", reason)
+            trace_id = current_trace_id()
+
+            if not allowed:
+                span.set_attribute("studio.outcome", "guardrail_blocked")
+                return {
+                    "run_id": run_id,
+                    "trace_id": trace_id,
+                    "status": "refused",
+                    "reason": reason,
+                    "answer": (
+                        "I can only answer questions about OCTO drone-shop orders, "
+                        "products, and sales analytics."
+                    ),
+                }
+
+            try:
+                result = answer_data_question(question)
+            except Exception as exc:
+                span.record_exception(exc)
+                span.set_attribute("studio.outcome", "error")
+                logger.exception("Studio ask failed")
+                raise HTTPException(status_code=502, detail="studio ask failed") from exc
+
+            usage = result.get("token_usage", {})
+            span.set_attribute("gen_ai.usage.input_tokens", int(usage.get("input", 0)))
+            span.set_attribute("gen_ai.usage.output_tokens", int(usage.get("output", 0)))
+            span.set_attribute("studio.data_source", result.get("data_source", "unknown"))
+            span.set_attribute("studio.outcome", "success")
+
+            return {
+                "run_id": run_id,
+                "trace_id": trace_id,
+                "status": "ok",
+                "agents_run": ["data_analyst"],
+                "model_id": settings.genai_model_id,
+                "token_usage": usage,
+                "answer": result.get("answer", ""),
+                "data_source": result.get("data_source", ""),
             }
