@@ -79,16 +79,20 @@ def _langfuse_get(path: str, params: dict | None = None) -> Any:
         return None
 
 
-def collect_analytics(hours: float = 1.0, limit: int = 200) -> dict[str, float]:
+def collect_analytics(hours: float = 1.0, limit: int = 100) -> dict[str, float]:
     """Aggregate token/cost/latency/score analytics from Langfuse over a window."""
     since = _langfuse_datetime(hours)
+    # Langfuse caps `limit` at 100 and 400s ("too_big, maximum:100") above it.
+    page_limit = max(1, min(int(limit), 100))
     observations = (_langfuse_get(
         "/api/public/observations",
-        params={"fromStartTime": since, "type": "GENERATION", "limit": limit},
+        params={"fromStartTime": since, "type": "GENERATION", "limit": page_limit},
     ) or {}).get("data", [])
+    # The scores endpoint validates `limit` more strictly than observations on
+    # this build; it is optional, so omit it (server default) and cap client-side.
     scores = (_langfuse_get(
-        "/api/public/scores", params={"fromTimestamp": since, "limit": limit}
-    ) or {}).get("data", [])
+        "/api/public/scores", params={"fromTimestamp": since}
+    ) or {}).get("data", [])[:page_limit]
 
     total_in = total_out = 0
     total_cost = 0.0
