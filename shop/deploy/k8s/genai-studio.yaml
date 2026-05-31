@@ -129,6 +129,19 @@ spec:
               value: "/app/wallet"
             - name: STUDIO_WEB_SEARCH_ENABLED
               value: "false"
+            # RAG over the 23ai native-VECTOR knowledge base (genai_kb). Enabled
+            # once the migration + seed have run; degrades to a labelled fallback
+            # if the table is missing, so toggling is safe.
+            - name: STUDIO_RAG_ENABLED
+              value: "true"
+            - name: OCI_GENAI_EMBED_MODEL_ID
+              value: "cohere.embed-multilingual-v3.0"
+            - name: STUDIO_EMBED_DIM
+              value: "1024"
+            - name: STUDIO_RAG_TOP_K
+              value: "4"
+            - name: STUDIO_RAG_KB_TABLE
+              value: "genai_kb"
           volumeMounts:
             - name: atp-wallet
               mountPath: /app/wallet
