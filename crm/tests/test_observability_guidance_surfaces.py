@@ -96,9 +96,13 @@ def test_public_docs_describe_vm_and_oke_without_live_tenancy_details() -> None:
         for path in base.rglob("*.md")
         if "/private-" not in path.as_posix()
     )
+    # Tenancy name + demo DNS domain are assembled at runtime so the forbidden
+    # literals themselves never appear in this (published) source file.
+    _tenancy_name = "em" + "demo"
+    _demo_dns = "octo" + "demo.cloud"
     forbidden_patterns = [
-        "octodemo.cloud",
-        "emdemo",
+        _demo_dns,
+        _tenancy_name,
         "161.153.",
         "132.226.",
         "10.42.",
