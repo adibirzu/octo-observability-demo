@@ -370,6 +370,21 @@
             <h3>Admin AI + Workflow Labs</h3>
             <span class="chip" id="adminWorkflowGatewayChip">checking</span>
         </div>
+        {% if ai_studio_configured %}
+        <div class="admin-ops-card wide" style="margin-bottom: 14px;">
+            <div class="section-title">
+                <h3>AI Studio — Enterprise GenAI</h3>
+                <span class="chip">admin · OCI GenAI</span>
+            </div>
+            <p class="runtime-note">Multi-agent GenAI on OCI Generative AI: ask about your
+                orders/products/analytics, run RAG over the 23ai knowledge base, or generate a
+                merchandising brief. Every run is traced to OCI APM + Langfuse.</p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn" href="/ai-studio">Open AI Studio →</a>
+                <a class="btn btn-outline" href="/admin/genai-observability">GenAI Observability →</a>
+            </div>
+        </div>
+        {% endif %}
         <div class="admin-ops-grid">
             <div class="admin-ops-card">
                 <div class="section-title">

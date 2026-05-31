@@ -361,6 +361,35 @@ async def ai_studio_page(request: Request):
     return _render_page(request, "ai_studio", "AI Studio", module="ai_studio")
 
 
+@app.get("/admin/genai-observability", response_class=HTMLResponse)
+async def genai_observability_page(request: Request):
+    """Admin-only single pane for GenAI observability.
+
+    Shows live token / cost / latency / judge-score tiles + a recent-runs table
+    (fetched from /api/ai-studio/metrics) and deep-links to OCI APM, Langfuse,
+    Grafana and the GenAI Command Center dashboard. All deep-link targets are
+    env-driven (no tenancy/IP baked in).
+    """
+    from fastapi import HTTPException
+
+    from server.auth_security import require_role
+
+    try:
+        require_role(request, "admin")
+    except HTTPException:
+        return RedirectResponse(url="/login", status_code=302)
+    return _render_page(
+        request,
+        "genai_observability",
+        "GenAI Observability",
+        module="genai_observability",
+        apm_console_url=cfg.apm_console_url,
+        langfuse_url=cfg.langfuse_dashboard_url or cfg.langfuse_host,
+        grafana_url=cfg.grafana_url,
+        genai_command_center_url=cfg.genai_command_center_url,
+    )
+
+
 @app.get("/catalogue", response_class=HTMLResponse)
 async def catalogue_page(request: Request):
     return _render_page(request, "page", "Catalogue", module="catalogue")
