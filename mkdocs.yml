@@ -107,6 +107,7 @@ nav:
     - Modules: drone-shop/modules.md
     - Checkout Flow: drone-shop/checkout.md
     - AI Assistant: drone-shop/assistant.md
+    - AI Studio (GenAI agents): drone-shop/ai-studio.md
   - Enterprise CRM:
     - crm/index.md
     - Modules: crm/modules.md
@@ -149,6 +150,7 @@ nav:
     - WAF observability: observability-v2/waf-observability.md
     - Auto-remediation flow: observability-v2/autoremediation-flow.md
     - Code Knowledge Map: observability-v2/code-knowledge-map.md
+    - GenAI monitoring (AI Studio): observability-v2/ai-studio-genai-monitoring.md
     - Demo script: observability-v2/demo-script.md
   - Integrations:
     - integrations/index.md
@@ -184,6 +186,9 @@ nav:
     - "Lab 09 — Chaos drill": workshop/lab-09-chaos-drill.md
     - "Lab 10 — Failed checkout debug": workshop/lab-10-failed-checkout.md
     - "Lab 11 — OKE Autoscaling": workshop/lab-11-oke-autoscaling.md
+    - "Lab 12 — GenAI Agent Trace": workshop/lab-12-genai-agent-trace.md
+    - "Lab 13 — APM / Langfuse / Grafana Pivot": workshop/lab-13-apm-langfuse-grafana-pivot.md
+    - "Lab 14 — LLM-as-a-Judge": workshop/lab-14-llm-as-judge.md
 
 extra:
   social:

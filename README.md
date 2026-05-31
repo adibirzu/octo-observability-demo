@@ -52,6 +52,7 @@ Observability marketing claims are easy. Wiring a real, multi-service applicatio
 |---|---|---|
 | **OCTO Drone Shop** (`shop/`) | Python FastAPI + Jinja, OCI APM RUM | Customer storefront: catalog, cart, checkout, AI assistant, real-user telemetry |
 | **Enterprise CRM Portal** (`crm/`) | Python FastAPI | Operations console: catalog, orders, customers, simulations, observability dashboard, security training |
+| **AI Studio** (`services/genai-studio/`) | Python FastAPI + LangGraph + `langchain-oci` (OCI GenAI) | GenAI multi-agent merchandising-brief workflow (Supervisor + Sales Analyst + Evidence/RAG + Code Interpreter + Product Copy + Presenter); observable in OCI APM **and** Langfuse. Shop proxies to it; off by default |
 | **APM Java Demo** (`services/apm-java-demo/`) | Spring Boot 3 + OCI APM Java agent | Payment sidecar populating OCI APM **App Servers** (Apdex, GC, CPU, JVM telemetry); verification + authorization spans on checkout |
 | **OTEL Gateway** (`services/otel-gateway/`) | OpenTelemetry Collector | Optional telemetry fan-out and edge collection |
 | **Async Worker** (`services/async-worker/`) | Python | Background jobs for catalog hydration and simulation runners |
@@ -74,6 +75,7 @@ The platform exercises every layer of OCI's observability stack. Each signal is 
 | **OCI Service Connector Hub** | Routes OCI Logging log groups into Log Analytics for unified search and dashboarding | `deploy/oci/ensure_log_analytics_connectors.sh` |
 | **OCI WAF + Cloud Guard** | Edge-layer events correlated with application traces; auto-remediator consumes Cloud Guard problems and runs scoped fixes | `deploy/oci/ensure_waf.sh`, `deploy/oci/ensure_cloud_guard*.sh`, `services/auto-remediator/` |
 | **OCI Vault + Security Zones** | Secret material kept out of source; environment-driven configuration | `deploy/oci/ensure_vault.sh`, `deploy/oci/ensure_security_zones.sh` |
+| **OCI Generative AI + Langfuse** | Agentic GenAI traced end-to-end: one OTEL provider exports `gen_ai.*` agent/LLM spans to **both** OCI APM (service map, trace fan-out across 6 agents) and self-hosted Langfuse (prompts, tokens, cost). Built on `langchain-oci` + LangGraph | `services/genai-studio/`, `site/observability-v2/ai-studio-genai-monitoring.md` |
 
 **The correlation promise.** A customer fails checkout. From the RUM session, the operator pivots to the APM trace; from the trace, into the Java App Servers dashboard for the sidecar; from any span, into the matching ATP SQL evidence; from the same trace, into OCI Logging Analytics where every log row carries `oracleApmTraceId`. The Monitoring alarm that fired is linked to the same trace ID. Nothing is fabricated — the IDs match because the SDK and Java agent emitted them together.
 
@@ -129,6 +131,8 @@ octo-apm-demo/
 ├── crm/                  Enterprise CRM Portal — operations console (FastAPI)
 ├── services/             Supporting microservices
 │   ├── apm-java-demo/    Spring Boot payment sidecar with OCI APM Java agent
+│   ├── genai-studio/     AI Studio — LangGraph multi-agent GenAI on OCI (APM + Langfuse)
+│   ├── observability-stack/  External GenAI obs backends — Langfuse + Grafana on OKE (optional)
 │   ├── otel-gateway/     OpenTelemetry collector
 │   ├── async-worker/     Background job runner
 │   ├── auto-remediator/  OCI Functions auto-remediation

@@ -1,0 +1,396 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "type": "text",
+      "title": "",
+      "gridPos": { "h": 3, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "transparent": true,
+      "options": {
+        "mode": "html",
+        "content": "<div style='text-align:center;padding:8px 0'><h2 style='margin:0;color:#6C47FF'>OpenTelemetry for GenAI — LLM Operations</h2><p style='margin:4px 0 0;color:#888;font-size:13px'>Enterprise-grade monitoring for LLM-powered applications. No vendor lock-in. No black boxes. Just signal.<br/>OTel Semantic Conventions: <code>gen_ai.system</code>, <code>gen_ai.usage.input_tokens</code>, <code>gen_ai.request.model</code>, <code>gen_ai.operation.name</code></p></div>"
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Total Tokens",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 3 },
+      "id": 1,
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "fixed", "fixedColor": "#6C47FF" }, "unit": "short" },
+        "overrides": []
+      },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "total_tokens", "text": "Total Tokens", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "stat",
+      "title": "Cost (USD)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 3 },
+      "id": 2,
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "fixed", "fixedColor": "#FF9830" }, "unit": "currencyUSD", "decimals": 4 },
+        "overrides": []
+      },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "total_cost_usd", "text": "Cost", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "stat",
+      "title": "Projected Monthly",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 3 },
+      "id": 3,
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "fixed", "fixedColor": "#E02F44" }, "unit": "currencyUSD", "decimals": 2 },
+        "overrides": []
+      },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "projected_monthly_usd", "text": "Monthly", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "stat",
+      "title": "APM Services",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 3, "x": 12, "y": 3 },
+      "id": 4,
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "fixed", "fixedColor": "#37872D" } },
+        "overrides": []
+      },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "apm_services_count", "text": "Services", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "stat",
+      "title": "Error Rate",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 3, "x": 15, "y": 3 },
+      "id": 5,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 5 },
+            { "color": "red", "value": 15 }
+          ]},
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "stat",
+      "title": "Coordinator Agents",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 3, "x": 18, "y": 3 },
+      "id": 6,
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "#3274D9" } }, "overrides": [] },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "coordinator_agents_count", "text": "Agents", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "stat",
+      "title": "MCP Tools",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 4, "w": 3, "x": 21, "y": 3 },
+      "id": 7,
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "#8AB8FF" } }, "overrides": [] },
+      "options": { "graphMode": "none", "colorMode": "value", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{
+        "columns": [{ "selector": "mcp_tools_count", "text": "Tools", "type": "number" }],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/summary"
+      }]
+    },
+    {
+      "type": "timeseries",
+      "title": "LLM Throughput & Latency (5-min buckets)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 7 },
+      "id": 10,
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 15, "gradientMode": "opacity", "pointSize": 4, "showPoints": "auto", "spanNulls": true },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Latency Avg ms" }, "properties": [{ "id": "custom.axisPlacement", "value": "right" }, { "id": "unit", "value": "ms" }] }
+        ]
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "time", "text": "Time", "type": "time" },
+          { "selector": "throughput", "text": "Throughput", "type": "number" },
+          { "selector": "latency_avg_ms", "text": "Latency Avg ms", "type": "number" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/runtime-series?hours=24&bucket_minutes=5"
+      }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Token Consumption Over Time",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 7 },
+      "id": 11,
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60, "gradientMode": "scheme", "stacking": { "mode": "normal", "group": "A" } },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "time", "text": "Time", "type": "time" },
+          { "selector": "input_tokens", "text": "Input Tokens", "type": "number" },
+          { "selector": "output_tokens", "text": "Output Tokens", "type": "number" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/runtime-series?hours=24&bucket_minutes=5"
+      }]
+    },
+    {
+      "type": "table",
+      "title": "APM Service Health — OTel Instrumented Services",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 15 },
+      "id": 20,
+      "options": { "showHeader": true, "sortBy": [{ "displayName": "Errors", "desc": true }] },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Health" }, "properties": [
+            { "id": "custom.displayMode", "value": "color-background-solid" },
+            { "id": "mappings", "value": [
+              { "type": "value", "options": { "healthy": { "text": "HEALTHY", "color": "green" }, "warning": { "text": "WARNING", "color": "yellow" }, "degraded": { "text": "DEGRADED", "color": "orange" }, "critical": { "text": "CRITICAL", "color": "red" } } }
+            ]}
+          ]},
+          { "matcher": { "id": "byName", "options": "Error Rate %" }, "properties": [
+            { "id": "custom.displayMode", "value": "gradient-gauge" },
+            { "id": "max", "value": 100 },
+            { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } }
+          ]},
+          { "matcher": { "id": "byName", "options": "Avg Duration (ms)" }, "properties": [{ "id": "unit", "value": "ms" }] }
+        ]
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "service", "text": "Service", "type": "string" },
+          { "selector": "traces", "text": "Traces", "type": "number" },
+          { "selector": "errors", "text": "Errors", "type": "number" },
+          { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" },
+          { "selector": "avg_duration_ms", "text": "Avg Duration (ms)", "type": "number" },
+          { "selector": "health", "text": "Health", "type": "string" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/apm-services?hours=24"
+      }]
+    },
+    {
+      "type": "table",
+      "title": "GenAI Operations — Traced by OTel gen_ai.operation.name",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 23 },
+      "id": 30,
+      "options": { "showHeader": true, "sortBy": [{ "displayName": "Trace Count", "desc": true }] },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Error Rate %" }, "properties": [
+            { "id": "custom.displayMode", "value": "gradient-gauge" },
+            { "id": "max", "value": 100 },
+            { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 25 }] } }
+          ]},
+          { "matcher": { "id": "byName", "options": "Avg Duration (ms)" }, "properties": [{ "id": "unit", "value": "ms" }] },
+          { "matcher": { "id": "byName", "options": "Max Duration (ms)" }, "properties": [{ "id": "unit", "value": "ms" }] }
+        ]
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "service", "text": "Service", "type": "string" },
+          { "selector": "operation", "text": "Operation", "type": "string" },
+          { "selector": "trace_count", "text": "Trace Count", "type": "number" },
+          { "selector": "error_count", "text": "Errors", "type": "number" },
+          { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" },
+          { "selector": "avg_duration_ms", "text": "Avg Duration (ms)", "type": "number" },
+          { "selector": "max_duration_ms", "text": "Max Duration (ms)", "type": "number" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/apm-operations?hours=24&limit=50"
+      }]
+    },
+    {
+      "type": "table",
+      "title": "AI Agent Inventory — Coordinator Agents",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 23 },
+      "id": 31,
+      "options": { "showHeader": true },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Status" }, "properties": [
+            { "id": "custom.displayMode", "value": "color-background-solid" },
+            { "id": "mappings", "value": [
+              { "type": "value", "options": { "ok": { "text": "OK", "color": "green" }, "error": { "text": "ERROR", "color": "red" }, "unknown": { "text": "UNKNOWN", "color": "yellow" } } }
+            ]}
+          ]}
+        ]
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "role", "text": "Agent Role", "type": "string" },
+          { "selector": "display_name", "text": "Display Name", "type": "string" },
+          { "selector": "status", "text": "Status", "type": "string" },
+          { "selector": "tools_count", "text": "Tools", "type": "number" },
+          { "selector": "models", "text": "Models", "type": "string" },
+          { "selector": "description", "text": "Description", "type": "string" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/coordinator-agents"
+      }]
+    },
+    {
+      "type": "table",
+      "title": "MCP Server Connectivity",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 31 },
+      "id": 40,
+      "options": { "showHeader": true },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Connected" }, "properties": [
+            { "id": "custom.displayMode", "value": "color-background-solid" },
+            { "id": "mappings", "value": [
+              { "type": "value", "options": { "true": { "text": "CONNECTED", "color": "green" }, "false": { "text": "DISCONNECTED", "color": "red" } } }
+            ]}
+          ]}
+        ]
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "name", "text": "Server", "type": "string" },
+          { "selector": "status", "text": "Status", "type": "string" },
+          { "selector": "connected", "text": "Connected", "type": "string" },
+          { "selector": "tool_count", "text": "Tools", "type": "number" },
+          { "selector": "transport", "text": "Transport", "type": "string" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/mcp-servers"
+      }]
+    },
+    {
+      "type": "table",
+      "title": "Recent Traces — OTel Distributed Tracing via OCI APM",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 37 },
+      "id": 50,
+      "options": { "showHeader": true, "sortBy": [{ "displayName": "Time", "desc": true }] },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Duration (ms)" }, "properties": [
+            { "id": "unit", "value": "ms" },
+            { "id": "custom.displayMode", "value": "gradient-gauge" },
+            { "id": "min", "value": 0 },
+            { "id": "max", "value": 5000 },
+            { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 500 }, { "color": "red", "value": 2000 }] } }
+          ]},
+          { "matcher": { "id": "byName", "options": "Severity" }, "properties": [
+            { "id": "custom.displayMode", "value": "color-background-solid" },
+            { "id": "mappings", "value": [
+              { "type": "value", "options": { "healthy": { "text": "OK", "color": "green" }, "warning": { "text": "WARN", "color": "yellow" }, "degraded": { "text": "DEGRADED", "color": "orange" }, "critical": { "text": "CRITICAL", "color": "red" } } }
+            ]}
+          ]}
+        ]
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "time", "text": "Time", "type": "time" },
+          { "selector": "service", "text": "Service", "type": "string" },
+          { "selector": "operation", "text": "Operation", "type": "string" },
+          { "selector": "duration_ms", "text": "Duration (ms)", "type": "number" },
+          { "selector": "span_count", "text": "Spans", "type": "number" },
+          { "selector": "error_count", "text": "Errors", "type": "number" },
+          { "selector": "severity", "text": "Severity", "type": "string" },
+          { "selector": "trace_key", "text": "Trace Key", "type": "string" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/apm-traces?hours=4&limit=80"
+      }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Error Rate Over Time (%)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "__INFINITY_UID__" },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 31 },
+      "id": 60,
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 20, "gradientMode": "opacity" },
+          "color": { "mode": "fixed", "fixedColor": "#E02F44" },
+          "unit": "percent",
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 10 }] }
+        },
+        "overrides": []
+      },
+      "targets": [{
+        "columns": [
+          { "selector": "time", "text": "Time", "type": "time" },
+          { "selector": "error_rate_pct", "text": "Error Rate %", "type": "number" }
+        ],
+        "format": "table", "parser": "backend", "refId": "A", "source": "url", "type": "json",
+        "url": "__CP_API_BASE__/runtime-series?hours=24&bucket_minutes=5"
+      }]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["oci-demo", "genai", "otel", "llm-operations"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "OpenTelemetry for GenAI — LLM Operations",
+  "uid": "oci-genai-llm-ops",
+  "version": 1
+}

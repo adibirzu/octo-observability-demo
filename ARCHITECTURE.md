@@ -242,6 +242,16 @@ This is the section the platform was built to demonstrate.
 
 A Service Connector routes every relevant OCI Logging log group into Logging Analytics so saved searches can run against the same records the apps write. The mapping is one Service Connector per log group, source = Logging, target = Logging Analytics log group, with a parser hint. Quota considerations: Service Connector Hub is subject to a per-tenancy connector cap; the deployment script consolidates log groups where possible and uses one connector per logical signal class (app logs, audit, WAF, eBPF) rather than one per service.
 
+### D.8 OCI Generative AI + Langfuse (AI Studio, optional)
+
+`services/genai-studio/` is an **admin-only**, flag-gated GenAI multi-agent component (LangGraph supervisor + sales-analyst, evidence/RAG, code-interpreter, product-copy, presenter) running on OCI Generative AI via `langchain-oci`. The Drone Shop reaches it through the same-origin proxy `/api/ai-studio/*` (`AI_STUDIO_ENABLED` defaults off — the storefront is unchanged otherwise).
+
+**One tracer, two consumers.** A single OpenTelemetry `TracerProvider` exports `gen_ai.*` agent/LLM spans to **both** OCI APM (OTLP — full service map + trace fan-out: shop → studio → 6 agents → each LLM call) **and** self-hosted Langfuse (via a span-name-prefix filter so only the agent path reaches it). A cost span-processor stamps `gen_ai.usage.cost_usd` from token counts so both panes show cost.
+
+**APM enhanced from Langfuse.** `services/genai-studio/app/sync/langfuse_apm_sync.py` periodically pulls the Langfuse public API (tokens, cost, latency p50/p95, LLM-as-judge scores) and publishes them as OCI Monitoring custom metrics (namespace `octo_genai`), so the token/cost dashboard (`deploy/oci/monitoring-dashboards/genai-token-cost.json`) and alarms read them in OCI. APM saved queries (`deploy/oci/apm/saved-queries/ai-studio-*.json`) carry **external drilldowns** to `langfuse.${DNS_DOMAIN}` and `grafana.${DNS_DOMAIN}`. LLM-as-a-judge runs as Langfuse evaluator templates scored by an OCI GenAI model (`services/genai-studio/scripts/ensure_evaluator_templates.py`).
+
+**External observability stack.** Langfuse + Grafana are deployed by the optional `services/observability-stack/` component into their own namespaces (`octo-langfuse`, `octo-grafana`) — never part of the app runtime. All secrets are generated at deploy time / read from OCI; nothing sensitive is committed.
+
 ---
 
 ## E. Cross-Service Correlation Contract

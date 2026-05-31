@@ -1,0 +1,20 @@
+{
+  "displayName": "OCTO GenAI — Token Spike",
+  "metricCompartmentId": "${COMPARTMENT_ID}",
+  "namespace": "octo_genai",
+  "query": "genai_total_tokens[5m]{service = \"octo-genai-studio\"}.sum() > 100000",
+  "severity": "WARNING",
+  "pendingDuration": "PT5M",
+  "destinations": ["${NOTIFICATION_TOPIC_OCID}"],
+  "isEnabled": true,
+  "messageFormat": "RAW",
+  "body": "AI Studio GenAI token consumption spiked above 100k tokens / 5m. Possible runaway agent loop or abuse. Inspect the run in Langfuse (lf.octodemo.cloud) and agent fan-out in OCI APM.",
+  "resolveBody": "AI Studio GenAI token rate is back to normal.",
+  "metadata": {
+    "phase": "genai-observability",
+    "plan": "P3 APM enhancement from Langfuse",
+    "design": "Reads octo_genai custom metrics published by the Langfuse->OCI Monitoring sync.",
+    "metric_publisher": "services/genai-studio/app/sync/langfuse_apm_sync.py",
+    "purpose": "Detect runaway token usage in the agentic GenAI workflow."
+  }
+}

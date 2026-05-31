@@ -11,6 +11,7 @@ ATP-backed drone commerce platform with full OCI observability, IDCS SSO, cross-
 - **Go workflow gateway** for backend workflow menus, scheduled ATP query sweeps, query-lab probes, and Select AI execution paths.
 - **IDCS OIDC SSO** (Authorization Code + PKCE) with JWKS-verified ID tokens (RS256). SSO users auto-provisioned; password users coexist.
 - **Cross-service CRM integration** — bidirectional customer/order sync with the companion CRM service via W3C `traceparent`-propagated distributed traces.
+- **AI Studio (optional GenAI component)** — a feature-flagged admin surface that proxies to the `services/genai-studio/` LangGraph multi-agent service (OCI Generative AI via `langchain-oci`). Produces a merchandising brief from six collaborating agents, traced into OCI APM **and** Langfuse. Off by default (`AI_STUDIO_ENABLED=false`); see [`site/drone-shop/ai-studio.md`](../site/drone-shop/ai-studio.md).
 
 ### Observability (MELTS)
 - **Metrics** — Prometheus `/metrics` + OCI Monitoring custom metrics (app.health, error rate, checkout count, DB latency, CRM sync age)

@@ -392,6 +392,71 @@ For each app server host:
 Repeat for the admin host. Do not type or commit real live hostnames in public
 docs; use ignored private runbooks or environment variables for live delivery.
 
+## 12b. AI Studio — Agentic GenAI (APM + Langfuse)
+
+Run this scene only when the **AI Studio** component is enabled
+(`AI_STUDIO_ENABLED=true` and the `genai-studio` service is reachable). It shows
+an *agentic* GenAI workflow — six collaborating agents on OCI Generative AI —
+traced into **both** OCI APM and Langfuse. See
+[GenAI monitoring](ai-studio-genai-monitoring.md) for the full reference.
+
+1. Open `${OCTO_LIVE_ADMIN_URL}/ai-studio` (the **AI Studio** nav item appears
+   only when the component is configured).
+2. Submit a request, for example
+   `Build a merchandising brief for our thermal-mapping drones`.
+3. Watch the result render: the merchandising brief, the category-revenue chart,
+   the ordered list of agents that ran, and the **trace id**.
+4. **OCI APM → Trace Explorer:** open that trace id. Walk the fan-out:
+   `ai_studio.brief` → `coordinator.supervisor` →
+   `agent.invoke.sales_analyst` (`tool.atp_query`) → `retrieval.evidence` →
+   `tool.code_interpreter` → `agent.invoke.product_copy` →
+   `agent.invoke.presenter`. Open an `llm.invoke.*` span and show
+   `gen_ai.request.model` and `gen_ai.usage.input_tokens` / `output_tokens`.
+5. **Langfuse** (self-hosted, e.g. `lf.octodemo.cloud`): open the same run /
+   session. Show prompts, completions, token counts, cost, and per-agent
+   latency — the LLM-centric view of the identical run.
+6. Contrast the two panes: APM answers *"where did time and errors go across
+   services?"*; Langfuse answers *"what did each agent prompt and spend?"*.
+
+Expected telemetry:
+
+- One continuous APM trace spanning shop proxy → studio → each agent → each LLM call.
+- `gen_ai.*` attributes on every model span; `studio.agents_run` on `studio.brief`.
+- The same run visible in Langfuse via the agent-path span-prefix filter.
+
+### 12b.1 Log Analytics drill for the GenAI run
+
+Console path:
+
+```text
+OCI Console -> Observability & Management -> Log Analytics -> Log Explorer
+```
+
+1. Set the time window around the brief you generated.
+2. Filter by `oracleApmTraceId = <trace_id>` (the trace id shown with the brief)
+   or `'Log Source' = 'octo-genai-studio'`.
+3. Pin these fields so the GenAI run reads cleanly:
+   - `Trace ID`, `Span ID`, `Service`
+   - `gen_ai.request.model` (Model)
+   - `gen_ai.usage.input_tokens` / `gen_ai.usage.output_tokens` / `gen_ai.usage.cost_usd`
+   - `studio.run_id`, `studio.data_source`
+4. Open the saved search **`genai-token-cost`** (token & cost by run / model / agent).
+5. From any log row, use `oracleApmTraceId` to pivot back to APM Trace Explorer —
+   closing the loop APM ↔ Log Analytics ↔ Langfuse on one `trace_id`.
+
+This is the same join contract as the rest of the platform (Section 11): the
+GenAI run is correlated by `oracleApmTraceId`, not re-keyed.
+
+This scene maps directly onto the OCI Enterprise AI multi-agent pattern
+(Supervisor + Sales Analyst + Evidence/RAG + Code Interpreter + Product Copy +
+Presenter) — the difference here is that every hop is observable.
+
+!!! warning "Tenancy discipline"
+    Validate AI Studio + the observability stack in the **staging** tenancy first.
+    Promote to the **production** tenancy only after the staging run is green and
+    reviewed. The Sales Analyst ATP user is **read-only**; all GenAI / Langfuse /
+    APM secrets come from OCI Vault or environment, never from git.
+
 ## 13. Close The Story
 
 Use this narrative:
@@ -409,6 +474,8 @@ Use this narrative:
    symptom.
 8. Stack Monitoring and DB Management/Operations Insights explain host and DB
    health for the same time window.
+9. AI Studio proves an agentic GenAI workflow on OCI Generative AI is observable
+   the same way — one APM trace across six agents, the same run in Langfuse.
 
 ## Supporting Scripts
 

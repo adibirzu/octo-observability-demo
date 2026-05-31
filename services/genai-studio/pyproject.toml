@@ -1,0 +1,48 @@
+[project]
+name = "octo-genai-studio"
+version = "0.1.0"
+description = "OCTO Drone Shop AI Studio — LangGraph multi-agent merchandising-brief service on OCI Generative AI, observable in OCI APM + Langfuse."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.136.3",
+    "uvicorn[standard]==0.48.0",
+    "httpx==0.28.1",
+    "pydantic>=2.9,<3.0",
+    "python-multipart==0.0.29",
+    # LangChain / LangGraph on OCI Generative AI
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langgraph>=0.2.0",
+    "langchain-oci>=0.2.6,<0.3.0",
+    # OCI SDK + Oracle driver (read-only ATP access for the Sales Analyst agent)
+    "oci>=2.120.0",
+    "oracledb>=2.0.0",
+    # Code Interpreter agent (sandboxed trend analysis + chart)
+    "pandas>=2.2.0",
+    "matplotlib>=3.9.0",
+    # Observability — OTEL -> OCI APM, plus Langfuse bridge
+    "opentelemetry-api>=1.27.0",
+    "opentelemetry-sdk>=1.27.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.27.0",
+    "opentelemetry-instrumentation-fastapi>=0.48b0",
+    "opentelemetry-instrumentation-httpx>=0.48b0",
+    "langfuse>=4.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.6.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+    "unit: fast isolated tests",
+    "integration: tests that touch external services",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
