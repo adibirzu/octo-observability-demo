@@ -23,6 +23,8 @@ def _stub_llm(monkeypatch):
         "app.agents.supervisor",
         "app.agents.evidence",
         "app.agents.product_copy",
+        "app.agents.data_qa",
+        "app.agents.rag",
     ):
         monkeypatch.setattr(module + ".call_llm", fake_call_llm, raising=True)
     yield

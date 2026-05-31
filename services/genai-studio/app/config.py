@@ -51,6 +51,14 @@ class Settings:
     genai_temperature: float = field(default_factory=lambda: _env_float("GENAI_TEMPERATURE", 0.2))
     genai_max_tokens: int = field(default_factory=lambda: _env_int("GENAI_MAX_TOKENS", 800))
 
+    # RAG (Oracle 23ai native VECTOR). The embed model dimension MUST match the
+    # genai_kb.embedding VECTOR(N) column (Cohere v3 = 1024).
+    rag_enabled: bool = field(default_factory=lambda: _env_bool("STUDIO_RAG_ENABLED", False))
+    genai_embed_model_id: str = field(default_factory=lambda: _env("OCI_GENAI_EMBED_MODEL_ID", "cohere.embed-multilingual-v3.0"))
+    embed_dim: int = field(default_factory=lambda: _env_int("STUDIO_EMBED_DIM", 1024))
+    rag_top_k: int = field(default_factory=lambda: _env_int("STUDIO_RAG_TOP_K", 4))
+    rag_kb_table: str = field(default_factory=lambda: _env("STUDIO_RAG_KB_TABLE", "genai_kb"))
+
     # Observability — OTEL -> OCI APM
     otel_service_name: str = field(default_factory=lambda: _env("OTEL_SERVICE_NAME", "octo-genai-studio"))
     service_namespace: str = field(default_factory=lambda: _env("SERVICE_NAMESPACE", "octo-drone-shop"))
@@ -80,6 +88,11 @@ class Settings:
     @property
     def db_configured(self) -> bool:
         return self.db_kind in {"oracle", "postgres"} and bool(self.db_dsn)
+
+    @property
+    def rag_configured(self) -> bool:
+        """RAG needs the flag on, GenAI for embeddings, and an Oracle DB."""
+        return bool(self.rag_enabled and self.genai_configured and self.db_kind == "oracle" and self.db_configured)
 
 
 @lru_cache
