@@ -48,6 +48,7 @@ console → *Admin AI + Workflow Labs* → **AI Studio — Enterprise GenAI** ca
 | --- | --- | --- | --- |
 | **Ask about your data** | `POST /api/ai-studio/ask` → studio `/api/studio/ask` | Free-form questions about **orders, products, and sales analytics**; a single **Data Analyst** agent answers, grounded on a read-only ATP snapshot | `orders`, `products`, `order_items` via the read-only `studio_ro` user |
 | **Ask the catalog (RAG)** | `POST /api/ai-studio/rag` → studio `/api/studio/rag` | Semantic **retrieval-augmented** Q&A about products/specs/policies; the **Product Expert** embeds the question, runs a 23ai native VECTOR search over `genai_kb`, and answers grounded on the retrieved passages (with cosine-distance citations) | `genai_kb` (catalog + curated docs) via `studio_ro` |
+| **Chat (multi-turn)** | `POST /api/ai-studio/chat` → studio `/api/studio/chat` | A conversational assistant that **remembers the session** (prior turns are replayed into the model); JSON or SSE token stream | in-process conversation memory; drone/shop domain |
 | **Merchandising brief** | `POST /api/ai-studio/brief` → studio `/api/studio/brief` | The 6-agent merchandising workflow (supervisor + sales/evidence/code/copy/presenter) | same read-only ATP tables |
 
 The RAG mode adds `retrieval.embed` + `vector_db.search` spans to the trace — see
@@ -60,6 +61,12 @@ grants); the read query is captured on the `tool.atp_query` span (`db.statement`
 model turns your question + that snapshot into the answer — it never writes to the database and is
 told to use only the provided data. The response carries `data_source` (`oracle_atp` when live,
 `synthetic` with a `fallback_reason` otherwise) so you always know the provenance.
+
+## Multi-turn chat
+
+The **Chat (multi-turn)** tab is a conversational surface (distinct from the single-shot ask/rag/brief): the studio keeps a bounded, session-scoped history and **replays prior turns into each OCI GenAI call**, so the assistant has context. Each turn is traced under `studio.chat` → `agent.invoke.chat_assistant` → `llm.invoke.chat` carrying `gen_ai.*` plus `gen_ai.conversation.id` (= the session id), so a whole conversation is one correlatable session in OCI APM and Langfuse — and shows up in the **GenAI Session Rollup** view. Set `stream=true` for an SSE token stream (the studio records time-to-first-token on the span); the admin UI uses the JSON path.
+
+Conversation memory is process-local and bounded (last ~6 exchanges, LRU across sessions); the documented upgrade is a Redis/ATP-backed store keyed on the same session id.
 
 ## Request flow
 

@@ -117,6 +117,10 @@ distance) so retrieval is auditable from the UI as well as the trace.
    degrades to a labelled fallback when off or the KB is unseeded — it never breaks the
    existing modes.
 
+## Multi-turn chat telemetry
+
+The chat surface adds `studio.chat` (mode=chat) → `agent.invoke.chat_assistant` → `llm.invoke.chat` spans. Each carries `gen_ai.conversation.id` (the session id), `gen_ai.request.turns` (history depth replayed), and — when streamed — `gen_ai.response.time_to_first_token_ms`. Because conversations are grouped by `session.id`, the **GenAI Session Rollup** Log Analytics search (Phase A) shows tokens/cost/agents per conversation, and the same `trace_id` follows each turn into Langfuse.
+
 ## Admin GenAI Observability page
 
 `/admin/genai-observability` is an in-product single pane (admin-only) that **uses the

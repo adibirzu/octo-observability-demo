@@ -358,3 +358,96 @@ async def studio_metrics_summary(
         "summary": summary,
         "recent": recent,
     }
+
+
+# ── Phase B: multi-turn / streaming chat ──────────────────────────────────
+import json as _json  # local alias; safe re-import
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(..., description="User chat message")
+    session_id: str = Field("", description="Conversation id (groups turns)")
+    user: str = Field("", description="Requesting user (email or id)")
+    stream: bool = Field(False, description="Stream tokens via SSE when true")
+
+
+@app.post("/api/studio/chat")
+async def studio_chat(
+    body: ChatRequest,
+    request: Request,
+    x_internal_service_key: str | None = Header(default=None),
+):
+    """Multi-turn chat over OCI GenAI with server-side conversation memory.
+
+    Distinct from the single-shot brief/ask/rag: prior turns are replayed into the
+    model. JSON by default; set ``stream=true`` for an SSE token stream. Traced
+    under ``studio.chat`` (mode=chat) with gen_ai.* + gen_ai.conversation.id so a
+    whole conversation is one correlatable session in OCI APM and Langfuse.
+    """
+    _require_internal_key(x_internal_service_key)
+    settings = get_settings()
+    from app.agents.chat import answer_chat, stream_chat
+
+    message = bounded(body.message, limit=settings.message_max_chars)
+    allowed, reason = scope_decision(message)
+    run_id = uuid.uuid4().hex
+    session_id = bounded(body.session_id, limit=64) or run_id
+    user = bounded(body.user, limit=200)
+
+    if not allowed:
+        tracer = get_tracer()
+        with run_scope(run_id=run_id, session_id=session_id, user=user):
+            with tracer.start_as_current_span("studio.chat") as span:
+                span.set_attribute("studio.run_id", run_id)
+                span.set_attribute("studio.mode", "chat")
+                span.set_attribute("studio.guardrail.allowed", False)
+                span.set_attribute("studio.guardrail.reason", reason)
+                trace_id = current_trace_id()
+        return {
+            "run_id": run_id, "trace_id": trace_id, "session_id": session_id,
+            "status": "refused", "reason": reason,
+            "answer": "I can only chat about OCTO drones, products, orders, and policies.",
+        }
+
+    if body.stream:
+        from fastapi.responses import StreamingResponse
+
+        def _event_stream():
+            tracer = get_tracer()
+            with run_scope(run_id=run_id, session_id=session_id, user=user):
+                with tracer.start_as_current_span("studio.chat") as span:
+                    span.set_attribute("studio.run_id", run_id)
+                    span.set_attribute("studio.mode", "chat")
+                    span.set_attribute("studio.streaming", True)
+                    span.set_attribute("studio.guardrail.allowed", True)
+                    trace_id = current_trace_id()
+                    yield "event: meta\ndata: " + _json.dumps(
+                        {"run_id": run_id, "trace_id": trace_id, "session_id": session_id}
+                    ) + "\n\n"
+                    try:
+                        for delta in stream_chat(message, session_id):
+                            yield "data: " + _json.dumps({"delta": delta}) + "\n\n"
+                    except Exception as exc:  # pragma: no cover
+                        span.record_exception(exc)
+                        yield "event: error\ndata: " + _json.dumps({"error": "stream_failed"}) + "\n\n"
+                    yield "event: done\ndata: {}\n\n"
+
+        return StreamingResponse(_event_stream(), media_type="text/event-stream")
+
+    tracer = get_tracer()
+    with run_scope(run_id=run_id, session_id=session_id, user=user):
+        with tracer.start_as_current_span("studio.chat") as span:
+            span.set_attribute("studio.run_id", run_id)
+            span.set_attribute("studio.mode", "chat")
+            span.set_attribute("studio.guardrail.allowed", True)
+            trace_id = current_trace_id()
+            result = answer_chat(message, session_id)
+            usage = result.get("token_usage", {})
+            span.set_attribute("gen_ai.usage.input_tokens", int(usage.get("input", 0)))
+            span.set_attribute("gen_ai.usage.output_tokens", int(usage.get("output", 0)))
+    return {
+        "run_id": run_id, "trace_id": trace_id, "session_id": session_id,
+        "status": "ok", "agents_run": ["chat_assistant"],
+        "model_id": settings.genai_model_id, "token_usage": usage,
+        "answer": result.get("answer", ""), "history_turns": result.get("history_turns", 0),
+    }
