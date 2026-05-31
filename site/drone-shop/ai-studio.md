@@ -93,7 +93,7 @@ the OCI Responses-API managed sandbox is the documented hardening upgrade.
 | Shop | `AI_STUDIO_INTERNAL_SERVICE_KEY` | — | Shared key the proxy presents to the studio. |
 | Studio | `OCI_GENAI_MODEL_ID` | — | e.g. `meta.llama-3.3-70b-instruct` / `cohere.command-r-08-2024`. |
 | Studio | `OCI_AUTH_TYPE` | `INSTANCE_PRINCIPAL` | `API_KEY` for local. |
-| Studio | `LANGFUSE_BASE_URL` | — | Self-hosted Langfuse, e.g. `https://lf.octodemo.cloud`. |
+| Studio | `LANGFUSE_BASE_URL` | — | Self-hosted Langfuse, e.g. `https://lf.<DNS_DOMAIN>`. |
 
 See [`services/genai-studio/README.md`](https://github.com/adibirzu/octo-apm-demo/tree/main/services/genai-studio)
 for the full service reference, and

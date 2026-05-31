@@ -412,7 +412,7 @@ traced into **both** OCI APM and Langfuse. See
    `tool.code_interpreter` → `agent.invoke.product_copy` →
    `agent.invoke.presenter`. Open an `llm.invoke.*` span and show
    `gen_ai.request.model` and `gen_ai.usage.input_tokens` / `output_tokens`.
-5. **Langfuse** (self-hosted, e.g. `lf.octodemo.cloud`): open the same run /
+5. **Langfuse** (self-hosted, e.g. `lf.<DNS_DOMAIN>`): open the same run /
    session. Show prompts, completions, token counts, cost, and per-agent
    latency — the LLM-centric view of the identical run.
 6. Contrast the two panes: APM answers *"where did time and errors go across
