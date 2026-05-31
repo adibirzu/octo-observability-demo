@@ -14,7 +14,7 @@ Usage: deploy/oke/create-emdemo-small-cluster.sh
 
 Creates or reuses the small emdemo OKE cluster and node pool for
 octo-apm-demo. The script reuses the existing VCN, public LB, APM domain,
-Logging resources, and ATP database from credentials/emdemo/outputs.json.
+Logging resources, and ATP database from credentials/${OCI_PROFILE:-DEFAULT}/outputs.json.
 
 Key overrides:
   OKE_WORKER_SUBNET_ID=<subnet-ocid>
@@ -39,9 +39,9 @@ esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/emdemo/outputs.json}"
+OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 
-: "${OCI_PROFILE:=emdemo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
 : "${OKE_CLUSTER_NAME:=octo-apm-demo-oke}"
 : "${OKE_KUBERNETES_VERSION:=v1.34.1}"

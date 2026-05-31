@@ -51,7 +51,7 @@ Monitoring`. The `emdemo` tenancy currently exposes Trace Explorer saved
 queries through provider id/name `APM`, so apply there with:
 
 ```bash
-OCI_CLI_PROFILE=emdemo \
+OCI_CLI_PROFILE=DEFAULT \
 COMPARTMENT_ID=<COMPARTMENT_OCID> \
 APM_DOMAIN_ID=<APM_DOMAIN_OCID> \
 APM_SAVED_QUERY_PROVIDER_ID=APM \

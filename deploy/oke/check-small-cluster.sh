@@ -6,7 +6,7 @@
 # and Service Connector Hub availability for Log Analytics routing.
 #
 # Usage:
-#   OCI_PROFILE=emdemo ./deploy/oke/check-small-cluster.sh
+#   OCI_PROFILE=DEFAULT ./deploy/oke/check-small-cluster.sh
 
 set -euo pipefail
 
@@ -24,7 +24,7 @@ case "${1:-}" in
         ;;
 esac
 
-OCI_PROFILE="${OCI_PROFILE:-emdemo}"
+OCI_PROFILE="${OCI_PROFILE:-DEFAULT}"
 OCI_REGION="${OCI_REGION:-us-phoenix-1}"
 NODE_COUNT="${NODE_COUNT:-2}"
 NODE_OCPUS="${NODE_OCPUS:-1}"

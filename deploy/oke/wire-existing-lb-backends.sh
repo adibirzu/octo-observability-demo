@@ -11,9 +11,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/emdemo/outputs.json}"
+OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 
-: "${OCI_PROFILE:=emdemo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${SHOP_BACKEND_SET:=oke_shop_nodeport}"
 : "${CRM_BACKEND_SET:=oke_admin_nodeport}"
 : "${ACTIVE_SHOP_BACKEND_SET:=shop}"

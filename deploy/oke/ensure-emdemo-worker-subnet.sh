@@ -32,9 +32,9 @@ esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/emdemo/outputs.json}"
+OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 
-: "${OCI_PROFILE:=emdemo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
 : "${OKE_WORKER_SUBNET_NAME:=octo-emdemo-oke-workers-private-subnet}"
 : "${OKE_WORKER_SUBNET_CIDR:=10.42.40.0/24}"

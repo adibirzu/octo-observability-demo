@@ -27,7 +27,7 @@ Apply Phase 7 OCI Monitoring alarms to the OCTO compartment.
 Environment:
   COMPARTMENT_ID            (required)  OCTO compartment OCID
   NOTIFICATION_TOPIC_OCID   (required)  OCI Notifications topic OCID
-  OCI_PROFILE               (optional, default: emdemo)
+  OCI_PROFILE               (optional, default: DEFAULT)
   APPLY                     (optional, default: false) — set to "true" to mutate
 
 The default flow is a dry-run that lists what would be applied. When
@@ -41,7 +41,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     exit 0
 fi
 
-: "${OCI_PROFILE:=emdemo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${APPLY:=false}"
 : "${COMPARTMENT_ID:?COMPARTMENT_ID is required — set to the OCTO compartment OCID}"
 : "${NOTIFICATION_TOPIC_OCID:?NOTIFICATION_TOPIC_OCID is required — set to the Notifications topic OCID}"

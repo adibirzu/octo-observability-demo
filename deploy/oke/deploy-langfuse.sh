@@ -39,7 +39,7 @@ esac
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 MANIFEST="${REPO_ROOT}/k8s/oke/langfuse/langfuse.yaml"
-OUTPUTS_JSON="${OUTPUTS_JSON:-/Users/abirzu/dev/octo-apm-demo/credentials/emdemo/outputs.json}"
+OUTPUTS_JSON="${OUTPUTS_JSON:-${REPO_ROOT:-.}/credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 
 command_exists() { command -v "$1" >/dev/null 2>&1; }
 
@@ -113,7 +113,7 @@ if ! command_exists timeout && ! command_exists gtimeout; then
     require_cmd python3
 fi
 
-: "${OCI_PROFILE:=emdemo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
 : "${OCI_CMD_TIMEOUT:=45}"
 : "${OCI_CLI_CONNECTION_TIMEOUT:=10}"
