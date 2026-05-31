@@ -151,6 +151,7 @@ nav:
     - Auto-remediation flow: observability-v2/autoremediation-flow.md
     - Code Knowledge Map: observability-v2/code-knowledge-map.md
     - GenAI monitoring (AI Studio): observability-v2/ai-studio-genai-monitoring.md
+    - Langfuse vs OCI APM (GenAI): observability-v2/langfuse-vs-apm-genai.md
     - Demo script: observability-v2/demo-script.md
   - Integrations:
     - integrations/index.md
