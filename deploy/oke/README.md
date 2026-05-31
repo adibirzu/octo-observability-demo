@@ -14,12 +14,12 @@ secret after a Langfuse project is created.
 
 Read-only OCTO DEMO capacity check: use
 [`check-small-cluster.sh`](check-small-cluster.sh) before creating any OKE
-resources in `emdemo`. It verifies the target VCN/subnets from the Compute
+resources in `demo`. It verifies the target VCN/subnets from the Compute
 outputs, lists existing clusters, checks OKE cluster quota, E4/E5 Flex OCPU
 availability, block-volume headroom, and Service Connector Hub availability.
 It does not create, update, or delete resources.
 
-Current `emdemo` result on May 11, 2026:
+Current `demo` result on May 11, 2026:
 
 - Quota/capacity is sufficient for a small two-node test cluster in the OCTO
   project compartment: `cluster-count available=3`, E4/E5 Flex OCPUs
@@ -72,7 +72,7 @@ The script:
    (`octo-auth`, `octo-atp`, `octo-atp-wallet`, `octo-oci-config`,
    `octo-apm`, `octo-logging`, and `ocir-pull-secret`) and fails fast
    when any are missing. Recreate them with
-   `deploy/oke/bootstrap-emdemo-secrets.sh`.
+   `deploy/oke/bootstrap-demo-secrets.sh`.
 3. If the OCI Secrets Store CSI driver CRD is installed, applies a
    per-namespace `SecretProviderClass` that pulls every secret from
    OCI Vault. Otherwise continues with plain Kubernetes Secrets.
@@ -92,9 +92,9 @@ It defaults from `OCI_CLI_REGION`, then `OCI_REGION_ID`, then `us-phoenix-1`.
 Keep it explicit when OCIR images are pulled from a different region than the
 APM domain.
 
-## emdemo small OKE cluster path
+## demo small OKE cluster path
 
-The emdemo OKE path is deliberately staged beside the live Compute/VM
+The demo OKE path is deliberately staged beside the live Compute/VM
 deployment. It reuses the existing VCN, ATP database, APM domain, OCI
 Logging resources, and public OCI Load Balancer, but it does not change
 host routing until an explicit cutover.
@@ -112,13 +112,13 @@ Capacity target:
 Provision and deploy:
 
 ```bash
-./deploy/oke/ensure-emdemo-worker-subnet.sh
+./deploy/oke/ensure-demo-worker-subnet.sh
 
 OKE_WORKER_SUBNET_ID=<worker-subnet-ocid> \
 OKE_NODE_POOL_NAME=octo-apm-demo-oke-pool-private \
-./deploy/oke/create-emdemo-small-cluster.sh
+./deploy/oke/create-demo-small-cluster.sh
 
-./deploy/oke/bootstrap-emdemo-secrets.sh
+./deploy/oke/bootstrap-demo-secrets.sh
 
 OCIR_REGION=eu-frankfurt-1 \
 OCIR_TENANCY=<OCIR_NAMESPACE> \
@@ -131,7 +131,7 @@ OKE_CLUSTER_NAME=octo-apm-demo-oke \
 ./deploy/oke/install-oci-kubernetes-monitoring.sh
 ```
 
-Current emdemo validation, May 13, 2026:
+Current demo validation, May 13, 2026:
 
 - OKE cluster `octo-apm-demo-oke` is active with two private workers in
   the dedicated OKE worker subnet.
@@ -174,7 +174,7 @@ Current emdemo validation, May 13, 2026:
   logs on this small demo cluster.
 - The ONM config sends container and tcpconnect logs directly to Log
   Analytics through the OCI Log Analytics Fluentd plugin. It does not
-  require a Service Connector Hub connector. The emdemo Service Connector
+  require a Service Connector Hub connector. The demo Service Connector
   Hub quota is still exhausted (`used=7`, `available=0`), so new OCI
   Logging -> Log Analytics connectors still require quota cleanup or reuse
   of an existing approved connector.
@@ -242,7 +242,7 @@ drains during upgrades never kill every pod at once.
   discovery CronJob would re-enable Resource Manager service-log
   automation while `OCI_ONM_ENABLE_SERVICE_LOGS=false`.
 - NetworkPolicies allow the existing LB/NodePort path only from
-  `OKE_EXTERNAL_INGRESS_CIDR`, defaulting to the emdemo VCN range
+  `OKE_EXTERNAL_INGRESS_CIDR`, defaulting to the demo VCN range
   `10.42.0.0/16`.
 - Pods disable service-account token automount, run as UID/GID `10001`
   where the image supports it, use the runtime-default seccomp profile,

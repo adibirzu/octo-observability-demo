@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Create/reuse a dedicated private OKE worker subnet in the existing emdemo VCN.
+# Create/reuse a dedicated private OKE worker subnet in the existing demo VCN.
 #
 # The VM deployment keeps using the app private subnet. This subnet is for OKE
 # workers only, so OKE node bootstrap/security rules do not loosen VM ingress.
@@ -8,10 +8,10 @@ set -euo pipefail
 
 usage() {
     cat <<'EOF'
-Usage: deploy/oke/ensure-emdemo-worker-subnet.sh
+Usage: deploy/oke/ensure-demo-worker-subnet.sh
 
 Creates or reuses the dedicated private OKE worker subnet in the existing
-emdemo VCN. It also scopes security-list rules for worker bootstrap and the
+demo VCN. It also scopes security-list rules for worker bootstrap and the
 existing OCI Load Balancer NodePort path.
 EOF
 }
@@ -36,9 +36,9 @@ OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/o
 
 : "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
-: "${OKE_WORKER_SUBNET_NAME:=octo-emdemo-oke-workers-private-subnet}"
+: "${OKE_WORKER_SUBNET_NAME:=octo-demo-oke-workers-private-subnet}"
 : "${OKE_WORKER_SUBNET_CIDR:=10.42.40.0/24}"
-: "${OKE_WORKER_SECURITY_LIST_NAME:=octo-emdemo-oke-workers-private-sl}"
+: "${OKE_WORKER_SECURITY_LIST_NAME:=octo-demo-oke-workers-private-sl}"
 : "${OKE_SHOP_NODEPORT:=30080}"
 : "${OKE_CRM_NODEPORT:=30081}"
 
@@ -235,7 +235,7 @@ if [[ -z "${WORKER_SECURITY_LIST_ID}" ]]; then
         --display-name "${OKE_WORKER_SECURITY_LIST_NAME}" \
         --ingress-security-rules "[]" \
         --egress-security-rules '[{"protocol":"all","destination":"0.0.0.0/0","destinationType":"CIDR_BLOCK","isStateless":false,"description":"OKE worker egress through NAT and Service Gateway routes."}]' \
-        --freeform-tags '{"project":"octo-apm-demo","environment":"emdemo","managed_by":"deploy/oke/ensure-emdemo-worker-subnet.sh"}' |
+        --freeform-tags '{"project":"octo-apm-demo","environment":"demo","managed_by":"deploy/oke/ensure-demo-worker-subnet.sh"}' |
         jq -r '.data.id')"
     echo "  Created ${OKE_WORKER_SECURITY_LIST_NAME}"
 else
@@ -267,7 +267,7 @@ if [[ -z "${WORKER_SUBNET_ID}" ]]; then
         --dhcp-options-id "${APP_DHCP_OPTIONS_ID}" \
         --security-list-ids "[\"${WORKER_SECURITY_LIST_ID}\"]" \
         --dns-label "octooke" \
-        --freeform-tags '{"project":"octo-apm-demo","environment":"emdemo","managed_by":"deploy/oke/ensure-emdemo-worker-subnet.sh"}' |
+        --freeform-tags '{"project":"octo-apm-demo","environment":"demo","managed_by":"deploy/oke/ensure-demo-worker-subnet.sh"}' |
         jq -r '.data.id')"
     echo "  Created ${OKE_WORKER_SUBNET_NAME}"
 else
@@ -283,5 +283,5 @@ Dedicated OKE worker subnet is ready:
 Use it with:
   OKE_WORKER_SUBNET_ID=${WORKER_SUBNET_ID} \\
   OKE_NODE_POOL_NAME=octo-apm-demo-oke-pool-private \\
-  ./deploy/oke/create-emdemo-small-cluster.sh
+  ./deploy/oke/create-demo-small-cluster.sh
 EOF

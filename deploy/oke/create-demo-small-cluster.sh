@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Create/reuse the small emdemo OKE cluster for octo-apm-demo.
+# Create/reuse the small demo OKE cluster for octo-apm-demo.
 #
-# This intentionally reuses the existing emdemo VCN, ATP, APM domain, OCI
+# This intentionally reuses the existing demo VCN, ATP, APM domain, OCI
 # Logging resources, and public OCI Load Balancer. It does not alter LB listener
 # routing. Workloads are exposed as NodePort services so the existing LB can be
 # switched later with deploy/oke/wire-existing-lb-backends.sh.
@@ -10,9 +10,9 @@ set -euo pipefail
 
 usage() {
     cat <<'EOF'
-Usage: deploy/oke/create-emdemo-small-cluster.sh
+Usage: deploy/oke/create-demo-small-cluster.sh
 
-Creates or reuses the small emdemo OKE cluster and node pool for
+Creates or reuses the small demo OKE cluster and node pool for
 octo-apm-demo. The script reuses the existing VCN, public LB, APM domain,
 Logging resources, and ATP database from credentials/${OCI_PROFILE:-DEFAULT}/outputs.json.
 
@@ -230,7 +230,7 @@ find_or_create_nsg() {
         --compartment-id "${compartment_id}" \
         --vcn-id "${vcn_id}" \
         --display-name "${name}" \
-        --freeform-tags '{"project":"octo-apm-demo","managed_by":"deploy/oke/create-emdemo-small-cluster.sh"}' |
+        --freeform-tags '{"project":"octo-apm-demo","managed_by":"deploy/oke/create-demo-small-cluster.sh"}' |
         jq -r '.data.id'
 }
 
@@ -294,7 +294,7 @@ ENDPOINT_SUBNET_ID="${OKE_ENDPOINT_SUBNET_ID:-$(json_value '.network.value.lb_su
 APP_NSG_ID="$(json_value '.network.value.app_nsg_id')"
 LB_NSG_ID="$(json_value '.network.value.lb_nsg_id')"
 LB_PUBLIC_SL_ID="$(oci_json network security-list list --compartment-id "${COMPARTMENT_ID}" --vcn-id "${VCN_ID}" --all |
-    jq -r '.data[] | select(."display-name" == "octo-emdemo-lb-public-sl") | .id' | head -1)"
+    jq -r '.data[] | select(."display-name" == "octo-demo-lb-public-sl") | .id' | head -1)"
 ADMIN_CIDR="${OKE_ADMIN_CIDR:-$(curl -fsS --max-time 10 https://ifconfig.me 2>/dev/null || true)/32}"
 if [[ "${ADMIN_CIDR}" == "/32" ]]; then
     echo "Could not determine admin CIDR. Set OKE_ADMIN_CIDR." >&2
@@ -302,7 +302,7 @@ if [[ "${ADMIN_CIDR}" == "/32" ]]; then
 fi
 
 echo "================================================================"
-echo " OKE small cluster bootstrap — emdemo"
+echo " OKE small cluster bootstrap — demo"
 echo "   Cluster:        ${OKE_CLUSTER_NAME}"
 echo "   Shape:          ${OKE_NODE_POOL_SIZE} x ${OKE_NODE_SHAPE} (${OKE_NODE_OCPUS} OCPU / ${OKE_NODE_MEMORY_GBS} GiB each)"
 echo "   Total nodes:    $((OKE_NODE_POOL_SIZE * OKE_NODE_OCPUS)) OCPU / $((OKE_NODE_POOL_SIZE * OKE_NODE_MEMORY_GBS)) GiB"
@@ -312,8 +312,8 @@ echo "   Endpoint subnet:${ENDPOINT_SUBNET_ID}"
 echo "   API CIDR:       ${ADMIN_CIDR}"
 echo "================================================================"
 
-OKE_WORKER_NSG_ID="$(find_or_create_nsg "${COMPARTMENT_ID}" "${VCN_ID}" "octo-emdemo-oke-workers-nsg")"
-OKE_ENDPOINT_NSG_ID="$(find_or_create_nsg "${COMPARTMENT_ID}" "${VCN_ID}" "octo-emdemo-oke-endpoint-nsg")"
+OKE_WORKER_NSG_ID="$(find_or_create_nsg "${COMPARTMENT_ID}" "${VCN_ID}" "octo-demo-oke-workers-nsg")"
+OKE_ENDPOINT_NSG_ID="$(find_or_create_nsg "${COMPARTMENT_ID}" "${VCN_ID}" "octo-demo-oke-endpoint-nsg")"
 
 echo
 echo "[1/5] Ensuring network rules..."
@@ -348,7 +348,7 @@ if [[ -z "${CLUSTER_ID}" ]]; then
         --service-lb-subnet-ids "[\"$(json_value '.network.value.lb_subnet_id')\"]" \
         --pods-cidr "10.244.0.0/16" \
         --services-cidr "10.96.0.0/16" \
-        --freeform-tags '{"project":"octo-apm-demo","environment":"emdemo","managed_by":"deploy/oke/create-emdemo-small-cluster.sh"}' \
+        --freeform-tags '{"project":"octo-apm-demo","environment":"demo","managed_by":"deploy/oke/create-demo-small-cluster.sh"}' \
         --wait-for-state SUCCEEDED \
         --max-wait-seconds 1800 |
         jq -r '.data.resources[]? | select(."entity-type" == "cluster") | .identifier' | head -1)"
@@ -385,7 +385,7 @@ if [[ -z "${NODE_POOL_ID}" ]]; then
         --placement-configs "[{\"availabilityDomain\":\"${AD_NAME}\",\"subnetId\":\"${WORKER_SUBNET_ID}\"}]" \
         --nsg-ids "[\"${APP_NSG_ID}\",\"${OKE_WORKER_NSG_ID}\"]" \
         --cni-type FLANNEL_OVERLAY \
-        --node-freeform-tags '{"project":"octo-apm-demo","environment":"emdemo","role":"oke-worker"}' \
+        --node-freeform-tags '{"project":"octo-apm-demo","environment":"demo","role":"oke-worker"}' \
         --initial-node-labels '[{"key":"octo.oracle.com/pool","value":"small"},{"key":"octo.oracle.com/project","value":"octo-apm-demo"}]' \
         --wait-for-state SUCCEEDED \
         --max-wait-seconds 2400 |
@@ -424,6 +424,6 @@ Cluster created/reused:
   node_pool_id=${NODE_POOL_ID:-unknown}
 
 Next:
-  ./deploy/oke/bootstrap-emdemo-secrets.sh
+  ./deploy/oke/bootstrap-demo-secrets.sh
   DNS_DOMAIN=octodemo.cloud OCIR_REGION=${OCI_REGION} OCIR_TENANCY=\$(oci os ns get --profile ${OCI_PROFILE} --query data --raw-output) ./deploy/oke/deploy-oke.sh
 EOF

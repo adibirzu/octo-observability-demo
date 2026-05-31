@@ -135,7 +135,7 @@ def test_oke_image_build_requires_immutable_tag_and_runtime_uid() -> None:
 
 
 def test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse() -> None:
-    bootstrap = read_text("deploy/oke/bootstrap-emdemo-secrets.sh")
+    bootstrap = read_text("deploy/oke/bootstrap-demo-secrets.sh")
 
     assert "command -v envsubst" in bootstrap
     assert "envsubst < \"${REPO_ROOT}/deploy/k8s/oke/common/namespaces.yaml\"" in bootstrap

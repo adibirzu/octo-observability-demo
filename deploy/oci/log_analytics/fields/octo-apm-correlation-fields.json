@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2026-05-12",
   "policy": "reuse-existing-fields-first",
-  "namespaceFieldInventory": "Generated from `oci log-analytics field list-fields` for the emdemo Log Analytics namespace. Re-run apply_fields.sh to validate against a target namespace before deployment.",
+  "namespaceFieldInventory": "Generated from `oci log-analytics field list-fields` for the demo Log Analytics namespace. Re-run apply_fields.sh to validate against a target namespace before deployment.",
   "fields": [
     {
       "semanticName": "Order ID",

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check whether the emdemo OCTO project can host a small OKE test cluster.
+# Check whether the demo OCTO project can host a small OKE test cluster.
 #
 # This script is intentionally read-only. It checks the target OCTO project VCN,
 # existing clusters, OKE cluster quota, node OCPU quota, boot-volume capacity,

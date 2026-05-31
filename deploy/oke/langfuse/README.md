@@ -15,7 +15,7 @@ operator explicitly sets `ALLOW_DIFFERENT_VCN=true`.
 ./deploy/oke/deploy-langfuse.sh --check
 ```
 
-For emdemo, defaults are read from `credentials/${OCI_PROFILE:-DEFAULT}/outputs.json`:
+For demo, defaults are read from `credentials/${OCI_PROFILE:-DEFAULT}/outputs.json`:
 
 - `COMPARTMENT_ID`
 - `TARGET_VCN_ID`

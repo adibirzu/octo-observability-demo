@@ -209,7 +209,7 @@ def build_story(styles: dict[str, ParagraphStyle]) -> list:
     story: list = [
         Paragraph("Private Live OCTO Demo Guide - End User and OCI APM Troubleshooting", styles["GuideTitle"]),
         paragraph(
-            "This PDF is generated from a live Playwright run against the emdemo deployment. "
+            "This PDF is generated from a live Playwright run against the demo deployment. "
             "It includes real deployment domains and private screenshots, so it must stay in ignored local paths only.",
             styles["GuideSubtitle"],
         ),
@@ -430,7 +430,7 @@ def build_story(styles: dict[str, ParagraphStyle]) -> list:
         numbered_list(
             [
                 "Open OCI Console > Observability & Management > Application Performance Monitoring > Trace Explorer.",
-                "Select the emdemo compartment and the correct APM domain.",
+                "Select the demo compartment and the correct APM domain.",
                 "Set the time window to the Playwright run.",
                 "Search by copied trace id. If no trace id is available, filter by workflow.id = 'checkout', payment.gateway.request_id, or operation names containing checkout.",
                 "Open the trace details and inspect the waterfall from RUM/browser to shop, payment gateway simulation, Java app-server, admin/CRM, and ATP SQL.",
