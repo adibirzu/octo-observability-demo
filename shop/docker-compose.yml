@@ -43,6 +43,10 @@ services:
       - WORKFLOW_PUBLIC_API_BASE_URL=${WORKFLOW_PUBLIC_API_BASE_URL:-}
       - WORKFLOW_SERVICE_NAME=${WORKFLOW_SERVICE_NAME:-octo-workflow-gateway}
       - SELECTAI_PROFILE_NAME=${SELECTAI_PROFILE_NAME:-}
+      - AI_STUDIO_ENABLED=${AI_STUDIO_ENABLED:-false}
+      - AI_STUDIO_BASE_URL=${AI_STUDIO_BASE_URL:-http://genai-studio:8090}
+      - AI_STUDIO_SERVICE_NAME=${AI_STUDIO_SERVICE_NAME:-octo-genai-studio}
+      - AI_STUDIO_INTERNAL_SERVICE_KEY=${AI_STUDIO_INTERNAL_SERVICE_KEY:-}
       - OCI_APM_ENDPOINT=${OCI_APM_ENDPOINT:-}
       - OCI_APM_PRIVATE_DATAKEY=${OCI_APM_PRIVATE_DATAKEY:-}
       - OCI_APM_PUBLIC_DATAKEY=${OCI_APM_PUBLIC_DATAKEY:-}
@@ -89,4 +93,38 @@ services:
       - SELECTAI_PROFILE_NAME=${SELECTAI_PROFILE_NAME:-}
     volumes:
       - ${ORACLE_WALLET_PATH:-./wallet}:/opt/oracle/wallet:ro
+    restart: unless-stopped
+
+  # AI Studio — GenAI multi-agent merchandising service (LangGraph on OCI GenAI).
+  # Host port 8091 avoids the workflow-gateway's 8090; the shop reaches it
+  # in-network at http://genai-studio:8090. Enable with AI_STUDIO_ENABLED=true.
+  genai-studio:
+    build:
+      context: ./../services/genai-studio
+    ports:
+      - "8091:8090"
+    env_file:
+      - .env.local
+      - deploy/credentials.env
+    environment:
+      - STUDIO_PORT=8090
+      - OTEL_SERVICE_NAME=${AI_STUDIO_SERVICE_NAME:-octo-genai-studio}
+      - SERVICE_NAMESPACE=${SERVICE_NAMESPACE:-octo-drone-shop}
+      - STUDIO_INTERNAL_SERVICE_KEY=${AI_STUDIO_INTERNAL_SERVICE_KEY:-}
+      - OCI_AUTH_TYPE=${OCI_AUTH_TYPE:-API_KEY}
+      - OCI_CONFIG_PROFILE=${OCI_CONFIG_PROFILE:-DEFAULT}
+      - OCI_GENAI_MODEL_ID=${OCI_GENAI_MODEL_ID:-}
+      - OCI_GENAI_COMPARTMENT_ID=${OCI_COMPARTMENT_ID:-}
+      - OCI_GENAI_ENDPOINT=${OCI_GENAI_ENDPOINT:-}
+      - OCI_APM_ENDPOINT=${OCI_APM_ENDPOINT:-}
+      - OCI_APM_PRIVATE_DATA_KEY=${OCI_APM_PRIVATE_DATAKEY:-}
+      - LANGFUSE_TRACING_ENABLED=${LANGFUSE_TRACING_ENABLED:-true}
+      - LANGFUSE_BASE_URL=${LANGFUSE_BASE_URL:-}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - STUDIO_DB_KIND=${STUDIO_DB_KIND:-none}
+      - STUDIO_DB_DSN=${STUDIO_DB_DSN:-}
+      - STUDIO_DB_USER=${STUDIO_DB_USER:-}
+      - STUDIO_DB_PASSWORD=${STUDIO_DB_PASSWORD:-}
+      - STUDIO_WEB_SEARCH_ENABLED=${STUDIO_WEB_SEARCH_ENABLED:-false}
     restart: unless-stopped
