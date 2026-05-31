@@ -49,13 +49,13 @@ _SYNTHETIC = {
 _DATA_QUERIES = {
     "orders_summary": (
         "SELECT COUNT(*) AS order_count, "
-        "NVL(SUM(total_amount),0) AS total_revenue, "
-        "NVL(AVG(total_amount),0) AS avg_order_value, "
+        "NVL(SUM(total),0) AS total_revenue, "
+        "NVL(AVG(total),0) AS avg_order_value, "
         "MAX(created_at) AS latest_order "
         "FROM orders"
     ),
     "orders_by_status": (
-        "SELECT status, COUNT(*) AS orders, NVL(SUM(total_amount),0) AS revenue "
+        "SELECT status, COUNT(*) AS orders, NVL(SUM(total),0) AS revenue "
         "FROM orders GROUP BY status ORDER BY orders DESC"
     ),
     "product_summary": (
