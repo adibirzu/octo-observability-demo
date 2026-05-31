@@ -1,0 +1,15 @@
+{
+  "displayName": "GenAI APM Trace Dashboard",
+  "description": "APM-centric GenAI view: the AI Studio distributed trace correlated to logs. Tiles are keyed on the same trace_id / studio.run_id that OCI APM Trace Explorer uses (saved queries ai_studio_agent_fanout + ai_studio_token_cost on the octo-genai-studio service). Use this alongside APM Trace Explorer for the span waterfall; drilldowns go to Langfuse (lf.${DNS_DOMAIN}) and Grafana (grafana.${DNS_DOMAIN}).",
+  "freeformTags": {
+    "deployment-profile": "shared",
+    "managed-by": "apply_saved_searches_and_dashboards.py",
+    "surface": "apm-genai"
+  },
+  "widgets": [
+    { "title": "GenAI agent spans (APM trace correlation)", "search": "genai-agent-fanout" },
+    { "title": "Token & cost per trace/run", "search": "genai-token-cost" },
+    { "title": "Token throughput over time", "search": "genai-token-trend" },
+    { "title": "GenAI errors in trace context", "search": "genai-errors" }
+  ]
+}
