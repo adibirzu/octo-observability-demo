@@ -94,6 +94,15 @@ class Config:
     workflow_poll_seconds = _env_int("WORKFLOW_POLL_SECONDS", 90)
     workflow_faulty_query_enabled = _env_value("WORKFLOW_FAULTY_QUERY_ENABLED", "false").lower() in ("1", "true", "yes")
 
+    # ── AI Studio (GenAI multi-agent) component ──
+    # Disabled by default: when the flag/base URL are unset the shop is unchanged,
+    # the nav item is hidden, and the proxy returns 503.
+    ai_studio_enabled = _env_bool("AI_STUDIO_ENABLED", False)
+    ai_studio_base_url = _env_value("AI_STUDIO_BASE_URL", "").rstrip("/")
+    ai_studio_service_name = _env_value("AI_STUDIO_SERVICE_NAME", "octo-genai-studio")
+    ai_studio_internal_service_key = _env_secret("AI_STUDIO_INTERNAL_SERVICE_KEY", "")
+    ai_studio_timeout_seconds = _env_float("AI_STUDIO_TIMEOUT_SECONDS", 60.0)
+
     # ── Java APM app-server sidecar ──
     java_apm_service_url = _env_value("JAVA_APM_SERVICE_URL", "").rstrip("/")
     java_apm_service_name = _env_value(
@@ -253,6 +262,10 @@ class Config:
     @property
     def workflow_gateway_configured(self) -> bool:
         return bool(self.workflow_api_base_url)
+
+    @property
+    def ai_studio_configured(self) -> bool:
+        return bool(self.ai_studio_enabled and self.ai_studio_base_url)
 
     @property
     def selectai_configured(self) -> bool:

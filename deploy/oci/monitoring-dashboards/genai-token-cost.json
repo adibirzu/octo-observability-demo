@@ -1,0 +1,46 @@
+{
+  "displayName": "OCTO GenAI — Tokens, Cost & Judge Scores",
+  "description": "OCI Monitoring dashboard for AI Studio GenAI analytics published by the Langfuse->OCI Monitoring sync (namespace octo_genai). Token usage, estimated USD cost, latency percentiles, and LLM-as-judge scores. APM has no native dashboards, so GenAI cost/score visualization lives on OCI Monitoring; drill out to Langfuse + Grafana for detail.",
+  "freeformTags": {
+    "platform": "octo-apm-demo",
+    "component": "genai-observability",
+    "managed_by": "deploy/oci/monitoring-dashboards/apply.sh"
+  },
+  "metricNamespace": "octo_genai",
+  "externalLinks": [
+    {"name": "Langfuse", "url": "https://lf.<DNS_DOMAIN>"},
+    {"name": "Grafana FinOps", "url": "https://grafana.<DNS_DOMAIN>"}
+  ],
+  "widgets": [
+    {
+      "title": "GenAI total tokens (per interval)",
+      "query": "genai_total_tokens[1m]{service = \"octo-genai-studio\"}.sum()",
+      "type": "LINE"
+    },
+    {
+      "title": "Input vs output tokens",
+      "query": "genai_input_tokens[1m].sum() + genai_output_tokens[1m].sum()",
+      "type": "LINE"
+    },
+    {
+      "title": "Estimated GenAI cost (USD)",
+      "query": "genai_cost_usd[1m]{service = \"octo-genai-studio\"}.sum()",
+      "type": "LINE"
+    },
+    {
+      "title": "Generations count",
+      "query": "genai_generations[1m].sum()",
+      "type": "LINE"
+    },
+    {
+      "title": "Latency p50 / p95 (ms)",
+      "query": "genai_latency_p95_ms[1m].max()",
+      "type": "LINE"
+    },
+    {
+      "title": "LLM-as-judge avg score",
+      "query": "genai_judge_score_avg[5m].mean()",
+      "type": "LINE"
+    }
+  ]
+}

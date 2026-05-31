@@ -127,6 +127,7 @@ time, ~15 minutes per subsequent tenancy via the Resource Manager stack.
 | Component | Tech | Routes | Key features |
 |---|---|---|---|
 | Drone Shop | Python/FastAPI | 98 | Commerce, SSO, chaos, observability, CRM sync |
+| AI Studio (proxy) | `server/modules/ai_studio.py` + `/ai-studio` | admin-only | Same-origin proxy to the GenAI multi-agent service (`services/genai-studio/`); forwards W3C trace context; off by default (`AI_STUDIO_ENABLED`) |
 | Workflow Gateway | Go | ~15 | Select AI, query lab, ATP sweeps, component health |
 | Enterprise CRM | Python/FastAPI | ~80 | CRM, simulation proxy, SSO, distributed traces |
 | Ops Portal | Python/FastAPI | ~40 | Tenancy config, k6 launcher, health matrix, monitoring |

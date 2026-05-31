@@ -9,6 +9,11 @@ tmp/
 node_modules/
 .DS_Store
 
+# Local-only redaction denylist (exact tenancy/namespace literals — never commit)
+tests/redaction_denylist.local
+# Local Antigravity CLI session cache (captures tenancy context — never commit)
+.antigravitycli/
+
 # Env files (never commit real values)
 .env
 .env.local

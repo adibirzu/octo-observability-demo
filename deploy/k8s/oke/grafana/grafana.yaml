@@ -1,0 +1,265 @@
+# GenAI observability Grafana on OKE for OCTO-DEMO.
+#
+# Rendered by deploy/oke/deploy-grafana.sh:
+#   envsubst < deploy/k8s/oke/grafana/grafana.yaml | kubectl apply -f -
+#
+# Dashboards are provisioned from a ConfigMap built at deploy time from
+# deploy/k8s/oke/grafana/dashboards/*.json (ported from OCI-DEMO C32). The
+# Infinity datasource targets ${GENAI_API_BASE} (a GenAI metrics/JSON API,
+# e.g. the AI Studio observability endpoint); the OCI Metrics datasource reads
+# the OCI Monitoring custom metrics published by the Langfuse->APM sync (P3).
+# No secrets are committed — admin password + API token are injected at deploy
+# time into the grafana-secrets Secret.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${GRAFANA_NAMESPACE}
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+    app.kubernetes.io/component: dashboards
+    octo.oracle.com/tier: test
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: ${GRAFANA_NAMESPACE}
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: OCI Metrics
+        uid: oci-metrics
+        type: oci-metrics-datasource
+        access: proxy
+        editable: true
+        jsonData:
+          tenancymode: "instance"
+          environment: "OCI Instance"
+          defaultRegion: "${OCI_REGION}"
+      - name: GenAI API
+        uid: control-plane-api
+        type: yesoreyeram-infinity-datasource
+        access: proxy
+        isDefault: true
+        editable: true
+        jsonData:
+          allowedHosts:
+            - "${GENAI_API_BASE}"
+          httpHeaderName1: Authorization
+        secureJsonData:
+          httpHeaderValue1: "Bearer ${GENAI_API_TOKEN}"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-provider
+  namespace: ${GRAFANA_NAMESPACE}
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+data:
+  provider.yaml: |
+    apiVersion: 1
+    providers:
+      - name: octo-genai
+        orgId: 1
+        folder: OCTO GenAI
+        type: file
+        disableDeletion: false
+        editable: true
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards
+
+# NOTE: the grafana-dashboards ConfigMap is generated at deploy time by
+# deploy/oke/deploy-grafana.sh from deploy/k8s/oke/grafana/dashboards/*.json
+# (with __CP_API_BASE__/__INFINITY_UID__/__OCI_UID__ substituted) and mounted at
+# /var/lib/grafana/dashboards. It is intentionally not inlined here.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: ${GRAFANA_NAMESPACE}
+  labels:
+    app: grafana
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+        app.kubernetes.io/part-of: octo-demo-observability
+    spec:
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
+        runAsNonRoot: true
+      containers:
+        - name: grafana
+          image: docker.io/grafana/grafana-oss:11.3.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-secrets
+                  key: admin-user
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-secrets
+                  key: admin-password
+            - name: GF_SERVER_ROOT_URL
+              value: "${GRAFANA_PUBLIC_URL}"
+            - name: GF_SERVER_DOMAIN
+              value: "${GRAFANA_HOSTNAME}"
+            - name: GF_USERS_ALLOW_SIGN_UP
+              value: "false"
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "false"
+            - name: GF_INSTALL_PLUGINS
+              value: "oci-metrics-datasource,yesoreyeram-infinity-datasource"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "768Mi"
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/grafana
+            - name: datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: dashboard-provider
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: dashboards
+              mountPath: /var/lib/grafana/dashboards
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: grafana-data
+        - name: datasources
+          configMap:
+            name: grafana-datasources
+        - name: dashboard-provider
+          configMap:
+            name: grafana-dashboard-provider
+        - name: dashboards
+          configMap:
+            name: grafana-dashboards
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+  namespace: ${GRAFANA_NAMESPACE}
+  labels:
+    app: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: "${GRAFANA_STORAGE_CLASS}"
+  resources:
+    requests:
+      storage: "${GRAFANA_STORAGE}"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: ${GRAFANA_NAMESPACE}
+  labels:
+    app: grafana
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+spec:
+  type: ClusterIP
+  selector:
+    app: grafana
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-lb
+  namespace: ${GRAFANA_NAMESPACE}
+  labels:
+    app: grafana
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: octo-demo-observability
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "${OCI_LB_SHAPE_FLEX_MIN}"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "${OCI_LB_SHAPE_FLEX_MAX}"
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: "${OCI_LB_SUBNET_OCID}"
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "None"
+spec:
+  type: LoadBalancer
+  selector:
+    app: grafana
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grafana-ingress
+  namespace: ${GRAFANA_NAMESPACE}
+spec:
+  podSelector:
+    matchLabels:
+      app: grafana
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 3000
