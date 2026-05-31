@@ -184,5 +184,5 @@ Images pushed:
   ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-workflow-gateway:${IMAGE_TAG}
 
 Deploy with:
-  DNS_DOMAIN=octodemo.cloud OCIR_REGION=${OCIR_REGION} OCIR_TENANCY=${OCIR_TENANCY} IMAGE_TAG=${IMAGE_TAG} ./deploy/oke/deploy-oke.sh
+  DNS_DOMAIN=<DNS_DOMAIN> OCIR_REGION=${OCIR_REGION} OCIR_TENANCY=${OCIR_TENANCY} IMAGE_TAG=${IMAGE_TAG} ./deploy/oke/deploy-oke.sh
 EOF

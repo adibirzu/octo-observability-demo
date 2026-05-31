@@ -23,7 +23,7 @@
     {"savedSearch": "genai-token-cost", "field": "studio.run_id", "parameter": "run_id"}
   ],
   "external_drilldowns": [
-    {"name": "Langfuse", "url": "https://lf.octodemo.cloud", "why": "Inspect prompt/completion, token usage, cost, and LLM-as-judge scores for this run."},
-    {"name": "Grafana FinOps", "url": "https://grafana.octodemo.cloud", "why": "Token cost attribution and GenAI spend dashboards (LLM FinOps)."}
+    {"name": "Langfuse", "url": "https://lf.<DNS_DOMAIN>", "why": "Inspect prompt/completion, token usage, cost, and LLM-as-judge scores for this run."},
+    {"name": "Grafana FinOps", "url": "https://grafana.<DNS_DOMAIN>", "why": "Token cost attribution and GenAI spend dashboards (LLM FinOps)."}
   ]
 }

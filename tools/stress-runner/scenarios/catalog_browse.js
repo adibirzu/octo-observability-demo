@@ -9,7 +9,7 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
-const TARGET = __ENV.STRESS_TARGET_URL || 'https://shop.octodemo.cloud';
+const TARGET = __ENV.STRESS_TARGET_URL || 'https://shop.<DNS_DOMAIN>';
 const RUN_ID = __ENV.RUN_ID || 'unset';
 
 export const options = {

@@ -3,9 +3,9 @@
 A self-contained external component that stands up the **GenAI observability backends** for the
 OCTO platform on **OKE**:
 
-- **Langfuse** (`langfuse.octodemo.cloud`) — LLM/agent traces, prompts, token usage, cost, and
+- **Langfuse** (`langfuse.<DNS_DOMAIN>`) — LLM/agent traces, prompts, token usage, cost, and
   LLM-as-a-judge scores for the [AI Studio](../genai-studio/README.md) multi-agent service.
-- **Grafana** (`grafana.octodemo.cloud`) — GenAI FinOps / operations dashboards (token cost
+- **Grafana** (`grafana.<DNS_DOMAIN>`) — GenAI FinOps / operations dashboards (token cost
   attribution, LLM operations, unified GenAI view) reading OCI Monitoring custom metrics and the
   AI Studio GenAI API via the Infinity datasource.
 
@@ -53,10 +53,10 @@ project VCN** unless `ALLOW_DIFFERENT_VCN=true`.
 
 ```bash
 # 1) Langfuse
-LANGFUSE_HOSTNAME=langfuse.octodemo.cloud ./deploy/oke/deploy-langfuse.sh
+LANGFUSE_HOSTNAME=langfuse.<DNS_DOMAIN> ./deploy/oke/deploy-langfuse.sh
 
 # 2) Grafana (after Langfuse, or independently)
-GRAFANA_HOSTNAME=grafana.octodemo.cloud ./deploy/oke/deploy-grafana.sh
+GRAFANA_HOSTNAME=grafana.<DNS_DOMAIN> ./deploy/oke/deploy-grafana.sh
 ```
 
 All secrets (Langfuse Postgres/ClickHouse/Redis/MinIO/encryption keys, Grafana admin password, the
@@ -69,14 +69,14 @@ Secrets. None are committed.
 2. Inject them into the shop + AI Studio (never commit):
    ```bash
    APP_LANGFUSE_PUBLIC_KEY=pk-lf-... APP_LANGFUSE_SECRET_KEY=sk-lf-... \
-   LANGFUSE_PROJECT_NAME=drones.octodemo.cloud ./deploy/oke/deploy-langfuse.sh
+   LANGFUSE_PROJECT_NAME=drones.<DNS_DOMAIN> ./deploy/oke/deploy-langfuse.sh
    ```
    This updates the `octo-llmetry` secret in the shop namespace; the AI Studio reads the same keys.
 
 ## DNS / TLS
 
-`*.octodemo.cloud` wildcard DNS + TLS are provisioned out of band (OCI DNS zone + cert import).
-Point `langfuse.octodemo.cloud` / `grafana.octodemo.cloud` at the respective LoadBalancer external
+`*.<DNS_DOMAIN>` wildcard DNS + TLS are provisioned out of band (OCI DNS zone + cert import).
+Point `langfuse.<DNS_DOMAIN>` / `grafana.<DNS_DOMAIN>` at the respective LoadBalancer external
 addresses printed by each script.
 
 ## Low-usage defaults
@@ -88,5 +88,5 @@ per-component resource tables in `deploy/oke/langfuse/README.md`. Grafana runs 1
 ## Security
 
 No tenancy names, OCIDs, IPs, datakeys, admin passwords, or Langfuse keys live in this component —
-only `<PLACEHOLDER>` / `${VAR}` tokens and the accepted `*.octodemo.cloud` demo domain. A redaction
+only `<PLACEHOLDER>` / `${VAR}` tokens and the accepted `*.<DNS_DOMAIN>` demo domain. A redaction
 guard test (`tests/test_observability_stack_surface.py`) enforces this.

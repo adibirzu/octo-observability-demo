@@ -62,7 +62,7 @@ def _target_host_for_shop() -> str:
     dns = (getattr(cfg, "dns_domain", "") or "").strip()
     if dns:
         return f"https://shop.{dns}"
-    return (cfg.shop_public_url or "https://shop.octodemo.cloud").rstrip("/")
+    return (cfg.shop_public_url or "https://shop.<DNS_DOMAIN>").rstrip("/")
 
 
 # Request model — server-side hard caps (D-13)

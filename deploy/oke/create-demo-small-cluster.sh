@@ -425,5 +425,5 @@ Cluster created/reused:
 
 Next:
   ./deploy/oke/bootstrap-demo-secrets.sh
-  DNS_DOMAIN=octodemo.cloud OCIR_REGION=${OCI_REGION} OCIR_TENANCY=\$(oci os ns get --profile ${OCI_PROFILE} --query data --raw-output) ./deploy/oke/deploy-oke.sh
+  DNS_DOMAIN=<DNS_DOMAIN> OCIR_REGION=${OCI_REGION} OCIR_TENANCY=\$(oci os ns get --profile ${OCI_PROFILE} --query data --raw-output) ./deploy/oke/deploy-oke.sh
 EOF

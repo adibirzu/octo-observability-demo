@@ -124,4 +124,4 @@ done
 echo
 echo "Done. Verify each saved query in OCI Console → APM → Trace Explorer."
 echo "Then wire each widget drilldown to the external_drilldowns[*] URLs"
-echo "from the corresponding JSON file (lm/phoenix/openlit/grafana .octodemo.cloud)."
+echo "from the corresponding JSON file (lm/phoenix/openlit/grafana .<DNS_DOMAIN>)."

@@ -1,7 +1,7 @@
 # Langfuse Test Stack on OKE
 
 This is the low-resource OKE path for a dedicated OCTO-DEMO Langfuse test
-environment such as `https://langfuse.octodemo.cloud`.
+environment such as `https://langfuse.<DNS_DOMAIN>`.
 
 The script is intentionally separate from the production Shop/CRM OKE deploy:
 it deploys Langfuse web, worker, Postgres, ClickHouse, Redis, and MinIO in
@@ -28,8 +28,8 @@ prints the node summary.
 ## Apply
 
 ```bash
-LANGFUSE_HOSTNAME=langfuse.octodemo.cloud \
-LANGFUSE_PUBLIC_URL=https://langfuse.octodemo.cloud \
+LANGFUSE_HOSTNAME=langfuse.<DNS_DOMAIN> \
+LANGFUSE_PUBLIC_URL=https://langfuse.<DNS_DOMAIN> \
 ./deploy/oke/deploy-langfuse.sh
 ```
 
@@ -44,7 +44,7 @@ to it by passing project ingestion keys:
 ```bash
 APP_LANGFUSE_PUBLIC_KEY=pk-lf-... \
 APP_LANGFUSE_SECRET_KEY=sk-lf-... \
-LANGFUSE_PROJECT_NAME=drones.octodemo.cloud \
+LANGFUSE_PROJECT_NAME=drones.<DNS_DOMAIN> \
 ./deploy/oke/deploy-langfuse.sh
 ```
 

@@ -39,12 +39,12 @@ def test_query_rejects_non_admin_host() -> None:
 
     response = client.post(
         "/api/admin/coordinator/query",
-        headers={"host": "drones.octodemo.cloud"},
+        headers={"host": "drones.<DNS_DOMAIN>"},
         json={"message": "Show admin users", "page": "admin"},
     )
 
     assert response.status_code == 403
-    assert "admin.octodemo.cloud" in response.json()["detail"]
+    assert "admin.<DNS_DOMAIN>" in response.json()["detail"]
 
 
 def test_query_allows_configured_admin_host(monkeypatch) -> None:
@@ -104,7 +104,7 @@ def test_query_answers_admin_pages_with_scoped_sources() -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["allowed"] is True
-    assert payload["surface"] == "admin.octodemo.cloud"
+    assert payload["surface"] == "admin.<DNS_DOMAIN>"
     assert payload["scope"] == "octo-apm-demo"
     assert payload["guardrails"]["scope_enforced"] is True
     assert payload["guardrails"]["oci_auth_mode"] == coordinator.cfg.oci_auth_mode

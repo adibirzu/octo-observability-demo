@@ -8,7 +8,7 @@
   "destinations": ["${NOTIFICATION_TOPIC_OCID}"],
   "isEnabled": true,
   "messageFormat": "RAW",
-  "body": "AI Studio GenAI token consumption spiked above 100k tokens / 5m. Possible runaway agent loop or abuse. Inspect the run in Langfuse (lf.octodemo.cloud) and agent fan-out in OCI APM.",
+  "body": "AI Studio GenAI token consumption spiked above 100k tokens / 5m. Possible runaway agent loop or abuse. Inspect the run in Langfuse (lf.<DNS_DOMAIN>) and agent fan-out in OCI APM.",
   "resolveBody": "AI Studio GenAI token rate is back to normal.",
   "metadata": {
     "phase": "genai-observability",

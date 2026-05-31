@@ -8,8 +8,8 @@
   },
   "metricNamespace": "octo_genai",
   "externalLinks": [
-    {"name": "Langfuse", "url": "https://lf.octodemo.cloud"},
-    {"name": "Grafana FinOps", "url": "https://grafana.octodemo.cloud"}
+    {"name": "Langfuse", "url": "https://lf.<DNS_DOMAIN>"},
+    {"name": "Grafana FinOps", "url": "https://grafana.<DNS_DOMAIN>"}
   ],
   "widgets": [
     {

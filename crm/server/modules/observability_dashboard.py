@@ -168,13 +168,13 @@ def _observability_capabilities() -> dict:
             },
             "admin_coordinator": {
                 "enabled": True,
-                "surface": "admin.octodemo.cloud",
+                "surface": "admin.<DNS_DOMAIN>",
                 "scope": "octo-apm-demo",
                 "admin_only": True,
                 "scope_enforced": True,
                 "oci_auth_mode": cfg.oci_auth_mode,
                 "raw_prompt_logged": False,
-                "allowed_hosts": ["admin.octodemo.cloud"],
+                "allowed_hosts": ["admin.<DNS_DOMAIN>"],
                 "span_names": ["admin.coordinator.scope", "admin.coordinator.query"],
                 "log_fields": [
                     "coordinator.surface",

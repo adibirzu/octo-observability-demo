@@ -26,10 +26,10 @@ to the operator-owned external observability surfaces:
 
 | Host | Tool |
 |---|---|
-| `lm.octodemo.cloud` | Langfuse / LLMetry |
-| `phoenix.octodemo.cloud` | Arize Phoenix |
-| `openlit.octodemo.cloud` | OpenLIT |
-| `grafana.octodemo.cloud` | Grafana |
+| `lm.<DNS_DOMAIN>` | Langfuse / LLMetry |
+| `phoenix.<DNS_DOMAIN>` | Arize Phoenix |
+| `openlit.<DNS_DOMAIN>` | OpenLIT |
+| `grafana.<DNS_DOMAIN>` | Grafana |
 
 When importing these queries into APM, configure the widget drilldown
 to surface the matching `external_drilldowns[*].url` from the saved

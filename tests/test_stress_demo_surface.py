@@ -538,10 +538,10 @@ _APM_SQ_FILES = {
 }
 _APM_SQ_NAMESPACE_PATTERNS = ("octo_apm_demo", "octo-apm-demo")
 _APM_SQ_DRILLDOWN_HOSTS = (
-    "lm.octodemo.cloud",
-    "phoenix.octodemo.cloud",
-    "openlit.octodemo.cloud",
-    "grafana.octodemo.cloud",
+    "lm.<DNS_DOMAIN>",
+    "phoenix.<DNS_DOMAIN>",
+    "openlit.<DNS_DOMAIN>",
+    "grafana.<DNS_DOMAIN>",
 )
 
 
@@ -1558,10 +1558,10 @@ def test_lab11_includes_drilldown_hosts() -> None:
     body = read_text(_LAB11_REL)
     # D-20: all four external drilldown hosts must appear as outbound links.
     for host in (
-        "lm.octodemo.cloud",
-        "phoenix.octodemo.cloud",
-        "openlit.octodemo.cloud",
-        "grafana.octodemo.cloud",
+        "lm.<DNS_DOMAIN>",
+        "phoenix.<DNS_DOMAIN>",
+        "openlit.<DNS_DOMAIN>",
+        "grafana.<DNS_DOMAIN>",
     ):
         assert host in body, (
             f"Lab 11 must include drilldown link block for {host} (D-20)"

@@ -20,7 +20,7 @@ def test_crm_observability_capabilities_are_dashboard_safe() -> None:
     assert payload["melts"]["coverage"]["metrics"]["namespace"] == "octo_apm_demo"
     assert "app.order_sync.count" in payload["melts"]["coverage"]["metrics"]["families"]
     assert "auth-login-correlation" in payload["melts"]["coverage"]["logs"]["saved_searches"]
-    assert payload["signals"]["admin_coordinator"]["surface"] == "admin.octodemo.cloud"
+    assert payload["signals"]["admin_coordinator"]["surface"] == "admin.<DNS_DOMAIN>"
     assert payload["signals"]["admin_coordinator"]["scope"] == "octo-apm-demo"
     assert payload["signals"]["admin_coordinator"]["admin_only"] is True
     assert payload["signals"]["admin_coordinator"]["scope_enforced"] is True

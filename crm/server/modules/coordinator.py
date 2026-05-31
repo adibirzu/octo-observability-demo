@@ -31,10 +31,10 @@ tracer_fn = get_tracer
 
 _PROJECT_SCOPE = "octo-apm-demo"
 _ALLOWED_RESOURCE_HOSTS = {
-    "admin.octodemo.cloud",
-    "drones.octodemo.cloud",
-    "langfuse.octodemo.cloud",
-    "lf.octodemo.cloud",
+    "admin.<DNS_DOMAIN>",
+    "drones.<DNS_DOMAIN>",
+    "langfuse.<DNS_DOMAIN>",
+    "lf.<DNS_DOMAIN>",
 }
 _DOMAIN_RE = re.compile(r"\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b", re.IGNORECASE)
 
@@ -181,7 +181,7 @@ _TOPICS = (
     CoordinatorTopic(
         key="genai-llm",
         label="GenAI, Langfuse, and LLM telemetry",
-        keywords=("ai", "assistant", "genai", "llm", "langfuse", "lf.octodemo.cloud", "select ai", "selectai"),
+        keywords=("ai", "assistant", "genai", "llm", "langfuse", "lf.<DNS_DOMAIN>", "select ai", "selectai"),
         answer=(
             "GenAI and LLM telemetry is scoped to OCTO APM Demo: OCI APM spans, Langfuse project events, "
             "and admin-only Select AI or assistant activity. The public drone shop should not run coordinator logic."
@@ -193,7 +193,7 @@ _TOPICS = (
         ),
         suggested_actions=(
             "Record model/provider, prompt class, token counts, latency, and trace_id on GenAI spans.",
-            "Use Langfuse only for drones.octodemo.cloud project data and avoid unrelated project queries.",
+            "Use Langfuse only for drones.<DNS_DOMAIN> project data and avoid unrelated project queries.",
         ),
     ),
 )
@@ -208,10 +208,10 @@ _ALLOWED_RESOURCE_TERMS = frozenset(
         "octo demo",
         "octo-apm-demo",
         "octo apm demo",
-        "admin.octodemo.cloud",
-        "drones.octodemo.cloud",
-        "langfuse.octodemo.cloud",
-        "lf.octodemo.cloud",
+        "admin.<DNS_DOMAIN>",
+        "drones.<DNS_DOMAIN>",
+        "langfuse.<DNS_DOMAIN>",
+        "lf.<DNS_DOMAIN>",
         "enterprise-crm-portal",
         "octo-drone-shop",
         "octoatp",
@@ -406,7 +406,7 @@ def _refusal_response(reason: str) -> dict:
         "sources": [],
         "suggested_actions": [
             "Rephrase the question with an OCTO APM Demo resource or admin page.",
-            "Use admin.octodemo.cloud for coordinator questions.",
+            "Use admin.<DNS_DOMAIN> for coordinator questions.",
         ],
         "reason": reason,
     }

@@ -18,7 +18,7 @@
     "studio.data_source.fallback_reason"
   ],
   "external_drilldowns": [
-    {"name": "Langfuse", "url": "https://lf.octodemo.cloud", "why": "Same run as a Langfuse trace: per-agent prompts, completions, and timings."},
-    {"name": "Grafana LLM Ops", "url": "https://grafana.octodemo.cloud", "why": "LLM operations dashboard — agent latency and throughput."}
+    {"name": "Langfuse", "url": "https://lf.<DNS_DOMAIN>", "why": "Same run as a Langfuse trace: per-agent prompts, completions, and timings."},
+    {"name": "Grafana LLM Ops", "url": "https://grafana.<DNS_DOMAIN>", "why": "LLM operations dashboard — agent latency and throughput."}
   ]
 }

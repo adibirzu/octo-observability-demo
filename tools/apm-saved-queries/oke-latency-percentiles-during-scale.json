@@ -8,12 +8,12 @@
   "external_drilldowns": [
     {
       "name": "Langfuse / LLMetry",
-      "url": "https://lm.octodemo.cloud/",
+      "url": "https://lm.<DNS_DOMAIN>/",
       "why": "Drill into per-LLM call latency when checkout p95 spikes due to GenAI."
     },
     {
       "name": "Grafana",
-      "url": "https://grafana.octodemo.cloud/",
+      "url": "https://grafana.<DNS_DOMAIN>/",
       "why": "Compare APM-side latency with cluster / RUM dashboards."
     }
   ]
