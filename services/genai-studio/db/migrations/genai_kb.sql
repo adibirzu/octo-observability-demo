@@ -1,6 +1,6 @@
 -- genai_kb — RAG knowledge base for AI Studio (Oracle 19c compatible).
 --
--- The demo ATP is Oracle 19c (no native VECTOR type), so embeddings are stored
+-- The target ATP is Oracle 19c (no native VECTOR type), so embeddings are stored
 -- as JSON text in a CLOB column and cosine similarity is computed app-side in
 -- services/genai-studio/app/db/vector_search.py. On a 23ai DB you may instead use
 -- `embedding VECTOR(1024, FLOAT32)` + a VECTOR index and swap the ranking SQL.
