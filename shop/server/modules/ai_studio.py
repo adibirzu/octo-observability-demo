@@ -157,3 +157,55 @@ async def studio_brief(request: Request) -> Response:
 async def studio_ask(request: Request) -> Response:
     """Proxy a free-form Data Q&A (orders/products/analytics) to AI Studio."""
     return await _proxy(request, op="ask", upstream_path="/api/studio/ask")
+
+
+@router.post("/rag")
+async def studio_rag(request: Request) -> Response:
+    """Proxy a retrieval-augmented Q&A (products/specs/policies) to AI Studio."""
+    return await _proxy(request, op="rag", upstream_path="/api/studio/rag")
+
+
+async def _proxy_get(request: Request, *, op: str, upstream_path: str) -> Response:
+    """Admin-gated, trace-propagating GET proxy to the AI Studio service."""
+    principal = require_admin_or_internal_service(request)
+    if not cfg.ai_studio_configured:
+        raise HTTPException(status_code=503, detail="AI Studio is not configured")
+
+    target = f"{cfg.ai_studio_base_url}{upstream_path}"
+    tracer = get_tracer("octo-drone-shop.ai-studio")
+    with tracer.start_as_current_span(f"ai_studio.{op}") as span:
+        span.set_attributes(
+            {
+                "app.module": "admin-ai-studio",
+                "app.logical_endpoint": f"admin.ai_studio.{op}",
+                "ai_studio.service_name": cfg.ai_studio_service_name,
+                "ai_studio.admin_required": True,
+                "http.request.method": "GET",
+                "auth.role": str(principal.get("role", "unknown")),
+            }
+        )
+        try:
+            async with httpx.AsyncClient(timeout=cfg.ai_studio_timeout_seconds) as client:
+                upstream = await client.get(
+                    target, params=dict(request.query_params), headers=_copy_headers(request)
+                )
+        except httpx.HTTPError as exc:
+            span.record_exception(exc)
+            span.set_attribute("ai_studio.error", exc.__class__.__name__)
+            logger.warning("AI Studio GET proxy failed: %s", exc)
+            raise HTTPException(status_code=502, detail="AI Studio request failed") from exc
+        span.set_attribute("http.response.status_code", upstream.status_code)
+        if upstream.status_code >= 400:
+            span.set_status(Status(StatusCode.ERROR, str(upstream.status_code)))
+
+    headers = {}
+    content_type = upstream.headers.get("content-type")
+    if content_type:
+        headers["content-type"] = content_type
+    return Response(content=upstream.content, status_code=upstream.status_code, headers=headers)
+
+
+@router.get("/metrics")
+async def studio_metrics(request: Request) -> Response:
+    """Proxy the GenAI telemetry summary (admin observability page) from AI Studio."""
+    return await _proxy_get(request, op="metrics", upstream_path="/api/studio/metrics/summary")
