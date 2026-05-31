@@ -18,6 +18,19 @@ def test_data_queries_are_select_only():
 
 
 @pytest.mark.unit
+def test_orders_queries_use_real_total_column():
+    """Regression: prod ORDERS has column TOTAL, not total_amount (ORA-00904).
+
+    A wrong column name made data_overview() silently fall back to synthetic, so
+    the Data Q&A surface never showed real ATP figures. Guard both Oracle + PG.
+    """
+    for sql in list(atp_readonly._DATA_QUERIES.values()) + list(atp_readonly._DATA_QUERIES_PG.values()):
+        assert "total_amount" not in sql.lower()
+    assert "sum(total)" in atp_readonly._DATA_QUERIES["orders_summary"].lower()
+    assert "sum(total)" in atp_readonly._DATA_QUERIES["orders_by_status"].lower()
+
+
+@pytest.mark.unit
 def test_data_overview_synthetic_without_db():
     # Default settings: db_kind=none -> synthetic overview with the named sets.
     ov = atp_readonly.data_overview()
