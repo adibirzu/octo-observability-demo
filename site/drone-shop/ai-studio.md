@@ -39,14 +39,36 @@ flowchart LR
 | **Product Copy** | Product Copy agent | Merchandising copy grounded on sales + evidence. |
 | **Presenter** | Final Presenter | Assembles the final markdown brief + chart. |
 
+## Two modes
+
+AI Studio is **admin-only** and reached from the top nav **AI Studio** link or the admin
+console → *Admin AI + Workflow Labs* → **AI Studio — Enterprise GenAI** card (`/ai-studio`).
+
+| Mode | Endpoint | What it does | Data it reads |
+| --- | --- | --- | --- |
+| **Ask about your data** | `POST /api/ai-studio/ask` → studio `/api/studio/ask` | Free-form questions about **orders, products, and sales analytics**; a single **Data Analyst** agent answers, grounded on a read-only ATP snapshot | `orders`, `products`, `order_items` via the read-only `studio_ro` user |
+| **Merchandising brief** | `POST /api/ai-studio/brief` → studio `/api/studio/brief` | The 6-agent merchandising workflow (supervisor + sales/evidence/code/copy/presenter) | same read-only ATP tables |
+
+**Where answers come from.** The Data Analyst can only `SELECT` (the `studio_ro` user has no write
+grants); the read query is captured on the `tool.atp_query` span (`db.statement`). The OCI GenAI
+model turns your question + that snapshot into the answer — it never writes to the database and is
+told to use only the provided data. The response carries `data_source` (`oracle_atp` when live,
+`synthetic` with a `fallback_reason` otherwise) so you always know the provenance.
+
 ## Request flow
 
-1. An admin opens **AI Studio** (nav item appears only when configured) and submits a request.
-2. The shop proxy (`/api/ai-studio/brief`, admin/internal-service auth only) forwards the call
-   to the studio service with W3C trace context.
-3. The supervisor orchestrates the agents; each LLM call emits `gen_ai.*` telemetry.
-4. The studio returns `{ run_id, trace_id, agents_run, brief, chart_png_base64, token_usage }`.
-5. The page renders the brief, the chart, and the **trace id** for cross-referencing APM/Langfuse.
+1. An admin opens **AI Studio** and asks a data question (or requests a brief).
+2. The shop proxy (`/api/ai-studio/{ask,brief}`, admin/internal-service auth only) forwards the
+   call to the studio service with W3C trace context (one continuous trace).
+3. The Data Analyst (or the brief supervisor + agents) reads ATP read-only and calls OCI GenAI;
+   each LLM call emits `gen_ai.*` telemetry; the run is exported to **both OCI APM and Langfuse**.
+4. The studio returns `{ run_id, trace_id, data_source, agents_run, answer|brief, token_usage }`.
+5. The page renders the answer and a **"Where this came from"** line: the exact path
+   *shop proxy → octo-genai-studio → Data Analyst → ATP + OCI GenAI* plus the **trace id** to find
+   the run in OCI APM Trace Explorer, Langfuse, and the GenAI Command Center dashboard.
+
+See [Lab 15 — GenAI Data Q&A: full lineage](../workshop/lab-15-genai-data-qa-lineage.md) for the
+step-by-step correlation walkthrough.
 
 ## Governance
 
