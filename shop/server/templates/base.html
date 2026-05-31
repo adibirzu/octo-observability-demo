@@ -319,6 +319,9 @@
           <a href="/" {% if module == 'dashboard' or not module %}class="active" {% endif %}>Workspace</a>
           <a href="/shop" {% if module == 'shop' %}class="active" {% endif %}>Drone Shop</a>
           <a href="/services" {% if module == 'services' %}class="active" {% endif %}>Services & Support</a>
+          {% if ai_studio_configured %}
+          <a href="/ai-studio" {% if module == 'ai_studio' %}class="active" {% endif %}>AI Studio</a>
+          {% endif %}
         </nav>
       </header>
 

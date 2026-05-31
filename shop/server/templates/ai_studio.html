@@ -3,16 +3,31 @@
 {% block content %}
 <section aria-labelledby="ai-studio-heading" class="ai-studio">
   <header class="ai-studio__intro">
-    <h1 id="ai-studio-heading">AI Studio — agentic merchandising</h1>
+    <h1 id="ai-studio-heading">AI Studio — Enterprise GenAI (admin)</h1>
     <p>
-      A LangGraph multi-agent workflow on OCI Generative AI. A <strong>Supervisor</strong>
-      orchestrates <strong>Sales Analyst</strong> (Autonomous DB), <strong>Evidence/RAG</strong>,
-      <strong>Code Interpreter</strong>, <strong>Product Copy</strong>, and <strong>Presenter</strong>
-      agents to produce a merchandising brief. Every step is traced into OCI APM and Langfuse.
+      Multi-agent GenAI on <strong>OCI Generative AI</strong>. <strong>Ask a question</strong>
+      about your orders, products, and sales analytics (the Data Analyst reads the Autonomous
+      Database read-only), or generate an agentic <strong>merchandising brief</strong>. Every run
+      is traced into <strong>OCI APM</strong> and <strong>Langfuse</strong> — the trace id below
+      lets you follow exactly where the answer came from.
     </p>
   </header>
 
-  <form id="studio-form" class="ai-studio__form" autocomplete="off">
+  <div class="ai-studio__tabs" role="tablist">
+    <button type="button" id="tab-ask" class="ai-studio__tab is-active" role="tab" aria-selected="true">Ask about your data</button>
+    <button type="button" id="tab-brief" class="ai-studio__tab" role="tab" aria-selected="false">Merchandising brief</button>
+  </div>
+
+  <!-- Q&A panel -->
+  <form id="ask-form" class="ai-studio__form" autocomplete="off">
+    <label for="ask-question">Ask about orders, products, or analytics</label>
+    <textarea id="ask-question" name="question" rows="3" maxlength="1000"
+      placeholder="e.g. How many orders this quarter and what is total revenue? Which products are low on stock?">How many orders do we have and what is the total revenue?</textarea>
+    <button type="submit" id="ask-run">Ask the Data Analyst</button>
+  </form>
+
+  <!-- Brief panel -->
+  <form id="brief-form" class="ai-studio__form" autocomplete="off" hidden>
     <label for="studio-request">Merchandising request</label>
     <textarea id="studio-request" name="request" rows="3" maxlength="1000"
       placeholder="e.g. Build a merchandising brief for our thermal-mapping drone lineup">Build a merchandising brief for our top drone categories this quarter</textarea>
@@ -27,71 +42,113 @@
     <div class="ai-studio__meta">
       <span>Run: <code id="studio-run-id"></code></span>
       <span>Trace: <code id="studio-trace-id"></code></span>
+      <span>Data source: <code id="studio-source"></code></span>
       <span>Agents: <code id="studio-agents"></code></span>
     </div>
+    <p class="ai-studio__correlate" id="studio-correlate"></p>
     <img id="studio-chart" alt="Category revenue chart" hidden />
-    <div id="studio-brief" class="ai-studio__brief"></div>
+    <div id="studio-answer" class="ai-studio__brief"></div>
   </article>
 </section>
 
 <style nonce="{{ csp_nonce }}">
-  .ai-studio { max-width: 880px; }
-  .ai-studio__form { display: grid; gap: .5rem; margin: 1rem 0; }
+  .ai-studio { max-width: 900px; }
+  .ai-studio__tabs { display: flex; gap: .5rem; margin: 1rem 0 .25rem; }
+  .ai-studio__tab { padding: .45rem 1rem; cursor: pointer; border: 1px solid var(--line, rgba(0,0,0,.2)); background: transparent; color: inherit; border-radius: 6px 6px 0 0; }
+  .ai-studio__tab.is-active { background: rgba(108, 210, 224, 0.14); border-bottom-color: transparent; font-weight: 600; }
+  .ai-studio__form { display: grid; gap: .5rem; margin: .5rem 0 1rem; }
   .ai-studio__form textarea, .ai-studio__form input { width: 100%; padding: .6rem; }
   .ai-studio__form button { justify-self: start; padding: .6rem 1.2rem; cursor: pointer; }
-  .ai-studio__meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: .85rem; opacity: .8; margin-bottom: .75rem; }
+  .ai-studio__meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: .85rem; opacity: .85; margin-bottom: .5rem; }
+  .ai-studio__correlate { font-size: .85rem; opacity: .8; margin: 0 0 .75rem; }
+  .ai-studio__correlate a { font-weight: 600; }
   .ai-studio__brief { white-space: pre-wrap; line-height: 1.5; }
   #studio-chart { max-width: 100%; border: 1px solid rgba(0,0,0,.1); border-radius: 6px; margin: .5rem 0 1rem; }
 </style>
 
 <script nonce="{{ csp_nonce }}">
   (function () {
-    const form = document.getElementById('studio-form');
+    const askForm = document.getElementById('ask-form');
+    const briefForm = document.getElementById('brief-form');
+    const tabAsk = document.getElementById('tab-ask');
+    const tabBrief = document.getElementById('tab-brief');
     const statusEl = document.getElementById('studio-status');
     const result = document.getElementById('studio-result');
-    const briefEl = document.getElementById('studio-brief');
+    const answerEl = document.getElementById('studio-answer');
     const chartEl = document.getElementById('studio-chart');
-    const runBtn = document.getElementById('studio-run');
+    const correlateEl = document.getElementById('studio-correlate');
 
-    form.addEventListener('submit', async function (ev) {
-      ev.preventDefault();
-      runBtn.disabled = true;
-      result.hidden = true;
-      statusEl.textContent = 'Running multi-agent workflow…';
+    function setTab(ask) {
+      tabAsk.classList.toggle('is-active', ask);
+      tabBrief.classList.toggle('is-active', !ask);
+      tabAsk.setAttribute('aria-selected', ask);
+      tabBrief.setAttribute('aria-selected', !ask);
+      askForm.hidden = !ask;
+      briefForm.hidden = ask;
+    }
+    tabAsk.addEventListener('click', () => setTab(true));
+    tabBrief.addEventListener('click', () => setTab(false));
+
+    function render(data, isBrief) {
+      statusEl.textContent = data.status === 'refused'
+        ? 'Refused by guardrails: ' + (data.reason || '')
+        : 'Done.';
+      document.getElementById('studio-run-id').textContent = data.run_id || '';
+      document.getElementById('studio-trace-id').textContent = data.trace_id || '';
+      document.getElementById('studio-source').textContent = data.data_source || (data.sales && data.sales.source) || '—';
+      document.getElementById('studio-agents').textContent = (data.agents_run || []).join(' → ');
+      answerEl.textContent = data.answer || data.brief || '';
+      // Trace lineage so the operator knows exactly where the answer came from.
+      if (data.trace_id) {
+        correlateEl.innerHTML =
+          'Where this came from: shop proxy → <code>octo-genai-studio</code> → ' +
+          (isBrief ? 'supervisor + 5 agents' : 'Data Analyst') +
+          ' → OCI GenAI, reading ATP (<code>' + (document.getElementById('studio-source').textContent) + '</code>). ' +
+          'Find trace <code>' + data.trace_id + '</code> in <strong>OCI APM → Trace Explorer</strong> ' +
+          '(saved query <em>AI Studio — Agent Fan-out</em>) and the same run in ' +
+          '<strong>Langfuse</strong>; tokens &amp; cost are on the <em>GenAI Command Center</em> dashboard.';
+      } else {
+        correlateEl.textContent = '';
+      }
+      if (isBrief && data.chart_png_base64) {
+        chartEl.src = 'data:image/png;base64,' + data.chart_png_base64;
+        chartEl.hidden = false;
+      } else {
+        chartEl.hidden = true;
+      }
+      result.hidden = false;
+    }
+
+    async function submit(url, body, btn, isBrief) {
+      btn.disabled = true; result.hidden = true;
+      statusEl.textContent = isBrief ? 'Running multi-agent workflow…' : 'Asking the Data Analyst…';
       try {
-        const res = await fetch('/api/ai-studio/brief', {
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            request: document.getElementById('studio-request').value,
-            category: document.getElementById('studio-category').value,
-            session_id: 'studio-' + Date.now(),
-          }),
+          body: JSON.stringify(Object.assign({ session_id: 'studio-' + Date.now() }, body)),
         });
         const data = await res.json();
-        if (!res.ok) {
-          statusEl.textContent = 'Error: ' + (data.detail || res.status);
-          return;
-        }
-        statusEl.textContent = data.status === 'refused'
-          ? 'Request refused by guardrails: ' + (data.reason || '')
-          : 'Done.';
-        document.getElementById('studio-run-id').textContent = data.run_id || '';
-        document.getElementById('studio-trace-id').textContent = data.trace_id || '';
-        document.getElementById('studio-agents').textContent = (data.agents_run || []).join(' → ');
-        briefEl.textContent = data.brief || '';
-        if (data.chart_png_base64) {
-          chartEl.src = 'data:image/png;base64,' + data.chart_png_base64;
-          chartEl.hidden = false;
-        } else {
-          chartEl.hidden = true;
-        }
-        result.hidden = false;
+        if (!res.ok) { statusEl.textContent = 'Error: ' + (data.detail || res.status); return; }
+        render(data, isBrief);
       } catch (err) {
         statusEl.textContent = 'Request failed: ' + err;
       } finally {
-        runBtn.disabled = false;
+        btn.disabled = false;
       }
+    }
+
+    askForm.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      submit('/api/ai-studio/ask', { question: document.getElementById('ask-question').value },
+        document.getElementById('ask-run'), false);
+    });
+    briefForm.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      submit('/api/ai-studio/brief', {
+        request: document.getElementById('studio-request').value,
+        category: document.getElementById('studio-category').value,
+      }, document.getElementById('studio-run'), true);
     });
   })();
 </script>
