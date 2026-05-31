@@ -1,0 +1,18 @@
+{
+  "displayName": "GenAI Command Center",
+  "description": "AI Studio (OCI Generative AI multi-agent) observability — token throughput, cost by model, agent fan-out, data-source health, and errors. Pivot to OCI APM Trace Explorer (ai_studio_agent_fanout / ai_studio_token_cost saved queries) for the distributed trace, and out to Langfuse + Grafana for prompt/cost detail.",
+  "freeformTags": {
+    "deployment-profile": "shared",
+    "managed-by": "apply_saved_searches_and_dashboards.py",
+    "surface": "genai"
+  },
+  "widgets": [
+    { "title": "GenAI token throughput", "search": "genai-token-trend" },
+    { "title": "Token & cost by run / model / agent", "search": "genai-token-cost" },
+    { "title": "Cost by model (FinOps)", "search": "genai-cost-by-model" },
+    { "title": "Agent fan-out (supervisor + 5 agents)", "search": "genai-agent-fanout" },
+    { "title": "Sales Analyst data source (ATP vs synthetic)", "search": "genai-data-source-mix" },
+    { "title": "GenAI errors & guardrail blocks", "search": "genai-errors" },
+    { "title": "Assistant + LLMetry detail", "search": "genai-assistant-llmetry" }
+  ]
+}
