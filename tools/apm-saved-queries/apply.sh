@@ -26,7 +26,7 @@ Apply Phase 7 APM saved queries to the OCTO APM domain.
 Environment:
   COMPARTMENT_ID    (required)  OCTO compartment OCID
   APM_DOMAIN_ID     (required when APPLY=true) Target APM domain OCID
-  OCI_PROFILE       (optional, default: demo)
+  OCI_PROFILE       (optional, default: DEFAULT)
   APPLY             (optional, default: false) — set to "true" to mutate
 
 The default flow is a dry-run that lists what would be applied. When
@@ -40,7 +40,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     exit 0
 fi
 
-: "${OCI_PROFILE:=demo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${APPLY:=false}"
 : "${COMPARTMENT_ID:?COMPARTMENT_ID is required — set to the OCTO compartment OCID}"
 

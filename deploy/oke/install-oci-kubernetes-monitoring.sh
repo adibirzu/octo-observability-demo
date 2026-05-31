@@ -42,9 +42,9 @@ esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/demo/outputs.json}"
+OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 
-: "${OCI_PROFILE:=demo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
 : "${OKE_CLUSTER_NAME:=octo-apm-demo-oke}"
 : "${MONITORING_NAMESPACE:=oci-onm}"
