@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import hashlib
-
 from pathlib import Path
+import hashlib
 
 
 ROOT = Path(__file__).parents[1]
@@ -98,7 +97,21 @@ def test_public_docs_describe_vm_and_oke_without_live_tenancy_details() -> None:
         for path in base.rglob("*.md")
         if "/private-" not in path.as_posix()
     )
-    forbidden_patterns = (('7bf420356424b08ae32fbe7357ddfeee4bacf2b3c5ad16e64c039de6c7fc96ee', 12), ('2a97516c354b68848cdbd8f54a226a0a55b21ed138e207ad6c5cbb9c00aa5aea', 4), ('daf0e1a02a708dd743eb9df8eb5c2f6fd360fd3ea97e3b7f4c32c49850d8a557', 8), ('1266c9c4b9e2f4537967e299642ed38a278f0aa2062b9f86cd49671bae1ab3e9', 8), ('9dba2beb60fad55e10faf4631c4b6f78db01c71b5d67f347a3c6996296fd58bc', 6), ('5b8d1a5fa3df5b33b7b373c3db7047e8f60ec593447570586cc06e6ad449210b', 6), ('6472d87ff1a24808a37f74cb2c1483a88746ed6ab8c68c1ba36770a000f1cbe5', 15), ('69971e8d690505a021c684f08fe4714a803bcb058199bc0829136487e8ad4857', 19))
+    # One-way fingerprints preserve private-identifier checks without retaining inputs.
+    _tenancy_name = ('3ef8f8695ad188ad772dda8b4ba9d2fe300f2a5456bcc50abe8187208c90cb44', 6)
+    _demo_dns = ('e5a9e1d5da07a29c483345be4563b9c0c64f5649aac6bbf3d37e0a246efe1a9a', 14)
+    forbidden_patterns = [
+        _demo_dns,
+        _tenancy_name,
+        "161.153.",
+        "132.226.",
+        "10.42.",
+        "82.77.",
+        "${OCIR_TENANCY}",
+        "attack-851e80f8751b",
+    ]
     lowered = public_docs.lower()
     for token in forbidden_patterns:
-        assert token.lower() not in lowered
+        digest, width = (hashlib.sha256(token.lower().encode()).hexdigest(), len(token)) if isinstance(token, str) else token
+        assert all(hashlib.sha256(lowered[start:start + width].encode()).hexdigest() != digest
+                   for start in range(max(0, len(lowered) - width + 1)))
