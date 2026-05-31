@@ -34,7 +34,7 @@ phrase before any mutation.
 |----------|---------------|---------|
 | `COMPARTMENT_ID` | always | OCTO compartment OCID (target compartment for the alarm) |
 | `NOTIFICATION_TOPIC_OCID` | always | OCI Notifications topic OCID to route the alarm |
-| `OCI_PROFILE` | optional (default `demo`) | OCI CLI profile |
+| `OCI_PROFILE` | optional (default `DEFAULT`) | OCI CLI profile |
 | `APPLY` | optional (default `false`) | set to `true` to mutate |
 
 ### Dry-run
