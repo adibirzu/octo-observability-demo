@@ -7,7 +7,7 @@ description: "Pivot one GenAI run between OCI APM, Langfuse, and Grafana for the
 
 !!! info "Lab Facts"
     - **Time:** 25 minutes
-    - **Surface:** OCI APM, Langfuse (`lf.octodemo.cloud`), Grafana (`grafana.octodemo.cloud`)
+    - **Surface:** OCI APM, Langfuse (`lf.<DNS_DOMAIN>`), Grafana (`grafana.<DNS_DOMAIN>`)
     - **Prereqs:** Lab 12 complete; observability-stack deployed
 
 ## Objective
@@ -31,12 +31,12 @@ saved query; note the per-call `gen_ai.usage.cost_usd`. Use the saved query's
 
 ### 3. Langfuse pane
 
-Open `https://lf.octodemo.cloud` → the same session/run. Inspect the prompts and
+Open `https://lf.<DNS_DOMAIN>` → the same session/run. Inspect the prompts and
 completions per agent, token usage, cost, and any LLM-as-judge scores (Lab 14).
 
 ### 4. Grafana pane
 
-Open `https://grafana.octodemo.cloud` → **OCTO GenAI** folder → *LLM FinOps —
+Open `https://grafana.<DNS_DOMAIN>` → **OCTO GenAI** folder → *LLM FinOps —
 Token Cost Attribution*. Confirm the run's tokens/cost appear in the rollups
 (published by the Langfuse → OCI Monitoring sync into the `octo_genai` namespace).
 
@@ -60,7 +60,7 @@ echo "Expect genai_total_tokens / genai_cost_usd in OCI Monitoring namespace oct
 | --- | --- | --- |
 | Langfuse trace missing | Span-prefix filter / keys | Confirm `LANGFUSE_*` keys + span names |
 | Grafana panels empty | Sync not run / namespace | Run the sync; confirm `octo_genai` namespace |
-| Drilldown link 404 | Hostname not provisioned | Point `*.octodemo.cloud` DNS at the LBs |
+| Drilldown link 404 | Hostname not provisioned | Point `*.<DNS_DOMAIN>` DNS at the LBs |
 
 ## Read More
 

@@ -36,7 +36,7 @@ flowchart TD
    (`tool.atp_query`) → `retrieval.evidence` → `tool.code_interpreter` →
    `agent.invoke.product_copy` → `agent.invoke.presenter`, each `llm.invoke.*` carrying
    `gen_ai.request.model` and `gen_ai.usage.*` tokens.
-3. **Langfuse** (`lf.octodemo.cloud`): open the same session/run. Show prompts, completions,
+3. **Langfuse** (`lf.<DNS_DOMAIN>`): open the same session/run. Show prompts, completions,
    token counts, cost, and per-agent latency — the LLM-centric view of the identical run.
 4. Contrast: APM answers *"where did time/errors go across services?"*; Langfuse answers
    *"what did each agent prompt and spend?"*.
