@@ -7,7 +7,7 @@ APM" reference and the oci-quickstart genai-inference-app-monitoring example:
 * ``vector_db.search``  — fetch candidate chunks from ``genai_kb`` and rank by
                           cosine similarity (db.* + vector.* attributes)
 
-The emdemo ATP is Oracle 19c (no native VECTOR type), so embeddings are stored as
+The target ATP is Oracle 19c (no native VECTOR type), so embeddings are stored as
 JSON text in a CLOB column and cosine similarity is computed in-process over the
 (small, bounded) knowledge base. The span shape, attributes, and citations are
 identical to a native-VECTOR backend — only the distance math moves app-side.
