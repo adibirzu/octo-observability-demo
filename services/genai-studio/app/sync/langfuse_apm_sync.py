@@ -133,6 +133,39 @@ def collect_analytics(hours: float = 1.0, limit: int = 100) -> dict[str, float]:
     }
 
 
+def recent_generations(hours: float = 24.0, limit: int = 25) -> list[dict[str, Any]]:
+    """Return a trimmed list of recent GENERATION observations for the admin UI.
+
+    Read-only against Langfuse; each item carries the trace id + agent + tokens +
+    cost so the admin observability page can render a per-run table and deep-link
+    each row to OCI APM and Langfuse. Empty list when Langfuse is unconfigured.
+    """
+    since = _langfuse_datetime(hours)
+    page_limit = max(1, min(int(limit), 100))
+    observations = (_langfuse_get(
+        "/api/public/observations",
+        params={"fromStartTime": since, "type": "GENERATION", "limit": page_limit},
+    ) or {}).get("data", [])
+    runs: list[dict[str, Any]] = []
+    for obs in observations:
+        usage = obs.get("usage") or {}
+        in_tok = int(usage.get("input") or usage.get("promptTokens") or 0)
+        out_tok = int(usage.get("output") or usage.get("completionTokens") or 0)
+        model = obs.get("model") or ""
+        cost = obs.get("calculatedTotalCost")
+        runs.append({
+            "trace_id": obs.get("traceId") or "",
+            "name": obs.get("name") or "",
+            "model": model,
+            "input_tokens": in_tok,
+            "output_tokens": out_tok,
+            "cost_usd": round(float(cost if cost is not None else estimate_cost_usd(model, in_tok, out_tok)), 6),
+            "latency_ms": obs.get("latency"),
+            "time": obs.get("startTime") or obs.get("createdAt") or "",
+        })
+    return runs
+
+
 # ── OCI Monitoring publish ─────────────────────────────────────────────────
 def publish_to_oci_monitoring(metrics: dict[str, float]) -> bool:
     """Publish aggregated metrics to OCI Monitoring (octo_genai namespace)."""

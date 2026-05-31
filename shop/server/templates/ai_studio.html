@@ -15,15 +15,24 @@
 
   <div class="ai-studio__tabs" role="tablist">
     <button type="button" id="tab-ask" class="ai-studio__tab is-active" role="tab" aria-selected="true">Ask about your data</button>
+    <button type="button" id="tab-rag" class="ai-studio__tab" role="tab" aria-selected="false">Ask the catalog (RAG)</button>
     <button type="button" id="tab-brief" class="ai-studio__tab" role="tab" aria-selected="false">Merchandising brief</button>
   </div>
 
-  <!-- Q&A panel -->
+  <!-- Q&A panel (aggregate Data Analyst) -->
   <form id="ask-form" class="ai-studio__form" autocomplete="off">
     <label for="ask-question">Ask about orders, products, or analytics</label>
     <textarea id="ask-question" name="question" rows="3" maxlength="1000"
       placeholder="e.g. How many orders this quarter and what is total revenue? Which products are low on stock?">How many orders do we have and what is the total revenue?</textarea>
     <button type="submit" id="ask-run">Ask the Data Analyst</button>
+  </form>
+
+  <!-- RAG panel (semantic retrieval over the 23ai knowledge base) -->
+  <form id="rag-form" class="ai-studio__form" autocomplete="off" hidden>
+    <label for="rag-question">Ask about products, specs, or policies (semantic search)</label>
+    <textarea id="rag-question" name="question" rows="3" maxlength="1000"
+      placeholder="e.g. Which drone is best for night search and rescue? What is the returns policy? RTK vs PPK?">Which drone is best for thermal mapping and night search & rescue?</textarea>
+    <button type="submit" id="rag-run">Ask the Product Expert</button>
   </form>
 
   <!-- Brief panel -->
@@ -48,6 +57,10 @@
     <p class="ai-studio__correlate" id="studio-correlate"></p>
     <img id="studio-chart" alt="Category revenue chart" hidden />
     <div id="studio-answer" class="ai-studio__brief"></div>
+    <div id="studio-citations" class="ai-studio__citations" hidden>
+      <h3>Retrieved sources</h3>
+      <ol id="studio-citations-list"></ol>
+    </div>
   </article>
 </section>
 
@@ -63,33 +76,54 @@
   .ai-studio__correlate { font-size: .85rem; opacity: .8; margin: 0 0 .75rem; }
   .ai-studio__correlate a { font-weight: 600; }
   .ai-studio__brief { white-space: pre-wrap; line-height: 1.5; }
+  .ai-studio__citations { margin-top: 1rem; font-size: .85rem; }
+  .ai-studio__citations h3 { font-size: .8rem; opacity: .7; margin-bottom: .35rem; }
+  .ai-studio__citations li { margin: .2rem 0; opacity: .9; }
+  .ai-studio__citations code { opacity: .7; }
   #studio-chart { max-width: 100%; border: 1px solid rgba(0,0,0,.1); border-radius: 6px; margin: .5rem 0 1rem; }
 </style>
 
 <script nonce="{{ csp_nonce }}">
   (function () {
-    const askForm = document.getElementById('ask-form');
-    const briefForm = document.getElementById('brief-form');
-    const tabAsk = document.getElementById('tab-ask');
-    const tabBrief = document.getElementById('tab-brief');
+    const forms = { ask: document.getElementById('ask-form'), rag: document.getElementById('rag-form'), brief: document.getElementById('brief-form') };
+    const tabs = { ask: document.getElementById('tab-ask'), rag: document.getElementById('tab-rag'), brief: document.getElementById('tab-brief') };
     const statusEl = document.getElementById('studio-status');
     const result = document.getElementById('studio-result');
     const answerEl = document.getElementById('studio-answer');
     const chartEl = document.getElementById('studio-chart');
     const correlateEl = document.getElementById('studio-correlate');
+    const citesEl = document.getElementById('studio-citations');
+    const citesList = document.getElementById('studio-citations-list');
 
-    function setTab(ask) {
-      tabAsk.classList.toggle('is-active', ask);
-      tabBrief.classList.toggle('is-active', !ask);
-      tabAsk.setAttribute('aria-selected', ask);
-      tabBrief.setAttribute('aria-selected', !ask);
-      askForm.hidden = !ask;
-      briefForm.hidden = ask;
+    function setTab(name) {
+      Object.keys(tabs).forEach(function (k) {
+        const on = k === name;
+        tabs[k].classList.toggle('is-active', on);
+        tabs[k].setAttribute('aria-selected', on);
+        forms[k].hidden = !on;
+      });
     }
-    tabAsk.addEventListener('click', () => setTab(true));
-    tabBrief.addEventListener('click', () => setTab(false));
+    Object.keys(tabs).forEach(function (k) { tabs[k].addEventListener('click', function () { setTab(k); }); });
 
-    function render(data, isBrief) {
+    const LINEAGE = {
+      ask: 'Data Analyst (aggregate SQL over ATP)',
+      rag: 'Product Expert (RAG: <code>retrieval.embed</code> → <code>vector_db.search</code> on Oracle 23ai → OCI GenAI)',
+      brief: 'supervisor + 5 agents',
+    };
+
+    function renderCitations(citations) {
+      citesList.innerHTML = '';
+      if (!citations || !citations.length) { citesEl.hidden = true; return; }
+      citations.forEach(function (c) {
+        const li = document.createElement('li');
+        li.innerHTML = (c.title || c.source || 'source') +
+          ' <code>(' + (c.source || '') + (c.distance != null ? ', d=' + c.distance : '') + ')</code>';
+        citesList.appendChild(li);
+      });
+      citesEl.hidden = false;
+    }
+
+    function render(data, mode) {
       statusEl.textContent = data.status === 'refused'
         ? 'Refused by guardrails: ' + (data.reason || '')
         : 'Done.';
@@ -98,19 +132,20 @@
       document.getElementById('studio-source').textContent = data.data_source || (data.sales && data.sales.source) || '—';
       document.getElementById('studio-agents').textContent = (data.agents_run || []).join(' → ');
       answerEl.textContent = data.answer || data.brief || '';
+      renderCitations(data.citations);
       // Trace lineage so the operator knows exactly where the answer came from.
       if (data.trace_id) {
         correlateEl.innerHTML =
           'Where this came from: shop proxy → <code>octo-genai-studio</code> → ' +
-          (isBrief ? 'supervisor + 5 agents' : 'Data Analyst') +
-          ' → OCI GenAI, reading ATP (<code>' + (document.getElementById('studio-source').textContent) + '</code>). ' +
+          (LINEAGE[mode] || LINEAGE.ask) +
+          ', source <code>' + (document.getElementById('studio-source').textContent) + '</code>. ' +
           'Find trace <code>' + data.trace_id + '</code> in <strong>OCI APM → Trace Explorer</strong> ' +
-          '(saved query <em>AI Studio — Agent Fan-out</em>) and the same run in ' +
-          '<strong>Langfuse</strong>; tokens &amp; cost are on the <em>GenAI Command Center</em> dashboard.';
+          'and the same run in <strong>Langfuse</strong>; tokens &amp; cost are on the ' +
+          '<em>GenAI Command Center</em> dashboard.';
       } else {
         correlateEl.textContent = '';
       }
-      if (isBrief && data.chart_png_base64) {
+      if (mode === 'brief' && data.chart_png_base64) {
         chartEl.src = 'data:image/png;base64,' + data.chart_png_base64;
         chartEl.hidden = false;
       } else {
@@ -119,9 +154,11 @@
       result.hidden = false;
     }
 
-    async function submit(url, body, btn, isBrief) {
+    const BUSY = { ask: 'Asking the Data Analyst…', rag: 'Retrieving + asking the Product Expert…', brief: 'Running multi-agent workflow…' };
+
+    async function submit(url, body, btn, mode) {
       btn.disabled = true; result.hidden = true;
-      statusEl.textContent = isBrief ? 'Running multi-agent workflow…' : 'Asking the Data Analyst…';
+      statusEl.textContent = BUSY[mode] || 'Working…';
       try {
         const res = await fetch(url, {
           method: 'POST',
@@ -130,7 +167,7 @@
         });
         const data = await res.json();
         if (!res.ok) { statusEl.textContent = 'Error: ' + (data.detail || res.status); return; }
-        render(data, isBrief);
+        render(data, mode);
       } catch (err) {
         statusEl.textContent = 'Request failed: ' + err;
       } finally {
@@ -138,17 +175,22 @@
       }
     }
 
-    askForm.addEventListener('submit', function (ev) {
+    forms.ask.addEventListener('submit', function (ev) {
       ev.preventDefault();
       submit('/api/ai-studio/ask', { question: document.getElementById('ask-question').value },
-        document.getElementById('ask-run'), false);
+        document.getElementById('ask-run'), 'ask');
     });
-    briefForm.addEventListener('submit', function (ev) {
+    forms.rag.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      submit('/api/ai-studio/rag', { question: document.getElementById('rag-question').value },
+        document.getElementById('rag-run'), 'rag');
+    });
+    forms.brief.addEventListener('submit', function (ev) {
       ev.preventDefault();
       submit('/api/ai-studio/brief', {
         request: document.getElementById('studio-request').value,
         category: document.getElementById('studio-category').value,
-      }, document.getElementById('studio-run'), true);
+      }, document.getElementById('studio-run'), 'brief');
     });
   })();
 </script>

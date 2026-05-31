@@ -189,6 +189,8 @@ nav:
     - "Lab 12 — GenAI Agent Trace": workshop/lab-12-genai-agent-trace.md
     - "Lab 13 — APM / Langfuse / Grafana Pivot": workshop/lab-13-apm-langfuse-grafana-pivot.md
     - "Lab 14 — LLM-as-a-Judge": workshop/lab-14-llm-as-judge.md
+    - "Lab 15 — GenAI Data Q&A lineage": workshop/lab-15-genai-data-qa-lineage.md
+    - "Lab 16 — GenAI RAG retrieval lineage": workshop/lab-16-genai-rag-retrieval-lineage.md
 
 extra:
   social:
