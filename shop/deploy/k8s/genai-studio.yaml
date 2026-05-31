@@ -1,0 +1,177 @@
+# AI Studio — GenAI multi-agent merchandising service (LangGraph on OCI GenAI).
+# Mirrors workflow-gateway.yaml. GenAI auth uses OKE Workload Identity
+# (instance/workload principal); APM + Langfuse keys come from OCI Vault secrets.
+# Cluster scope: octo-apm-demo-oke (LogAnalytics compartment) — deploy only after
+# staging validation and explicit approval.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: octo-genai-studio
+  namespace: octo-drone-shop
+  labels:
+    app: octo-genai-studio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: octo-genai-studio
+  template:
+    metadata:
+      labels:
+        app: octo-genai-studio
+    spec:
+      containers:
+        - name: genai-studio
+          image: ${OCIR_REPO}/octo-genai-studio:latest
+          ports:
+            - containerPort: 8090
+          env:
+            - name: STUDIO_PORT
+              value: "8090"
+            - name: OTEL_SERVICE_NAME
+              value: "octo-genai-studio"
+            - name: SERVICE_NAMESPACE
+              value: "octo-drone-shop"
+            - name: OCI_AUTH_TYPE
+              value: "INSTANCE_PRINCIPAL"
+            # Region + monitoring compartment for the Langfuse->OCI Monitoring sync
+            # (PostMetricData targets the telemetry-ingestion endpoint of this region).
+            - name: OCI_REGION
+              value: "${OCI_REGION}"
+            - name: OCI_MONITORING_COMPARTMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: octo-oci-config
+                  key: compartment-id
+            - name: STUDIO_INTERNAL_SERVICE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: octo-ai-studio
+                  key: internal-service-key
+            # Reuse the shop's existing GenAI config secret (octo-oci-config).
+            - name: OCI_GENAI_MODEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: octo-oci-config
+                  key: genai-model-id
+            - name: OCI_GENAI_COMPARTMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: octo-oci-config
+                  key: compartment-id
+            - name: OCI_GENAI_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: octo-oci-config
+                  key: genai-endpoint
+            - name: OCI_APM_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: octo-apm
+                  key: endpoint
+                  optional: true
+            - name: OCI_APM_PRIVATE_DATA_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: octo-apm
+                  key: private-key
+                  optional: true
+            - name: LANGFUSE_TRACING_ENABLED
+              value: "true"
+            # Reuse the shop's existing Langfuse secret (octo-llmetry).
+            - name: LANGFUSE_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: octo-llmetry
+                  key: langfuse-host
+                  optional: true
+            - name: LANGFUSE_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: octo-llmetry
+                  key: langfuse-public-key
+                  optional: true
+            - name: LANGFUSE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: octo-llmetry
+                  key: langfuse-secret-key
+                  optional: true
+            # Read-only ATP for the Sales Analyst agent (falls back to synthetic
+            # data when unset, so the service starts without a DB).
+            - name: STUDIO_DB_KIND
+              value: "oracle"
+            - name: STUDIO_DB_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: octo-atp-readonly
+                  key: dsn
+                  optional: true
+            - name: STUDIO_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: octo-atp-readonly
+                  key: username
+                  optional: true
+            - name: STUDIO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: octo-atp-readonly
+                  key: password
+                  optional: true
+            - name: STUDIO_ORACLE_WALLET_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: octo-atp-readonly
+                  key: wallet-password
+                  optional: true
+            - name: STUDIO_ORACLE_WALLET_DIR
+              value: "/app/wallet"
+            - name: STUDIO_WEB_SEARCH_ENABLED
+              value: "false"
+          volumeMounts:
+            - name: atp-wallet
+              mountPath: /app/wallet
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8090
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+      imagePullSecrets:
+        - name: ocir-pull-secret
+      volumes:
+        - name: atp-wallet
+          secret:
+            secretName: octo-atp-wallet
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: octo-genai-studio
+  namespace: octo-drone-shop
+  labels:
+    app: octo-genai-studio
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      targetPort: 8090
+      protocol: TCP
+  selector:
+    app: octo-genai-studio

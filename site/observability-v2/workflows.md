@@ -12,6 +12,7 @@ Six logical flows that every dashboard, alarm, and playbook groups on.
 | `admin-analytics` | Slow aggregates | `/api/analytics`, `/api/campaigns` |
 | `demo-storyboard` | Guided lab journey | Open shop → add drone → dummy card authorization → support ticket |
 | `attack-lab` | Security investigation path | Admin trigger → WAF/app entry → Java sidecar → SQL error → OSQuery evidence |
+| `agentic-brief` | AI Studio merchandising brief (admin-only GenAI) | Admin → shop proxy → AI Studio supervisor → sales_analyst (ATP) → evidence → code_interpreter → product_copy → presenter; traced to OCI APM **and** Langfuse, cost/score synced to OCI Monitoring (`octo_genai`) and Grafana. Join keys: `studio.run_id`, `session_id`, `trace_id`. |
 
 ## Mapping
 

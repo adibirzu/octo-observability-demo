@@ -1,0 +1,20 @@
+{
+  "displayName": "OCTO GenAI — Daily Spend Threshold",
+  "metricCompartmentId": "${COMPARTMENT_ID}",
+  "namespace": "octo_genai",
+  "query": "genai_cost_usd[1d]{service = \"octo-genai-studio\"}.sum() > 25",
+  "severity": "WARNING",
+  "pendingDuration": "PT5M",
+  "destinations": ["${NOTIFICATION_TOPIC_OCID}"],
+  "isEnabled": true,
+  "messageFormat": "RAW",
+  "body": "AI Studio estimated GenAI spend exceeded the daily threshold (25 USD). Review token usage in Grafana FinOps (grafana.<DNS_DOMAIN>) and per-run cost in Langfuse (lf.<DNS_DOMAIN>).",
+  "resolveBody": "AI Studio GenAI daily spend is back under the threshold.",
+  "metadata": {
+    "phase": "genai-observability",
+    "plan": "P3 APM enhancement from Langfuse",
+    "design": "Reads octo_genai custom metrics published by the Langfuse->OCI Monitoring sync.",
+    "metric_publisher": "services/genai-studio/app/sync/langfuse_apm_sync.py",
+    "purpose": "Cost guardrail for the agentic GenAI workflow."
+  }
+}

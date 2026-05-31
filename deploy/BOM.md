@@ -160,9 +160,17 @@ One of:
 | octo-drone-shop | `Dockerfile` (multi-stage, `ARG PYTHON_BASE=python:3.12-slim`) | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-drone-shop:<tag>` |
 | enterprise-crm-portal | `Dockerfile` | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/enterprise-crm-portal:<tag>` |
 | oci-coordinator (optional) | `Dockerfile` | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/oci-coordinator:<tag>` |
+| octo-genai-studio (optional) | `services/genai-studio/Dockerfile` | `${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/octo-genai-studio:<tag>` |
 
 Apple Silicon hosts MUST cross-build with `--platform linux/amd64` or
 delegate to an x86_64 remote builder (see `deploy/deploy.sh`).
+
+**AI Studio (optional GenAI component)** adds secrets `octo-ai-studio`
+(`internal-service-key`), `octo-genai` (`model-id`, `compartment-id`,
+`endpoint`), `octo-langfuse` (`base-url`, `public-key`, `secret-key`), and a
+read-only `octo-atp-readonly` DB user. Deploy with
+`shop/deploy/k8s/genai-studio.yaml`; the shop enables it via `AI_STUDIO_ENABLED`
++ `AI_STUDIO_BASE_URL`. Off by default. Validate in a staging tenancy before production.
 
 ---
 
