@@ -39,14 +39,14 @@ case "${1:-}" in
         ;;
 esac
 
-: "${OCI_PROFILE:=emdemo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${OCIR_REGION:=us-phoenix-1}"
 : "${OCIR_TENANCY:=$(oci os ns get --profile "${OCI_PROFILE}" --query data --raw-output)}"
 : "${IMAGE_TAG:=$(date -u +%Y%m%d%H%M%S)}"
 : "${PLATFORM:=linux/amd64}"
 : "${PUSH_LATEST:=false}"
 : "${BUILDER:=docker}"
-: "${OUTPUTS_FILE:=${REPO_ROOT}/credentials/emdemo/outputs.json}"
+: "${OUTPUTS_FILE:=${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/outputs.json}"
 : "${VERIFY_RUNTIME_UID:=true}"
 : "${EXPECTED_RUNTIME_UID:=10001}"
 : "${ALLOW_LATEST_IMAGE_TAG:=false}"
