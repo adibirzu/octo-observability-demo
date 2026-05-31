@@ -52,6 +52,32 @@ flowchart TD
 | `studio.data_source` | `tool.atp_query` | `oracle_atp` vs `synthetic` fallback. |
 | `studio.guardrail.allowed` / `reason` | `studio.brief` | Scope / injection decision. |
 
+## OCI dashboards for GenAI
+
+OCI APM has **no standalone dashboard objects** — dashboards live in the **OCI Management
+Dashboard** service (Console → *Observability & Management → Dashboards*), which embeds APM
+saved-search and Log Analytics widgets. Three importable surfaces ship for GenAI:
+
+| Surface | File | Backed by |
+| --- | --- | --- |
+| **GenAI Command Center** (Management Dashboard, 7 widgets) | `deploy/oci/log_analytics/dashboards/genai-llmetry-command-center.json` | token throughput, token/cost by run·model·agent, cost-by-model FinOps, agent fan-out, Sales-Analyst data-source health, errors & guardrails, assistant LLMetry |
+| **GenAI APM Trace Dashboard** (Management Dashboard, 4 widgets) | `deploy/oci/log_analytics/dashboards/genai-apm-trace-dashboard.json` | trace-correlated view keyed on the same `trace_id` / `studio.run_id` as the APM saved queries `ai_studio_agent_fanout` + `ai_studio_token_cost` |
+| **GenAI Tokens, Cost & Judge Scores** (OCI Monitoring) | `deploy/oci/monitoring-dashboards/genai-token-cost.json` | the `octo_genai` custom-metric namespace published by the Langfuse→OCI Monitoring sync |
+
+Import the Management Dashboards (idempotent; creates the backing saved searches too):
+
+```bash
+# Dry-run is the default; add --apply to mutate. --skip-detection-rules imports
+# only saved searches + dashboards (no LA_NAMESPACE / scheduled rules needed).
+COMPARTMENT_ID=<LogAnalytics-compartment-OCID> OCI_PROFILE=<profile> \
+  python deploy/oci/log_analytics/apply_saved_searches_and_dashboards.py \
+  --apply --skip-detection-rules
+```
+
+The dashboards read the `octo-genai-studio` Log Source, so import them into the tenancy where
+AI Studio actually runs (otherwise the tiles render empty). Tiles drill out to Langfuse
+(`lf.${DNS_DOMAIN}`) and Grafana (`grafana.${DNS_DOMAIN}`) for prompt/cost detail.
+
 ## Enabling
 
 Set on the studio: `OCI_APM_ENDPOINT` + `OCI_APM_PRIVATE_DATA_KEY` (APM) and
