@@ -1,0 +1,45 @@
+{
+  "_comment": "Curated, generic drone-domain knowledge for the AI Studio RAG agent. No tenancy / customer / infrastructure data. Each entry is embedded into genai_kb (source='doc').",
+  "docs": [
+    {
+      "slug": "buying-guide-thermal-mapping",
+      "title": "Buying guide: thermal mapping drones",
+      "text": "Thermal mapping platforms pair a radiometric thermal sensor with an RGB camera so survey crews can capture temperature and visual data in one flight. Look for radiometric (not just colourised) thermal output, a mechanical or hybrid shutter for drift-free readings, and dual-payload gimbals. Endurance of 30-40 minutes and RTK positioning are typical for professional inspection and search-and-rescue work. Night operations benefit from low-light RGB plus thermal fusion."
+    },
+    {
+      "slug": "buying-guide-survey-rtk",
+      "title": "Buying guide: survey and mapping (RTK/PPK)",
+      "text": "Survey-grade drones use RTK (real-time kinematic) or PPK (post-processed kinematic) GNSS to achieve centimetre-level accuracy without dense ground control points. PPK is more robust where the radio link to a base station is unreliable; RTK gives corrected positions in flight. Fixed-wing platforms cover large corridors efficiently; multirotors are better for detailed vertical structures. Photogrammetry workflows want high overlap (75/65) and a mechanical shutter to avoid rolling-shutter distortion."
+    },
+    {
+      "slug": "buying-guide-public-safety",
+      "title": "Buying guide: public safety and first response",
+      "text": "Public-safety drones prioritise rapid deployment, thermal payloads for locating people, spotlight/loudspeaker accessories, and encrypted command-and-control links. NDAA-compliant supply chains are frequently required for government buyers. Look for quick-swap batteries, IP-rated weather resistance for all-conditions flying, and a controller that supports live video sharing to an incident command picture."
+    },
+    {
+      "slug": "spec-rtk-vs-ppk",
+      "title": "RTK vs PPK: which positioning to choose",
+      "text": "RTK streams corrections from a base station or network during flight, so geotags are corrected immediately but the workflow depends on a stable link. PPK logs raw satellite observations and corrects them after landing against base-station data, which tolerates link dropouts and is often preferred for beyond-visual-line-of-sight corridor mapping. Both reach centimetre accuracy; PPK trades real-time feedback for resilience."
+    },
+    {
+      "slug": "policy-warranty-returns",
+      "title": "Warranty and returns policy",
+      "text": "Professional platforms ship with a 12-month manufacturer warranty covering defects in materials and workmanship; crash and flyaway damage is excluded unless a care plan is purchased. Returns of unflown, unregistered units are accepted within 30 days in original packaging. Batteries and opened firmware-bound payloads are non-returnable for safety reasons. Care plans add accidental-damage coverage and faster RMA turnaround."
+    },
+    {
+      "slug": "policy-ndaa-compliance",
+      "title": "NDAA compliance for government buyers",
+      "text": "US government and many public-safety buyers require drones whose flight controllers, cameras, radios, and key components are not sourced from covered foreign entities, per the National Defense Authorization Act. NDAA-compliant SKUs are flagged in the catalog. Compliance is about the supply chain of components, not only the assembly location, so request a compliance attestation for tenders."
+    },
+    {
+      "slug": "spec-endurance-payload-tradeoff",
+      "title": "Understanding endurance vs payload",
+      "text": "Flight endurance falls as payload mass rises because more thrust (and therefore current) is needed to hover. A platform rated for 40 minutes bare may deliver 25-30 minutes carrying a dual thermal/RGB gimbal. For mapping missions, plan battery swaps around effective endurance with the payload fitted, not the headline figure, and keep a 20% reserve for wind and return-to-home."
+    },
+    {
+      "slug": "guide-agriculture",
+      "title": "Buying guide: agriculture and crop health",
+      "text": "Agriculture drones split into mapping (multispectral/NDVI sensors for crop-health indices) and spraying (heavy-lift platforms with tanks and nozzles). Multispectral mapping wants calibrated reflectance panels and consistent altitude for comparable NDVI over time. Spraying platforms are regulated for chemical application and need flow-rate calibration tied to ground speed."
+    }
+  ]
+}

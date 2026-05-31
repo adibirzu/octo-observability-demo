@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section aria-labelledby="genai-obs-heading" class="genai-obs">
+  <header class="genai-obs__intro">
+    <h1 id="genai-obs-heading">GenAI Observability (admin)</h1>
+    <p>
+      One pane for every AI Studio run: token throughput, spend, latency and
+      LLM-as-judge scores, plus the most recent generations — sourced from the
+      telemetry the agents emit to <strong>OCI APM</strong> and <strong>Langfuse</strong>.
+      Use the deep links to pivot into the full trace, dashboard, and metric views.
+    </p>
+  </header>
+
+  <div class="genai-obs__controls">
+    <label for="obs-window">Window</label>
+    <select id="obs-window">
+      <option value="1">Last 1h</option>
+      <option value="6">Last 6h</option>
+      <option value="24" selected>Last 24h</option>
+      <option value="168">Last 7d</option>
+    </select>
+    <button type="button" id="obs-refresh" class="btn btn-outline">Refresh</button>
+    <span id="obs-status" class="genai-obs__status" role="status" aria-live="polite"></span>
+  </div>
+
+  <!-- Live tiles -->
+  <div class="genai-obs__tiles grid grid-4">
+    <div class="card tile"><span class="tile__label">Total tokens</span><strong id="t-total-tokens" class="tile__value">—</strong><span id="t-token-split" class="tile__sub muted"></span></div>
+    <div class="card tile"><span class="tile__label">Estimated cost</span><strong id="t-cost" class="tile__value">—</strong><span class="tile__sub muted">USD (window)</span></div>
+    <div class="card tile"><span class="tile__label">Latency p50 / p95</span><strong id="t-latency" class="tile__value">—</strong><span class="tile__sub muted">ms</span></div>
+    <div class="card tile"><span class="tile__label">Judge score (avg)</span><strong id="t-judge" class="tile__value">—</strong><span id="t-judge-n" class="tile__sub muted"></span></div>
+  </div>
+
+  <!-- Deep-link pivots -->
+  <div class="genai-obs__links grid grid-4">
+    {% if apm_console_url %}<a class="card link-card" href="{{ apm_console_url }}" target="_blank" rel="noopener"><strong>OCI APM</strong><span class="muted">Trace Explorer — full waterfall</span></a>{% else %}<div class="card link-card is-off"><strong>OCI APM</strong><span class="muted">Set APM_CONSOLE_URL</span></div>{% endif %}
+    {% if langfuse_url %}<a class="card link-card" href="{{ langfuse_url }}" target="_blank" rel="noopener"><strong>Langfuse</strong><span class="muted">Prompts, tokens, scores</span></a>{% else %}<div class="card link-card is-off"><strong>Langfuse</strong><span class="muted">Set LANGFUSE_DASHBOARD_URL</span></div>{% endif %}
+    {% if grafana_url %}<a class="card link-card" href="{{ grafana_url }}" target="_blank" rel="noopener"><strong>Grafana</strong><span class="muted">GenAI metric boards</span></a>{% else %}<div class="card link-card is-off"><strong>Grafana</strong><span class="muted">Set GENAI_GRAFANA_URL</span></div>{% endif %}
+    {% if genai_command_center_url %}<a class="card link-card" href="{{ genai_command_center_url }}" target="_blank" rel="noopener"><strong>Command Center</strong><span class="muted">OCI Mgmt Dashboard</span></a>{% else %}<div class="card link-card is-off"><strong>Command Center</strong><span class="muted">Set GENAI_COMMAND_CENTER_URL</span></div>{% endif %}
+  </div>
+
+  <!-- Trace lookup -->
+  <div class="genai-obs__lookup card">
+    <h3>Find a run by trace id</h3>
+    <p class="muted">Paste a trace id (from an AI Studio answer) to jump straight to it.</p>
+    <div class="lookup-row">
+      <input id="obs-trace" type="text" placeholder="32-hex trace id" maxlength="64" />
+      <button type="button" id="obs-apm" class="btn btn-outline">Open in APM</button>
+      <button type="button" id="obs-lf" class="btn btn-outline">Open in Langfuse</button>
+    </div>
+  </div>
+
+  <!-- Recent runs -->
+  <div class="genai-obs__recent card">
+    <h3>Recent generations</h3>
+    <table>
+      <thead><tr><th>Time</th><th>Span</th><th>Model</th><th>In</th><th>Out</th><th>Cost $</th><th>Latency</th><th>Trace</th></tr></thead>
+      <tbody id="obs-rows"><tr><td colspan="8" class="muted">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<style nonce="{{ csp_nonce }}">
+  .genai-obs { max-width: 1200px; }
+  .genai-obs__intro p { max-width: 70ch; }
+  .genai-obs__controls { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; }
+  .genai-obs__controls select { width: auto; }
+  .genai-obs__status { font-size: .85rem; opacity: .8; }
+  .genai-obs__tiles, .genai-obs__links { margin: 1rem 0; }
+  .tile { display: flex; flex-direction: column; gap: .25rem; }
+  .tile__label { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+  .tile__value { font-family: "Orbitron", sans-serif; font-size: 1.6rem; }
+  .tile__sub { font-size: .78rem; }
+  .link-card { display: flex; flex-direction: column; gap: .25rem; transition: 180ms ease; }
+  .link-card:hover { box-shadow: 0 0 0 1px var(--teal); }
+  .link-card strong { color: var(--teal); }
+  .link-card.is-off { opacity: .5; }
+  .genai-obs__lookup, .genai-obs__recent { padding: 20px; margin: 1rem 0; }
+  .lookup-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .lookup-row input { max-width: 420px; }
+  .genai-obs__recent td, .genai-obs__recent th { font-size: .82rem; }
+  .genai-obs__recent code { font-size: .76rem; }
+</style>
+
+<script nonce="{{ csp_nonce }}">
+  (function () {
+    const apmBase = {{ apm_console_url | tojson }};
+    const lfBase = {{ langfuse_url | tojson }};
+    const statusEl = document.getElementById('obs-status');
+    const rowsEl = document.getElementById('obs-rows');
+
+    function fmtInt(n) { return (n == null ? '—' : Math.round(n).toLocaleString()); }
+    function fmtUsd(n) { return (n == null ? '—' : '$' + Number(n).toFixed(4)); }
+
+    function apmTraceUrl(id) {
+      if (!apmBase || !id) return '';
+      // Append the trace id as a hint; operators land in Trace Explorer either way.
+      return apmBase + (apmBase.indexOf('?') >= 0 ? '&' : '?') + 'traceId=' + encodeURIComponent(id);
+    }
+    function lfTraceUrl(id) {
+      if (!lfBase || !id) return '';
+      return lfBase.replace(/\/$/, '') + '/traces?search=' + encodeURIComponent(id);
+    }
+
+    function renderSummary(s) {
+      document.getElementById('t-total-tokens').textContent = fmtInt(s.genai_total_tokens);
+      document.getElementById('t-token-split').textContent =
+        'in ' + fmtInt(s.genai_input_tokens) + ' · out ' + fmtInt(s.genai_output_tokens);
+      document.getElementById('t-cost').textContent = fmtUsd(s.genai_cost_usd);
+      document.getElementById('t-latency').textContent =
+        (s.genai_latency_p50_ms || 0) + ' / ' + (s.genai_latency_p95_ms || 0);
+      document.getElementById('t-judge').textContent =
+        (s.genai_judge_scores ? Number(s.genai_judge_score_avg).toFixed(3) : '—');
+      document.getElementById('t-judge-n').textContent =
+        (s.genai_judge_scores ? fmtInt(s.genai_judge_scores) + ' scored' : 'no scores yet');
+    }
+
+    function renderRows(rows) {
+      if (!rows || !rows.length) {
+        rowsEl.innerHTML = '<tr><td colspan="8" class="muted">No generations in this window (or Langfuse not configured).</td></tr>';
+        return;
+      }
+      rowsEl.innerHTML = '';
+      rows.forEach(function (r) {
+        const tr = document.createElement('tr');
+        const tid = r.trace_id || '';
+        const link = apmTraceUrl(tid) || lfTraceUrl(tid);
+        const traceCell = link
+          ? '<a href="' + link + '" target="_blank" rel="noopener"><code>' + tid.slice(0, 12) + '…</code></a>'
+          : '<code>' + (tid ? tid.slice(0, 12) + '…' : '—') + '</code>';
+        tr.innerHTML =
+          '<td>' + (r.time ? String(r.time).replace('T', ' ').slice(0, 19) : '—') + '</td>' +
+          '<td>' + (r.name || '—') + '</td>' +
+          '<td>' + (r.model || '—') + '</td>' +
+          '<td>' + fmtInt(r.input_tokens) + '</td>' +
+          '<td>' + fmtInt(r.output_tokens) + '</td>' +
+          '<td>' + fmtUsd(r.cost_usd) + '</td>' +
+          '<td>' + (r.latency_ms != null ? Math.round(r.latency_ms) + 'ms' : '—') + '</td>' +
+          '<td>' + traceCell + '</td>';
+        rowsEl.appendChild(tr);
+      });
+    }
+
+    async function load() {
+      const hours = document.getElementById('obs-window').value;
+      statusEl.textContent = 'Loading…';
+      try {
+        const res = await fetch('/api/ai-studio/metrics?hours=' + hours + '&limit=25', { headers: { 'accept': 'application/json' } });
+        if (!res.ok) { statusEl.textContent = 'Error ' + res.status + (res.status === 503 ? ' (AI Studio not configured)' : ''); return; }
+        const data = await res.json();
+        renderSummary(data.summary || {});
+        renderRows(data.recent || []);
+        statusEl.textContent = (data.langfuse_configured ? 'Updated.' : 'Langfuse not configured — tiles show zeros.');
+      } catch (err) {
+        statusEl.textContent = 'Request failed: ' + err;
+      }
+    }
+
+    document.getElementById('obs-refresh').addEventListener('click', load);
+    document.getElementById('obs-window').addEventListener('change', load);
+    document.getElementById('obs-apm').addEventListener('click', function () {
+      const u = apmTraceUrl(document.getElementById('obs-trace').value.trim());
+      if (u) window.open(u, '_blank', 'noopener'); else statusEl.textContent = 'APM URL not configured.';
+    });
+    document.getElementById('obs-lf').addEventListener('click', function () {
+      const u = lfTraceUrl(document.getElementById('obs-trace').value.trim());
+      if (u) window.open(u, '_blank', 'noopener'); else statusEl.textContent = 'Langfuse URL not configured.';
+    });
+    load();
+  })();
+</script>
+{% endblock %}

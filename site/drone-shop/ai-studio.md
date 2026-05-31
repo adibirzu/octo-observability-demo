@@ -47,7 +47,13 @@ console → *Admin AI + Workflow Labs* → **AI Studio — Enterprise GenAI** ca
 | Mode | Endpoint | What it does | Data it reads |
 | --- | --- | --- | --- |
 | **Ask about your data** | `POST /api/ai-studio/ask` → studio `/api/studio/ask` | Free-form questions about **orders, products, and sales analytics**; a single **Data Analyst** agent answers, grounded on a read-only ATP snapshot | `orders`, `products`, `order_items` via the read-only `studio_ro` user |
+| **Ask the catalog (RAG)** | `POST /api/ai-studio/rag` → studio `/api/studio/rag` | Semantic **retrieval-augmented** Q&A about products/specs/policies; the **Product Expert** embeds the question, runs a 23ai native VECTOR search over `genai_kb`, and answers grounded on the retrieved passages (with cosine-distance citations) | `genai_kb` (catalog + curated docs) via `studio_ro` |
 | **Merchandising brief** | `POST /api/ai-studio/brief` → studio `/api/studio/brief` | The 6-agent merchandising workflow (supervisor + sales/evidence/code/copy/presenter) | same read-only ATP tables |
+
+The RAG mode adds `retrieval.embed` + `vector_db.search` spans to the trace — see
+[GenAI monitoring → RAG span model](../observability-v2/ai-studio-genai-monitoring.md#rag-over-the-oracle-23ai-knowledge-base).
+The admin **GenAI Observability** page (`/admin/genai-observability`) rolls up token/cost/
+latency/judge tiles + recent runs and deep-links to APM/Langfuse/Grafana/Command Center.
 
 **Where answers come from.** The Data Analyst can only `SELECT` (the `studio_ro` user has no write
 grants); the read query is captured on the `tool.atp_query` span (`db.statement`). The OCI GenAI

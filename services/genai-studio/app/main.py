@@ -69,6 +69,13 @@ class AskRequest(BaseModel):
     user: str = Field("", description="Requesting user (email or id)")
 
 
+class RagRequest(BaseModel):
+    question: str = Field(..., description="Free-form product/spec/policy question (semantic RAG)")
+    top_k: int = Field(0, description="Override the number of retrieved passages")
+    session_id: str = Field("", description="Conversation/session id for correlation")
+    user: str = Field("", description="Requesting user (email or id)")
+
+
 def _require_internal_key(provided: str | None) -> None:
     expected = get_settings().internal_service_key
     if not expected:
@@ -237,3 +244,117 @@ async def studio_ask(
                 "answer": result.get("answer", ""),
                 "data_source": result.get("data_source", ""),
             }
+
+
+@app.post("/api/studio/rag")
+async def studio_rag(
+    body: RagRequest,
+    request: Request,
+    x_internal_service_key: str | None = Header(default=None),
+) -> dict:
+    """Retrieval-augmented Q&A over the 23ai knowledge base (single-agent path).
+
+    Routes to the RAG agent which embeds the question, runs a native VECTOR
+    similarity search over ``genai_kb`` (catalog + curated docs), and answers
+    grounded on the retrieved passages. Traced under ``studio.rag`` with the
+    retrieval.embed + vector_db.search child spans so the RAG pipeline is visible
+    in OCI APM and Langfuse exactly like a brief/ask run.
+    """
+    _require_internal_key(x_internal_service_key)
+    settings = get_settings()
+
+    from app.agents.rag import answer_rag_question
+
+    question = bounded(body.question, limit=settings.message_max_chars)
+    allowed, reason = scope_decision(question)
+    run_id = uuid.uuid4().hex
+    session_id = bounded(body.session_id, limit=64) or run_id
+    user = bounded(body.user, limit=200)
+
+    tracer = get_tracer()
+    with run_scope(run_id=run_id, session_id=session_id, user=user):
+        with tracer.start_as_current_span("studio.rag") as span:
+            span.set_attribute("studio.run_id", run_id)
+            span.set_attribute("studio.mode", "rag")
+            span.set_attribute("studio.guardrail.allowed", allowed)
+            span.set_attribute("studio.guardrail.reason", reason)
+            trace_id = current_trace_id()
+
+            if not allowed:
+                span.set_attribute("studio.outcome", "guardrail_blocked")
+                return {
+                    "run_id": run_id,
+                    "trace_id": trace_id,
+                    "status": "refused",
+                    "reason": reason,
+                    "answer": (
+                        "I can only answer questions about OCTO drone-shop products, "
+                        "specs, orders, and policies."
+                    ),
+                }
+
+            try:
+                result = answer_rag_question(question, k=(body.top_k or None))
+            except Exception as exc:
+                span.record_exception(exc)
+                span.set_attribute("studio.outcome", "error")
+                logger.exception("Studio rag failed")
+                raise HTTPException(status_code=502, detail="studio rag failed") from exc
+
+            usage = result.get("token_usage", {})
+            span.set_attribute("gen_ai.usage.input_tokens", int(usage.get("input", 0)))
+            span.set_attribute("gen_ai.usage.output_tokens", int(usage.get("output", 0)))
+            span.set_attribute("studio.data_source", result.get("data_source", "unknown"))
+            span.set_attribute("retrieval.documents.count", int(result.get("retrieved_count", 0)))
+            span.set_attribute("studio.outcome", "success")
+
+            return {
+                "run_id": run_id,
+                "trace_id": trace_id,
+                "status": "ok",
+                "agents_run": ["rag_analyst"],
+                "model_id": settings.genai_model_id,
+                "token_usage": usage,
+                "answer": result.get("answer", ""),
+                "citations": result.get("citations", []),
+                "retrieved_count": result.get("retrieved_count", 0),
+                "data_source": result.get("data_source", ""),
+            }
+
+
+@app.get("/api/studio/metrics/summary")
+async def studio_metrics_summary(
+    hours: float = 24.0,
+    limit: int = 25,
+    x_internal_service_key: str | None = Header(default=None),
+) -> dict:
+    """GenAI telemetry summary for the admin observability page.
+
+    Aggregates the token / cost / latency / judge-score analytics that Langfuse
+    has collected for AI Studio runs, plus a recent-runs list. Read-only; this is
+    the studio "using the collected telemetry" to power the in-app single pane.
+    Degrades to zeros + an empty list when Langfuse is unconfigured/unreachable.
+    """
+    _require_internal_key(x_internal_service_key)
+    settings = get_settings()
+    window = max(0.1, min(float(hours), 168.0))
+    summary: dict = {}
+    recent: list = []
+    langfuse_configured = is_langfuse_enabled()
+    try:
+        from app.sync.langfuse_apm_sync import collect_analytics, recent_generations
+
+        summary = collect_analytics(hours=window)
+        recent = recent_generations(hours=window, limit=max(1, min(int(limit), 100)))
+    except Exception as exc:  # pragma: no cover - network/credential dependent
+        logger.warning("metrics summary failed: %s", exc)
+        summary = {"error": exc.__class__.__name__}
+
+    return {
+        "window_hours": window,
+        "service_name": settings.otel_service_name,
+        "model_id": settings.genai_model_id,
+        "langfuse_configured": langfuse_configured,
+        "summary": summary,
+        "recent": recent,
+    }
