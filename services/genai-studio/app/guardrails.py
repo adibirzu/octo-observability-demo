@@ -16,6 +16,10 @@ _ALLOWED_TERMS = {
     "cost", "sku", "catalog", "compare", "recommend", "mission", "spec", "specs",
     "shipping", "checkout", "warranty", "merchandising", "marketing", "brief",
     "sales", "trend", "revenue", "category", "campaign", "bundle", "promotion",
+    # Admin Data Q&A scope — orders / products / analytics over ATP.
+    "order", "orders", "product", "products", "inventory", "analytics",
+    "customer", "customers", "shipment", "shipments", "status", "selling",
+    "top", "best", "average", "total", "count", "report", "how many",
 }
 _BLOCKED_TERMS = {
     "ignore previous", "ignore the previous", "system prompt", "developer message",
