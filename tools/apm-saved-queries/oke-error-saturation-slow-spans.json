@@ -8,22 +8,22 @@
   "external_drilldowns": [
     {
       "name": "Grafana",
-      "url": "https://grafana.octodemo.cloud/",
+      "url": "https://grafana.<DNS_DOMAIN>/",
       "why": "Cluster-side saturation view (node CPU, memory pressure) for the same time slice."
     },
     {
       "name": "Langfuse / LLMetry",
-      "url": "https://lm.octodemo.cloud/",
+      "url": "https://lm.<DNS_DOMAIN>/",
       "why": "Investigate LLM-driven span latency when GenAI is in the slow path."
     },
     {
       "name": "OpenLIT",
-      "url": "https://openlit.octodemo.cloud/",
+      "url": "https://openlit.<DNS_DOMAIN>/",
       "why": "OTel-native LLM trace view for errored spans."
     },
     {
       "name": "Phoenix",
-      "url": "https://phoenix.octodemo.cloud/",
+      "url": "https://phoenix.<DNS_DOMAIN>/",
       "why": "AI evaluation panel for failed GenAI calls in the stress window."
     }
   ]

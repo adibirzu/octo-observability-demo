@@ -10,7 +10,7 @@
 //   - User-Agent: k6/octo-stress-runner
 //
 // Configuration (via -e args set by the FastAPI wrapper):
-//   STRESS_TARGET_URL  — public LB URL, e.g. https://shop.octodemo.cloud
+//   STRESS_TARGET_URL  — public LB URL, e.g. https://shop.<DNS_DOMAIN>
 //   K6_VUS             — virtual users (mapped from `rps` cap 1..200)
 //   K6_DURATION        — duration (e.g. "60s", cap 10s..600s)
 //   RUN_ID             — UUID injected by CRM admin route / wrapper
@@ -18,7 +18,7 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
-const TARGET = __ENV.STRESS_TARGET_URL || 'https://shop.octodemo.cloud';
+const TARGET = __ENV.STRESS_TARGET_URL || 'https://shop.<DNS_DOMAIN>';
 const RUN_ID = __ENV.RUN_ID || 'unset';
 
 export const options = {

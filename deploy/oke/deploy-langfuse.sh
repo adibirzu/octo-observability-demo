@@ -2,12 +2,12 @@
 # Deploy a low-footprint Langfuse v3 test stack on OKE for OCTO-DEMO.
 #
 # Defaults are tuned for the demo compartment, the existing OCTO compute
-# VCN, and the requested hostname langfuse.octodemo.cloud. The script refuses
+# VCN, and the requested hostname langfuse.<DNS_DOMAIN>. The script refuses
 # to deploy to an OKE cluster in a different VCN unless ALLOW_DIFFERENT_VCN=true.
 #
 # Usage:
 #   ./deploy/oke/deploy-langfuse.sh --check
-#   LANGFUSE_HOSTNAME=langfuse.octodemo.cloud ./deploy/oke/deploy-langfuse.sh
+#   LANGFUSE_HOSTNAME=langfuse.<DNS_DOMAIN> ./deploy/oke/deploy-langfuse.sh
 
 set -euo pipefail
 
@@ -122,7 +122,7 @@ fi
 : "${TARGET_VCN_ID:=$(json_value '.network.value.vcn_id')}"
 : "${OCI_LB_SUBNET_OCID:=$(json_value '.network.value.lb_subnet_id')}"
 : "${LANGFUSE_NAMESPACE:=octo-langfuse}"
-: "${LANGFUSE_HOSTNAME:=langfuse.octodemo.cloud}"
+: "${LANGFUSE_HOSTNAME:=langfuse.<DNS_DOMAIN>}"
 : "${LANGFUSE_PUBLIC_URL:=https://${LANGFUSE_HOSTNAME}}"
 : "${LANGFUSE_STORAGE_CLASS:=oci-bv}"
 : "${LANGFUSE_POSTGRES_STORAGE:=10Gi}"
@@ -324,7 +324,7 @@ echo
 echo "[7/7] Optional OCTO app exporter secret..."
 if [[ -n "${APP_LANGFUSE_PUBLIC_KEY:-}" && -n "${APP_LANGFUSE_SECRET_KEY:-}" ]]; then
     : "${K8S_NAMESPACE_SHOP:=octo-drone-shop}"
-    : "${LANGFUSE_PROJECT_NAME:=drones.octodemo.cloud}"
+    : "${LANGFUSE_PROJECT_NAME:=drones.<DNS_DOMAIN>}"
     kubectl -n "${K8S_NAMESPACE_SHOP}" create secret generic octo-llmetry \
         --from-literal=langfuse-enabled=true \
         --from-literal=langfuse-host="${LANGFUSE_PUBLIC_URL}" \

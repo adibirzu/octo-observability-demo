@@ -124,15 +124,15 @@ def test_workflow_gateway_proxy_rejects_admin_token_on_public_shop_host(monkeypa
             workflow_service_name="octo-workflow-gateway",
             selectai_configured=True,
             selectai_profile_name="OCTO_SELECTAI",
-            crm_public_hostname="admin.octodemo.cloud",
-            dns_domain="octodemo.cloud",
+            crm_public_hostname="admin.<DNS_DOMAIN>",
+            dns_domain="<DNS_DOMAIN>",
         ),
     )
 
     response = client.post(
         "/api/workflow-gateway/api/selectai/generate",
         json={"prompt": "show active drone inventory"},
-        headers={**_admin_headers(monkeypatch), "host": "drones.octodemo.cloud"},
+        headers={**_admin_headers(monkeypatch), "host": "drones.<DNS_DOMAIN>"},
     )
 
     assert response.status_code == 403

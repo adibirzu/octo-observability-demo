@@ -8,7 +8,7 @@
   "destinations": ["${NOTIFICATION_TOPIC_OCID}"],
   "isEnabled": true,
   "messageFormat": "RAW",
-  "body": "AI Studio estimated GenAI spend exceeded the daily threshold (25 USD). Review token usage in Grafana FinOps (grafana.octodemo.cloud) and per-run cost in Langfuse (lf.octodemo.cloud).",
+  "body": "AI Studio estimated GenAI spend exceeded the daily threshold (25 USD). Review token usage in Grafana FinOps (grafana.<DNS_DOMAIN>) and per-run cost in Langfuse (lf.<DNS_DOMAIN>).",
   "resolveBody": "AI Studio GenAI daily spend is back under the threshold.",
   "metadata": {
     "phase": "genai-observability",

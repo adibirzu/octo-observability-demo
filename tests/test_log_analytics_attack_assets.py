@@ -593,7 +593,7 @@ def test_octo_apm_workshop_deploy_wrapper_is_scoped_and_variable_driven() -> Non
     assert "verify_deployed_dashboards.py\" --dashboard-name" in content
     assert "detection_rule_creator.py\" --write-default" in content
     assert "ocid1." not in content
-    assert "octodemo.cloud" not in content
+    assert "<DNS_DOMAIN>" not in content
     assert "161.153." not in content
     assert "cap-live" not in content
 
@@ -615,7 +615,7 @@ def test_log_analytics_saved_search_dashboard_apply_helper_is_scoped() -> None:
     assert "COMPARTMENT_ID is required" in content
     assert "LA_NAMESPACE is required" in content
     assert "ocid1." not in content
-    assert "octodemo.cloud" not in content
+    assert "<DNS_DOMAIN>" not in content
     assert "161.153." not in content
 
 

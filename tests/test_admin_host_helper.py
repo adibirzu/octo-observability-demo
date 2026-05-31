@@ -39,7 +39,7 @@ def test_admin_host_module_exports_helpers() -> None:
         _require_admin_host,
     )
 
-    assert _ADMIN_SURFACE == "admin.octodemo.cloud"
+    assert _ADMIN_SURFACE == "admin.<DNS_DOMAIN>"
     assert _LOCAL_HOSTS == {"localhost", "127.0.0.1", "::1", "testserver"}
     assert callable(_request_host)
     assert callable(_configured_admin_hosts)
@@ -103,8 +103,8 @@ def test_admin_host_local_hosts_pass() -> None:
 def test_admin_host_admin_surface_passes() -> None:
     from server.modules._admin_host import _require_admin_host
 
-    req = _build_request({"host": "admin.octodemo.cloud"})
-    assert _require_admin_host(req) == "admin.octodemo.cloud"
+    req = _build_request({"host": "admin.<DNS_DOMAIN>"})
+    assert _require_admin_host(req) == "admin.<DNS_DOMAIN>"
 
 
 def test_admin_host_unknown_host_403() -> None:
@@ -124,15 +124,15 @@ def test_admin_host_dns_domain_env_extends_allowlist(monkeypatch) -> None:
         helper,
         "cfg",
         SimpleNamespace(
-            dns_domain="octodemo.cloud",
-            crm_base_url="https://admin.octodemo.cloud",
+            dns_domain="<DNS_DOMAIN>",
+            crm_base_url="https://admin.<DNS_DOMAIN>",
         ),
     )
 
-    req_admin = _build_request({"host": "admin.octodemo.cloud"})
-    req_crm = _build_request({"host": "crm.octodemo.cloud"})
-    assert helper._require_admin_host(req_admin) == "admin.octodemo.cloud"
-    assert helper._require_admin_host(req_crm) == "crm.octodemo.cloud"
+    req_admin = _build_request({"host": "admin.<DNS_DOMAIN>"})
+    req_crm = _build_request({"host": "crm.<DNS_DOMAIN>"})
+    assert helper._require_admin_host(req_admin) == "admin.<DNS_DOMAIN>"
+    assert helper._require_admin_host(req_crm) == "crm.<DNS_DOMAIN>"
 
 
 # ── Structural: coordinator must import, not re-implement ────────────────
@@ -175,4 +175,4 @@ def test_coordinator_admin_host_regression_403() -> None:
         json={"message": "Show admin users", "page": "admin"},
     )
     assert response.status_code == 403
-    assert "admin.octodemo.cloud" in response.json()["detail"]
+    assert "admin.<DNS_DOMAIN>" in response.json()["detail"]

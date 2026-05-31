@@ -7,7 +7,7 @@ APM + RUM + OCI Logging → Log Analytics + Stack Monitoring.
 
 Dedicated Langfuse test path: use
 [`deploy-langfuse.sh`](deploy-langfuse.sh) to deploy a low-resource
-`octo-langfuse` stack for `langfuse.octodemo.cloud`. The script validates
+`octo-langfuse` stack for `langfuse.<DNS_DOMAIN>`. The script validates
 OCI/Kubernetes rights, enforces the target VCN by default, creates platform
 secrets at deploy time, and can optionally update the Shop `octo-llmetry`
 secret after a Langfuse project is created.

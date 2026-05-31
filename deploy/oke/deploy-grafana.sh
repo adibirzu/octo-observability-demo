@@ -10,7 +10,7 @@
 #
 # Usage:
 #   ./deploy/oke/deploy-grafana.sh --check
-#   GRAFANA_HOSTNAME=grafana.octodemo.cloud ./deploy/oke/deploy-grafana.sh
+#   GRAFANA_HOSTNAME=grafana.<DNS_DOMAIN> ./deploy/oke/deploy-grafana.sh
 
 set -euo pipefail
 
@@ -85,7 +85,7 @@ fi
 : "${TARGET_VCN_ID:=$(json_value '.network.value.vcn_id')}"
 : "${OCI_LB_SUBNET_OCID:=$(json_value '.network.value.lb_subnet_id')}"
 : "${GRAFANA_NAMESPACE:=octo-grafana}"
-: "${GRAFANA_HOSTNAME:=grafana.octodemo.cloud}"
+: "${GRAFANA_HOSTNAME:=grafana.<DNS_DOMAIN>}"
 : "${GRAFANA_PUBLIC_URL:=https://${GRAFANA_HOSTNAME}}"
 : "${GRAFANA_STORAGE_CLASS:=oci-bv}"
 : "${GRAFANA_STORAGE:=5Gi}"

@@ -16,12 +16,12 @@
   "external_drilldowns": [
     {
       "name": "Phoenix",
-      "url": "https://phoenix.octodemo.cloud/",
+      "url": "https://phoenix.<DNS_DOMAIN>/",
       "why": "Trace-level evaluation view for runs hitting newly-scheduled pods."
     },
     {
       "name": "OpenLIT",
-      "url": "https://openlit.octodemo.cloud/",
+      "url": "https://openlit.<DNS_DOMAIN>/",
       "why": "OTel-native trace view filtered by the same pod set."
     }
   ]

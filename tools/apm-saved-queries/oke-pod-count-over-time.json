@@ -8,22 +8,22 @@
   "external_drilldowns": [
     {
       "name": "Langfuse / LLMetry",
-      "url": "https://lm.octodemo.cloud/",
+      "url": "https://lm.<DNS_DOMAIN>/",
       "why": "Correlate LLM trace cost/latency observed during scale-out window."
     },
     {
       "name": "Arize Phoenix",
-      "url": "https://phoenix.octodemo.cloud/",
+      "url": "https://phoenix.<DNS_DOMAIN>/",
       "why": "Inspect AI evaluation runs that ran inside the stress window."
     },
     {
       "name": "OpenLIT",
-      "url": "https://openlit.octodemo.cloud/",
+      "url": "https://openlit.<DNS_DOMAIN>/",
       "why": "OTel-native LLM telemetry view for the same time slice."
     },
     {
       "name": "Grafana",
-      "url": "https://grafana.octodemo.cloud/",
+      "url": "https://grafana.<DNS_DOMAIN>/",
       "why": "Cross-source dashboard view (cluster + LLM + app)."
     }
   ]
