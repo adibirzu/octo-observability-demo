@@ -182,13 +182,13 @@ class TestAssistantTelemetryConfig:
         assert cfg.langfuse_otel_export_enabled is False
 
     def test_langfuse_project_defaults_to_shop_hostname(self, env):
-        env.setenv("SHOP_PUBLIC_URL", "https://drones.<DNS_DOMAIN>")
+        env.setenv("SHOP_PUBLIC_URL", "https://drones.example.test")
         cfg = _fresh_config(env)
-        assert cfg.shop_public_hostname == "drones.<DNS_DOMAIN>"
-        assert cfg.langfuse_project_name == "drones.<DNS_DOMAIN>"
+        assert cfg.shop_public_hostname == "drones.example.test"
+        assert cfg.langfuse_project_name == "drones.example.test"
 
     def test_explicit_langfuse_project_name_wins(self, env):
-        env.setenv("SHOP_PUBLIC_URL", "https://drones.<DNS_DOMAIN>")
+        env.setenv("SHOP_PUBLIC_URL", "https://drones.example.test")
         env.setenv("LANGFUSE_PROJECT_NAME", "custom-drone-assistant")
         cfg = _fresh_config(env)
         assert cfg.langfuse_project_name == "custom-drone-assistant"
