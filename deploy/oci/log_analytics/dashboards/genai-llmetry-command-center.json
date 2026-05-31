@@ -13,6 +13,10 @@
     { "title": "Agent fan-out (supervisor + 5 agents)", "search": "genai-agent-fanout" },
     { "title": "Sales Analyst data source (ATP vs synthetic)", "search": "genai-data-source-mix" },
     { "title": "GenAI errors & guardrail blocks", "search": "genai-errors" },
-    { "title": "Assistant + LLMetry detail", "search": "genai-assistant-llmetry" }
+    { "title": "Assistant + LLMetry detail", "search": "genai-assistant-llmetry" },
+    { "title": "Session / thread rollup (multi-turn)", "search": "genai-session-rollup" },
+    { "title": "LLM latency percentiles (p50 / p95)", "search": "genai-latency-percentiles" },
+    { "title": "RAG retrieval (grounding quality)", "search": "genai-rag-retrieval" },
+    { "title": "LLM-as-judge scores by run", "search": "genai-judge-by-run" }
   ]
 }
