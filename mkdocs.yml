@@ -151,6 +151,7 @@ nav:
     - Auto-remediation flow: observability-v2/autoremediation-flow.md
     - Code Knowledge Map: observability-v2/code-knowledge-map.md
     - GenAI monitoring (AI Studio): observability-v2/ai-studio-genai-monitoring.md
+    - Langfuse vs OCI APM (GenAI): observability-v2/langfuse-vs-apm-genai.md
     - Demo script: observability-v2/demo-script.md
   - Integrations:
     - integrations/index.md
@@ -189,6 +190,8 @@ nav:
     - "Lab 12 — GenAI Agent Trace": workshop/lab-12-genai-agent-trace.md
     - "Lab 13 — APM / Langfuse / Grafana Pivot": workshop/lab-13-apm-langfuse-grafana-pivot.md
     - "Lab 14 — LLM-as-a-Judge": workshop/lab-14-llm-as-judge.md
+    - "Lab 15 — GenAI Data Q&A lineage": workshop/lab-15-genai-data-qa-lineage.md
+    - "Lab 16 — GenAI RAG retrieval lineage": workshop/lab-16-genai-rag-retrieval-lineage.md
 
 extra:
   social:

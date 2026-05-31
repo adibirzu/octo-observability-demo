@@ -163,6 +163,10 @@ class Config:
     opsi_console_url = _env_value("OPSI_CONSOLE_URL", "")
     db_management_console_url = _env_value("DB_MANAGEMENT_CONSOLE_URL", "")
     log_analytics_console_url = _env_value("LOG_ANALYTICS_CONSOLE_URL", "")
+    # GenAI Observability page deep-links (env-driven; never bake tenancy/IP).
+    langfuse_dashboard_url = _env_value("LANGFUSE_DASHBOARD_URL", "")
+    grafana_url = _env_value("GENAI_GRAFANA_URL", "")
+    genai_command_center_url = _env_value("GENAI_COMMAND_CENTER_URL", "")
 
     # ── Internal service-to-service authentication ──
     # Shared key between CRM and Drone Shop so the CRM backend can proxy
