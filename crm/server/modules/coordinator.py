@@ -31,7 +31,7 @@ tracer_fn = get_tracer
 
 _PROJECT_SCOPE = "octo-apm-demo"
 _ALLOWED_RESOURCE_HOSTS = {
-    "admin.<DNS_DOMAIN>",
+    "admin.<dns_domain>",
     "drones.<DNS_DOMAIN>",
     "langfuse.<DNS_DOMAIN>",
     "lf.<DNS_DOMAIN>",
@@ -208,7 +208,7 @@ _ALLOWED_RESOURCE_TERMS = frozenset(
         "octo demo",
         "octo-apm-demo",
         "octo apm demo",
-        "admin.<DNS_DOMAIN>",
+        "admin.<dns_domain>",
         "drones.<DNS_DOMAIN>",
         "langfuse.<DNS_DOMAIN>",
         "lf.<DNS_DOMAIN>",
@@ -406,7 +406,7 @@ def _refusal_response(reason: str) -> dict:
         "sources": [],
         "suggested_actions": [
             "Rephrase the question with an OCTO APM Demo resource or admin page.",
-            "Use admin.<DNS_DOMAIN> for coordinator questions.",
+            "Use admin.<dns_domain> for coordinator questions.",
         ],
         "reason": reason,
     }
