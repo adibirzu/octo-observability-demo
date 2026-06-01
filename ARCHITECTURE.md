@@ -252,6 +252,8 @@ A Service Connector routes every relevant OCI Logging log group into Logging Ana
 
 **External observability stack.** Langfuse + Grafana are deployed by the optional `services/observability-stack/` component into their own namespaces (`octo-langfuse`, `octo-grafana`) — never part of the app runtime. All secrets are generated at deploy time / read from OCI; nothing sensitive is committed.
 
+**Admin-host sign-in.** AI Studio is served only on the admin host (`admin.${DNS_DOMAIN}`) and has its own sign-in: `GET /ai-studio/login` renders an admin-only page (404 on the public storefront host), and `POST /api/ai-studio/login` reuses the shop password-login flow (rate-limit + audit), requires `role=admin`, and sets the httponly, host-scoped `octo_session` cookie. `/ai-studio` and `/admin/genai-observability` redirect unauthenticated admins to `/ai-studio/login` (not `/login`) — on the admin host `/login` and `/api/auth/*` serve the CRM portal, a separate app, which is why AI Studio carries its own sign-in. The shop `admin` account password is operator-supplied at runtime via `SEED_ADMIN_PASSWORD` (from the optional Kubernetes secret `octo-auth/seed-admin-password`); when absent the shop falls back to the committed default seed hash (local/dev only). This is distinct from the CRM `BOOTSTRAP_ADMIN_PASSWORD` (secret key `octo-auth/bootstrap-admin-password`).
+
 ---
 
 ## E. Cross-Service Correlation Contract

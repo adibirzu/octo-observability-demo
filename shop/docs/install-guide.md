@@ -417,6 +417,46 @@ kubectl -n octo-drone-shop rollout restart deploy/octo-drone-shop
 | Callback redirects to `/login?sso_error=invalid_state` | PKCE cookie missing — usually a domain/path mismatch  | Ensure `IDCS_REDIRECT_URI` host matches the user-facing host     |
 | `RuntimeError: AUTH_TOKEN_SECRET is required` at startup | Production but no signing secret               | Set `AUTH_TOKEN_SECRET` (32+ random bytes) before starting       |
 
+## 11b. Admin access / AI Studio sign-in
+
+The shop exposes an **admin-host-only** sign-in for AI Studio and the GenAI
+Observability console. This is distinct from the IDCS/CRM `/login` flow in
+section 11: on the admin host, `/login` and `/api/auth/*` are served by the CRM
+portal (a different app), so AI Studio has its own sign-in under `/ai-studio`.
+
+### How it works
+
+- `GET /ai-studio/login` renders an admin-only sign-in page. It is served only on
+  the admin host (`admin.<DNS_DOMAIN>`) and returns `404` on the public
+  storefront host.
+- `POST /api/ai-studio/login` authenticates by reusing the shop password-login
+  flow (same rate-limit + audit logging), requires `role=admin`, and on success
+  sets the httpOnly `octo_session` cookie (secure, `samesite=lax`, host-scoped to
+  the admin host).
+- `/ai-studio` and `/admin/genai-observability` redirect **unauthenticated**
+  admins to `/ai-studio/login` (not `/login`).
+
+### Admin credential
+
+The shop `admin` account password is supplied at runtime via the
+`SEED_ADMIN_PASSWORD` env, sourced from the Kubernetes secret
+`octo-auth/seed-admin-password` (optional). When the secret is absent the shop
+falls back to the committed default seed hash, which is **LOCAL/DEV ONLY**.
+
+The live admin password is operator-supplied (see the deployment secret) and is
+**never committed** to the repo. Store it as the `seed-admin-password` key of the
+`octo-auth` secret — for example with `kubectl create secret generic … --from-file`
+reading the value from a file (so it stays out of shell history), or via your
+secret manager — then restart the shop so the seed reconciles:
+
+```bash
+kubectl -n octo-drone-shop rollout restart deploy/octo-drone-shop
+```
+
+This is **distinct** from `BOOTSTRAP_ADMIN_PASSWORD`, the CRM bootstrap admin
+password (separate app, separate secret key `octo-auth/bootstrap-admin-password`).
+Do not conflate the two.
+
 ## 12. Enhancement rollout plan
 
 After the baseline deployment is stable, use this sequence to turn the platform

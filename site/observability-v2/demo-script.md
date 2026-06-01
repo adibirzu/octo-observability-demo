@@ -47,12 +47,19 @@ The RUM bootstrap stores the e-mail in browser local storage as
 `octoSyntheticUserEmail` and sets `window.apmrum.username` before the OCI RUM
 browser agent loads.
 
-Admin local login uses the generated deployment credentials:
+Shop AI Studio admin login uses the shop `admin` account. Its password is
+operator-supplied (see the deployment secret `octo-auth/seed-admin-password`,
+surfaced to the shop as `SEED_ADMIN_PASSWORD`); when the secret is absent the
+shop falls back to a committed default seed hash for LOCAL/DEV only:
 
 | Field | Value |
 | --- | --- |
-| Username | `BOOTSTRAP_ADMIN_USERNAME` from the ignored operator env file; default is `admin` |
-| Password | `BOOTSTRAP_ADMIN_PASSWORD` from the ignored operator env file |
+| Username | `admin` (the shop seed admin account) |
+| Password | operator-supplied via `SEED_ADMIN_PASSWORD` (secret `octo-auth/seed-admin-password`) |
+
+This is distinct from the CRM portal bootstrap admin (`BOOTSTRAP_ADMIN_USERNAME`
+/ `BOOTSTRAP_ADMIN_PASSWORD`, secret key `octo-auth/bootstrap-admin-password`),
+which signs in to the CRM at `${OCTO_LIVE_ADMIN_URL}/login`.
 
 Never paste the password into documentation, screenshots, issues, or commits.
 
@@ -140,9 +147,12 @@ Expected telemetry:
 
 ## 5. Run Admin Controls
 
-1. Open `${OCTO_LIVE_ADMIN_URL}/login`.
-2. Sign in with the generated local admin account from
-   the ignored operator env file.
+1. Open `${OCTO_LIVE_ADMIN_URL}/ai-studio/login`.
+2. Sign in with the shop `admin` account (password operator-supplied; see the
+   deployment secret). On the admin host, `${OCTO_LIVE_ADMIN_URL}/login` serves
+   the CRM portal, so the shop admin/AI Studio controls have their own sign-in
+   under `/ai-studio/login`; visiting `/ai-studio` while unauthenticated
+   redirects there automatically.
 3. Open `${OCTO_LIVE_ADMIN_URL}/settings`.
 4. Run **Java Health** to validate the Java app-server APM path.
 5. Run **Demo Storyboard** to create a linked shop, payment, support, Java,
@@ -401,7 +411,9 @@ traced into **both** OCI APM and Langfuse. See
 [GenAI monitoring](ai-studio-genai-monitoring.md) for the full reference.
 
 1. Open `${OCTO_LIVE_ADMIN_URL}/ai-studio` (the **AI Studio** nav item appears
-   only when the component is configured).
+   only when the component is configured). If you are not yet signed in, this
+   redirects to `${OCTO_LIVE_ADMIN_URL}/ai-studio/login`; sign in with the shop
+   `admin` account (password operator-supplied via the deployment secret).
 2. Submit a request, for example
    `Build a merchandising brief for our thermal-mapping drones`.
 3. Watch the result render: the merchandising brief, the category-revenue chart,

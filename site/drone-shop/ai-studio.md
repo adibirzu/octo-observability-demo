@@ -41,17 +41,51 @@ flowchart LR
 
 ## Two modes
 
-AI Studio is **admin-only** and reached from the top nav **AI Studio** link or the admin
-console → *Admin AI + Workflow Labs* → **AI Studio — Enterprise GenAI** card (`/ai-studio`).
+AI Studio is **admin-only** and reached from the top nav **AI Studio** link (after signing in —
+see [Admin sign-in](#admin-sign-in) below) or the admin console → *Admin AI + Workflow Labs* →
+**AI Studio — Enterprise GenAI** card (`/ai-studio`).
+
+### Admin sign-in
+
+**Quick steps — how any operator opens AI Studio:**
+
+1. Go to `https://admin.<DNS_DOMAIN>/ai-studio` — or sign in to the **CRM portal**
+   (`https://admin.<DNS_DOMAIN>/login`) and click **AI Studio** in the left-hand nav.
+2. You are redirected to the AI Studio sign-in page (`/ai-studio/login`).
+3. Sign in with the **`admin`** account. The password is set by the deployment operator via the
+   `octo-auth/seed-admin-password` secret (env `SEED_ADMIN_PASSWORD`); on this demo it is the same
+   credential as the CRM portal on the admin host. (Locally, with no secret, the shop falls back to
+   the committed default seed hash — dev only.)
+4. You land on the AI Studio console. Pick a mode (see the table below): **Ask about your data**,
+   **Ask the catalog (RAG)**, or **Merchandising brief**.
+5. Open **GenAI Observability** (`/admin/genai-observability`) for token/cost/latency tiles and
+   deep-links into OCI APM Trace Explorer and Langfuse.
+
+!!! note "Setting the admin password (operators)"
+    The live password is never committed. An operator stores it as the
+    `seed-admin-password` key of the `octo-auth` Kubernetes secret — using
+    `kubectl create secret generic … --from-literal` with the value read from a
+    prompt or file (so it stays out of shell history), or via your secret
+    manager — then restarts the shop. `deploy/init-tenancy.sh` seeds this key
+    automatically on a fresh tenancy.
+
+AI Studio carries its own sign-in because on the admin host `/login` and `/api/auth/*` serve the
+**CRM portal** (a different app). `GET /ai-studio/login` renders an admin-only sign-in page
+(admin-host-only — 404 on the public storefront host). `POST /api/ai-studio/login` reuses the shop
+password-login flow (rate-limit + audit), requires `role=admin`, and sets the httponly
+`octo_session` cookie (secure, samesite=lax, host-scoped to the admin host). Visiting `/ai-studio`
+or `/admin/genai-observability` while unauthenticated redirects the admin to `/ai-studio/login`
+(not `/login`). The `admin` account password is operator-supplied at runtime (see deployment
+secret) and is never committed.
 
 | Mode | Endpoint | What it does | Data it reads |
 | --- | --- | --- | --- |
 | **Ask about your data** | `POST /api/ai-studio/ask` → studio `/api/studio/ask` | Free-form questions about **orders, products, and sales analytics**; a single **Data Analyst** agent answers, grounded on a read-only ATP snapshot | `orders`, `products`, `order_items` via the read-only `studio_ro` user |
-| **Ask the catalog (RAG)** | `POST /api/ai-studio/rag` → studio `/api/studio/rag` | Semantic **retrieval-augmented** Q&A about products/specs/policies; the **Product Expert** embeds the question, runs a 23ai native VECTOR search over `genai_kb`, and answers grounded on the retrieved passages (with cosine-distance citations) | `genai_kb` (catalog + curated docs) via `studio_ro` |
+| **Ask the catalog (RAG)** | `POST /api/ai-studio/rag` → studio `/api/studio/rag` | Semantic **retrieval-augmented** Q&A about products/specs/policies; the **Product Expert** embeds the question, runs an **app-side cosine** similarity search over the embeddings stored as JSON in `genai_kb` (Oracle Database 19c — no native VECTOR/`VECTOR_DISTANCE`), and answers grounded on the retrieved passages (with cosine-distance citations) | `genai_kb` (catalog + curated docs) via `studio_ro` |
 | **Merchandising brief** | `POST /api/ai-studio/brief` → studio `/api/studio/brief` | The 6-agent merchandising workflow (supervisor + sales/evidence/code/copy/presenter) | same read-only ATP tables |
 
 The RAG mode adds `retrieval.embed` + `vector_db.search` spans to the trace — see
-[GenAI monitoring → RAG span model](../observability-v2/ai-studio-genai-monitoring.md#rag-over-the-oracle-23ai-knowledge-base).
+[GenAI monitoring → RAG span model](../observability-v2/ai-studio-genai-monitoring.md#rag-over-the-oracle-19c-knowledge-base).
 The admin **GenAI Observability** page (`/admin/genai-observability`) rolls up token/cost/
 latency/judge tiles + recent runs and deep-links to APM/Langfuse/Grafana/Command Center.
 

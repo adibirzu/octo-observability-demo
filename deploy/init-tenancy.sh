@@ -307,10 +307,15 @@ AUTH_TOKEN_SECRET="${AUTH_TOKEN_SECRET:-$(first_nonempty_secret_value_or_blank o
 INTERNAL_SERVICE_KEY="${INTERNAL_SERVICE_KEY:-$(first_nonempty_secret_value_or_blank octo-auth internal-service-key)}"
 APP_SECRET_KEY="${APP_SECRET_KEY:-$(first_nonempty_secret_value_or_blank octo-auth app-secret-key)}"
 BOOTSTRAP_ADMIN_PASSWORD="${BOOTSTRAP_ADMIN_PASSWORD:-$(first_nonempty_secret_value_or_blank octo-auth bootstrap-admin-password)}"
+# Shop admin-host AI Studio sign-in credential (consumed by the shop as
+# SEED_ADMIN_PASSWORD). Preserve any existing value; otherwise default to the
+# bootstrap admin password so a fresh tenancy has a single admin-host credential.
+SEED_ADMIN_PASSWORD="${SEED_ADMIN_PASSWORD:-$(first_nonempty_secret_value_or_blank octo-auth seed-admin-password)}"
 [[ -n "${AUTH_TOKEN_SECRET}" ]] || AUTH_TOKEN_SECRET="$(gen_secret)"
 [[ -n "${INTERNAL_SERVICE_KEY}" ]] || INTERNAL_SERVICE_KEY="$(gen_secret)"
 [[ -n "${APP_SECRET_KEY}" ]] || APP_SECRET_KEY="$(gen_secret)"
 [[ -n "${BOOTSTRAP_ADMIN_PASSWORD}" ]] || BOOTSTRAP_ADMIN_PASSWORD="$(gen_secret)"
+[[ -n "${SEED_ADMIN_PASSWORD}" ]] || SEED_ADMIN_PASSWORD="${BOOTSTRAP_ADMIN_PASSWORD}"
 
 if resolve_ocir_pull_credentials; then
     for namespace in "${K8S_NAMESPACE_SHOP}" "${K8S_NAMESPACE_CRM}"; do
@@ -324,7 +329,8 @@ apply_literal_secret_all_namespaces "octo-auth" \
     "token-secret=${AUTH_TOKEN_SECRET}" \
     "internal-service-key=${INTERNAL_SERVICE_KEY}" \
     "app-secret-key=${APP_SECRET_KEY}" \
-    "bootstrap-admin-password=${BOOTSTRAP_ADMIN_PASSWORD}"
+    "bootstrap-admin-password=${BOOTSTRAP_ADMIN_PASSWORD}" \
+    "seed-admin-password=${SEED_ADMIN_PASSWORD}"
 
 ORACLE_DSN="${ORACLE_DSN:-$(first_nonempty_secret_value_or_blank octo-atp dsn)}"
 ORACLE_USER="${ORACLE_USER:-$(first_nonempty_secret_value_or_blank octo-atp username)}"

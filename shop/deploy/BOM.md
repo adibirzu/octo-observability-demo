@@ -135,6 +135,7 @@ vars or `*_FILE` mount paths (OCI Vault + Secrets Store CSI compatible).
 | `INTERNAL_SERVICE_KEY` | 32-byte url-safe random | Cross-service `X-Internal-Service-Key` (shop, CRM, coordinator) |
 | `APP_SECRET_KEY` | 32-byte url-safe random | Session signing (CRM) |
 | `BOOTSTRAP_ADMIN_PASSWORD` | strong | CRM bootstrap admin user |
+| `SEED_ADMIN_PASSWORD` | strong | shop admin AI Studio sign-in (admin-host) |
 | `ORACLE_PASSWORD` | ATP admin password | Both apps (DB) |
 | `ORACLE_WALLET_PASSWORD` | Wallet password | Both apps (DB) |
 | `IDCS_CLIENT_SECRET` | From IDCS confidential app | OIDC SSO |
@@ -204,7 +205,7 @@ Total provisioning time: **45–90 minutes** for the first tenancy; subsequent t
 | `OCI_COMPARTMENT_ID` | pre-flight (recommended) | `ensure_apm.sh`, `ensure_stack_monitoring.sh`, init-tenancy |
 | `ORACLE_DSN`, `ORACLE_PASSWORD`, `ORACLE_WALLET_PASSWORD` | init-tenancy (writes Secret) | app runtime |
 | `INTERNAL_SERVICE_KEY` | init-tenancy (generates if missing) | shop, CRM, coordinator |
-| `AUTH_TOKEN_SECRET`, `APP_SECRET_KEY`, `BOOTSTRAP_ADMIN_PASSWORD` | init-tenancy | app runtime |
+| `AUTH_TOKEN_SECRET`, `APP_SECRET_KEY`, `BOOTSTRAP_ADMIN_PASSWORD`, `SEED_ADMIN_PASSWORD` | init-tenancy | app runtime |
 | `IDCS_DOMAIN_URL`, `IDCS_CLIENT_ID`, `IDCS_CLIENT_SECRET` | `validate()` at startup | OIDC |
 | `OCI_APM_*`, `OCI_LOG_ID`, `OCI_LOG_GROUP_ID` | `validate()` at startup | OTel, logging SDK |
 | `OCI_LB_SUBNET_OCID` | pre-flight (recommended) | K8s Service annotation |
