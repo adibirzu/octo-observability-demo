@@ -13,11 +13,17 @@ import logging
 
 import httpx
 from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 from opentelemetry.propagate import inject
 from opentelemetry.trace import Status, StatusCode
 
-from server.auth_security import _is_internal_service_call, require_admin_or_internal_service
+from server.auth_security import (
+    SESSION_COOKIE_NAME,
+    _is_internal_service_call,
+    require_admin_or_internal_service,
+)
 from server.config import cfg
+from server.modules.auth import login as _password_login
 from server.observability.logging_sdk import push_log
 
 
@@ -43,6 +49,60 @@ from server.observability.otel_setup import get_tracer
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai-studio", tags=["ai-studio"])
+
+
+def _request_is_https(request: Request) -> bool:
+    return (
+        request.url.scheme == "https"
+        or request.headers.get("x-forwarded-proto", "").split(",", 1)[0].strip().lower() == "https"
+    )
+
+
+@router.post("/login")
+async def studio_login(request: Request) -> Response:
+    """Cookie-issuing admin sign-in for AI Studio on the admin host.
+
+    The shared shop login (``/api/auth/login``) only returns a localStorage
+    bearer token; server-rendered admin pages authenticate via the
+    ``octo_session`` cookie. This endpoint — reachable only on the admin host
+    and routed to the shop by the LB ``/api/ai-studio`` rule — verifies
+    credentials (reusing the password-login flow for rate-limiting + audit),
+    requires the admin role, and sets the session cookie so a subsequent
+    ``GET /ai-studio`` page navigation is authenticated.
+    """
+    _enforce_admin_host(request)
+
+    raw = await request.body()
+    try:
+        payload = json.loads(raw.decode("utf-8")) if raw else {}
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail="Login request must be JSON") from exc
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=400, detail="Login request must be a JSON object")
+
+    # Reuse the canonical password-login handler (raises 400/401/429 on failure)
+    # so rate-limiting, the audit log, and auth telemetry stay in one place.
+    result = await _password_login(request, payload)
+    user = result.get("user") or {}
+    if str(user.get("role")) != "admin":
+        raise HTTPException(status_code=403, detail="AI Studio requires an admin account")
+
+    response = JSONResponse(
+        {
+            "status": "success",
+            "redirect": "/ai-studio",
+            "user": {"username": user.get("username"), "role": user.get("role")},
+        }
+    )
+    response.set_cookie(
+        SESSION_COOKIE_NAME,
+        result["token"],
+        httponly=True,
+        secure=_request_is_https(request),
+        samesite="lax",
+        path="/",
+    )
+    return response
 
 _FORWARDED_HEADERS = (
     "authorization",
