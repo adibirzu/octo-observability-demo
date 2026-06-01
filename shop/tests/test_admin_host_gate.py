@@ -101,3 +101,44 @@ def test_ai_studio_proxy_404_on_public_host(admin_app):
         follow_redirects=False,
     )
     assert r.status_code == 404
+
+
+# ── AI Studio sign-in (admin-host-scoped, cookie-issuing) ──────────────────
+@pytest.mark.unit
+def test_ai_studio_login_page_on_admin_host(admin_app):
+    r = _client(admin_app).get(
+        "/ai-studio/login", headers={"host": "admin.example.test"}, follow_redirects=False
+    )
+    assert r.status_code == 200
+    assert "AI Studio Sign-in" in r.text
+
+
+@pytest.mark.unit
+def test_ai_studio_login_page_404_on_public_host(admin_app):
+    r = _client(admin_app).get(
+        "/ai-studio/login", headers={"host": "drones.example.test"}, follow_redirects=False
+    )
+    assert r.status_code == 404
+
+
+@pytest.mark.unit
+def test_unauth_ai_studio_redirects_to_studio_login_not_crm_login(admin_app):
+    # On the admin host an unauthenticated admin must be sent to the shop-served
+    # /ai-studio/login (LB-routed to shop), NOT /login (which serves the CRM there).
+    r = _client(admin_app).get(
+        "/ai-studio", headers={"host": "admin.example.test"}, follow_redirects=False
+    )
+    assert r.status_code == 302
+    assert r.headers["location"] == "/ai-studio/login"
+
+
+@pytest.mark.unit
+def test_ai_studio_login_post_404_on_public_host(admin_app):
+    # The cookie-issuing login endpoint is not discoverable on the storefront host.
+    r = _client(admin_app).post(
+        "/api/ai-studio/login",
+        headers={"host": "drones.example.test", "content-type": "application/json"},
+        json={"username": "x", "password": "y"},
+        follow_redirects=False,
+    )
+    assert r.status_code == 404
