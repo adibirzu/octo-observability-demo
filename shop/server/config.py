@@ -88,6 +88,11 @@ class Config:
     )
     _shop_public_url = _env_value("SHOP_PUBLIC_URL", "").rstrip("/")
     _crm_public_url = _env_value("CRM_PUBLIC_URL", "").rstrip("/")
+    # Admin host: back-office surfaces (AI Studio, GenAI Observability) are served
+    # only when the request arrives on this host. Defaults to admin.<DNS_DOMAIN>;
+    # override with ADMIN_PUBLIC_HOST. Empty + no DNS_DOMAIN => host gate disabled
+    # (single-host/local dev), so the role gate alone applies.
+    _admin_public_host = _env_value("ADMIN_PUBLIC_HOST", "").strip().lower()
     workflow_api_base_url = _env_value("WORKFLOW_API_BASE_URL", "").rstrip("/")
     _workflow_public_api_base_url = _env_value("WORKFLOW_PUBLIC_API_BASE_URL", "").rstrip("/")
     workflow_service_name = _env_value("WORKFLOW_SERVICE_NAME", "octo-workflow-gateway")
@@ -234,6 +239,35 @@ class Config:
     @property
     def shop_public_hostname(self) -> str:
         return self._hostname_from_url(self.shop_public_url)
+
+    @property
+    def admin_public_hostname(self) -> str:
+        """Host on which admin-only back-office surfaces are served.
+
+        Explicit ADMIN_PUBLIC_HOST wins; otherwise admin.<DNS_DOMAIN>. Empty when
+        neither is set (single-host/local dev) -> host gating is disabled.
+        """
+        if self._admin_public_host:
+            return self._admin_public_host
+        if self.dns_domain:
+            return f"admin.{self.dns_domain}".lower()
+        return ""
+
+    def is_admin_host(self, request_host: str) -> bool:
+        """True if the request host may serve admin-only surfaces.
+
+        - When no admin host is configured (no ADMIN_PUBLIC_HOST and no
+          DNS_DOMAIN), gating is OFF (returns True) so local/dev keeps working.
+        - Local hosts (localhost/127.0.0.1/::1/testserver) always allowed.
+        - Otherwise the request host must equal the configured admin host.
+        """
+        admin = self.admin_public_hostname
+        if not admin:
+            return True
+        host = (request_host or "").split(":", 1)[0].strip().lower()
+        if host in {"localhost", "127.0.0.1", "::1", "testserver", ""}:
+            return True
+        return host == admin
 
     @property
     def workflow_public_api_base_url(self) -> str:
