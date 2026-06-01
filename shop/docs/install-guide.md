@@ -436,6 +436,15 @@ portal (a different app), so AI Studio has its own sign-in under `/ai-studio`.
 - `/ai-studio` and `/admin/genai-observability` redirect **unauthenticated**
   admins to `/ai-studio/login` (not `/login`).
 
+### Single sign-on (CRM → AI Studio)
+
+The CRM portal and AI Studio share the admin host and `octo-auth/token-secret`,
+so a CRM login also mints the shop's `octo_session` cookie — one sign-in covers
+both apps and the `/ai-studio/login` step is skipped. This requires
+`AUTH_TOKEN_SECRET` (same value as the shop) to be wired into the CRM
+deployment from `octo-auth/token-secret`. The shop still re-checks `role=admin`
+before opening AI Studio, and CRM logout clears `octo_session` too.
+
 ### Admin credential
 
 The shop `admin` account password is supplied at runtime via the

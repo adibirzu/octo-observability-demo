@@ -49,17 +49,24 @@ see [Admin sign-in](#admin-sign-in) below) or the admin console → *Admin AI + 
 
 **Quick steps — how any operator opens AI Studio:**
 
-1. Go to `https://admin.<DNS_DOMAIN>/ai-studio` — or sign in to the **CRM portal**
-   (`https://admin.<DNS_DOMAIN>/login`) and click **AI Studio** in the left-hand nav.
-2. You are redirected to the AI Studio sign-in page (`/ai-studio/login`).
-3. Sign in with the **`admin`** account. The password is set by the deployment operator via the
-   `octo-auth/seed-admin-password` secret (env `SEED_ADMIN_PASSWORD`); on this demo it is the same
-   credential as the CRM portal on the admin host. (Locally, with no secret, the shop falls back to
-   the committed default seed hash — dev only.)
+1. Sign in to the **CRM portal** at `https://admin.<DNS_DOMAIN>/login` with the **`admin`** account.
+2. Click **AI Studio** in the left-hand nav (or go straight to `https://admin.<DNS_DOMAIN>/ai-studio`).
+   Thanks to **single sign-on**, you go straight in — no second prompt.
+3. *(Only if you didn't sign in to the CRM first)* you'll get the AI Studio sign-in page at
+   `/ai-studio/login`; sign in with the same **`admin`** account.
 4. You land on the AI Studio console. Pick a mode (see the table below): **Ask about your data**,
    **Ask the catalog (RAG)**, or **Merchandising brief**.
 5. Open **GenAI Observability** (`/admin/genai-observability`) for token/cost/latency tiles and
    deep-links into OCI APM Trace Explorer and Langfuse.
+
+!!! tip "Single sign-on (CRM → AI Studio)"
+    Both apps live on the admin host and share `octo-auth/token-secret`, so a CRM login also mints
+    the shop's `octo_session` cookie — one sign-in covers the CRM portal **and** AI Studio, and CRM
+    logout clears both. The admin password gates the CRM; the shop independently re-checks
+    `role=admin` before opening AI Studio, so non-admins are still refused. The admin password is set
+    by the deployment operator via the `octo-auth/seed-admin-password` secret (env
+    `SEED_ADMIN_PASSWORD`); locally, with no secret, the shop falls back to the committed default
+    seed hash (dev only).
 
 !!! note "Setting the admin password (operators)"
     The live password is never committed. An operator stores it as the
