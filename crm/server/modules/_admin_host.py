@@ -5,7 +5,7 @@ admin-only FastAPI surfaces (e.g. `/api/admin/coordinator/*`,
 `/api/admin/stress/*`). Do not duplicate this logic in other modules —
 import from here.
 
-Phase 5 contract (admin.<DNS_DOMAIN> only) and Phase 7 extension
+Phase 5 contract (admin.<dns_domain> only) and Phase 7 extension
 (stress-test surface) both depend on these helpers behaving identically.
 A structural test in `tests/test_admin_host_helper.py` asserts that the
 coordinator module imports these helpers rather than re-implementing them.
@@ -18,7 +18,9 @@ from fastapi import HTTPException, Request, status
 
 from server.config import cfg
 
-_ADMIN_SURFACE = "admin.<DNS_DOMAIN>"
+# Hostnames are compared lowercased (see _request_host), so keep the placeholder
+# lowercase. The real admin host is added from cfg.dns_domain at runtime.
+_ADMIN_SURFACE = "admin.<dns_domain>"
 _LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1", "testserver"}
 
 
@@ -53,5 +55,5 @@ def _require_admin_host(request: Request) -> str:
         return host
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
-        detail="OCI Coordinator is only available from admin.<DNS_DOMAIN>.",
+        detail="OCI Coordinator is only available from admin.<dns_domain>.",
     )
