@@ -16,9 +16,29 @@ from fastapi import APIRouter, HTTPException, Request, Response
 from opentelemetry.propagate import inject
 from opentelemetry.trace import Status, StatusCode
 
-from server.auth_security import require_admin_or_internal_service
+from server.auth_security import _is_internal_service_call, require_admin_or_internal_service
 from server.config import cfg
 from server.observability.logging_sdk import push_log
+
+
+def _request_host(request: Request) -> str:
+    return (
+        request.headers.get("x-forwarded-host")
+        or request.headers.get("host")
+        or (request.url.hostname or "")
+    ).split(",", 1)[0].strip().lower()
+
+
+def _enforce_admin_host(request: Request) -> None:
+    """Browser calls to AI Studio must arrive on the admin host (else 404).
+
+    Internal service-to-service calls (validated by the shared key) are exempt —
+    they carry no browser host and run inside the cluster.
+    """
+    if _is_internal_service_call(request):
+        return
+    if not cfg.is_admin_host(_request_host(request)):
+        raise HTTPException(status_code=404, detail="Not Found")
 from server.observability.otel_setup import get_tracer
 
 logger = logging.getLogger(__name__)
@@ -96,6 +116,7 @@ def _lift_upstream_attributes(span, upstream: httpx.Response) -> None:
 
 async def _proxy(request: Request, *, op: str, upstream_path: str) -> Response:
     """Shared admin-gated, trace-propagating proxy to the AI Studio service."""
+    _enforce_admin_host(request)
     principal = require_admin_or_internal_service(request)
     if not cfg.ai_studio_configured:
         raise HTTPException(status_code=503, detail="AI Studio is not configured")
@@ -167,6 +188,7 @@ async def studio_rag(request: Request) -> Response:
 
 async def _proxy_get(request: Request, *, op: str, upstream_path: str) -> Response:
     """Admin-gated, trace-propagating GET proxy to the AI Studio service."""
+    _enforce_admin_host(request)
     principal = require_admin_or_internal_service(request)
     if not cfg.ai_studio_configured:
         raise HTTPException(status_code=503, detail="AI Studio is not configured")
