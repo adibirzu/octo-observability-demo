@@ -91,6 +91,11 @@ class Config:
     app_port: int = field(default_factory=lambda: _env_int("APP_PORT", 8080))
     app_env: str = field(default_factory=lambda: _env("APP_ENV", "production"))
     app_secret_key: str = field(default_factory=_default_app_secret_key)
+    # Shared bearer-token signing secret (octo-auth/token-secret), identical to
+    # the Drone Shop's AUTH_TOKEN_SECRET. Lets the CRM mint the shop's
+    # octo_session cookie so a single admin-host login also signs the user into
+    # AI Studio (cross-app SSO bridge). Empty => bridge disabled, no SSO cookie.
+    auth_token_secret: str = field(default_factory=lambda: _env_secret("AUTH_TOKEN_SECRET"))
     app_runtime: str = field(default_factory=lambda: _env("APP_RUNTIME", "docker"))
     service_namespace: str = field(default_factory=lambda: _env("SERVICE_NAMESPACE", "octo"))
     service_instance_id: str = field(default_factory=lambda: _env("SERVICE_INSTANCE_ID", _env("HOSTNAME", "local-dev")))

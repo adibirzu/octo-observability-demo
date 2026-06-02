@@ -332,6 +332,37 @@ SEED_USERS = [
     },
 ]
 
+# Optional runtime override for the admin seed credential. When set (production
+# secret), the live admin password is operator-supplied and never committed to
+# the repo. The admin account gates the admin-host AI Studio sign-in
+# (``POST /api/ai-studio/login``), so this is the single source of truth for that
+# password in deployed environments.
+_SEED_ADMIN_PASSWORD = (os.getenv("SEED_ADMIN_PASSWORD") or "").strip()
+
+
+def _resolve_seed_password_hash(username: str, existing_hash: str | None, default_hash: str) -> str:
+    """Return the password hash to persist for a seed user.
+
+    For the ``admin`` user, prefer ``SEED_ADMIN_PASSWORD`` when configured so the
+    live credential is secret-driven. The existing hash is kept when it already
+    verifies the configured password (idempotent — avoids a needless rewrite and
+    a new salt on every pod restart). When the secret is absent, the committed
+    default hash is used so local/dev and ``docker-compose`` work out of the box.
+    """
+    if username == "admin" and _SEED_ADMIN_PASSWORD:
+        import bcrypt
+
+        secret = _SEED_ADMIN_PASSWORD.encode("utf-8")
+        if existing_hash:
+            try:
+                if bcrypt.checkpw(secret, existing_hash.encode("utf-8")):
+                    return existing_hash
+            except ValueError:
+                pass
+        return bcrypt.hashpw(secret, bcrypt.gensalt()).decode("ascii")
+    return default_hash
+
+
 # ── Engine creation ──────────────────────────────────────────────
 
 _engine_kwargs = {
@@ -1086,9 +1117,15 @@ def _reconcile_seed_users(session) -> None:
     for username, payload in desired_by_username.items():
         existing = existing_users.get(username)
         if existing is None:
+            seed_payload = {
+                **payload,
+                "password_hash": _resolve_seed_password_hash(
+                    username, None, payload["password_hash"]
+                ),
+            }
             try:
                 nested = session.begin_nested()
-                session.add(User(**payload))
+                session.add(User(**seed_payload))
                 nested.commit()
             except Exception:
                 existing = session.query(User).filter_by(username=username).first()
@@ -1098,7 +1135,9 @@ def _reconcile_seed_users(session) -> None:
                 continue
 
         existing.email = payload["email"]
-        existing.password_hash = payload["password_hash"]
+        existing.password_hash = _resolve_seed_password_hash(
+            username, existing.password_hash, payload["password_hash"]
+        )
         existing.role = payload["role"]
         existing.is_active = 1
 
@@ -1120,7 +1159,17 @@ def seed_data():
                 return
 
             # Users
-            session.add_all(User(**user) for user in SEED_USERS)
+            session.add_all(
+                User(
+                    **{
+                        **user,
+                        "password_hash": _resolve_seed_password_hash(
+                            user["username"], None, user["password_hash"]
+                        ),
+                    }
+                )
+                for user in SEED_USERS
+            )
             session.flush()
 
             session.add_all(Product(**product) for product in SEED_PRODUCTS)

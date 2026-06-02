@@ -127,7 +127,7 @@ time, ~15 minutes per subsequent tenancy via the Resource Manager stack.
 | Component | Tech | Routes | Key features |
 |---|---|---|---|
 | Drone Shop | Python/FastAPI | 98 | Commerce, SSO, chaos, observability, CRM sync |
-| AI Studio (proxy) | `server/modules/ai_studio.py` + `/ai-studio` | admin-only | Same-origin proxy to the GenAI multi-agent service (`services/genai-studio/`); forwards W3C trace context; off by default (`AI_STUDIO_ENABLED`) |
+| AI Studio (proxy) | `server/modules/ai_studio.py` + `/ai-studio` | admin-host-only | Same-origin proxy to the GenAI multi-agent service (`services/genai-studio/`); forwards W3C trace context; off by default (`AI_STUDIO_ENABLED`). Host-gated to the admin host (`admin.<DNS_DOMAIN>`) — 404 on the public storefront host. Dedicated sign-in: `GET /ai-studio/login` (admin-only page) → `POST /api/ai-studio/login` (reuses the shop password-login flow with rate-limit + audit, requires `role=admin`) → sets the httponly `octo_session` cookie (secure, samesite=lax, host-scoped to the admin host). Unauthenticated admins on `/ai-studio` and `/admin/genai-observability` redirect to `/ai-studio/login` (not `/login`), because on the admin host `/login` and `/api/auth/*` serve the CRM portal (a separate app) |
 | Workflow Gateway | Go | ~15 | Select AI, query lab, ATP sweeps, component health |
 | Enterprise CRM | Python/FastAPI | ~80 | CRM, simulation proxy, SSO, distributed traces |
 | Ops Portal | Python/FastAPI | ~40 | Tenancy config, k6 launcher, health matrix, monitoring |

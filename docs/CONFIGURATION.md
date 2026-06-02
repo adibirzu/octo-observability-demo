@@ -147,7 +147,8 @@ publishing public URLs to the browser. Configure both sides.
 | `INTERNAL_SERVICE_KEY` | secret | Server-to-server token shared between Shop and CRM. Generate with `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`. Required for the simulation proxy. Prefer `INTERNAL_SERVICE_KEY_FILE` for mounted secrets. |
 | `AUTH_TOKEN_SECRET` | secret | Application JWT signing secret. |
 | `APP_SECRET_KEY` | secret | Flask/Starlette session secret. |
-| `BOOTSTRAP_ADMIN_PASSWORD` | secret | Initial admin password for the CRM. Used only on first boot. |
+| `SEED_ADMIN_PASSWORD` | secret | Shop `admin` account seed password. Gates the admin-host AI Studio sign-in (`POST /api/ai-studio/login`). Operator-supplied; sourced from the `octo-auth` secret key `seed-admin-password` (optional). When absent, the Shop falls back to the committed default seed hash (local/dev only). |
+| `BOOTSTRAP_ADMIN_PASSWORD` | secret | CRM bootstrap admin password — a distinct mechanism in a different app (the Enterprise CRM). Used only on first boot. Not the same as `SEED_ADMIN_PASSWORD`. |
 
 ---
 
@@ -389,7 +390,7 @@ into every enabled namespace (`shop.namespace`, `crm.namespace`):
 | Secret | Keys |
 |--------|------|
 | `octo-atp` | `dsn`, `username`, `password`, `wallet-password` |
-| `octo-auth` | `token-secret`, `internal-service-key`, `app-secret-key`, `bootstrap-admin-password` |
+| `octo-auth` | `token-secret`, `internal-service-key`, `app-secret-key`, `seed-admin-password`, `bootstrap-admin-password` |
 | `octo-apm` | `endpoint`, `private-key`, `public-key`, `rum-endpoint`, `rum-web-application-ocid` |
 | `octo-logging` | `log-group-id`, `log-id`, `log-chaos-audit-id`, `log-security-id` |
 | `octo-oci-config` | `compartment-id`, `genai-endpoint`, `genai-model-id`, `selectai-profile-name` |
@@ -538,7 +539,7 @@ global:
 Required secret keys before `helm install`:
 
 * `octo-atp`: `dsn`, `username`, `password`, `wallet-password`
-* `octo-auth`: `token-secret`, `internal-service-key`, `app-secret-key`, `bootstrap-admin-password`
+* `octo-auth`: `token-secret`, `internal-service-key`, `app-secret-key`, `seed-admin-password`, `bootstrap-admin-password`
 * `octo-apm`: `endpoint`, `private-key`, `public-key`, `rum-endpoint`, `rum-web-application-ocid`
 * `octo-logging`: `log-group-id`, `log-id`, `log-chaos-audit-id`, `log-security-id`
 * `octo-oci-config`: `compartment-id`, `genai-endpoint`, `genai-model-id`, `selectai-profile-name`
