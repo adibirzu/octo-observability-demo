@@ -1,0 +1,51 @@
+# OKE RBAC — grant an IAM GROUP kubectl access to the octo-drone-shop namespace
+# on octo-apm-demo-oke (LogAnalytics compartment). PREFERRED over the per-user
+# binding for team access: add/remove operators in OCI IAM and they inherit
+# (or lose) kubectl access with no cluster change.
+#
+# WHY GROUP WORKS: OKE presents a user-principal's IAM GROUP OCIDs to Kubernetes
+# as RBAC group memberships, so a binding subject `kind: Group, name: <group-ocid>`
+# authorizes every member of that IAM group. (User-principal subjects use the
+# user OCID; group subjects use the group OCID — both are OCIDs, never emails.)
+#
+# SCOPE: namespaced to octo-drone-shop only (least privilege; shared multi-tenant
+# cluster). ClusterRole `edit` = roll the Deployment, apply the CronJob, read
+# pods/logs in this ns. Swap to `view` for a read-only operator group.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# ONE-TIME SETUP (an IAM admin):
+#   1. Create the group + add operators:
+#        oci iam group create --name octo-oke-deployers \
+#          --description "kubectl deploy access to octo-apm-demo-oke / octo-drone-shop"
+#        oci iam group add-user --user-id <USER_OCID> --group-id <GROUP_OCID>
+#   2. Grant the group an IAM policy to reach the cluster (token mint), e.g. in
+#      the LogAnalytics compartment:
+#        Allow group octo-oke-deployers to use cluster-family in compartment LogAnalytics
+#   3. Apply this binding — by someone who ALREADY has cluster-admin on
+#      octo-apm-demo-oke (cluster creator / tenancy admin / OCI Console Cloud
+#      Shell, which is admin). The group being granted cannot apply it itself.
+#
+# APPLY (group OCID via envsubst; never commit a real OCID):
+#   export OKE_RBAC_GROUP_OCID=$(oci iam group list --profile emdemo \
+#     --query "data[?name=='octo-oke-deployers'].id | [0]" --raw-output)
+#   envsubst < deploy/k8s/oke/rbac/octo-deployer-group-rolebinding.yaml | kubectl apply -f -
+# (Run from a context that IS cluster-admin on octo-apm-demo-oke.)
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: octo-deployer-group
+  namespace: octo-drone-shop
+  labels:
+    app.kubernetes.io/managed-by: octo-observability-demo
+    purpose: deploy-access
+subjects:
+  # OKE group subject = the IAM group's OCID. Every member of the group inherits
+  # this access. Set via envsubst; do not hardcode a real OCID (redaction rule).
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: "${OKE_RBAC_GROUP_OCID}"
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io

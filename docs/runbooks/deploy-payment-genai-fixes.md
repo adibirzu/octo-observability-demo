@@ -35,6 +35,13 @@ export OKE_RBAC_USER_OCID=$(awk '/^\[emdemo\]/{f=1;next}/^\[/{f=0}f&&/^user/{pri
 envsubst < deploy/k8s/oke/rbac/octo-deployer-rolebinding.yaml | kubectl apply -f -
 ```
 
+> **Team access (preferred):** bind an **IAM group** instead, so operators added
+> to the group inherit kubectl access with no cluster change. OKE maps IAM group
+> OCIDs to Kubernetes RBAC groups. Use
+> `deploy/k8s/oke/rbac/octo-deployer-group-rolebinding.yaml` (set
+> `OKE_RBAC_GROUP_OCID` from `oci iam group list`); its header documents the
+> group + policy setup.
+
 Then the granted user refreshes their kubeconfig and confirms the **right**
 cluster (suffix `…cm67gejykua`, us-phoenix-1):
 
