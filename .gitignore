@@ -59,6 +59,18 @@ outputs.json
 **/jumphost.json
 **/.ocir-token
 **/auth-token.txt
+
+# emdemo is the PRODUCTION tenancy — its credentials/state/outputs are LOCAL
+# DEVELOPMENT data only and must NEVER be pushed. The rules above (credentials/,
+# *.tfvars, *.tfstate, **/outputs.json, wallets, keys) already cover these;
+# the explicit guards below ignore emdemo data even if it lands outside those.
+credentials/emdemo/
+**/emdemo/credentials/
+*emdemo*.tfvars
+*emdemo*.tfstate
+*emdemo*.tfstate.*
+**/vars/emdemo.tfvars
+**/state/emdemo.tfstate*
 **/oci_api_key_*.pem
 
 # Logs + test output
