@@ -172,6 +172,15 @@ read-only `octo-atp-readonly` DB user. Deploy with
 `shop/deploy/k8s/genai-studio.yaml`; the shop enables it via `AI_STUDIO_ENABLED`
 + `AI_STUDIO_BASE_URL`. Off by default. Validate in a staging tenancy before production.
 
+Admin-host AI Studio sign-in additionally consumes the shop secret
+`octo-auth/seed-admin-password` (optional). It is sourced into the shop via
+`SEED_ADMIN_PASSWORD` and sets the `admin` account password used by the
+admin-host `/ai-studio/login` flow. When the secret is absent the shop falls
+back to the committed default seed hash (LOCAL/DEV ONLY) — supply this secret
+for any live/admin-host deploy. The live value is operator-supplied and never
+committed. This is DISTINCT from `octo-auth/bootstrap-admin-password`
+(`BOOTSTRAP_ADMIN_PASSWORD`, the CRM bootstrap admin — separate app).
+
 ---
 
 ## 13. Smallest viable deploy (demo)

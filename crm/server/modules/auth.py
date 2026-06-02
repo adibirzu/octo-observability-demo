@@ -2,6 +2,7 @@
 
 import base64
 import hashlib
+import json
 import logging
 import secrets
 import time
@@ -30,6 +31,46 @@ import hmac
 # DB-backed session store — shared across all OKE replicas via ATP
 _login_attempts: dict[str, list[float]] = {}
 LOGIN_WINDOW_SECONDS = 300
+
+# ── Cross-app SSO bridge ────────────────────────────────────────────────────
+# The CRM portal and the Drone Shop's AI Studio are both served on the admin
+# host and share octo-auth/token-secret. On login the CRM also mints the shop's
+# `octo_session` cookie so a single sign-in covers both apps (no second prompt at
+# /ai-studio). The token format mirrors shop/server/auth_security.py exactly:
+# `base64url(json).` + `base64url(HMAC_SHA256(sha256(secret), body))`. The shop
+# still enforces role=admin on AI Studio, so a non-admin gets a token but is
+# gated there. If AUTH_TOKEN_SECRET is unset the bridge is silently disabled.
+SHOP_SESSION_COOKIE = "octo_session"
+SHOP_TOKEN_TTL_SECONDS = 60 * 60 * 8
+
+
+def _mint_shop_session_token(user_id: int, username: str, role: str) -> str | None:
+    secret = (cfg.auth_token_secret or "").strip()
+    if not secret:
+        return None
+    secret_bytes = hashlib.sha256(secret.encode("utf-8")).digest()
+    payload = {
+        "sub": user_id,
+        "username": username,
+        "role": role,
+        "auth_method": "password",
+        "exp": int(time.time()) + SHOP_TOKEN_TTL_SECONDS,
+    }
+    body = (
+        base64.urlsafe_b64encode(
+            json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
+        )
+        .rstrip(b"=")
+        .decode("ascii")
+    )
+    sig = (
+        base64.urlsafe_b64encode(
+            hmac.new(secret_bytes, body.encode("utf-8"), hashlib.sha256).digest()
+        )
+        .rstrip(b"=")
+        .decode("ascii")
+    )
+    return f"{body}.{sig}"
 
 
 class LoginRequest(BaseModel):
@@ -121,6 +162,20 @@ async def login(req: LoginRequest, request: Request, response: Response):
                 secure=is_https,
                 max_age=cfg.session_timeout_seconds,
             )
+            # Cross-app SSO: also issue the shop's octo_session so this single
+            # login authenticates the admin-host AI Studio (same host, shared
+            # secret). Carries the user's real role; the shop gates admin there.
+            shop_token = _mint_shop_session_token(int(user.id), str(user.username), str(user.role))
+            if shop_token:
+                response.set_cookie(
+                    SHOP_SESSION_COOKIE, shop_token,
+                    httponly=True,
+                    samesite="lax",
+                    secure=is_https,
+                    max_age=SHOP_TOKEN_TTL_SECONDS,
+                    path="/",
+                )
+                span.set_attribute("auth.sso_bridge", "octo_session_issued")
             _login_attempts.pop(client_ip, None)
 
             business_metrics.record_login_success(method="password", role=user.role or "user")
@@ -202,6 +257,8 @@ async def logout(request: Request, response: Response):
             await db.execute(text("DELETE FROM user_sessions WHERE session_id = :sid"), {"sid": session_id})
         business_metrics.record_logout()
     response.delete_cookie("session_id")
+    # Clear the cross-app SSO cookie so logout also signs out of AI Studio.
+    response.delete_cookie(SHOP_SESSION_COOKIE, path="/")
     return {"status": "logged_out"}
 
 

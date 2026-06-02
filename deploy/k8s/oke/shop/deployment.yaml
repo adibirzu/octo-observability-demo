@@ -145,6 +145,16 @@ spec:
                 secretKeyRef:
                   name: octo-auth
                   key: internal-service-key
+            # ── Admin seed credential (gates admin-host AI Studio sign-in).
+            # Operator-supplied so the live admin password is never committed.
+            # Optional: when absent the shop falls back to the committed default
+            # seed hash (local/dev only).
+            - name: SEED_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: octo-auth
+                  key: seed-admin-password
+                  optional: true
             # ── Autonomous DB
             - name: ORACLE_DSN
               valueFrom:
