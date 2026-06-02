@@ -3,7 +3,7 @@ uvicorn[standard]==0.48.0
 sqlalchemy==2.0.50
 oracledb==3.4.2
 python-dotenv==1.2.2
-python-multipart==0.0.29
+python-multipart==0.0.30
 python-jose[cryptography]==3.5.0
 passlib[bcrypt]==1.7.4
 # Pinned at 4.3.x: passlib 1.7.4 reads bcrypt.__about__.__version__, removed in
@@ -21,7 +21,7 @@ opentelemetry-instrumentation-httpx==0.63b1
 opentelemetry-instrumentation-logging==0.63b1
 opentelemetry-exporter-prometheus==0.63b1
 prometheus-client==0.25.0
-oci==2.175.0
+oci==2.176.0
 pydantic==2.13.4
 pydantic-settings==2.14.1
 itsdangerous==2.2.0
