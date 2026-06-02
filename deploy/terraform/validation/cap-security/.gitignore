@@ -1,8 +1,0 @@
-# Never commit state, provider plugins, or real-OCID tfvars from this validation root.
-.terraform/
-.terraform.lock.hcl
-*.tfstate
-*.tfstate.*
-*.tfplan
-terraform.*.tfvars
-*.env

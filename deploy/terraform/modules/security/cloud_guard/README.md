@@ -88,5 +88,5 @@ recipe, and attached a target on a dedicated child compartment
 (`octo-apm-demo-sec`) — `responder_rule_state = DETECT` (notify-only). cap's
 Cloud Guard was already enabled with a root target, so `enable_cloud_guard_service`
 stayed off and the target watched the child compartment. All resources reached
-`ACTIVE`; `terraform plan` is clean. See the isolated root at
-`deploy/terraform/validation/cap-security/`.
+`ACTIVE`; `terraform plan` is clean. See the portable harness at
+`deploy/terraform/validation/security-modules/`.

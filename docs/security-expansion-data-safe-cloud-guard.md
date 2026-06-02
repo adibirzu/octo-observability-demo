@@ -342,7 +342,7 @@ Security Posture dashboard → phased flag flips, staged in `cap` before `emdemo
 ## 8. cap validation results (2026-06-02)
 
 Phase 1 was staged **live in cap** (`pbncapgemini`, eu-frankfurt-1) ahead of
-emdemo, via an isolated root (`deploy/terraform/validation/cap-security/`) with
+emdemo, via an isolated root (`deploy/terraform/validation/security-modules/`) with
 a cap-pinned provider and its own state — *not* the repo-root stack, whose local
 `terraform.tfstate` describes oci4cca resources and would mis-reconcile against
 cap. Validated against `oracle/oci` **8.16.0**.

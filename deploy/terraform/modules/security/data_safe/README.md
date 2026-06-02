@@ -95,7 +95,7 @@ plan, then promote to `emdemo` inside the `LogAnalytics` compartment scope.**
 Applied live against cap (`pbncapgemini`, eu-frankfurt-1) with `oracle/oci`
 **8.16.0**: registered a public-access ADB (`oci-demo-shared-atp`) as a target
 and provisioned scheduled Security + User Assessment baselines — all `ACTIVE`.
-See `deploy/terraform/validation/cap-security/`.
+See `deploy/terraform/validation/security-modules/`.
 
 Two findings from that run:
 
