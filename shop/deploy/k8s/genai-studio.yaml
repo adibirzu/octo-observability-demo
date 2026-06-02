@@ -64,16 +64,22 @@ spec:
                 secretKeyRef:
                   name: octo-oci-config
                   key: genai-endpoint
+            # Dedicated AI APM domain (octo-ai-apm) — a separate domain for the
+            # GenAI service so the gen_ai.* NUMERIC attributes (input/output
+            # tokens, cost_usd, retrieval.documents.count) can be activated
+            # without competing for the shared domain's exhausted numeric slots.
+            # The shop/storefront stays on the main octo-apm domain; the two are
+            # correlated by W3C trace_id (and Langfuse shows the full GenAI tree).
             - name: OCI_APM_ENDPOINT
               valueFrom:
                 secretKeyRef:
-                  name: octo-apm
+                  name: octo-apm-ai
                   key: endpoint
                   optional: true
             - name: OCI_APM_PRIVATE_DATA_KEY
               valueFrom:
                 secretKeyRef:
-                  name: octo-apm
+                  name: octo-apm-ai
                   key: private-key
                   optional: true
             - name: LANGFUSE_TRACING_ENABLED
