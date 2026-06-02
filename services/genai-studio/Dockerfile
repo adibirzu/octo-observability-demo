@@ -28,6 +28,10 @@ RUN pip install --upgrade pip \
         "langfuse>=4.0.1"
 
 COPY app ./app
+# RAG assets: 23ai migration, curated knowledge, seeder (PR #18). Needed so the
+# in-pod seed (python -m scripts.seed_genai_kb) and migration are available.
+COPY db ./db
+COPY scripts ./scripts
 
 USER appuser
 EXPOSE 8090

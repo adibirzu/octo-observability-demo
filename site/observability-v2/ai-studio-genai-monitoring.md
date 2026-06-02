@@ -60,8 +60,8 @@ saved-search and Log Analytics widgets. Three importable surfaces ship for GenAI
 
 | Surface | File | Backed by |
 | --- | --- | --- |
-| **GenAI Command Center** (Management Dashboard, 7 widgets) | `deploy/oci/log_analytics/dashboards/genai-llmetry-command-center.json` | token throughput, token/cost by run·model·agent, cost-by-model FinOps, agent fan-out, Sales-Analyst data-source health, errors & guardrails, assistant LLMetry |
-| **GenAI APM Trace Dashboard** (Management Dashboard, 4 widgets) | `deploy/oci/log_analytics/dashboards/genai-apm-trace-dashboard.json` | trace-correlated view keyed on the same `trace_id` / `studio.run_id` as the APM saved queries `ai_studio_agent_fanout` + `ai_studio_token_cost` |
+| **GenAI Command Center** (Management Dashboard, 11 widgets) | `deploy/oci/log_analytics/dashboards/genai-llmetry-command-center.json` | token throughput, token/cost by run·model·agent, cost-by-model FinOps, agent fan-out, Sales-Analyst data-source health, errors & guardrails, assistant LLMetry, **session/thread rollup, latency p50/p95, RAG retrieval grounding, LLM-as-judge by run** (Phase A — APM parity) |
+| **GenAI APM Trace Dashboard** (Logging Analytics dashboard, 4 widgets) | `deploy/oci/log_analytics/dashboards/genai-apm-trace-dashboard.json` | trace-correlated view keyed on the same `trace_id` / `studio.run_id` as the APM saved queries `ai_studio_agent_fanout` + `ai_studio_token_cost`. Despite the name it is a Logging Analytics dashboard, not a native APM dashboard — the full native APM trace richness (waterfall, span detail, service map) lives in **APM Trace Explorer**. |
 | **GenAI Tokens, Cost & Judge Scores** (OCI Monitoring) | `deploy/oci/monitoring-dashboards/genai-token-cost.json` | the `octo_genai` custom-metric namespace published by the Langfuse→OCI Monitoring sync |
 
 Import the Management Dashboards (idempotent; creates the backing saved searches too):
@@ -78,11 +78,14 @@ The dashboards read the `octo-genai-studio` Log Source, so import them into the 
 AI Studio actually runs (otherwise the tiles render empty). Tiles drill out to Langfuse
 (`lf.${DNS_DOMAIN}`) and Grafana (`grafana.${DNS_DOMAIN}`) for prompt/cost detail.
 
-## RAG over the Oracle 23ai knowledge base
+## RAG over the Oracle 19c knowledge base
 
 The **Ask the catalog (RAG)** mode answers product/spec/policy questions with
-retrieval-augmented generation over an Oracle 23ai **native VECTOR** knowledge base
-(`genai_kb`: catalog rows + curated drone docs). It is the in-product realisation of
+retrieval-augmented generation over an Oracle 19c knowledge base
+(`genai_kb`: catalog rows + curated drone docs). The live ATP is Oracle 19c with
+**app-side cosine similarity** (`vector.engine=appside_cosine`) over embeddings stored
+as JSON text in a CLOB — there is no Oracle 23ai native `VECTOR` type or `VECTOR_DISTANCE`.
+It is the in-product realisation of
 Oracle's *"Observability on RAG solutions using OCI APM"* pattern and the
 `oci-quickstart` `genai-inference-app-monitoring` example — every retrieval step is a
 span, so the cost and grounding of RAG are visible, not hidden.
@@ -93,15 +96,15 @@ span, so the cost and grounding of RAG are visible, not hidden.
 flowchart LR
     A[studio.rag] --> B[agent.invoke.rag_analyst]
     B --> C[retrieval.embed<br/>gen_ai.* embeddings]
-    B --> D[vector_db.search<br/>VECTOR_DISTANCE COSINE]
-    D --> E[(Oracle 23ai<br/>genai_kb)]
+    B --> D[vector_db.search<br/>app-side cosine COSINE]
+    D --> E[(Oracle 19c<br/>genai_kb)]
     B --> F[llm.invoke.chat<br/>grounded answer]
 ```
 
 | Span | Key attributes | Why it matters |
 | --- | --- | --- |
 | `retrieval.embed` | `gen_ai.system`, `gen_ai.request.model`, `embedding.dimension` | The embedding call has its own cost/latency, separate from generation. |
-| `vector_db.search` | `db.system=oracle.atp`, `vector.metric=COSINE`, `vector.top_k`, `retrieval.documents.count`, `retrieval.top_distance`, `db.statement` | Proves *which* passages grounded the answer and how close they were. |
+| `vector_db.search` | `db.system=oracle.atp`, `vector.engine=appside_cosine`, `vector.metric=COSINE`, `vector.top_k`, `retrieval.documents.count`, `retrieval.top_distance` | Proves *which* passages grounded the answer and how close they were (cosine ranked app-side over CLOB-stored JSON embeddings). |
 | `llm.invoke.chat` | `gen_ai.request.model`, `gen_ai.usage.*` | The generation grounded on retrieved context. |
 
 The answer carries `data_source` (`oracle_atp` when the KB is live, otherwise a
@@ -111,7 +114,7 @@ distance) so retrieval is auditable from the UI as well as the trace.
 ### Enabling RAG
 
 1. Run the migration once as the schema owner (creates `genai_kb` + grants `SELECT`
-   to `studio_ro`): `services/genai-studio/db/migrations/genai_kb_23ai.sql`.
+   to `studio_ro`): `services/genai-studio/db/migrations/genai_kb.sql`.
 2. Seed embeddings (writeable user, never `studio_ro`): `python -m scripts.seed_genai_kb`.
 3. Set `STUDIO_RAG_ENABLED=true` (+ `OCI_GENAI_EMBED_MODEL_ID`, `STUDIO_EMBED_DIM`). RAG
    degrades to a labelled fallback when off or the KB is unseeded — it never breaks the

@@ -110,6 +110,14 @@ spec:
                 secretKeyRef:
                   name: octo-auth
                   key: app-secret-key
+            # Shared bearer-token secret — lets the CRM mint the shop's
+            # octo_session cookie for cross-app SSO (one admin-host login also
+            # signs into AI Studio). Same value as the shop's AUTH_TOKEN_SECRET.
+            - name: AUTH_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: octo-auth
+                  key: token-secret
             - name: INTERNAL_SERVICE_KEY
               valueFrom:
                 secretKeyRef:

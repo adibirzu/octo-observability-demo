@@ -61,7 +61,7 @@ Environment variables:
 |---|---|---|---|
 | `COMPARTMENT_ID` | yes | — | OCTO compartment OCID. |
 | `APM_DOMAIN_ID` | yes when `APPLY=true` | — | Target APM domain OCID. |
-| `OCI_PROFILE` | no | `demo` | OCI CLI profile name. |
+| `OCI_PROFILE` | no | `DEFAULT` | OCI CLI profile name. |
 | `APPLY` | no | `false` | Set to `true` to actually mutate. |
 
 ### `oci apm-traces` subcommand caveat

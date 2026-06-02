@@ -297,6 +297,19 @@ async def list_modules():
 
 # ── Frontend pages ────────────────────────────────────────────
 
+def _request_host(request: Request) -> str:
+    """Resolve the externally-visible host (LB sets x-forwarded-host)."""
+    return (
+        request.headers.get("x-forwarded-host")
+        or request.headers.get("host")
+        or (request.url.hostname or "")
+    ).split(",", 1)[0].strip().lower()
+
+
+def _on_admin_host(request: Request) -> bool:
+    return cfg.is_admin_host(_request_host(request))
+
+
 def _render_page(request: Request, page: str, title: str, **ctx):
     if templates is None:
         return HTMLResponse(f"<h1>{title}</h1><p>Templates not configured</p>")
@@ -326,6 +339,9 @@ def _render_page(request: Request, page: str, title: str, **ctx):
          "idcs_configured": cfg.idcs_configured,
          "genai_configured": cfg.genai_configured,
          "ai_studio_configured": cfg.ai_studio_configured,
+         # Only expose admin-only surfaces (AI Studio nav link, admin console
+         # cards) when the request arrives on the admin host.
+         "on_admin_host": _on_admin_host(request),
          "app_name": cfg.app_name, **ctx},
     )
 
@@ -347,18 +363,41 @@ async def services_page(request: Request):
 
 @app.get("/ai-studio", response_class=HTMLResponse)
 async def ai_studio_page(request: Request):
-    # Admin-only surface: AI Studio is a back-office GenAI console, not a public
-    # storefront page. Gate server-side on the admin role (session cookie or
-    # bearer); non-admins are redirected to login rather than seeing the page.
+    # Admin-only back-office GenAI console. Two gates:
+    #  1. Host gate — only served on the admin host (admin.<DNS_DOMAIN>); on the
+    #     public storefront host it returns 404 so the surface isn't even
+    #     discoverable there.
+    #  2. Role gate — must be an admin (session cookie or bearer); non-admins on
+    #     the admin host are redirected to login.
     from fastapi import HTTPException
 
     from server.auth_security import require_role
 
+    if not _on_admin_host(request):
+        raise HTTPException(status_code=404, detail="Not Found")
     try:
         require_role(request, "admin")
     except HTTPException:
-        return RedirectResponse(url="/login", status_code=302)
+        # On the admin host the shop's own /login isn't reachable (that host's
+        # /login serves the CRM). Redirect to the AI-Studio-scoped sign-in, which
+        # routes back to the shop via the LB /ai-studio rule and issues the cookie.
+        return RedirectResponse(url="/ai-studio/login", status_code=302)
     return _render_page(request, "ai_studio", "AI Studio", module="ai_studio")
+
+
+@app.get("/ai-studio/login", response_class=HTMLResponse)
+async def ai_studio_login_page(request: Request):
+    """Admin-host-only sign-in for AI Studio.
+
+    Served under the ``/ai-studio`` prefix so the LB routes it to the shop on
+    the admin host. The form posts to ``/api/ai-studio/login`` (also shop-routed)
+    which sets the ``octo_session`` cookie, then this page redirects to /ai-studio.
+    """
+    from fastapi import HTTPException
+
+    if not _on_admin_host(request):
+        raise HTTPException(status_code=404, detail="Not Found")
+    return _render_page(request, "ai_studio_login", "AI Studio Sign-in", module="ai_studio")
 
 
 @app.get("/admin/genai-observability", response_class=HTMLResponse)
@@ -374,10 +413,12 @@ async def genai_observability_page(request: Request):
 
     from server.auth_security import require_role
 
+    if not _on_admin_host(request):
+        raise HTTPException(status_code=404, detail="Not Found")
     try:
         require_role(request, "admin")
     except HTTPException:
-        return RedirectResponse(url="/login", status_code=302)
+        return RedirectResponse(url="/ai-studio/login", status_code=302)
     return _render_page(
         request,
         "genai_observability",

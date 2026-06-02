@@ -13,16 +13,96 @@ import logging
 
 import httpx
 from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 from opentelemetry.propagate import inject
 from opentelemetry.trace import Status, StatusCode
 
-from server.auth_security import require_admin_or_internal_service
+from server.auth_security import (
+    SESSION_COOKIE_NAME,
+    _is_internal_service_call,
+    require_admin_or_internal_service,
+)
 from server.config import cfg
+from server.modules.auth import login as _password_login
 from server.observability.logging_sdk import push_log
+
+
+def _request_host(request: Request) -> str:
+    return (
+        request.headers.get("x-forwarded-host")
+        or request.headers.get("host")
+        or (request.url.hostname or "")
+    ).split(",", 1)[0].strip().lower()
+
+
+def _enforce_admin_host(request: Request) -> None:
+    """Browser calls to AI Studio must arrive on the admin host (else 404).
+
+    Internal service-to-service calls (validated by the shared key) are exempt —
+    they carry no browser host and run inside the cluster.
+    """
+    if _is_internal_service_call(request):
+        return
+    if not cfg.is_admin_host(_request_host(request)):
+        raise HTTPException(status_code=404, detail="Not Found")
 from server.observability.otel_setup import get_tracer
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai-studio", tags=["ai-studio"])
+
+
+def _request_is_https(request: Request) -> bool:
+    return (
+        request.url.scheme == "https"
+        or request.headers.get("x-forwarded-proto", "").split(",", 1)[0].strip().lower() == "https"
+    )
+
+
+@router.post("/login")
+async def studio_login(request: Request) -> Response:
+    """Cookie-issuing admin sign-in for AI Studio on the admin host.
+
+    The shared shop login (``/api/auth/login``) only returns a localStorage
+    bearer token; server-rendered admin pages authenticate via the
+    ``octo_session`` cookie. This endpoint — reachable only on the admin host
+    and routed to the shop by the LB ``/api/ai-studio`` rule — verifies
+    credentials (reusing the password-login flow for rate-limiting + audit),
+    requires the admin role, and sets the session cookie so a subsequent
+    ``GET /ai-studio`` page navigation is authenticated.
+    """
+    _enforce_admin_host(request)
+
+    raw = await request.body()
+    try:
+        payload = json.loads(raw.decode("utf-8")) if raw else {}
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail="Login request must be JSON") from exc
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=400, detail="Login request must be a JSON object")
+
+    # Reuse the canonical password-login handler (raises 400/401/429 on failure)
+    # so rate-limiting, the audit log, and auth telemetry stay in one place.
+    result = await _password_login(request, payload)
+    user = result.get("user") or {}
+    if str(user.get("role")) != "admin":
+        raise HTTPException(status_code=403, detail="AI Studio requires an admin account")
+
+    response = JSONResponse(
+        {
+            "status": "success",
+            "redirect": "/ai-studio",
+            "user": {"username": user.get("username"), "role": user.get("role")},
+        }
+    )
+    response.set_cookie(
+        SESSION_COOKIE_NAME,
+        result["token"],
+        httponly=True,
+        secure=_request_is_https(request),
+        samesite="lax",
+        path="/",
+    )
+    return response
 
 _FORWARDED_HEADERS = (
     "authorization",
@@ -96,6 +176,7 @@ def _lift_upstream_attributes(span, upstream: httpx.Response) -> None:
 
 async def _proxy(request: Request, *, op: str, upstream_path: str) -> Response:
     """Shared admin-gated, trace-propagating proxy to the AI Studio service."""
+    _enforce_admin_host(request)
     principal = require_admin_or_internal_service(request)
     if not cfg.ai_studio_configured:
         raise HTTPException(status_code=503, detail="AI Studio is not configured")
@@ -167,6 +248,7 @@ async def studio_rag(request: Request) -> Response:
 
 async def _proxy_get(request: Request, *, op: str, upstream_path: str) -> Response:
     """Admin-gated, trace-propagating GET proxy to the AI Studio service."""
+    _enforce_admin_host(request)
     principal = require_admin_or_internal_service(request)
     if not cfg.ai_studio_configured:
         raise HTTPException(status_code=503, detail="AI Studio is not configured")

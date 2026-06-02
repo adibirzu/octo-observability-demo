@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+    .studio-login-shell {
+        max-width: 520px;
+        margin: 64px auto;
+    }
+    .studio-login-card {
+        display: grid;
+        gap: 18px;
+    }
+    .studio-login-card p {
+        color: var(--muted);
+        line-height: 1.6;
+    }
+    .studio-login-form {
+        display: grid;
+        gap: 12px;
+    }
+    .studio-login-result {
+        min-height: 44px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    .studio-login-result.error {
+        border-color: var(--rose);
+        color: var(--rose);
+    }
+    .studio-login-result.ok {
+        border-color: var(--ok);
+        color: var(--ok);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="studio-login-shell">
+    <section class="card studio-login-card">
+        <div class="eyebrow">Back-office Access</div>
+        <h2>AI Studio Sign-in</h2>
+        <p>
+            AI Studio is an administrator-only GenAI console. Sign in with an
+            admin account to open the multi-agent studio and GenAI observability.
+        </p>
+        {% if idcs_configured %}
+        <a class="btn" href="/api/auth/sso/login" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#c74634;color:#fff;">
+            <span aria-hidden="true">⇄</span>
+            Sign in with OCI IAM (IDCS)
+        </a>
+        <div style="text-align:center;color:var(--muted);font-size:0.85em;">— or use an admin account —</div>
+        {% endif %}
+        <form id="studioLoginForm" class="studio-login-form">
+            <input type="text" id="username" placeholder="Admin username" autocomplete="username" data-testid="studio-login-username" required>
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password" data-testid="studio-login-password" required>
+            <button type="submit" class="btn" data-testid="studio-login-submit">Sign In</button>
+        </form>
+        <div class="studio-login-result" id="result" role="status" aria-live="polite">Awaiting sign-in.</div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ csp_nonce }}">
+const result = document.getElementById('result');
+
+function setMessage(message, state) {
+    result.textContent = message;
+    result.classList.remove('error', 'ok');
+    if (state) {
+        result.classList.add(state);
+    }
+}
+
+document.getElementById('studioLoginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    setMessage('Signing in…');
+
+    try {
+        const response = await fetch('/api/ai-studio/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ username, password })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok || payload.status !== 'success') {
+            setMessage(payload.detail || payload.error || 'Sign-in failed', 'error');
+            return;
+        }
+        setMessage(`Signed in as ${payload.user.username}. Opening AI Studio…`, 'ok');
+        window.location.assign(payload.redirect || '/ai-studio');
+    } catch (error) {
+        setMessage(`Sign-in failed: ${error.message}`, 'error');
+    }
+});
+</script>
+{% endblock %}

@@ -64,16 +64,22 @@ spec:
                 secretKeyRef:
                   name: octo-oci-config
                   key: genai-endpoint
+            # Dedicated AI APM domain (octo-ai-apm) — a separate domain for the
+            # GenAI service so the gen_ai.* NUMERIC attributes (input/output
+            # tokens, cost_usd, retrieval.documents.count) can be activated
+            # without competing for the shared domain's exhausted numeric slots.
+            # The shop/storefront stays on the main octo-apm domain; the two are
+            # correlated by W3C trace_id (and Langfuse shows the full GenAI tree).
             - name: OCI_APM_ENDPOINT
               valueFrom:
                 secretKeyRef:
-                  name: octo-apm
+                  name: octo-apm-ai
                   key: endpoint
                   optional: true
             - name: OCI_APM_PRIVATE_DATA_KEY
               valueFrom:
                 secretKeyRef:
-                  name: octo-apm
+                  name: octo-apm-ai
                   key: private-key
                   optional: true
             - name: LANGFUSE_TRACING_ENABLED
@@ -129,6 +135,19 @@ spec:
               value: "/app/wallet"
             - name: STUDIO_WEB_SEARCH_ENABLED
               value: "false"
+            # RAG over the 23ai native-VECTOR knowledge base (genai_kb). Enabled
+            # once the migration + seed have run; degrades to a labelled fallback
+            # if the table is missing, so toggling is safe.
+            - name: STUDIO_RAG_ENABLED
+              value: "true"
+            - name: OCI_GENAI_EMBED_MODEL_ID
+              value: "cohere.embed-multilingual-v3.0"
+            - name: STUDIO_EMBED_DIM
+              value: "1024"
+            - name: STUDIO_RAG_TOP_K
+              value: "4"
+            - name: STUDIO_RAG_KB_TABLE
+              value: "genai_kb"
           volumeMounts:
             - name: atp-wallet
               mountPath: /app/wallet

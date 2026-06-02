@@ -25,7 +25,7 @@ Required environment:
   OKE_NODE_POOL_OCID    Worker node pool OCID (envsubst into config JSON)
 
 Optional environment (defaults shown):
-  OCI_PROFILE=demo
+  OCI_PROFILE=DEFAULT
   OCI_REGION=us-phoenix-1
   OKE_CLUSTER_NAME=octo-apm-demo-oke
   APPLY=false           (default: dry-run; pass --apply to mutate)
@@ -71,7 +71,7 @@ esac
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
-: "${OCI_PROFILE:=demo}"
+: "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
 : "${OKE_CLUSTER_NAME:=octo-apm-demo-oke}"
 : "${APPLY:=false}"
