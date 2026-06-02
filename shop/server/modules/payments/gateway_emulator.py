@@ -586,11 +586,16 @@ def _emit_step(
         elapsed_ms = round((time.monotonic() - started) * 1000, 2)
         trace_ctx = current_trace_context()
         attrs["payment.gateway.step_latency_ms"] = elapsed_ms
-        push_log(
-            "INFO" if step.status in {"completed", "authorized", "ok"} else "WARNING",
-            step.message,
-            **attrs,
-        )
+        # Log level mirrors the span classification: success=INFO, genuine fault=
+        # ERROR, business outcome (declined/review/…)=WARNING — so a fault is
+        # distinguishable from a designed decline in the logs too.
+        if step.status in {"completed", "authorized", "ok"}:
+            log_level = "INFO"
+        elif step.status in PAYMENT_FAULT_STATUSES:
+            log_level = "ERROR"
+        else:
+            log_level = "WARNING"
+        push_log(log_level, step.message, **attrs)
         return replace(
             step,
             latency_ms=elapsed_ms,
