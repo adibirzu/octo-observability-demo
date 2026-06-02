@@ -201,3 +201,52 @@ variable "oke_availability_domain_names" {
   type    = list(string)
   default = []
 }
+
+###############################################################################
+# Security posture expansion — OCI Data Safe + Cloud Guard.
+# Additive + off by default so existing deploys see zero diff until an
+# operator opts in. Mirrors the create_atp / create_vault / create_logging
+# pattern. See docs/security-expansion-data-safe-cloud-guard.md.
+###############################################################################
+
+variable "create_data_safe" {
+  type        = bool
+  default     = false
+  description = "Register OCTOATP as a Data Safe target (+ optional audit/assessment scaffold)."
+}
+
+variable "data_safe_atp_id" {
+  type        = string
+  default     = ""
+  description = "Autonomous DB OCID to register in Data Safe. If create_atp=true this auto-wires to the new DB; otherwise pass a reused ATP OCID."
+}
+
+variable "create_cloud_guard" {
+  type        = bool
+  default     = false
+  description = "Provision the Cloud Guard target + cloned detector/responder recipes for the project compartment."
+}
+
+variable "cloud_guard_reporting_region" {
+  type        = string
+  default     = ""
+  description = "Cloud Guard reporting region (e.g. us-phoenix-1 in emdemo, eu-frankfurt-1 in cap). Required when create_cloud_guard=true."
+}
+
+variable "cloud_guard_target_compartment_id" {
+  type        = string
+  default     = ""
+  description = "Compartment the Cloud Guard target watches. Empty defaults to compartment_id."
+}
+
+variable "cloud_guard_topic_id" {
+  type        = string
+  default     = ""
+  description = "ONS notification topic OCID used as the responder/notify target (reuse modules/security oci_ons_notification_topic.remediation)."
+}
+
+variable "cloud_guard_auto_remediate" {
+  type        = bool
+  default     = false
+  description = "Phase 3 toggle. When true, selected responder rules switch from notify-only (DETECT) to auto-remediation (ENABLED)."
+}
