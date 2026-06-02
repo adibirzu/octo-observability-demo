@@ -1,0 +1,10 @@
+# Per-profile state + generated tfvars hold real OCIDs — never commit them.
+.terraform/
+.terraform.lock.hcl
+state/
+vars/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.bak
+*.env

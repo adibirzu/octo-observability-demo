@@ -100,8 +100,8 @@ A minimal local stack lives under `deploy/local-stack/` for laptop-scale explora
 
 ```bash
 # Clone and preview the documentation locally
-git clone https://github.com/<github-username>/octo-apm-demo.git
-cd octo-apm-demo
+git clone https://github.com/<github-username>/octo-observability-demo.git
+cd octo-observability-demo
 
 pip install -r requirements-docs.txt
 mkdocs serve

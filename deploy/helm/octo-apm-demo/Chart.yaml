@@ -16,7 +16,7 @@ keywords:
   - apm
   - observability
   - demo
-home: https://github.com/oracle/octo-apm-demo
+home: https://github.com/adibirzu/octo-observability-demo
 maintainers:
   - name: octo-apm-demo maintainers
 annotations:

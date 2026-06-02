@@ -57,7 +57,7 @@ Three supported install paths, same container image on each:
 | OCI Resource Manager stack | [octo-drone-shop/deploy/resource-manager/](https://github.com/adibirzu/octo-observability-demo/tree/main/shop/deploy/resource-manager) | One-click observability + WAF bootstrap (shared with the shop) |
 | Unified single VM | [octo-drone-shop/deploy/vm/](https://github.com/adibirzu/octo-observability-demo/tree/main/shop/deploy/vm) | Runs shop + CRM on one VM against ATP (demos, workshops, air-gapped) |
 
-See [deployment-options](https://adibirzu.github.io/octo-apm-demo/getting-started/deployment-options/) for the full matrix.
+See [deployment-options](https://adibirzu.github.io/octo-observability-demo/getting-started/deployment-options/) for the full matrix.
 
 ## Cross-service integration contract
 
@@ -159,7 +159,7 @@ Integrates with [OCTO Drone Shop](https://github.com/adibirzu/octo-observability
 
 ```bash
 git clone https://github.com/adibirzu/octo-observability-demo.git
-cd octo-apm-demo/crm
+cd octo-observability-demo/crm
 cp .env.example .env
 cp deploy/credentials.template deploy/credentials.env
 set -a
@@ -216,9 +216,9 @@ kubectl apply -f deploy/k8s/deployment-atp.yaml    # ATP-backed
 
 | Document | Coverage |
 |----------|----------|
-| [Platform Docs](https://adibirzu.github.io/octo-apm-demo/) | Full platform documentation (both repos) |
-| [OCI Observability Add-Ons](https://adibirzu.github.io/octo-apm-demo/observability/) | How to enable each OCI service |
-| [Database Integration](https://adibirzu.github.io/octo-apm-demo/architecture/database-integration/) | Shared ATP architecture |
+| [Platform Docs](https://adibirzu.github.io/octo-observability-demo/) | Full platform documentation (both repos) |
+| [OCI Observability Add-Ons](https://adibirzu.github.io/octo-observability-demo/observability/) | How to enable each OCI service |
+| [Database Integration](https://adibirzu.github.io/octo-observability-demo/architecture/database-integration/) | Shared ATP architecture |
 | [Security Testing Guide](docs/security-testing.md) | Optional OWASP vulnerability testing |
 
 ## Project Structure

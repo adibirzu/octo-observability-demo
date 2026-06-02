@@ -74,8 +74,8 @@ Encode these as a dynamic group + matching policies for instance principals, or 
 ## C. Clone and explore
 
 ```bash
-git clone https://github.com/<github-username>/octo-apm-demo.git
-cd octo-apm-demo
+git clone https://github.com/<github-username>/octo-observability-demo.git
+cd octo-observability-demo
 ```
 
 A quick walk through what lives where:
@@ -180,7 +180,7 @@ Read [CONFIGURATION.md](CONFIGURATION.md) for the full env var contract. The sho
 
 ```bash
 sudo dnf install -y git curl unzip   # or apt-get install ...
-git clone https://github.com/<github-username>/octo-apm-demo.git /opt/octo
+git clone https://github.com/<github-username>/octo-observability-demo.git /opt/octo
 cd /opt/octo/deploy/vm
 
 cp .env.template .env

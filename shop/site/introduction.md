@@ -44,7 +44,7 @@ package, Helm chart, cross-service E2E tests, and deployment runbooks.
 
 ```bash
 git clone https://github.com/adibirzu/octo-observability-demo.git
-cd octo-apm-demo
+cd octo-observability-demo
 ./deploy/verify.sh
 ```
 
@@ -59,10 +59,10 @@ LB/WAF, APM, OCI Logging, Log Analytics pipelines, DB Management,
 Operations Insights, and Stack Monitoring Standard.
 
 If you prefer OKE, start with the unified
-[new tenancy guide](https://adibirzu.github.io/octo-apm-demo/getting-started/new-tenancy/).
+[new tenancy guide](https://adibirzu.github.io/octo-observability-demo/getting-started/new-tenancy/).
 For the shared `DEFAULT` / `<OCI_PROFILE>` profile, the baked-in domain is
 `example.test`; check the unified
-[current status page](https://adibirzu.github.io/octo-apm-demo/operations/current-status/)
+[current status page](https://adibirzu.github.io/octo-observability-demo/operations/current-status/)
 before treating that shared environment as E2E-ready.
 
 ## OCI Services
@@ -215,8 +215,8 @@ flowchart TD
 |---|---|---|
 | [Local Docker](getting-started/quickstart.md) | 5 min | Development and testing |
 | [OKE Deployment](getting-started/oke-deployment.md) | 30 min | Production with full OCI observability |
-| [Private Compute Deployment](https://adibirzu.github.io/octo-apm-demo/getting-started/compute-deployment/) | 60-90 min | Production demo without Kubernetes, with LB/WAF, private instances, private ATP, APM, Logging, Log Analytics, and Stack Monitoring |
-| [Unified Deployment Options](https://adibirzu.github.io/octo-apm-demo/getting-started/deployment-options/) | varies | Choosing between OKE, private Compute, Resource Manager, and single-VM paths |
+| [Private Compute Deployment](https://adibirzu.github.io/octo-observability-demo/getting-started/compute-deployment/) | 60-90 min | Production demo without Kubernetes, with LB/WAF, private instances, private ATP, APM, Logging, Log Analytics, and Stack Monitoring |
+| [Unified Deployment Options](https://adibirzu.github.io/octo-observability-demo/getting-started/deployment-options/) | varies | Choosing between OKE, private Compute, Resource Manager, and single-VM paths |
 
 ## Next Steps
 

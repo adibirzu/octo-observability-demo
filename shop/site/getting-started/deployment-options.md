@@ -33,7 +33,7 @@ Management, Operations Insights, and Stack Monitoring Standard.
 [![Deploy Full Compute Stack to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip)
 
 Full walkthrough:
-[Compute Deployment](https://adibirzu.github.io/octo-apm-demo/getting-started/compute-deployment/).
+[Compute Deployment](https://adibirzu.github.io/octo-observability-demo/getting-started/compute-deployment/).
 
 ## OCI Resource Manager stack
 

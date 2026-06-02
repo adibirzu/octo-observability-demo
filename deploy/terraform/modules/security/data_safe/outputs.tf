@@ -32,3 +32,8 @@ output "user_assessment_id" {
   value       = var.enable_user_assessment ? oci_data_safe_user_assessment.octoatp[0].id : ""
   description = "OCID of the User Assessment baseline (empty when disabled)."
 }
+
+output "private_endpoint_id" {
+  value       = local.effective_private_endpoint_id
+  description = "OCID of the Data Safe private endpoint wired into the target (created or reused; empty for public-access ADBs)."
+}

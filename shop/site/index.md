@@ -6,7 +6,7 @@
 [:octicons-mark-github-16: Drone Shop](https://github.com/adibirzu/octo-observability-demo/tree/main/shop){ .md-button }
 [:octicons-mark-github-16: CRM Portal](https://github.com/adibirzu/octo-observability-demo/tree/main/crm){ .md-button .md-button--primary }
 [:material-cloud-upload: Deploy Compute Stack to OCI](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip){ .md-button .md-button--primary }
-[:material-cloud-upload: Deployment Options](https://adibirzu.github.io/octo-apm-demo/getting-started/deployment-options/){ .md-button }
+[:material-cloud-upload: Deployment Options](https://adibirzu.github.io/octo-observability-demo/getting-started/deployment-options/){ .md-button }
 
 ---
 

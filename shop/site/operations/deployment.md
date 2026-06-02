@@ -7,7 +7,7 @@ single-VM deployments. This page remains as the service-level OKE
 rollout reference for Drone Shop.
 
 For the production-demo path without Kubernetes, use the
-[Private Compute Deployment](https://adibirzu.github.io/octo-apm-demo/getting-started/compute-deployment/)
+[Private Compute Deployment](https://adibirzu.github.io/octo-observability-demo/getting-started/compute-deployment/)
 stack. It deploys Shop and CRM on private Podman Compute instances with
 public OCI LB/WAF, private ATP, APM, OCI Logging, Log Analytics, DB
 Management, Operations Insights, and Stack Monitoring Standard.
