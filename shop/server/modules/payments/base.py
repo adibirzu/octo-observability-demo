@@ -26,6 +26,19 @@ class PaymentEventKind(str, enum.Enum):
     PENDING = "pending"
 
 
+# Payment step/decision statuses that represent a genuine TECHNICAL fault, as
+# opposed to a business outcome ("declined" / "review" / "pending" / "cancelled").
+# Only these may set ``otel.status_code = ERROR`` on a span. Flagging a designed
+# antifraud DECLINE as ERROR makes a normal business outcome look like a silent
+# technical failure in APM Trace Explorer and pollutes the "Errored Traces" view
+# (see workshop Lab 18). Business declines stay observable via the
+# ``payment.status`` / ``payment.decision_source`` / ``payment.risk_score`` span
+# attributes and the payment metrics — not via span error status.
+PAYMENT_FAULT_STATUSES: frozenset[str] = frozenset(
+    {"error", "failed", "timeout", "unreachable", "exception"}
+)
+
+
 class InvalidSignature(Exception):
     """Raised by ``PaymentProvider.verify_webhook`` when the HMAC
     signature check fails. Never expose the underlying provider error

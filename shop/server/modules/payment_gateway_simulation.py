@@ -15,6 +15,7 @@ from opentelemetry import trace
 
 from server.config import cfg
 from server.modules.java_app_server import JavaAppServerClient
+from server.modules.payments.base import PAYMENT_FAULT_STATUSES
 from server.modules.payments.checkout_workflow import (
     PaymentContext,
     build_payment_context,
@@ -265,7 +266,10 @@ async def authorize_simulated_payment(
         verification_data = verification_result.get("data") or {}
         span.set_attribute("payment.verification.decision", verification_data.get("decision", "unknown"))
         span.set_attribute("payment.verification.provider", verification_data.get("verification_provider", "octo-antifraud-verification-app"))
-        if decision.status != "authorized":
+        # Only genuine technical faults set ERROR; a declined/review decision is a
+        # business outcome, not a span error (see payments.base.PAYMENT_FAULT_STATUSES
+        # and workshop Lab 18). Declines stay queryable via payment.status etc.
+        if decision.status in PAYMENT_FAULT_STATUSES:
             span.set_attribute("otel.status_code", "ERROR")
         business_metrics.record_payment_authorization(
             status=decision.status,
