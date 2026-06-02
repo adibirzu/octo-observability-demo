@@ -1,6 +1,6 @@
 # Introduction
 
-The **OCTO Cloud-Native Platform** is a reference implementation of enterprise applications running on Oracle Cloud Infrastructure (OCI). The current unified deployment, Resource Manager stacks, and documentation live in [`adibirzu/octo-apm-demo`](https://github.com/adibirzu/octo-apm-demo), which combines the Drone Shop service, Enterprise CRM service, OCI deployment automation, and the production-demo Compute stack.
+The **OCTO Cloud-Native Platform** is a reference implementation of enterprise applications running on Oracle Cloud Infrastructure (OCI). The current unified deployment, Resource Manager stacks, and documentation live in [`adibirzu/octo-apm-demo`](https://github.com/adibirzu/octo-observability-demo), which combines the Drone Shop service, Enterprise CRM service, OCI deployment automation, and the production-demo Compute stack.
 
 ## Goals
 
@@ -23,7 +23,7 @@ Both services integrate with the full OCI observability stack through modular ad
 
 ## Current Runtime Model
 
-- **Canonical deployment repo**: [`adibirzu/octo-apm-demo`](https://github.com/adibirzu/octo-apm-demo)
+- **Canonical deployment repo**: [`adibirzu/octo-apm-demo`](https://github.com/adibirzu/octo-observability-demo)
 - **Canonical docs site**: <https://adibirzu.github.io/octo-apm-demo>
 - **Default shared deployment hostnames**: `https://shop.example.test` and `https://crm.example.test`
 - **Validated private Compute hostnames**: `http://shop.example.test` and `http://crm.example.test`
@@ -43,14 +43,14 @@ the current `deploy/bootstrap.sh` flow, private Compute Resource Manager
 package, Helm chart, cross-service E2E tests, and deployment runbooks.
 
 ```bash
-git clone https://github.com/adibirzu/octo-apm-demo.git
+git clone https://github.com/adibirzu/octo-observability-demo.git
 cd octo-apm-demo
 ./deploy/verify.sh
 ```
 
 Recommended production-demo path:
 
-[![Deploy Full Compute Stack to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-apm-demo/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip)
+[![Deploy Full Compute Stack to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip)
 
 That stack can create the VCN, public LB subnet, private app subnet,
 private DB subnet, NAT Gateway, Service Gateway, NSGs/security lists,
@@ -229,6 +229,6 @@ flowchart TD
 
 | Repository | Component |
 |---|---|
-| [octo-apm-demo](https://github.com/adibirzu/octo-apm-demo) | Unified deployment, Resource Manager stacks, and current documentation source |
-| [octo-drone-shop](https://github.com/adibirzu/octo-apm-demo/tree/main/shop) | Drone Shop + Workflow Gateway service source |
-| [enterprise-crm-portal](https://github.com/adibirzu/octo-apm-demo/tree/main/crm) | Enterprise CRM Portal |
+| [octo-apm-demo](https://github.com/adibirzu/octo-observability-demo) | Unified deployment, Resource Manager stacks, and current documentation source |
+| [octo-drone-shop](https://github.com/adibirzu/octo-observability-demo/tree/main/shop) | Drone Shop + Workflow Gateway service source |
+| [enterprise-crm-portal](https://github.com/adibirzu/octo-observability-demo/tree/main/crm) | Enterprise CRM Portal |

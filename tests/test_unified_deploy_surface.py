@@ -6,14 +6,14 @@ from urllib.parse import parse_qs, urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RESOURCE_MANAGER_ZIP_URL = "https://github.com/adibirzu/octo-apm-demo/releases/download/resource-manager-stack/octo-stack.zip"
+RESOURCE_MANAGER_ZIP_URL = "https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip"
 RESOURCE_MANAGER_BUTTON_URL = (
     "https://cloud.oracle.com/resourcemanager/stacks/create"
     f"?zipUrl={RESOURCE_MANAGER_ZIP_URL}"
 )
 COMPUTE_RESOURCE_MANAGER_ZIP_URL = (
-    "https://github.com/adibirzu/octo-apm-demo/releases/download/"
-    "compute-resource-manager-stack-20260504/octo-compute-stack.zip"
+    "https://github.com/adibirzu/octo-observability-demo/releases/download/"
+    "compute-resource-manager-stack-20260602/octo-compute-stack.zip"
 )
 COMPUTE_RESOURCE_MANAGER_BUTTON_URL = (
     "https://cloud.oracle.com/resourcemanager/stacks/create"

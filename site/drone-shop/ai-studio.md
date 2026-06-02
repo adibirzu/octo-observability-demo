@@ -39,11 +39,13 @@ flowchart LR
 | **Product Copy** | Product Copy agent | Merchandising copy grounded on sales + evidence. |
 | **Presenter** | Final Presenter | Assembles the final markdown brief + chart. |
 
-## Two modes
+## Four modes
 
 AI Studio is **admin-only** and reached from the top nav **AI Studio** link (after signing in —
 see [Admin sign-in](#admin-sign-in) below) or the admin console → *Admin AI + Workflow Labs* →
-**AI Studio — Enterprise GenAI** card (`/ai-studio`).
+**AI Studio — Enterprise GenAI** card (`/ai-studio`). It offers four modes — **Ask about your
+data**, **Ask the catalog (RAG)**, **Chat (multi-turn)**, and **Merchandising brief** — described
+in the table below.
 
 ### Admin sign-in
 
@@ -89,7 +91,7 @@ secret) and is never committed.
 | --- | --- | --- | --- |
 | **Ask about your data** | `POST /api/ai-studio/ask` → studio `/api/studio/ask` | Free-form questions about **orders, products, and sales analytics**; a single **Data Analyst** agent answers, grounded on a read-only ATP snapshot | `orders`, `products`, `order_items` via the read-only `studio_ro` user |
 | **Ask the catalog (RAG)** | `POST /api/ai-studio/rag` → studio `/api/studio/rag` | Semantic **retrieval-augmented** Q&A about products/specs/policies; the **Product Expert** embeds the question, runs an **app-side cosine** similarity search over the embeddings stored as JSON in `genai_kb` (Oracle Database 19c — no native VECTOR/`VECTOR_DISTANCE`), and answers grounded on the retrieved passages (with cosine-distance citations) | `genai_kb` (catalog + curated docs) via `studio_ro` |
-| **Chat (multi-turn)** | `POST /api/ai-studio/chat` → studio `/api/studio/chat` | A conversational assistant that **remembers the session** (prior turns are replayed into the model); JSON or SSE token stream | in-process conversation memory; drone/shop domain |
+| **Chat (multi-turn)** | `POST /api/ai-studio/chat` → studio `/api/studio/chat` | A conversational assistant that **remembers the session** (prior turns are replayed into the model); JSON or SSE token stream — see [Multi-turn chat](#multi-turn-chat) | in-process conversation memory; drone/shop domain |
 | **Merchandising brief** | `POST /api/ai-studio/brief` → studio `/api/studio/brief` | The 6-agent merchandising workflow (supervisor + sales/evidence/code/copy/presenter) | same read-only ATP tables |
 
 The RAG mode adds `retrieval.embed` + `vector_db.search` spans to the trace — see
@@ -143,7 +145,7 @@ the OCI Responses-API managed sandbox is the documented hardening upgrade.
 | Studio | `OCI_AUTH_TYPE` | `INSTANCE_PRINCIPAL` | `API_KEY` for local. |
 | Studio | `LANGFUSE_BASE_URL` | — | Self-hosted Langfuse, e.g. `https://lf.<DNS_DOMAIN>`. |
 
-See [`services/genai-studio/README.md`](https://github.com/adibirzu/octo-apm-demo/tree/main/services/genai-studio)
+See [`services/genai-studio/README.md`](https://github.com/adibirzu/octo-observability-demo/tree/main/services/genai-studio)
 for the full service reference, and
 [GenAI monitoring with APM + Langfuse](../observability-v2/ai-studio-genai-monitoring.md) for the
 observability walkthrough.

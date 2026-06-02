@@ -41,7 +41,7 @@ Cloud-native CRM application built for **OCI Observability** demonstration. Show
 ## Deployment Bill of Materials
 
 Full minimum-required resource/cred/tool list for a new-tenancy deploy:
-[octo-drone-shop/deploy/BOM.md](https://github.com/adibirzu/octo-apm-demo/blob/main/shop/deploy/BOM.md)
+[octo-drone-shop/deploy/BOM.md](https://github.com/adibirzu/octo-observability-demo/blob/main/shop/deploy/BOM.md)
 — the shop side owns the authoritative BOM because the shop's deploy
 scripts (`pre-flight-check.sh`, `init-tenancy.sh`) validate against it
 and the Resource Manager schema is generated from the same source of
@@ -54,14 +54,14 @@ Three supported install paths, same container image on each:
 | Path | Entry point | When to use |
 |---|---|---|
 | OKE (Kubernetes) | `deploy/k8s/deployment-atp.yaml` | Production / HA |
-| OCI Resource Manager stack | [octo-drone-shop/deploy/resource-manager/](https://github.com/adibirzu/octo-apm-demo/tree/main/shop/deploy/resource-manager) | One-click observability + WAF bootstrap (shared with the shop) |
-| Unified single VM | [octo-drone-shop/deploy/vm/](https://github.com/adibirzu/octo-apm-demo/tree/main/shop/deploy/vm) | Runs shop + CRM on one VM against ATP (demos, workshops, air-gapped) |
+| OCI Resource Manager stack | [octo-drone-shop/deploy/resource-manager/](https://github.com/adibirzu/octo-observability-demo/tree/main/shop/deploy/resource-manager) | One-click observability + WAF bootstrap (shared with the shop) |
+| Unified single VM | [octo-drone-shop/deploy/vm/](https://github.com/adibirzu/octo-observability-demo/tree/main/shop/deploy/vm) | Runs shop + CRM on one VM against ATP (demos, workshops, air-gapped) |
 
 See [deployment-options](https://adibirzu.github.io/octo-apm-demo/getting-started/deployment-options/) for the full matrix.
 
 ## Cross-service integration contract
 
-This service pairs with the [OCTO Drone Shop](https://github.com/adibirzu/octo-apm-demo/tree/main/shop). The integration is symmetric on both sides:
+This service pairs with the [OCTO Drone Shop](https://github.com/adibirzu/octo-observability-demo/tree/main/shop). The integration is symmetric on both sides:
 
 | Concern | Value |
 |---|---|
@@ -149,7 +149,7 @@ middleware.entry ─── IP, user-agent, URL
 
 ## Cross-Service Integration
 
-Integrates with [OCTO Drone Shop](https://github.com/adibirzu/octo-apm-demo/tree/main/shop) via:
+Integrates with [OCTO Drone Shop](https://github.com/adibirzu/octo-observability-demo/tree/main/shop) via:
 - **Order sync** — one-way sync (Shop → CRM) with audit trail
 - **Distributed traces** — W3C `traceparent` propagation
 - **Shared ATP** — same Oracle ATP instance, session-tagged for OPSI
@@ -158,7 +158,7 @@ Integrates with [OCTO Drone Shop](https://github.com/adibirzu/octo-apm-demo/tree
 ## Quick Start
 
 ```bash
-git clone https://github.com/adibirzu/octo-apm-demo.git
+git clone https://github.com/adibirzu/octo-observability-demo.git
 cd octo-apm-demo/crm
 cp .env.example .env
 cp deploy/credentials.template deploy/credentials.env
