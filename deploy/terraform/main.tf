@@ -325,3 +325,52 @@ output "oke" {
   } : null
   description = "OKE coordinates. Use cluster_id with `oci ce cluster create-kubeconfig`."
 }
+
+###############################################################################
+# Security posture expansion — OCI Data Safe + Cloud Guard.
+# Additive, feature-flagged, OFF by default. Because both create_* flags
+# default to false, `terraform plan` on an existing deploy shows ZERO changes
+# until an operator opts in. Stage in cap (staging) first, then promote to
+# emdemo inside the LogAnalytics compartment scope.
+# See docs/security-expansion-data-safe-cloud-guard.md.
+###############################################################################
+
+locals {
+  # Reuse the new ATP when create_atp=true, else the passed-in OCID — exactly
+  # like stack_monitoring_atp_ocid above.
+  data_safe_atp_ocid = var.create_atp ? module.atp[0].atp_id : var.data_safe_atp_id
+}
+
+module "data_safe" {
+  source         = "./modules/security/data_safe"
+  count          = var.create_data_safe && local.data_safe_atp_ocid != "" ? 1 : 0
+  compartment_id = var.compartment_id
+  atp_id         = local.data_safe_atp_ocid
+}
+
+module "cloud_guard" {
+  source                = "./modules/security/cloud_guard"
+  count                 = var.create_cloud_guard ? 1 : 0
+  compartment_id        = var.compartment_id
+  reporting_region      = var.cloud_guard_reporting_region
+  target_compartment_id = var.cloud_guard_target_compartment_id
+  remediation_topic_id  = var.cloud_guard_topic_id
+  auto_remediate        = var.cloud_guard_auto_remediate
+}
+
+output "data_safe" {
+  value = length(module.data_safe) > 0 ? {
+    target_database_id = module.data_safe[0].target_database_id
+    target_name        = module.data_safe[0].target_display_name
+  } : null
+  description = "Data Safe target coordinates for OCTOATP (null when create_data_safe=false)."
+}
+
+output "cloud_guard" {
+  value = length(module.cloud_guard) > 0 ? {
+    target_id            = module.cloud_guard[0].target_id
+    responder_recipe_id  = module.cloud_guard[0].responder_recipe_id
+    responder_rule_state = module.cloud_guard[0].responder_rule_state
+  } : null
+  description = "Cloud Guard target/recipe coordinates (null when create_cloud_guard=false)."
+}
