@@ -143,7 +143,7 @@ def _validate_payload(content: bytes | None) -> dict:
         raise HTTPException(status_code=400, detail="AI Studio request must be JSON") from exc
     if not isinstance(payload, dict):
         raise HTTPException(status_code=400, detail="AI Studio request must be a JSON object")
-    field = str(payload.get("request") or payload.get("question") or "")
+    field = str(payload.get("request") or payload.get("question") or payload.get("message") or "")
     if len(field) > _MAX_REQUEST_CHARS:
         raise HTTPException(status_code=400, detail=f"request exceeds {_MAX_REQUEST_CHARS} characters")
     return payload
@@ -291,3 +291,16 @@ async def _proxy_get(request: Request, *, op: str, upstream_path: str) -> Respon
 async def studio_metrics(request: Request) -> Response:
     """Proxy the GenAI telemetry summary (admin observability page) from AI Studio."""
     return await _proxy_get(request, op="metrics", upstream_path="/api/studio/metrics/summary")
+
+
+# ── Phase B: chat proxy ────────────────────────────────────────────────────
+@router.post("/chat")
+async def studio_chat(request: Request) -> Response:
+    """Proxy a multi-turn chat turn (JSON) to the AI Studio service.
+
+    Admin/internal-service gated; forwards W3C trace context so the conversation
+    is one continuous trace shop -> studio -> chat_assistant -> OCI GenAI. The
+    studio also supports SSE (stream=true); this buffered proxy serves the JSON
+    path used by the admin UI.
+    """
+    return await _proxy(request, op="chat", upstream_path="/api/studio/chat")

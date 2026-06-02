@@ -16,6 +16,7 @@
   <div class="ai-studio__tabs" role="tablist">
     <button type="button" id="tab-ask" class="ai-studio__tab is-active" role="tab" aria-selected="true">Ask about your data</button>
     <button type="button" id="tab-rag" class="ai-studio__tab" role="tab" aria-selected="false">Ask the catalog (RAG)</button>
+    <button type="button" id="tab-chat" class="ai-studio__tab" role="tab" aria-selected="false">Chat (multi-turn)</button>
     <button type="button" id="tab-brief" class="ai-studio__tab" role="tab" aria-selected="false">Merchandising brief</button>
   </div>
 
@@ -33,6 +34,15 @@
     <textarea id="rag-question" name="question" rows="3" maxlength="1000"
       placeholder="e.g. Which drone is best for night search and rescue? What is the returns policy? RTK vs PPK?">Which drone is best for thermal mapping and night search & rescue?</textarea>
     <button type="submit" id="rag-run">Ask the Product Expert</button>
+  </form>
+
+  <!-- Chat panel (multi-turn conversation) -->
+  <form id="chat-form" class="ai-studio__form" autocomplete="off" hidden>
+    <div id="chat-transcript" class="ai-studio__transcript" aria-live="polite"></div>
+    <label for="chat-input">Chat about drones, products, orders, or policies</label>
+    <textarea id="chat-input" name="message" rows="2" maxlength="1000"
+      placeholder="e.g. Which drone for night search &amp; rescue? …then: and its battery life?"></textarea>
+    <button type="submit" id="chat-run">Send</button>
   </form>
 
   <!-- Brief panel -->
@@ -81,6 +91,11 @@
   .ai-studio__citations li { margin: .2rem 0; opacity: .9; }
   .ai-studio__citations code { opacity: .7; }
   #studio-chart { max-width: 100%; border: 1px solid rgba(0,0,0,.1); border-radius: 6px; margin: .5rem 0 1rem; }
+  .ai-studio__transcript { display: flex; flex-direction: column; gap: .5rem; max-height: 420px; overflow-y: auto; margin-bottom: .5rem; }
+  .chat-msg { padding: .5rem .75rem; border-radius: 10px; max-width: 85%; white-space: pre-wrap; line-height: 1.45; }
+  .chat-msg.user { align-self: flex-end; background: rgba(108, 210, 224, 0.16); }
+  .chat-msg.assistant { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid var(--line, rgba(0,0,0,.15)); }
+  .chat-msg .who { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; opacity: .6; display: block; margin-bottom: .15rem; }
 </style>
 
 <script nonce="{{ csp_nonce }}">
@@ -184,6 +199,49 @@
       ev.preventDefault();
       submit('/api/ai-studio/rag', { question: document.getElementById('rag-question').value },
         document.getElementById('rag-run'), 'rag');
+    });
+
+    // Multi-turn chat: keeps a session id and renders a conversation transcript.
+    var chatSession = 'chat-' + Date.now();
+    var chatTranscript = document.getElementById('chat-transcript');
+    function addBubble(role, text) {
+      var d = document.createElement('div');
+      d.className = 'chat-msg ' + role;
+      var who = document.createElement('span'); who.className = 'who';
+      who.textContent = role === 'user' ? 'You' : 'Assistant';
+      d.appendChild(who);
+      d.appendChild(document.createTextNode(text));
+      chatTranscript.appendChild(d);
+      chatTranscript.scrollTop = chatTranscript.scrollHeight;
+      return d;
+    }
+    forms.chat.addEventListener('submit', async function (ev) {
+      ev.preventDefault();
+      var input = document.getElementById('chat-input');
+      var msg = input.value.trim();
+      if (!msg) return;
+      var btn = document.getElementById('chat-run');
+      addBubble('user', msg);
+      input.value = '';
+      btn.disabled = true;
+      var pending = addBubble('assistant', '…');
+      try {
+        var res = await fetch('/api/ai-studio/chat', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ message: msg, session_id: chatSession })
+        });
+        var data = await res.json();
+        if (!res.ok) { pending.lastChild.textContent = 'Error: ' + (data.detail || res.status); return; }
+        pending.lastChild.textContent = data.status === 'refused'
+          ? ('Refused: ' + (data.reason || 'out of scope')) : (data.answer || '');
+        if (data.trace_id) {
+          statusEl.innerHTML = 'Traced: <code>' + data.trace_id + '</code> (session <code>' + chatSession + '</code>) — find it in OCI APM · Langfuse · GenAI session rollup.';
+        }
+      } catch (err) {
+        pending.lastChild.textContent = 'Request failed: ' + err;
+      } finally {
+        btn.disabled = false;
+      }
     });
     forms.brief.addEventListener('submit', function (ev) {
       ev.preventDefault();
