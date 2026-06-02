@@ -32,7 +32,7 @@ If you experience or witness unacceptable behavior, please contact the maintaine
 Local development setup is documented in detail elsewhere. The short version:
 
 1. **Fork** the repository on GitHub.
-2. **Clone** your fork: `git clone git@github.com:<your-user>/octo-apm-demo.git`.
+2. **Clone** your fork: `git clone git@github.com:<your-user>/octo-observability-demo.git`.
 3. **Create a branch** using one of the following prefixes:
    - `feature/<short-name>` — new functionality
    - `fix/<short-name>` — bug fixes

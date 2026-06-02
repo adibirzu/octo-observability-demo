@@ -35,8 +35,8 @@ OUTPUTS_JSON="${OUTPUTS_JSON:-}"
 if [[ -z "${OUTPUTS_JSON}" ]]; then
     if [[ -f "${REPO_ROOT}/credentials/${OCI_PROFILE}/outputs.json" ]]; then
         OUTPUTS_JSON="${REPO_ROOT}/credentials/${OCI_PROFILE}/outputs.json"
-    elif [[ -f "/Users/abirzu/dev/octo-apm-demo/credentials/${OCI_PROFILE}/outputs.json" ]]; then
-        OUTPUTS_JSON="/Users/abirzu/dev/octo-apm-demo/credentials/${OCI_PROFILE}/outputs.json"
+    elif [[ -f "/Users/abirzu/dev/octo-observability-demo/credentials/${OCI_PROFILE}/outputs.json" ]]; then
+        OUTPUTS_JSON="/Users/abirzu/dev/octo-observability-demo/credentials/${OCI_PROFILE}/outputs.json"
     else
         echo "ERROR: set OUTPUTS_JSON to the OCTO deployment outputs.json path." >&2
         exit 2
