@@ -346,6 +346,14 @@ module "data_safe" {
   count          = var.create_data_safe && local.data_safe_atp_ocid != "" ? 1 : 0
   compartment_id = var.compartment_id
   atp_id         = local.data_safe_atp_ocid
+
+  # Private-endpoint registration — only needed for a VCN-bound (private) ATP
+  # such as a privately-networked OCTOATP. Off by default; public-access ADBs
+  # ignore these. Surfaced by the cap validation.
+  enable_private_endpoint      = var.data_safe_enable_private_endpoint
+  datasafe_private_endpoint_id = var.data_safe_private_endpoint_id
+  private_endpoint_vcn_id      = var.data_safe_private_endpoint_vcn_id
+  private_endpoint_subnet_id   = var.data_safe_private_endpoint_subnet_id
 }
 
 module "cloud_guard" {

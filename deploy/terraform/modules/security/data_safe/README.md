@@ -26,6 +26,28 @@ Sensitive-data discovery + masking (plan Phase 2) are intentionally **not** in
 this scaffold: per the plan they run against a `OCTOATP_MASKDEMO` clone, never
 production data, and are added in a later iteration.
 
+## Public vs. private (VCN-bound) Autonomous DBs
+
+How the target ADB is networked decides what registration needs:
+
+- **Public / secure-access ADB** (no `subnet_id`): registers with just
+  `autonomous_database_id` — the default path, nothing extra.
+- **Private / VCN-bound ADB** (`subnet_id` set): Data Safe must reach it through
+  a **Data Safe private endpoint** in that VCN, or registration fails with
+  *"Data Safe private endpoint is not found in the VCN."* Set
+  `enable_private_endpoint = true` with `private_endpoint_vcn_id` +
+  `private_endpoint_subnet_id` (the module creates the PE and wires a
+  `connection_option { connection_type = "PRIVATE_ENDPOINT" }` into the target),
+  or pass an existing one via `datasafe_private_endpoint_id`. Check the DB first:
+  `oci db autonomous-database get --query 'data."data-safe-status"'` (must be
+  `NOT_REGISTERED`) and `'data."subnet-id"'` (null = public).
+
+| Variable | Default | Notes |
+|---|---|---|
+| `enable_private_endpoint` | `false` | Create a Data Safe PE for a VCN-bound ADB. |
+| `datasafe_private_endpoint_id` | `""` | Reuse an existing PE instead of creating one. |
+| `private_endpoint_vcn_id` / `private_endpoint_subnet_id` | `""` | Required when `enable_private_endpoint = true`. |
+
 ## Inputs (key)
 
 | Variable | Default | Notes |
@@ -67,3 +89,21 @@ plan, then promote to `emdemo` inside the `LogAnalytics` compartment scope.**
 > Verify provider attribute names against your installed `oracle/oci` provider
 > version before the first real apply — Data Safe resource argument names have
 > evolved across provider releases. This scaffold targets `oci >= 5.0.0`.
+
+## Validated in cap (2026-06-02)
+
+Applied live against cap (`pbncapgemini`, eu-frankfurt-1) with `oracle/oci`
+**8.16.0**: registered a public-access ADB (`oci-demo-shared-atp`) as a target
+and provisioned scheduled Security + User Assessment baselines — all `ACTIVE`.
+See `deploy/terraform/validation/security-modules/`.
+
+Two findings from that run:
+
+- **Already-registered guard.** Registering an ADB whose `data-safe-status` is
+  already `REGISTERED` fails with *"Autonomous database … is already
+  registered."* Pick an ADB that is `NOT_REGISTERED`, or import the existing
+  registration.
+- **Cosmetic `system_tags` diff.** The Security/User Assessment resources show a
+  recurring `system_tags = (known after apply)` no-op diff in oci 8.16. It is
+  server-populated and harmless; `ignore_changes` cannot suppress a computed-only
+  attribute, so the plan noise is expected and changes nothing on apply.

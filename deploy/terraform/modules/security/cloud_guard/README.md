@@ -70,3 +70,23 @@ then promote to `emdemo` inside the `LogAnalytics` compartment scope.**
 > against your installed `oracle/oci` provider version before the first real
 > apply — Cloud Guard resource schemas have evolved across releases. This
 > scaffold targets `oci >= 5.0.0`.
+
+## Operational note — one target per compartment
+
+OCI Cloud Guard permits **exactly one target per compartment**. Most tenancies
+already have a target on the **root** compartment (created when Cloud Guard is
+first enabled), so pointing this module's target at the root would collide.
+Set `target_compartment_id` to a **child** compartment instead — a child target
+coexists with an ancestor's target and takes precedence for its subtree. Keep
+`enable_cloud_guard_service = false` when the tenancy is already enabled.
+
+## Validated in cap (2026-06-02)
+
+Applied live against cap (`pbncapgemini`, eu-frankfurt-1) with `oracle/oci`
+**8.16.0**: cloned all three managed detector recipes + the managed responder
+recipe, and attached a target on a dedicated child compartment
+(`octo-apm-demo-sec`) — `responder_rule_state = DETECT` (notify-only). cap's
+Cloud Guard was already enabled with a root target, so `enable_cloud_guard_service`
+stayed off and the target watched the child compartment. All resources reached
+`ACTIVE`; `terraform plan` is clean. See the portable harness at
+`deploy/terraform/validation/security-modules/`.

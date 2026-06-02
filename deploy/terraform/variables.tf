@@ -221,6 +221,33 @@ variable "data_safe_atp_id" {
   description = "Autonomous DB OCID to register in Data Safe. If create_atp=true this auto-wires to the new DB; otherwise pass a reused ATP OCID."
 }
 
+# Data Safe private-endpoint registration — only for a VCN-bound (private) ATP.
+# All off/empty by default so the public-access path (e.g. cap oci-demo-shared-atp)
+# is unchanged. Set these in emdemo only if OCTOATP is locked to a private VCN.
+variable "data_safe_enable_private_endpoint" {
+  type        = bool
+  default     = false
+  description = "Create a Data Safe private endpoint in the ATP's VCN. Required to register a private/VCN-bound Autonomous DB."
+}
+
+variable "data_safe_private_endpoint_id" {
+  type        = string
+  default     = ""
+  description = "OCID of an existing Data Safe private endpoint to reuse instead of creating one."
+}
+
+variable "data_safe_private_endpoint_vcn_id" {
+  type        = string
+  default     = ""
+  description = "VCN OCID for the Data Safe private endpoint (required when data_safe_enable_private_endpoint = true)."
+}
+
+variable "data_safe_private_endpoint_subnet_id" {
+  type        = string
+  default     = ""
+  description = "Subnet OCID for the Data Safe private endpoint (required when data_safe_enable_private_endpoint = true)."
+}
+
 variable "create_cloud_guard" {
   type        = bool
   default     = false

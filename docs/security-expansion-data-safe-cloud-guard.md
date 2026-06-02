@@ -339,6 +339,36 @@ It does not block or alter any current component. Implementation order:
 `data_safe` submodule → `cloud_guard` submodule → Logging Analytics feeds +
 Security Posture dashboard → phased flag flips, staged in `cap` before `emdemo`.
 
+## 8. cap validation results (2026-06-02)
+
+Phase 1 was staged **live in cap** (`pbncapgemini`, eu-frankfurt-1) ahead of
+emdemo, via an isolated root (`deploy/terraform/validation/security-modules/`) with
+a cap-pinned provider and its own state — *not* the repo-root stack, whose local
+`terraform.tfstate` describes oci4cca resources and would mis-reconcile against
+cap. Validated against `oracle/oci` **8.16.0**.
+
+**Result: PASS.** Live + `ACTIVE`: a dedicated compartment, the Data Safe target
+(+ Security/User Assessment baselines), three cloned detector recipes, a cloned
+responder recipe (`DETECT` / notify-only), and a Cloud Guard target.
+
+Three things the dry plan could never have caught — the reason "validate against
+a live tenancy first" is in the guardrails:
+
+1. **Cloud Guard: one target per compartment.** cap was already enabled with a
+   root-compartment target, so the module target must watch a **child**
+   compartment. The module already supports this via `target_compartment_id`;
+   `enable_cloud_guard_service` stays off when the tenancy is enabled.
+2. **Data Safe: public vs. private ADBs.** Registering a VCN-bound ADB needs a
+   Data Safe **private endpoint** in its VCN. The `data_safe` module gained
+   additive `enable_private_endpoint` support for this; public-access ADBs are
+   unaffected. **Before emdemo, check OCTOATP's `data-safe-status` and
+   `subnet-id`** — if it is private, set the private-endpoint inputs.
+3. **Already-registered guard + cosmetic `system_tags` diff** — see the
+   `data_safe` module README.
+
+Promotion to emdemo remains gated on review and stays inside the `LogAnalytics`
+compartment scope (`reporting_region = us-phoenix-1`).
+
 ## Related pages
 
 - [Security Events](../site/observability/security.md) — current MITRE/OWASP, WAF, Vault, and Cloud Guard surface this plan expands.

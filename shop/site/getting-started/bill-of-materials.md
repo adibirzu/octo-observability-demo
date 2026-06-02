@@ -56,7 +56,7 @@ Full row-by-row detail in [`deploy/BOM.md`](https://github.com/adibirzu/octo-obs
   Analytics, DB Management, Operations Insights, and Stack Monitoring
   Standard
 - Resource Manager one-click stack:
-  <https://adibirzu.github.io/octo-apm-demo/getting-started/compute-deployment/>
+  <https://adibirzu.github.io/octo-observability-demo/getting-started/compute-deployment/>
 
 ## Variable → script map (excerpt)
 
