@@ -118,6 +118,48 @@ variable "assessment_schedule" {
   description = "Optional cron-like schedule string for security/user assessments. Empty = on-demand only. Refer to the OCI provider docs for the expected format."
 }
 
+###############################################################################
+# Private-endpoint registration — for Autonomous DBs locked to a private VCN.
+# Off by default; public-access ADBs need none of this. Surfaced by the cap
+# validation (a VCN-bound ADB can't register without a Data Safe PE in its VCN).
+###############################################################################
+
+variable "enable_private_endpoint" {
+  type        = bool
+  default     = false
+  description = "Create a Data Safe private endpoint in the target ADB's VCN. Required to register a VCN-bound (private) Autonomous DB. Leave off for public-access ADBs."
+}
+
+variable "datasafe_private_endpoint_id" {
+  type        = string
+  default     = ""
+  description = "OCID of an existing Data Safe private endpoint to reuse instead of creating one. Wins over enable_private_endpoint when set."
+}
+
+variable "private_endpoint_vcn_id" {
+  type        = string
+  default     = ""
+  description = "VCN OCID for the Data Safe private endpoint (required when enable_private_endpoint = true)."
+}
+
+variable "private_endpoint_subnet_id" {
+  type        = string
+  default     = ""
+  description = "Subnet OCID for the Data Safe private endpoint (required when enable_private_endpoint = true)."
+}
+
+variable "private_endpoint_nsg_ids" {
+  type        = list(string)
+  default     = []
+  description = "Optional NSG OCIDs to attach to the Data Safe private endpoint."
+}
+
+variable "private_endpoint_display_name" {
+  type        = string
+  default     = "octo-apm-demo-datasafe-pe"
+  description = "Display name for the Data Safe private endpoint."
+}
+
 variable "freeform_tags" {
   type        = map(string)
   default     = { project = "octo-apm-demo" }

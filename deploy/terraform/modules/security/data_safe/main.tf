@@ -32,8 +32,49 @@ resource "oci_data_safe_data_safe_configuration" "this" {
 }
 
 ###############################################################################
+# 0b. Data Safe private endpoint — REQUIRED to register an Autonomous DB that
+#     is locked to a private VCN (subnet_id set, no secure/public access).
+#     Off by default; public-access ADBs register without it (current path).
+#     Discovered during the cap validation: registering a VCN-bound ADB fails
+#     with "Data Safe private endpoint is not found in the VCN" unless a PE
+#     exists in that VCN. Pass an existing PE via datasafe_private_endpoint_id
+#     instead, or set enable_private_endpoint=true to create one here.
+###############################################################################
+
+resource "oci_data_safe_data_safe_private_endpoint" "this" {
+  count          = var.enable_private_endpoint ? 1 : 0
+  compartment_id = var.compartment_id
+  display_name   = var.private_endpoint_display_name
+  vcn_id         = var.private_endpoint_vcn_id
+  subnet_id      = var.private_endpoint_subnet_id
+  nsg_ids        = length(var.private_endpoint_nsg_ids) > 0 ? var.private_endpoint_nsg_ids : null
+  description    = "Data Safe private endpoint for registering a VCN-bound target database."
+  freeform_tags  = var.freeform_tags
+
+  lifecycle {
+    precondition {
+      condition     = !var.enable_private_endpoint || (var.private_endpoint_vcn_id != "" && var.private_endpoint_subnet_id != "")
+      error_message = "enable_private_endpoint requires private_endpoint_vcn_id and private_endpoint_subnet_id."
+    }
+  }
+}
+
+locals {
+  # The PE to wire into the target connection: a passed-in one wins, else the
+  # one created above (null when neither). one() yields null when count = 0, so
+  # this is safe whether or not the PE resource exists.
+  created_private_endpoint_id = one(oci_data_safe_data_safe_private_endpoint.this[*].id)
+  effective_private_endpoint_id = (
+    var.datasafe_private_endpoint_id != "" ? var.datasafe_private_endpoint_id :
+    (local.created_private_endpoint_id != null ? local.created_private_endpoint_id : "")
+  )
+}
+
+###############################################################################
 # 1. Target database registration — OCTOATP by its Autonomous DB OCID.
 #    This is the anchor resource; everything else references its id.
+#    For a private/VCN ADB a connection_option referencing the PE is emitted;
+#    for a public-access ADB the block is omitted (unchanged behavior).
 ###############################################################################
 
 resource "oci_data_safe_target_database" "octoatp" {
@@ -45,6 +86,16 @@ resource "oci_data_safe_target_database" "octoatp" {
     database_type          = var.database_type
     infrastructure_type    = var.infrastructure_type
     autonomous_database_id = var.atp_id
+  }
+
+  # Private-endpoint connection — only for VCN-bound ADBs. Omitted entirely for
+  # public-access ADBs so the simple registration path stays a no-op change.
+  dynamic "connection_option" {
+    for_each = local.effective_private_endpoint_id != "" ? [1] : []
+    content {
+      connection_type              = "PRIVATE_ENDPOINT"
+      datasafe_private_endpoint_id = local.effective_private_endpoint_id
+    }
   }
 
   freeform_tags = var.freeform_tags
