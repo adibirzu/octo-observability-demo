@@ -9,7 +9,9 @@
 
 ## 🚀 Deploy in 5–10 minutes
 
-[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/stack-20260602/octo-compute-stack.zip)
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260602/octo-compute-stack.zip)
+
+One-click stacks: **[Deploy Full Private Compute Stack to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260602/octo-compute-stack.zip)** (single private VM) · **[Deploy to Oracle Cloud — OKE stack](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip)** (Kubernetes).
 
 | Path | When to use | How |
 |---|---|---|
@@ -90,7 +92,7 @@ The documentation site is the canonical entry point. Direct links by audience:
 - **Deploying to a fresh OCI tenancy?** Use the [New Tenancy bootstrap](site/getting-started/new-tenancy.md).
 - **Two-instance Compute deployment?** Splitting services across a public LB/WAF, private Shop and CRM Compute instances, private ATP (see [Compute Deployment](site/getting-started/compute-deployment.md) and `deploy/compute/`).
 - **OKE / Kubernetes deployment?** See [OKE Deployment](site/getting-started/oke-deployment.md), `deploy/oke/`, and `deploy/helm/`.
-- **OCI Resource Manager stack?** [Deploy to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/stack-20260602/octo-stack.zip) directly from the Console.
+- **OCI Resource Manager stack?** [Deploy to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip) directly from the Console.
 - **Want to understand the architecture first?** Read [Platform Overview](site/architecture/platform-overview.md), [Service Inventory](site/architecture/service-inventory.md), and [Correlation Contract](site/architecture/correlation-contract.md).
 - **Want hands-on labs?** Work through the [Workshop](site/workshop/index.md) — ten labs from first trace through chaos drill.
 

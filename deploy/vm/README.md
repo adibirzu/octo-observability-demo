@@ -52,7 +52,7 @@ admin-scoped Select AI/workflow path used by OKE.
 sudo dnf install -y git curl unzip                 # or apt-get install ...
 
 # 2. Clone
-git clone https://github.com/adibirzu/octo-apm-demo.git /opt/octo
+git clone https://github.com/adibirzu/octo-observability-demo.git /opt/octo
 cd /opt/octo/deploy/vm
 
 # 3. Env

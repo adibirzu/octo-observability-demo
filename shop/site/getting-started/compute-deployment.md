@@ -13,9 +13,9 @@ Load Balancer and WAF:
 | ATP | Private DB subnet | Dedicated application database |
 
 The source of truth is
-[`deploy/compute/README.md`](https://github.com/adibirzu/octo-apm-demo/blob/main/deploy/compute/README.md).
+[`deploy/compute/README.md`](https://github.com/adibirzu/octo-observability-demo/blob/main/deploy/compute/README.md).
 
-[![Deploy Full Compute Stack to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-apm-demo/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip)
+[![Deploy Full Compute Stack to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip)
 
 If the Console test opens `https://cloud.oracle.com/stacks/create` and
 returns `NotAuthorizedOrNotFound(404)`, reopen the button above and

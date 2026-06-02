@@ -1,7 +1,7 @@
 # Getting Started
 
 Deploy the OCTO platform from the unified
-[`octo-apm-demo`](https://github.com/adibirzu/octo-apm-demo) project.
+[`octo-apm-demo`](https://github.com/adibirzu/octo-observability-demo) project.
 This service repo remains useful for app-level development, but new OCI
 tenancy deployments should use the unified deployment stack.
 

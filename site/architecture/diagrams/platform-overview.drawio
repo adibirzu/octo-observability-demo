@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" modified="2026-04-23T07:00:00.000Z" agent="octo-apm-demo" version="24.0.0" type="device">
   <diagram name="Platform Overview" id="platform-overview">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1080" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" value="00 - Notes and flow arrows" />
@@ -10,6 +10,7 @@
         <mxCell id="layer-observability" value="40 - Observability services" parent="0" />
         <mxCell id="layer-security" value="50 - Security, identity, and OCI platform" parent="0" />
         <mxCell id="layer-delivery" value="60 - Delivery and infrastructure as code" parent="0" />
+        <mxCell id="layer-genai" value="70 - GenAI and AI Studio (2026)" parent="0" />
         <mxCell id="title" value="OCTO-APM-DEMO — Platform Overview" style="text;html=1;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#1F2937" vertex="1" parent="1">
           <mxGeometry x="40" y="20" width="1320" height="40" as="geometry" />
         </mxCell>
@@ -176,6 +177,54 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2563EB;dashed=1" edge="1" parent="1" source="vault" target="oke">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="genai-band-note" value="2026 additions - GenAI / AI Studio (admin host only) + dedicated octo-ai-apm domain + Langfuse + OPS Insights + Database Management" style="text;html=1;align=left;fontSize=11;fontStyle=2;fontColor=#0F766E" vertex="1" parent="layer-genai">
+          <mxGeometry x="40" y="890" width="1320" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="aistudio" value="octo-genai-studio (AI Studio)&#10;LangGraph multi-agent on OCI Generative AI&#10;modes: ask / rag / brief / chat&#10;admin host only - studio_ro reader" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFBF1;strokeColor=#0D9488;fontSize=11;fontStyle=1;fontColor=#0F172A;verticalAlign=top" vertex="1" parent="layer-genai">
+          <mxGeometry x="40" y="920" width="290" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="aiapm" value="OCI APM - octo-ai-apm domain&#10;dedicated GenAI domain&#10;gen_ai.usage.input_tokens / output_tokens&#10;cost_usd / retrieval.documents.count" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBF7D0;strokeColor=#15803D;fontSize=11;fontStyle=1;fontColor=#111827;verticalAlign=top" vertex="1" parent="layer-genai">
+          <mxGeometry x="360" y="920" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="langfuse" value="Langfuse (lf host)&#10;multi-agent trace tree&#10;per-model token + cost" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFBF1;strokeColor=#0D9488;fontSize=11;fontStyle=1;fontColor=#0F172A;verticalAlign=top" vertex="1" parent="layer-genai">
+          <mxGeometry x="670" y="920" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="opsi" value="OCI OPS Insights&#10;ATP SQL + DB performance&#10;(OCTOATP)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=11;fontStyle=1;fontColor=#111827;verticalAlign=top" vertex="1" parent="layer-genai">
+          <mxGeometry x="900" y="920" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dbm" value="OCI Database Management&#10;OCTOATP health + SQL diagnostics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=11;fontStyle=1;fontColor=#111827;verticalAlign=top" vertex="1" parent="layer-genai">
+          <mxGeometry x="1130" y="920" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0D9488;dashed=1" edge="1" parent="1" source="crm" target="aistudio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e21-lbl" value="SSO octo_session" style="edgeLabel;html=1;align=center;fontSize=10;fontColor=#0F766E" connectable="0" vertex="1" parent="e21">
+          <mxGeometry x="-0.2" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A3412;dashed=1" edge="1" parent="1" source="aistudio" target="atp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22-lbl" value="studio_ro" style="edgeLabel;html=1;align=center;fontSize=10;fontColor=#9A3412" connectable="0" vertex="1" parent="e22">
+          <mxGeometry x="-0.3" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#15803D;dashed=1" edge="1" parent="1" source="aistudio" target="aiapm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23-lbl" value="gen_ai.* numerics" style="edgeLabel;html=1;align=center;fontSize=10;fontColor=#15803D" connectable="0" vertex="1" parent="e23">
+          <mxGeometry x="-0.1" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0D9488;dashed=1" edge="1" parent="1" source="aistudio" target="langfuse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0D9488;dashed=1" edge="1" parent="1" source="aistudio" target="genai">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2563EB;dashed=1" edge="1" parent="1" source="atp" target="opsi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2563EB;dashed=1" edge="1" parent="1" source="atp" target="dbm">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>

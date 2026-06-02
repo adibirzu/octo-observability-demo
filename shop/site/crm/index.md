@@ -1,6 +1,6 @@
 # Enterprise CRM Portal
 
-[:octicons-mark-github-16: Source](https://github.com/adibirzu/octo-apm-demo/tree/main/crm){ .md-button }
+[:octicons-mark-github-16: Source](https://github.com/adibirzu/octo-observability-demo/tree/main/crm){ .md-button }
 
 **Cloud-native CRM application** that now serves as the OCTO operations control plane for customer data, orders, invoices, product inventory, and storefront administration.
 

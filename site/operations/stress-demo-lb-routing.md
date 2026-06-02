@@ -15,7 +15,7 @@ existing round-robin path (D-09).
 Apply this rule **in the same operator window** that enables the
 Cluster Autoscaler add-on — both ship together as the "Phase 7
 operator window" (see
-[`deploy/oke/configure-cluster-autoscaler.sh`](https://github.com/adibirzu/octo-apm-demo/blob/main/deploy/oke/configure-cluster-autoscaler.sh)).
+[`deploy/oke/configure-cluster-autoscaler.sh`](https://github.com/adibirzu/octo-observability-demo/blob/main/deploy/oke/configure-cluster-autoscaler.sh)).
 Without it the stress run still functions, but stress traffic will
 land on the VM round-robin half of the LB and dilute the
 demo signal.

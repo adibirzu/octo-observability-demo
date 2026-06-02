@@ -1,7 +1,7 @@
 site_name: OCTO APM Demo — Unified Platform
 site_description: Unified deploy for OCTO Drone Shop + Enterprise CRM Portal on OCI — private Compute stack, OKE, full MELTS observability, shared Oracle ATP, IDCS SSO, cross-service trace propagation, Resource Manager stacks, and single-VM install.
 site_url: https://adibirzu.github.io/octo-apm-demo
-repo_url: https://github.com/adibirzu/octo-apm-demo
+repo_url: https://github.com/adibirzu/octo-observability-demo
 repo_name: adibirzu/octo-apm-demo
 edit_uri: edit/main/site/
 
@@ -83,6 +83,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Introduction: introduction.md
+  - What's New: whats-new.md
   - Getting Started:
     - getting-started/index.md
     - Prerequisites: getting-started/prerequisites.md
@@ -102,6 +103,7 @@ nav:
     - Database Integration: architecture/database-integration.md
     - Framework Approach: architecture/framework.md
     - "Diagrams (drawio)": architecture/diagrams/README.md
+    - "Workflows (Excalidraw)": architecture/workflows.md
   - Drone Shop:
     - drone-shop/index.md
     - Modules: drone-shop/modules.md
@@ -153,6 +155,8 @@ nav:
     - GenAI monitoring (AI Studio): observability-v2/ai-studio-genai-monitoring.md
     - Langfuse vs OCI APM (GenAI): observability-v2/langfuse-vs-apm-genai.md
     - Demo script: observability-v2/demo-script.md
+  - Security:
+    - "Data Safe + Cloud Guard (expansion plan)": security/data-safe-cloud-guard.md
   - Integrations:
     - integrations/index.md
     - Cross-service contract: crm/integrations/cross-service-contract.md
@@ -192,11 +196,12 @@ nav:
     - "Lab 14 — LLM-as-a-Judge": workshop/lab-14-llm-as-judge.md
     - "Lab 15 — GenAI Data Q&A lineage": workshop/lab-15-genai-data-qa-lineage.md
     - "Lab 16 — GenAI RAG retrieval lineage": workshop/lab-16-genai-rag-retrieval-lineage.md
+    - "Lab 17 — Root cause: APM → Log Analytics → OPSI → DBM": workshop/lab-17-root-cause-apm-logan.md
 
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/adibirzu/octo-apm-demo
+      link: https://github.com/adibirzu/octo-observability-demo
 
 docs_dir: site
 site_dir: build
