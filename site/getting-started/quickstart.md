@@ -49,7 +49,7 @@ without local tooling.
 
 1. Click the **Deploy to Oracle Cloud** badge:
 
-   [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-apm-demo/releases/download/compute-resource-manager-stack-20260517/octo-compute-stack.zip)
+   [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/stack-20260602/octo-compute-stack.zip)
 2. OCI Console opens at **Resource Manager → Create stack**, with the
    zip URL pre-filled.
 3. Fill the stack variables:
