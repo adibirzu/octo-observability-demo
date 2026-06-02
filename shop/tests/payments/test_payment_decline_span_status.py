@@ -103,3 +103,31 @@ def test_payment_fault_statuses_classification() -> None:
         assert s not in PAYMENT_FAULT_STATUSES, f"{s!r} is not a technical fault"
     for s in TECHNICAL_FAULTS:
         assert s in PAYMENT_FAULT_STATUSES, f"{s!r} should be a technical fault"
+
+
+def _emit_step_log_level(status: str, exporter: InMemorySpanExporter, monkeypatch: pytest.MonkeyPatch) -> str:
+    levels: list[str] = []
+    monkeypatch.setattr(gateway_emulator, "push_log", lambda level, message, **kw: levels.append(level))
+    _emit_step_span(status, exporter)
+    assert levels, "expected _emit_step to emit a log line"
+    return levels[0]
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("status", SUCCESS)
+def test_success_step_logs_info(status: str, captured_spans: InMemorySpanExporter, monkeypatch: pytest.MonkeyPatch) -> None:
+    assert _emit_step_log_level(status, captured_spans, monkeypatch) == "INFO"
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("status", BUSINESS_OUTCOMES)
+def test_business_outcome_step_logs_warning(status: str, captured_spans: InMemorySpanExporter, monkeypatch: pytest.MonkeyPatch) -> None:
+    assert _emit_step_log_level(status, captured_spans, monkeypatch) == "WARNING"
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("status", TECHNICAL_FAULTS)
+def test_technical_fault_step_logs_error(status: str, captured_spans: InMemorySpanExporter, monkeypatch: pytest.MonkeyPatch) -> None:
+    # A genuine fault should log at ERROR — distinguishable from a business
+    # decline (WARNING), mirroring the span otel.status_code classification.
+    assert _emit_step_log_level(status, captured_spans, monkeypatch) == "ERROR"
