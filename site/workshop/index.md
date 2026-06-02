@@ -56,6 +56,10 @@ By the end of the ten labs you'll be able to:
    losing your audit trail.
 8. **Diagnose a failed checkout** end-to-end: customer report
    ("checkout didn't work") → trace → log → SQL → fix.
+9. **Tell a business decline from a technical fault** on the payment rail:
+   recognise an antifraud DECLINE (HTTP 200, `is-fault=false`) that *looks*
+   like a silent error, and root-cause it from the failing payment-gateway
+   span to the upstream antifraud decision.
 
 ## Workshop format
 
@@ -93,10 +97,11 @@ Each lab follows the same shape so you can scan ahead and plan:
 | 15 | [GenAI Data Q&A lineage](lab-15-genai-data-qa-lineage.md) | 25 min | lab 12; AI Studio enabled |
 | 16 | [GenAI RAG retrieval lineage](lab-16-genai-rag-retrieval-lineage.md) | 25 min | lab 12; AI Studio enabled |
 | 17 | [Root cause: APM → Log Analytics → OPSI → DBM](lab-17-root-cause-apm-logan.md) | 35 min | labs 01-03; OPSI/DBM enabled |
+| 18 | [Root cause: failed payment with APM](lab-18-payment-failure-rca-apm.md) | 35 min | labs 01-03, 10, 17 |
 
-**Total:** ~9 hours across 17 labs. **Recommended split:** labs 1-5 day one
-(~2.5h), labs 6-11 day two (~3.5h), GenAI labs 12-16 + root-cause lab 17 as a
-focused add-on (~2.5h).
+**Total:** ~9.5 hours across 18 labs. **Recommended split:** labs 1-5 day one
+(~2.5h), labs 6-11 day two (~3.5h), GenAI labs 12-16 + root-cause labs 17-18 as
+a focused add-on (~3h).
 
 ---
 

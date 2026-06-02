@@ -197,6 +197,7 @@ nav:
     - "Lab 15 — GenAI Data Q&A lineage": workshop/lab-15-genai-data-qa-lineage.md
     - "Lab 16 — GenAI RAG retrieval lineage": workshop/lab-16-genai-rag-retrieval-lineage.md
     - "Lab 17 — Root cause: APM → Log Analytics → OPSI → DBM": workshop/lab-17-root-cause-apm-logan.md
+    - "Lab 18 — Root cause: failed payment with APM": workshop/lab-18-payment-failure-rca-apm.md
 
 extra:
   social:
