@@ -52,6 +52,34 @@ flowchart TD
 | `studio.data_source` | `tool.atp_query` | `oracle_atp` vs `synthetic` fallback. |
 | `studio.guardrail.allowed` / `reason` | `studio.brief` | Scope / injection decision. |
 
+## Dedicated AI APM domain (`octo-ai-apm`)
+
+GenAI telemetry has its **own** APM domain — **`octo-ai-apm`** — separate from the shared
+**main** APM domain that the shop, CRM, Java sidecar, and workflow gateway report to. The two
+stay joined because the studio forwards the W3C `traceparent`, so a GenAI run still correlates
+back to the originating shop/CRM trace by **`trace_id`** — the dedicated domain is *where the
+GenAI spans live*, not a break in the trace.
+
+The reason for the split is **numeric attribute activation**: APM only aggregates/queries
+attributes that are explicitly activated as metric dimensions, and slots are finite. The
+`octo-ai-apm` domain has the GenAI **numeric** attributes activated and queryable:
+
+| Numeric attribute | Span | What it measures |
+| --- | --- | --- |
+| `gen_ai.usage.input_tokens` | `llm.invoke.*`, `studio.*` | Prompt tokens. |
+| `gen_ai.usage.output_tokens` | `llm.invoke.*`, `studio.*` | Completion tokens. |
+| `gen_ai.usage.cost_usd` | `llm.invoke.*`, `studio.*` | Enriched per-call USD cost. |
+| `retrieval.documents.count` | `vector_db.search` | Passages returned for RAG grounding. |
+
+Alongside these, the usual GenAI **string** dimensions are activated for slice/dice:
+`gen_ai.agent.name`, `gen_ai.request.model`, `studio.mode`, `studio.outcome`, `studio.run_id`,
+and the `ai_studio.*` set. Because they live in a dedicated domain, you can group token/cost by
+model·agent·mode in APM without competing for attribute slots with the rest of the platform.
+
+The same token/cost figures are **also** available in two other panes for cross-checking:
+**Langfuse** (`lf.<DNS_DOMAIN>`) with per-model token/cost on the multi-agent trace tree, and the
+in-product [GenAI Observability page](#admin-genai-observability-page) (`/admin/genai-observability`).
+
 ## OCI dashboards for GenAI
 
 OCI APM has **no standalone dashboard objects** — dashboards live in the **OCI Management

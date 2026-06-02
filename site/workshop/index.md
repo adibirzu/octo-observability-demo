@@ -90,9 +90,13 @@ Each lab follows the same shape so you can scan ahead and plan:
 | 12 | [GenAI agent trace drill-down](lab-12-genai-agent-trace.md) | 20 min | lab 01; AI Studio enabled |
 | 13 | [APM ↔ Langfuse ↔ Grafana pivot](lab-13-apm-langfuse-grafana-pivot.md) | 25 min | lab 12; observability-stack |
 | 14 | [LLM-as-a-judge scoring](lab-14-llm-as-judge.md) | 25 min | lab 13; OCI GenAI judge model |
+| 15 | [GenAI Data Q&A lineage](lab-15-genai-data-qa-lineage.md) | 25 min | lab 12; AI Studio enabled |
+| 16 | [GenAI RAG retrieval lineage](lab-16-genai-rag-retrieval-lineage.md) | 25 min | lab 12; AI Studio enabled |
+| 17 | [Root cause: APM → Log Analytics → OPSI → DBM](lab-17-root-cause-apm-logan.md) | 35 min | labs 01-03; OPSI/DBM enabled |
 
-**Total:** ~7.5 hours across 14 labs. **Recommended split:** labs 1-5 day one
-(~2.5h), labs 6-11 day two (~3.5h), GenAI labs 12-14 as a focused add-on (~1h).
+**Total:** ~9 hours across 17 labs. **Recommended split:** labs 1-5 day one
+(~2.5h), labs 6-11 day two (~3.5h), GenAI labs 12-16 + root-cause lab 17 as a
+focused add-on (~2.5h).
 
 ---
 

@@ -1,7 +1,7 @@
 # Deployment
 
 The current unified deployment surface lives in
-[`adibirzu/octo-apm-demo`](https://github.com/adibirzu/octo-apm-demo).
+[`adibirzu/octo-apm-demo`](https://github.com/adibirzu/octo-observability-demo).
 Use that repository for new OKE, private Compute, Resource Manager, or
 single-VM deployments. This page remains as the service-level OKE
 rollout reference for Drone Shop.
