@@ -1,0 +1,89 @@
+# Langfuse -> OCI Monitoring sync (CronJob).
+#
+# Keeps the OCI Monitoring namespace `octo_genai` fresh so the GenAI FinOps /
+# judge-score dashboards (Grafana + OCI Monitoring) match what Langfuse computes
+# server-side. Without a scheduled runner these metrics go STALE — the genai-studio
+# Deployment never calls publish_to_oci_monitoring(); only this job does.
+#
+# Runs the SAME image as octo-genai-studio with the entrypoint overridden to the
+# one-shot sync (`--once --hours 1`), reusing the identical secrets. RAW gen_ai.*
+# spans already reach OCI APM (octo-ai-apm) from the studio pod's OTLP exporter;
+# this job is the COMPLEMENT that publishes the computed token/cost/latency/judge
+# aggregates as OCI Monitoring custom metrics. Read-only against Langfuse.
+#
+# Cluster scope: octo-apm-demo-oke (LogAnalytics compartment). Per tenancy rules,
+# deploy only after staging validation and explicit approval; emdemo is production.
+#   envsubst < genai-studio-langfuse-sync-cronjob.yaml | kubectl apply -f -
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: octo-genai-langfuse-apm-sync
+  namespace: octo-drone-shop
+  labels:
+    app: octo-genai-studio
+    component: langfuse-apm-sync
+spec:
+  schedule: "0 * * * *" # hourly, on the hour
+  concurrencyPolicy: Forbid # never overlap runs
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600 # the sync is a quick REST pull + PostMetricData
+      template:
+        metadata:
+          labels:
+            app: octo-genai-studio
+            component: langfuse-apm-sync
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: ocir-pull-secret # private OCIR — same as the genai-studio Deployment
+          containers:
+            - name: langfuse-apm-sync
+              image: ${OCIR_REPO}/octo-genai-studio:latest
+              # Override the web entrypoint with the one-shot sync. --hours 1 keeps
+              # each run idempotent and bounded; the hourly schedule gives ~1h of
+              # overlap so a missed run self-heals on the next tick.
+              command: ["python", "-m", "app.sync.langfuse_apm_sync", "--once", "--hours", "1"]
+              env:
+                - name: OCI_AUTH_TYPE
+                  value: "INSTANCE_PRINCIPAL"
+                - name: OCI_REGION
+                  value: "${OCI_REGION}"
+                - name: OTEL_SERVICE_NAME
+                  value: "octo-genai-studio"
+                - name: OCI_GENAI_METRICS_NAMESPACE
+                  value: "octo_genai"
+                - name: OCI_MONITORING_COMPARTMENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: octo-oci-config
+                      key: compartment-id
+                - name: LANGFUSE_BASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: octo-llmetry
+                      key: langfuse-host
+                      optional: true
+                - name: LANGFUSE_PUBLIC_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: octo-llmetry
+                      key: langfuse-public-key
+                      optional: true
+                - name: LANGFUSE_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: octo-llmetry
+                      key: langfuse-secret-key
+                      optional: true
+              resources:
+                requests:
+                  cpu: "50m"
+                  memory: "128Mi"
+                limits:
+                  cpu: "250m"
+                  memory: "256Mi"
