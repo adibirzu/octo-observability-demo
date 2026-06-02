@@ -19,6 +19,7 @@ from opentelemetry import trace
 from sqlalchemy import text
 
 from server.modules.java_app_server import JavaAppServerClient
+from server.modules.payments.base import PAYMENT_FAULT_STATUSES
 from server.modules.payments.checkout_workflow import PaymentContext
 from server.modules.payments.simulated_provider import SimulatedPaymentDecision
 from server.observability.correlation import apply_span_attributes, current_trace_context
@@ -577,7 +578,10 @@ def _emit_step(
     }
     with tracer.start_as_current_span(operation) as span:
         apply_span_attributes(span, attrs)
-        if step.status not in {"completed", "authorized", "ok"}:
+        # Only genuine technical faults set ERROR. A business outcome such as a
+        # declined/review step is NOT a fault — flagging it ERROR makes a designed
+        # antifraud decline look like a silent failure in APM (see Lab 18).
+        if step.status in PAYMENT_FAULT_STATUSES:
             span.set_attribute("otel.status_code", "ERROR")
         elapsed_ms = round((time.monotonic() - started) * 1000, 2)
         trace_ctx = current_trace_context()

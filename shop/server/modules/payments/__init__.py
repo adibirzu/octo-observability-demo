@@ -16,6 +16,7 @@ webhook endpoint returns 501 until a provider is configured.
 """
 
 from .base import (
+    PAYMENT_FAULT_STATUSES,
     Intent,
     InvalidSignature,
     PaymentEventKind,
@@ -30,6 +31,7 @@ __all__ = [
     "PaymentEventKind",
     "PaymentProvider",
     "WebhookEvent",
+    "PAYMENT_FAULT_STATUSES",
     "OrderState",
     "IllegalTransition",
     "transition",
