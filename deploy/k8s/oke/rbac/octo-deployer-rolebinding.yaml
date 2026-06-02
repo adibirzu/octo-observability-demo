@@ -1,0 +1,46 @@
+# OKE RBAC — grant a human OCI IAM user kubectl access to the octo-drone-shop
+# namespace on the octo-apm-demo-oke cluster (LogAnalytics compartment).
+#
+# WHY: `oci ce cluster create-kubeconfig` lets an IAM user MINT a token, but OKE
+# still authorizes via Kubernetes RBAC. An IAM user that the cluster has never
+# been told about gets "the server has asked for the client to provide
+# credentials" on every call. OKE maps a user principal to a Kubernetes user
+# whose NAME is the user's OCID — so the binding subject is that OCID.
+#
+# SCOPE: namespaced to octo-drone-shop only (least privilege; this is a shared,
+# multi-tenant cluster — do NOT grant cluster-wide access). `edit` is enough to
+# roll the shop Deployment, apply the CronJob, and read pods/logs in this ns.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# CHICKEN-AND-EGG: this manifest must be applied by someone who ALREADY has
+# cluster-admin on octo-apm-demo-oke (the cluster creator, a tenancy admin, or
+# OCI Console → Developer Service → Kubernetes Cluster → "Access Cluster" Cloud
+# Shell, which authenticates as an admin). The user being granted cannot apply
+# it themselves — that is the access they are missing.
+#
+# APPLY (envsubst the user OCID from your local OCI config; never commit the OCID):
+#   export OKE_RBAC_USER_OCID=$(awk '/^\[emdemo\]/{f=1;next}/^\[/{f=0}f&&/^user/{print $3}' ~/.oci/config | head -1)
+#   envsubst < deploy/k8s/oke/rbac/octo-deployer-rolebinding.yaml | kubectl apply -f -
+# (Run from a context that IS cluster-admin on octo-apm-demo-oke.)
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: octo-deployer
+  namespace: octo-drone-shop
+  labels:
+    app.kubernetes.io/managed-by: octo-observability-demo
+    purpose: deploy-access
+subjects:
+  # OKE user-principal subject = the IAM user's OCID. Set via envsubst; do not
+  # hardcode a real OCID in the repo (redaction rule).
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: "${OKE_RBAC_USER_OCID}"
+roleRef:
+  # Built-in aggregated ClusterRole: read/write most resources in this namespace
+  # (Deployments, Pods, Jobs, CronJobs, Secrets are excluded from `view` but
+  # included in `edit`). Use `view` instead for read-only troubleshooting access.
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
