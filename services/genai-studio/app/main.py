@@ -8,6 +8,7 @@ Endpoints:
 
 from __future__ import annotations
 
+import json
 import logging
 import uuid
 from contextlib import asynccontextmanager
@@ -30,6 +31,48 @@ from app.state import empty_state
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("genai-studio")
+
+
+class _StudioJsonFormatter(logging.Formatter):
+    """One JSON object per line so OCI Logging Analytics can extract the
+    gen_ai.* / studio.* fields. The GenAI dashboards query Log Source
+    'octo-genai-studio' for exactly these fields (gen_ai.agent.name, etc.)."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        payload: dict[str, object] = {
+            "time": self.formatTime(record, "%Y-%m-%dT%H:%M:%S%z"),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+            "service.name": "octo-genai-studio",
+        }
+        fields = getattr(record, "studio_fields", None)
+        if isinstance(fields, dict):
+            payload.update(fields)
+        if record.exc_info:
+            payload["exception"] = self.formatException(record.exc_info)
+        return json.dumps(payload, default=str)
+
+
+# Dedicated structured-event logger: pure-JSON stdout lines, collected by the
+# OKE Logging Analytics agent into the 'octo-genai-studio' Log Source so the
+# GenAI Command Center dashboards render. propagate=False keeps these off the
+# plain root handler (no double-logging).
+_studio_event_handler = logging.StreamHandler()
+_studio_event_handler.setFormatter(_StudioJsonFormatter())
+_studio_event_logger = logging.getLogger("genai-studio.events")
+_studio_event_logger.setLevel(logging.INFO)
+_studio_event_logger.handlers = [_studio_event_handler]
+_studio_event_logger.propagate = False
+
+
+def log_studio_run(event: str, **fields: object) -> None:
+    """Emit one structured gen_ai/studio run record (JSON line). Never raises —
+    observability must not break a studio run."""
+    try:
+        _studio_event_logger.info(event, extra={"studio_fields": {"event": event, **fields}})
+    except Exception:  # pragma: no cover - defensive
+        logger.debug("structured studio log emit failed", exc_info=True)
 
 
 @asynccontextmanager
@@ -160,6 +203,20 @@ async def studio_brief(
             span.set_attribute("gen_ai.usage.output_tokens", int(usage.get("output", 0)))
             span.set_attribute("studio.agents_run", ",".join(final.get("completed", [])))
             span.set_attribute("studio.outcome", "success")
+            log_studio_run(
+                "studio.brief",
+                **{
+                    "studio.run_id": run_id,
+                    "trace_id": trace_id,
+                    "studio.mode": "brief",
+                    "studio.outcome": "success",
+                    "studio.agents_run": ",".join(final.get("completed", [])),
+                    "gen_ai.agent.name": (final.get("completed") or ["supervisor"])[0],
+                    "gen_ai.request.model": settings.genai_model_id,
+                    "gen_ai.usage.input_tokens": int(usage.get("input", 0)),
+                    "gen_ai.usage.output_tokens": int(usage.get("output", 0)),
+                },
+            )
 
             return {
                 "run_id": run_id,
@@ -233,6 +290,21 @@ async def studio_ask(
             span.set_attribute("gen_ai.usage.output_tokens", int(usage.get("output", 0)))
             span.set_attribute("studio.data_source", result.get("data_source", "unknown"))
             span.set_attribute("studio.outcome", "success")
+            log_studio_run(
+                "studio.ask",
+                **{
+                    "studio.run_id": run_id,
+                    "trace_id": trace_id,
+                    "studio.mode": "data_qa",
+                    "studio.outcome": "success",
+                    "studio.data_source": result.get("data_source", "unknown"),
+                    "studio.agents_run": "data_analyst",
+                    "gen_ai.agent.name": "data_analyst",
+                    "gen_ai.request.model": settings.genai_model_id,
+                    "gen_ai.usage.input_tokens": int(usage.get("input", 0)),
+                    "gen_ai.usage.output_tokens": int(usage.get("output", 0)),
+                },
+            )
 
             return {
                 "run_id": run_id,
@@ -252,10 +324,11 @@ async def studio_rag(
     request: Request,
     x_internal_service_key: str | None = Header(default=None),
 ) -> dict:
-    """Retrieval-augmented Q&A over the 23ai knowledge base (single-agent path).
+    """Retrieval-augmented Q&A over the 19c knowledge base (single-agent path).
 
-    Routes to the RAG agent which embeds the question, runs a native VECTOR
-    similarity search over ``genai_kb`` (catalog + curated docs), and answers
+    Routes to the RAG agent which embeds the question, runs an app-side cosine
+    similarity search over ``genai_kb`` (catalog + curated docs; embeddings stored
+    as JSON in a CLOB on Oracle 19c — no native VECTOR), and answers
     grounded on the retrieved passages. Traced under ``studio.rag`` with the
     retrieval.embed + vector_db.search child spans so the RAG pipeline is visible
     in OCI APM and Langfuse exactly like a brief/ask run.
@@ -307,6 +380,22 @@ async def studio_rag(
             span.set_attribute("studio.data_source", result.get("data_source", "unknown"))
             span.set_attribute("retrieval.documents.count", int(result.get("retrieved_count", 0)))
             span.set_attribute("studio.outcome", "success")
+            log_studio_run(
+                "studio.rag",
+                **{
+                    "studio.run_id": run_id,
+                    "trace_id": trace_id,
+                    "studio.mode": "rag",
+                    "studio.outcome": "success",
+                    "studio.data_source": result.get("data_source", "unknown"),
+                    "studio.agents_run": "rag_analyst",
+                    "gen_ai.agent.name": "rag_analyst",
+                    "gen_ai.request.model": settings.genai_model_id,
+                    "gen_ai.usage.input_tokens": int(usage.get("input", 0)),
+                    "gen_ai.usage.output_tokens": int(usage.get("output", 0)),
+                    "retrieval.documents.count": int(result.get("retrieved_count", 0)),
+                },
+            )
 
             return {
                 "run_id": run_id,
