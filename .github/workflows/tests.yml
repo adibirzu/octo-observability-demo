@@ -1,0 +1,55 @@
+name: tests
+
+# Guards against silent drift in the deploy/observability assets (LAQL saved
+# searches, APM saved-query catalog, deploy-script --help/RBAC contracts) and in
+# the shop application code. Runs on every PR and on pushes to main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Contract + shop tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: shop/requirements-dev.txt
+      # A few contract tests (tests/test_admin_host_helper.py, test_stress_demo_surface.py)
+      # import shop `server` modules + use FastAPI's TestClient, so the contract
+      # suite needs the full shop deps (fastapi, httpx, sqlalchemy, opentelemetry, …),
+      # not a minimal set.
+      - name: Install shop + test deps
+        working-directory: shop
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+      # Deselect the one contract test that reads a gitignored, local-only secrets
+      # file (deploy/oke/bootstrap-demo-secrets.sh) — intentionally absent from CI,
+      # so it can only run locally. The ~220 asset-drift guards still run.
+      - name: Contract surface suite (deploy + observability asset drift guard)
+        env:
+          PYTHONPATH: shop
+        run: >-
+          python -m pytest -q tests/ --ignore=tests/e2e
+          --deselect "tests/test_unified_deploy_surface.py::test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse"
+      # Exclude integration/e2e (need DB/redis/browser) and the one OCI-shelling
+      # test that hangs on a credential-less runner (it fails fast only when an
+      # OCI config is present, e.g. locally).
+      - name: Shop unit + contract tests
+        working-directory: shop
+        run: >-
+          python -m pytest -q tests
+          -m "not integration and not e2e"
+          --deselect "tests/test_create_la_source.py::test_apply_without_credentials_fails_clearly"
