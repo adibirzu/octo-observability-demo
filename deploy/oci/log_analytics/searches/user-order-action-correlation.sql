@@ -1,12 +1,12 @@
 -- ============================================================================
 -- user-order-action-correlation
 -- Login, checkout, order, and payment pivots from real app logs.
--- Parameters: :trace_id optional, :auth_user_id optional, :order_id optional.
+-- Dashboard-safe: do not use LAQL colon parameters in saved searches.
+-- To pivot manually, copy this query in Log Explorer and add literal filters
+-- such as 'Trace ID' = '<TRACE_ID>', 'Auth User ID' = '<USER_ID>', or
+-- 'Order ID' = '<ORDER_ID>'.
 -- ============================================================================
 ('Auth User ID' != null or 'Order User ID' != null or 'Order ID' != null)
-| where (:trace_id = null or 'Trace ID' = :trace_id)
-| where (:auth_user_id = null or 'Auth User ID' = :auth_user_id or 'Order User ID' = :auth_user_id)
-| where (:order_id = null or 'Order ID' = :order_id)
 | stats count as Events,
         min(Time) as 'First Seen',
         max(Time) as 'Last Seen',

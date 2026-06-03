@@ -12,7 +12,7 @@
         values('Cart Quantity') as Quantities,
         values('Security Session ID') as Sessions,
         values('OWASP Category') as OWASP,
-        values('MITRE Technique ID') as Techniques
-  by 'Security Endpoint', 'Security Check', 'Attack Type',
-     'Security Severity', 'Client IP'
+        values('MITRE Technique ID') as Techniques,
+        values('Host IP Address (Client)') as 'Client IPs'
+  by 'Security Endpoint', 'Security Check', 'Attack Type', 'Security Severity'
 | sort -Events
