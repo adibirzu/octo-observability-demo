@@ -25,10 +25,28 @@ Use `OKE_RBAC_SUBJECT_KIND=Group` when binding an OCI IAM group instead of one
 user. Keep concrete OCIDs local-only and out of committed files.
 
 After the binding is applied from an already-authorized admin context, the
-bound identity can run:
+bound identity can run (preflight by default; `OCIR_REPO`/`OCI_REGION` are
+required to render the CronJob image):
 
 ```bash
-APPLY=true ./deploy/oke/apply-post-rbac-fixes.sh
+OCIR_REPO=<region>.ocir.io/<tenancy> OCI_REGION=us-phoenix-1 \
+  ./deploy/oke/apply-post-rbac-fixes.sh             # dry-run preflight
+OCIR_REPO=<region>.ocir.io/<tenancy> OCI_REGION=us-phoenix-1 \
+  APPLY=true ./deploy/oke/apply-post-rbac-fixes.sh  # perform it
+```
+
+## Relationship to the broad `edit` bindings
+
+`octo-deployer-rolebinding.yaml` and `octo-deployer-group-rolebinding.yaml` bind
+the built-in ClusterRole **`edit`**, which grants read/write to **secrets** and
+most namespaced resources. This `octo-drone-shop-deployer` custom Role is the
+**least-privilege replacement** (no secrets; only the rollout/CronJob/read verbs
+the deploy needs). **RBAC is additive** — if a subject keeps both, it still
+effectively has `edit`. After migrating a subject to this Role, delete the broad
+binding:
+
+```bash
+kubectl delete rolebinding octo-deployer octo-deployer-group -n octo-drone-shop
 ```
 
 ## Verification
