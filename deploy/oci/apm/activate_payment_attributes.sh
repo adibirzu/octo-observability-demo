@@ -16,7 +16,8 @@ set -euo pipefail
 DRY_RUN=true
 case "${1:-}" in
   -h|--help)
-    sed -n '1,18p' "$0"
+    echo "Usage: $0 [--dry-run|--apply]"
+    sed -n '2,13p' "$0"
     exit 0
     ;;
   --apply) DRY_RUN=false ;;
@@ -31,7 +32,12 @@ OCI_PROFILE="${OCI_CLI_PROFILE:-${OCI_PROFILE:-DEFAULT}}"
 APM_DOMAIN_DISPLAY_NAME="${APM_DOMAIN_DISPLAY_NAME:-octo-emdemo-apm}"
 APM_DOMAIN_ID="${APM_DOMAIN_ID:-}"
 COMPARTMENT_ID="${COMPARTMENT_ID:-}"
-APM_PAYMENT_INCLUDE_NUMERIC="${APM_PAYMENT_INCLUDE_NUMERIC:-true}"
+# Numeric attributes are OPT-IN: the shared prod domain octo-emdemo-apm has a
+# finite (and exhausted) NUMERIC attribute budget, and bulk activation is atomic
+# — defaulting payment.risk_score on could fail the whole batch. The 4 STRING
+# "reason" attributes (the core value: WHY a payment declined) are the safe
+# default; set APM_PAYMENT_INCLUDE_NUMERIC=true to also request the numeric one.
+APM_PAYMENT_INCLUDE_NUMERIC="${APM_PAYMENT_INCLUDE_NUMERIC:-false}"
 
 require_tool() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -44,25 +50,25 @@ string_attribute_details='[
   {
     "attributeName": "payment.antifraud_reasons",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.verification.decision",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.error_code",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.decision_source",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   }
 ]'
@@ -71,31 +77,31 @@ all_attribute_details='[
   {
     "attributeName": "payment.antifraud_reasons",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.verification.decision",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.error_code",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.decision_source",
     "attributeType": "STRING",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   },
   {
     "attributeName": "payment.risk_score",
     "attributeType": "NUMERIC",
-    "attributeNamespace": "TRACES",
+    "attributeNameSpace": "TRACES",
     "unit": "NONE"
   }
 ]'

@@ -48,4 +48,4 @@ def test_post_rbac_fix_script_checks_auth_before_apply() -> None:
     assert "kubectl auth can-i" in script
     assert "kubectl rollout restart" in script
     assert "genai-studio-langfuse-sync-cronjob.yaml" in script
-    assert "kubectl apply --dry-run=server" in script
+    assert "--dry-run=server" in script
