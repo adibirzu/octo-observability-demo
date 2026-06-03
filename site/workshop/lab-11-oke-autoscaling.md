@@ -18,8 +18,8 @@ correlation is reused here for stress correlation; the contract is
 identical (Phase 5 audit-event shape; OBS-02 parser).
 
 You will also visit the four external operator-owned drilldown
-surfaces (D-20): `lm.example.test`, `phoenix.example.test`,
-`openlit.example.test`, `grafana.example.test`.
+surfaces (D-20): `lm.<DNS_DOMAIN>`, `phoenix.<DNS_DOMAIN>`,
+`openlit.<DNS_DOMAIN>`, `grafana.<DNS_DOMAIN>`.
 
 ## Time budget
 
@@ -140,7 +140,7 @@ the ceiling).
 ### 5. Drill into APM (2 min)
 
 Open APM Trace Explorer (and link out to
-[`phoenix.example.test`](https://phoenix.example.test) for the
+[`phoenix.<DNS_DOMAIN>`](https://phoenix.<DNS_DOMAIN>) for the
 external trace-store view, if your tenancy has it configured).
 
 Run the four Phase 7 APM saved queries (plan 07-07), all scoped to
@@ -202,18 +202,18 @@ descent. Within 5 minutes you should be back at 2 shop pods and
 While the live run is in flight, the same `run_id` is propagated to
 four operator-owned external surfaces:
 
-- **[lm.example.test](https://lm.example.test)** — Langfuse /
+- **[lm.<DNS_DOMAIN>](https://lm.<DNS_DOMAIN>)** — Langfuse /
   LLMetry external view. Use when you want to see LLM/agent-side
   traces correlated with the stress window (the shop's AI assistant
   emits LLMetry spans).
-- **[phoenix.example.test](https://phoenix.example.test)** —
+- **[phoenix.<DNS_DOMAIN>](https://phoenix.<DNS_DOMAIN>)** —
   Arize Phoenix external trace store. Use when you want a second
   perspective on traces alongside APM Trace Explorer — Phoenix
   bucketing is different.
-- **[openlit.example.test](https://openlit.example.test)** —
+- **[openlit.<DNS_DOMAIN>](https://openlit.<DNS_DOMAIN>)** —
   OpenLIT external dashboard. Use when you want to inspect token /
   cost / model-side metrics for LLM calls inside the stress run.
-- **[grafana.example.test](https://grafana.example.test)** —
+- **[grafana.<DNS_DOMAIN>](https://grafana.<DNS_DOMAIN>)** —
   Grafana external dashboards. Use when you want to overlay the
   Phase 7 RPS / pod-count metrics on top of standard
   cluster-autoscaler Grafana panels (`cluster-autoscaler`

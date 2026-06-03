@@ -10,7 +10,8 @@
         values('Payment Processor Decision') as 'Processor Decisions',
         max('Payment Risk Score') as 'Max Risk Score',
         values('Trace ID') as Traces,
-        values('Order ID') as Orders
-  by 'Payment Method', 'Payment Network', 'Payment Card Brand',
-     'Payment Wallet Type', 'Payment Status', 'Payment Gateway Request ID'
+        values('Order ID') as Orders,
+        values('Payment Wallet Type') as 'Wallet Types',
+        values('Payment Gateway Request ID') as 'Gateway Requests'
+  by 'Payment Method', 'Payment Network', 'Payment Card Brand', 'Payment Status'
 | sort -'Max Risk Score'
