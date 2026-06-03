@@ -35,6 +35,15 @@ cd "$HERE"
 
 # ---- defaults / arg parsing ------------------------------------------------
 CMD="${1:-}"; shift || true
+# --help / -h as the command prints usage and exits preflight-free (a command is
+# the first positional, so without this --help is read as an unknown command).
+case "${CMD}" in
+  -h|--help)
+    echo "Usage: ./security-modules.sh <discover|plan|apply|verify|status|destroy> --profile <oci_profile> [options]"
+    sed -n '2,40p' "$0"
+    exit 0
+    ;;
+esac
 PROFILE=""; REGION=""; PARENT_CMPT=""; WATCH_CMPT=""; DB=""
 SKIP_DS=0; SKIP_CG=0; ASSESS=0; AUTOREM=0; AUTO_APPROVE=0
 SEC_NAME="octo-sec-validation"

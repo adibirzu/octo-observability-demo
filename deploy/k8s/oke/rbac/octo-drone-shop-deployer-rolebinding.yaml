@@ -1,0 +1,50 @@
+# Least-privilege OKE RBAC for post-deploy shop operations.
+#
+# Render with envsubst from an already-authorized Kubernetes admin context:
+#
+#   K8S_NAMESPACE_SHOP=octo-drone-shop \
+#   OKE_RBAC_SUBJECT_KIND=User \
+#   OKE_RBAC_SUBJECT_NAME=<OCI_IAM_USER_OR_GROUP_OCID> \
+#   envsubst < deploy/k8s/oke/rbac/octo-drone-shop-deployer-rolebinding.yaml | kubectl apply -f -
+#
+# Subject kind may be User or Group. The subject name must be the OCI IAM
+# principal/group identifier used by OKE authentication. Keep the concrete OCID
+# local-only; do not commit it.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: octo-drone-shop-deployer
+  namespace: ${K8S_NAMESPACE_SHOP}
+  labels:
+    app.kubernetes.io/part-of: octo-apm-demo
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "endpoints", "events", "configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["batch"]
+    resources: ["cronjobs", "jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: octo-drone-shop-deployer
+  namespace: ${K8S_NAMESPACE_SHOP}
+  labels:
+    app.kubernetes.io/part-of: octo-apm-demo
+    app.kubernetes.io/component: rbac
+subjects:
+  - kind: ${OKE_RBAC_SUBJECT_KIND}
+    name: ${OKE_RBAC_SUBJECT_NAME}
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: octo-drone-shop-deployer
+  apiGroup: rbac.authorization.k8s.io
