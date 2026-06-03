@@ -35,10 +35,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-dev.txt
+      # Deselect the one contract test that reads a gitignored, local-only secrets
+      # file (deploy/oke/bootstrap-demo-secrets.sh) — intentionally absent from CI,
+      # so it can only run locally. The ~220 asset-drift guards still run.
       - name: Contract surface suite (deploy + observability asset drift guard)
         env:
           PYTHONPATH: shop
-        run: python -m pytest -q tests/ --ignore=tests/e2e
+        run: >-
+          python -m pytest -q tests/ --ignore=tests/e2e
+          --deselect "tests/test_unified_deploy_surface.py::test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse"
       # Exclude integration/e2e (need DB/redis/browser) and the one OCI-shelling
       # test that hangs on a credential-less runner (it fails fast only when an
       # OCI config is present, e.g. locally).
