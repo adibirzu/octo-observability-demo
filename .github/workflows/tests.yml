@@ -1,0 +1,53 @@
+name: tests
+
+# Guards against silent drift in the deploy/observability assets (LAQL saved
+# searches, APM saved-query catalog, deploy-script --help/RBAC contracts) and in
+# the shop application code. Runs on every PR and on pushes to main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Contract surface tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      # The contract suite (tests/) is mostly stdlib file-content/asset checks;
+      # it additionally needs pytest, PyYAML (RBAC manifest parsing) and FastAPI
+      # (a few compute-surface tests import it).
+      - name: Install minimal deps
+        run: python -m pip install --upgrade pip "pytest>=9,<10" "pyyaml>=6,<7" "fastapi>=0.110"
+      - name: Run contract suite (deploy + observability asset drift guard)
+        run: python -m pytest -q tests/ --ignore=tests/e2e
+
+  shop:
+    name: Shop unit + contract tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: shop/requirements-dev.txt
+      - name: Install shop deps
+        working-directory: shop
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+      - name: Run shop tests (excluding integration/e2e — no DB/redis/browser in CI)
+        working-directory: shop
+        run: python -m pytest -q tests -m "not integration and not e2e"
