@@ -1,13 +1,17 @@
 {
-  "name": "ai_studio_agent_fanout",
-  "displayName": "AI Studio — Agent Fan-out",
+  "name": "octo-apm-ai-studio-agent-fanout",
+  "displayName": "OCTO APM - AI Studio agent fan-out",
   "description": "One AI Studio brief request fanned out across the supervisor + five agents (sales_analyst, evidence, code_interpreter, product_copy, presenter), each LLM/tool span in order. Mirrors the Langfuse trace view in OCI APM.",
-  "queryText": "show traces SpanName, gen_ai.agent.name as Agent, studio.data_source as DataSource, DurationMs where ServiceName = 'octo-genai-studio' and (SpanName like 'agent.invoke.%' or SpanName like 'coordinator.%' or SpanName like 'llm.invoke.%' or SpanName like 'tool.%' or SpanName = 'studio.brief') order by TimeStarted asc",
+  "queryText": "show (traces) TraceId, SpanName, gen_ai.agent.name as Agent, studio.data_source as DataSource, ServiceName as Service, DurationMs where ServiceName = 'octo-genai-studio' and (SpanName like 'agent.invoke.%' or SpanName like 'coordinator.%' or SpanName like 'llm.invoke.%' or SpanName like 'tool.%' or SpanName = 'studio.brief') order by TimeStarted asc",
   "scope": {
     "type": "trace",
     "defaultLookback": "1h",
     "services": ["octo-genai-studio"]
   },
+  "logAnalyticsPivots": [
+    {"savedSearch": "genai-assistant-llmetry", "field": "Trace ID", "parameter": "trace_id"},
+    {"savedSearch": "trace-drilldown", "field": "Trace ID", "parameter": "trace_id"}
+  ],
   "parameters": [],
   "widgetType": "TABLE",
   "troubleshootingFields": [

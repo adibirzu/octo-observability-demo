@@ -1,10 +1,19 @@
 {
-  "name": "ai_studio_latency",
-  "displayName": "AI Studio — GenAI Latency",
-  "description": "Span-native latency for AI Studio LLM + agent spans, ordered slowest-first. Trace-scoped on octo-genai-studio so latency is owned by OCI APM (not derived from the Langfuse sync). Pivots to the genai-latency-percentiles Log Analytics search and out to Langfuse/Grafana.",
-  "scopeType": "trace",
-  "defaultLookbackMinutes": 60,
-  "query": "show traces SpanName, gen_ai.agent.name as Agent, gen_ai.operation.name as Operation, DurationMs where ServiceName = 'octo-genai-studio' and (SpanName like 'llm.invoke.%' or SpanName like 'agent.invoke.%' or SpanName like 'studio.%' or SpanName = 'vector_db.search' or SpanName = 'retrieval.embed') order by DurationMs desc",
+  "name": "octo-apm-ai-studio-latency",
+  "displayName": "OCTO APM - AI Studio GenAI latency",
+  "description": "Span-native latency for AI Studio LLM + agent spans, ordered slowest-first. Trace-scoped on octo-genai-studio so latency is owned by OCI APM (not derived from the Langfuse sync).",
+  "queryText": "show (traces) TraceId, SpanName, gen_ai.agent.name as Agent, gen_ai.operation.name as Operation, ServiceName as Service, DurationMs where ServiceName = 'octo-genai-studio' and (SpanName like 'llm.invoke.%' or SpanName like 'agent.invoke.%' or SpanName like 'studio.%' or SpanName = 'vector_db.search' or SpanName = 'retrieval.embed') order by DurationMs desc",
+  "scope": {
+    "type": "trace",
+    "defaultLookback": "1h",
+    "services": ["octo-genai-studio"]
+  },
+  "logAnalyticsPivots": [
+    {"savedSearch": "genai-assistant-llmetry", "field": "Trace ID", "parameter": "trace_id"},
+    {"savedSearch": "trace-drilldown", "field": "Trace ID", "parameter": "trace_id"}
+  ],
+  "parameters": [],
+  "widgetType": "TABLE",
   "troubleshootingFields": [
     "gen_ai.agent.name",
     "gen_ai.operation.name",
@@ -12,14 +21,8 @@
     "studio.run_id",
     "session.id"
   ],
-  "externalDrilldowns": [
-    {
-      "label": "Langfuse — per-observation latency + prompt/completion",
-      "urlTemplate": "${LANGFUSE_BASE_URL}/project/${LANGFUSE_PROJECT_ID}/traces?observationId=${studio.run_id}"
-    },
-    {
-      "label": "Grafana — GenAI latency/throughput board",
-      "urlTemplate": "${GRAFANA_BASE_URL}/d/genai-llm-ops"
-    }
+  "external_drilldowns": [
+    {"name": "Langfuse", "url": "https://lf.<DNS_DOMAIN>", "why": "Per-observation latency + prompt/completion for this run."},
+    {"name": "Grafana LLM Ops", "url": "https://grafana.<DNS_DOMAIN>", "why": "GenAI latency/throughput board."}
   ]
 }

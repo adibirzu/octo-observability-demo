@@ -1,13 +1,17 @@
 {
-  "name": "ai_studio_token_cost",
-  "displayName": "AI Studio — GenAI Token & Cost",
+  "name": "octo-apm-ai-studio-token-cost",
+  "displayName": "OCTO APM - AI Studio GenAI token & cost",
   "description": "AI Studio multi-agent LLM spans with per-call token usage and estimated USD cost. Drill down to Langfuse for prompt/completion + eval scores and to Grafana for the FinOps cost dashboards.",
-  "queryText": "show traces gen_ai.request.model as Model, gen_ai.usage.input_tokens as InTokens, gen_ai.usage.output_tokens as OutTokens, gen_ai.usage.cost_usd as CostUSD, gen_ai.agent.name as Agent, studio.run_id as RunId where ServiceName = 'octo-genai-studio' and gen_ai.request.model is not null order by CostUSD desc",
+  "queryText": "show (traces) TraceId, gen_ai.request.model as Model, gen_ai.usage.input_tokens as InTokens, gen_ai.usage.output_tokens as OutTokens, gen_ai.usage.cost_usd as CostUSD, gen_ai.agent.name as Agent, ServiceName as Service, studio.run_id as RunId where ServiceName = 'octo-genai-studio' and gen_ai.request.model != null order by CostUSD desc",
   "scope": {
     "type": "trace",
     "defaultLookback": "1h",
     "services": ["octo-genai-studio"]
   },
+  "logAnalyticsPivots": [
+    {"savedSearch": "genai-assistant-llmetry", "field": "Trace ID", "parameter": "trace_id"},
+    {"savedSearch": "trace-drilldown", "field": "Trace ID", "parameter": "trace_id"}
+  ],
   "parameters": [],
   "widgetType": "TABLE",
   "troubleshootingFields": [
@@ -18,9 +22,6 @@
     "gen_ai.usage.cost_usd",
     "gen_ai.agent.name",
     "studio.run_id"
-  ],
-  "logAnalyticsPivots": [
-    {"savedSearch": "genai-token-cost", "field": "studio.run_id", "parameter": "run_id"}
   ],
   "external_drilldowns": [
     {"name": "Langfuse", "url": "https://lf.<DNS_DOMAIN>", "why": "Inspect prompt/completion, token usage, cost, and LLM-as-judge scores for this run."},

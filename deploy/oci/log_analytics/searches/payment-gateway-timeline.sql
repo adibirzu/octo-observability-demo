@@ -1,12 +1,12 @@
 -- ============================================================================
 -- payment-gateway-timeline
 -- Real gateway emulator steps from checkout traces and app logs.
--- Parameters: :gateway_request_id optional, :trace_id optional, :order_id optional.
+-- Dashboard-safe: do not use LAQL colon parameters in saved searches.
+-- To pivot manually, copy this query in Log Explorer and add literal filters
+-- such as 'Payment Gateway Request ID' = '<GATEWAY_REQUEST_ID>',
+-- 'Trace ID' = '<TRACE_ID>', or 'Order ID' = '<ORDER_ID>'.
 -- ============================================================================
 ('Payment Gateway Request ID' != null or 'Payment Gateway Step' != null)
-| where (:gateway_request_id = null or 'Payment Gateway Request ID' = :gateway_request_id)
-| where (:trace_id = null or 'Trace ID' = :trace_id)
-| where (:order_id = null or 'Order ID' = :order_id)
 | sort Time
 | fields Time, Service, 'Trace ID', 'Span ID', 'Order ID',
          'Payment Gateway Request ID', 'Payment Gateway Name',
