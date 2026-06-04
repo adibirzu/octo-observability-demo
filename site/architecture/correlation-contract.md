@@ -155,11 +155,14 @@ parameters.
   - `enterprise-crm-portal`
   - `octo-workflow-gateway` (Go)
   - `octo-traffic-generator`
-  - `octo-otel-gateway` (planned)
-  - `octo-load-control` (planned)
+  - `octo-load-control`
+  - `octo-async-worker`
+  - `octo-remediator`
+  - `octo-edge-fuzz`
+  - `octo-object-pipeline`
+  - `octo-otel-gateway` (planned — collector not currently deployed)
   - `octo-browser-runner` (planned)
   - `octo-cache` (planned)
-  - `octo-async-worker` (planned)
 
 ## Log field dictionary
 

@@ -139,7 +139,7 @@ Each support service is an independent Python or Go process with its own `pyproj
 - `services/edge-fuzz/` — input fuzzer for edge endpoints; doubles as a chaos source.
 - `services/remediator/` — orchestrated remediation actions for detected incidents.
 - `services/auto-remediator/` — OCI Function (`func.py` + `func.yaml`) that runs automated remediation in response to OCI Monitoring alarms.
-- `services/otel-gateway/` — local OTel collector for the compute-VM topology.
+- `services/otel-gateway/` — optional central OTel collector (sampling / redaction / batching policy plane). **Not currently in the deploy path**: apps export directly to OCI APM, so this collector is opt-in — deploy its `k8s/deployment.yaml` and repoint each app's exporter to it. See `.planning/CROSS-PILLAR-AUDIT.md` (gap #1).
 - `services/browser-runner/`, `services/cache/`, `services/container-lab/`, `services/vm-lab/` — supporting infrastructure for the attack/demo lab.
 
 Every support service sets `service.namespace = "octo"`, a stable `service.name`, and a `service.instance.id` derived from `SERVICE_INSTANCE_ID` → `POD_NAME` → `HOSTNAME` → `local-dev` (see Section E.3).
