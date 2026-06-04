@@ -69,6 +69,16 @@ WAF logs the trigger.
 
 ### 2. Find the event in OCI Logging
 
+!!! warning "Prerequisite: WAF policy logging must be enabled"
+    This lab assumes an OCI WAF log exists and feeds Log Analytics (source
+    `octo-waf`). The **compute** stack creates it automatically
+    (`deploy/compute/terraform` — `enable_waf_logging`), but the **portable
+    `deploy/terraform`** stack creates only the WAF *policy*, not the log: you
+    must enable WAF policy logging out-of-band and set `waf_log_id_*` so the
+    `la_pipeline_waf_*` Service Connectors are provisioned. Without it, the WAF
+    searches (`waf-vs-app-errors.sql`, the Security-Action slice of
+    `attack-lab-detections.sql`) return no rows. See `.planning/CROSS-PILLAR-AUDIT.md` (gap #5).
+
 Console → Logging → **Search Logs**.
 
 Pick the WAF log group (`octo-waf-logs` typically), then run:

@@ -16,7 +16,7 @@ telemetry. Fixes are surgical repoints + honest disclosures.
 | 2 | la-correlation | HIGH | 3 saved searches target source `octo-shop-app-json` not provisioned by default | repoint to `OCI Unified Schema Logs`/`SOC Application Logs` | ✅ fixed |
 | 3 | la-correlation | HIGH | searches join on `route`/`http_status`/`Duration` no service emits | use `url_path`/`http_status_code`/`http_response_time_ms` | ✅ fixed |
 | 4 | security | HIGH | `checkout-security-checks.sql` queries fields no parser maps (orphaned) | add fieldMaps to `octo-shop-v2.json`/`octo-crm-v2.json` | ✅ fixed |
-| 5 | security | MED | WAF dark by default in portable TF stack (no `oci_logging_log` for WAF) | port resource from compute stack, or document prereq | doc disclosure; TF port → follow-up |
+| 5 | security | MED | WAF dark by default in portable TF stack (no `oci_logging_log` for WAF) | port resource from compute stack, or document prereq | ✅ lab-06 prereq disclosed; TF port → follow-up |
 | 6 | workshop | HIGH | lab-11 cites `verify-11.sh` w/ fabricated PASS, script absent, no disclosure | add lab-18-style TODO disclosure | ✅ fixed |
 | 7 | workshop | HIGH | `certify.sh` caps at 10 labs while index sells 18 | scope as core-10 passport + reword index | ✅ fixed |
 | 8 | workshop | MED | `verify-17/18.sh` absent; lab-17 has no Verify section | add self-disclosing TODO note in lab-17 | ✅ fixed |
