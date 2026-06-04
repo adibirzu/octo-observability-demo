@@ -273,6 +273,13 @@ first saw the symptom.
 
 ---
 
+!!! note "verify-17.sh status"
+    Lab 17's verifier (`verify-17.sh`) is a **TODO** — it does not yet ship in
+    `tools/workshop/`, so `certify.sh` (the core-10 passport) does not cover this
+    capstone. Until it lands, confirm recovery by hand with the Step 5 APM
+    ERROR-trace query and the Log Analytics `trace_id` join above. Contributions
+    welcome.
+
 ## What to monitor day-to-day (the takeaway checklist)
 
 Keep these four panes pinned; they are the order you should always pivot in:
