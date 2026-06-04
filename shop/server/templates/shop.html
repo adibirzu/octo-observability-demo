@@ -247,11 +247,12 @@
         color: #06170f;
         font-weight: 600;
     }
+    .cat-btn:active { transform: translateY(1px); }
 
     /* ── Main layout: sidebar | catalog | cart ───────────────────── */
     .shop-layout {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 360px;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
         gap: 22px;
         align-items: start;
     }
@@ -269,7 +270,7 @@
 
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
         gap: 22px;
     }
     .product-card {
@@ -1187,7 +1188,7 @@ async function loadCart(usePurchaseJourney = false) {
                 <strong style="font-size:0.85rem;">${esc(item.name)}</strong>
                 <div class="helper">${item.quantity} × ${money(item.price)}</div>
             </div>
-            <button class="btn btn-outline remove-btn" style="font-size:0.75rem;padding:5px 10px;" type="button" data-id="${item.id}">✕</button>
+            <button class="btn btn-outline remove-btn" style="font-size:0.75rem;padding:5px 10px;min-height:24px;min-width:24px;" type="button" data-id="${item.id}" aria-label="Remove ${item.name || 'item'} from cart">✕</button>
         </div>
     `).join('');
     list.querySelectorAll('.remove-btn').forEach(btn => {
