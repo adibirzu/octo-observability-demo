@@ -121,6 +121,26 @@
       "logFieldName": "Security Event Classification"
     },
     {
+      "sourcePath": "$.security.check.name",
+      "logFieldName": "Security Check"
+    },
+    {
+      "sourcePath": "$.security.endpoint",
+      "logFieldName": "Security Endpoint"
+    },
+    {
+      "sourcePath": "$.owasp.category",
+      "logFieldName": "OWASP Category"
+    },
+    {
+      "sourcePath": "$.cart.session_id",
+      "logFieldName": "Security Session ID"
+    },
+    {
+      "sourcePath": "$.cart.product_id",
+      "logFieldName": "Cart Product ID"
+    },
+    {
       "sourcePath": "$.security.severity",
       "logFieldName": "Security Severity"
     },
