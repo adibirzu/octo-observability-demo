@@ -2,7 +2,7 @@
 -- checkout-security-checks
 -- Add-to-cart and checkout guardrail events emitted by security_span().
 -- ============================================================================
-('Security Check' != null or 'Attack Type' in ('mass_assign', 'rate_limit', 'idor'))
+('Security Check' != null or 'Security Event Classification' in ('mass_assign', 'rate_limit', 'idor'))
 | where Time > dateRelative(2h)
 | stats count as Events,
         min(Time) as 'First Seen',
@@ -14,5 +14,5 @@
         values('OWASP Category') as OWASP,
         values('MITRE Technique ID') as Techniques,
         values('Host IP Address (Client)') as 'Client IPs'
-  by 'Security Endpoint', 'Security Check', 'Attack Type', 'Security Severity'
+  by 'Security Endpoint', 'Security Check', 'Security Event Classification', 'Security Severity'
 | sort -Events
