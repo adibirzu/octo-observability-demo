@@ -151,6 +151,22 @@
         letter-spacing: 0.05em;
         text-transform: uppercase;
       }
+      /* Heading scale — distinct levels for hierarchy (bento control-room) */
+      h1 {
+        font-size: clamp(2rem, 1.4rem + 2.2vw, 2.8rem);
+        font-weight: 900;
+        line-height: 1.05;
+      }
+      h2 {
+        font-size: clamp(1.4rem, 1.1rem + 1vw, 1.75rem);
+      }
+      h3 {
+        font-size: 1.15rem;
+      }
+      h4 {
+        font-size: 0.95rem;
+        letter-spacing: 0.12em;
+      }
       p,
       td,
       th,
@@ -302,10 +318,63 @@
           justify-content: flex-start;
         }
       }
+      /* ---- Accessibility baseline (WCAG 2.2) ---- */
+      /* Visible keyboard focus everywhere; never outline:none alone (2.4.7/2.4.11) */
+      :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+        border-radius: inherit;
+      }
+      /* Skip-to-content link, hidden until focused (2.4.1) */
+      .skip-link {
+        position: absolute;
+        left: 12px;
+        top: -48px;
+        z-index: 1000;
+        padding: 8px 14px;
+        background: var(--teal-strong);
+        color: #04121d;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: top var(--duration-fast, 150ms) ease;
+      }
+      .skip-link:focus-visible {
+        top: 12px;
+      }
+      /* Screen-reader-only utility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      /* Respect reduced-motion: kill transitions/transform-on-hover (2.3.3) */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+        .product-card:hover,
+        .drilldown-card:hover,
+        .btn:hover,
+        .nav-links a:hover {
+          transform: none;
+        }
+      }
     </style>
     {% block head %}{% endblock %}
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="shell">
       <header class="topbar">
         <div class="brand-area">
@@ -325,7 +394,7 @@
         </nav>
       </header>
 
-      <main class="container">{% block content %}{% endblock %}</main>
+      <main class="container" id="main-content">{% block content %}{% endblock %}</main>
 
       <footer>
         OCTO Drone Commerce &copy; 2026. All rights reserved.
