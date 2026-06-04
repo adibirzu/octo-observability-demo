@@ -52,6 +52,12 @@ kubectl config current-context        # MUST map to …cm67gejykua, not another 
 kubectl get pods -n octo-drone-shop   # should now succeed (RBAC bound)
 ```
 
+If `oci ce cluster generate-token --profile emdemo` works but `kubectl` still
+returns an authentication or RBAC error, inspect the kubeconfig exec stanza. The
+active context must pass `--profile emdemo`; a stale stanza using `DEFAULT` can
+mint a valid OCI token for the wrong identity and fail Kubernetes authorization.
+Keep kubeconfig backups and profile fixes local-only.
+
 ---
 
 ## Step 1 — Build + push the shop image (x86 VM)
@@ -118,6 +124,11 @@ oci monitoring metric-data summarize-metrics-data --profile emdemo \
 kubectl get cronjob octo-genai-langfuse-apm-sync -n octo-drone-shop
 ```
 
+- **Credential surface:** `octo-genai-studio` must bind APM values from
+  `octo-apm-ai`, Langfuse keys from `octo-llmetry`, and Monitoring compartment /
+  region values from `octo-oci-config`. The CronJob uses the same image and
+  secret bindings as the studio Deployment, so it should not need any committed
+  credentials or resolved OCIDs.
 - **Payment fix:** in OCI APM (`octo-emdemo-apm`), open a *declined* checkout
   trace — `payment_gateway.credit_card.merchant_authorization_result` should now
   have **no** `otel.status_code=ERROR` (the trace stays `is-fault=false`). Follow

@@ -20,13 +20,13 @@ workloads.
 Use the helper script:
 
 ```bash
-COMPARTMENT_ID=ocid1.compartment.oc1..xxx \
+COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 AUTONOMOUS_DATABASE_ID=ocid1.autonomousdatabase.oc1..xxx \
 SM_RESOURCE_NAME=octo-atp \
 ./deploy/oci/ensure_stack_monitoring.sh          # dry run (default)
 
 DRY_RUN=false \
-COMPARTMENT_ID=ocid1.compartment.oc1..xxx \
+COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 AUTONOMOUS_DATABASE_ID=ocid1.autonomousdatabase.oc1..xxx \
 ./deploy/oci/ensure_stack_monitoring.sh          # actually register
 ```

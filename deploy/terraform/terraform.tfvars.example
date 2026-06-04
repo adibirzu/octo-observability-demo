@@ -7,7 +7,7 @@
 ###############################################################################
 
 # ── Always required ────────────────────────────────────────────────────
-compartment_id     = "ocid1.compartment.oc1..xxxx"
+compartment_id     = "<OCI_COMPARTMENT_OCID>"
 shop_domain        = "shop.example.tld"
 crm_domain         = "crm.example.tld"
 ops_domain         = "ops.example.tld"
@@ -20,7 +20,7 @@ admin_allow_cidrs = []
 
 # ── Log Analytics ───────────────────────────────────────────────────────
 la_namespace    = "your-la-namespace"
-la_log_group_id = "ocid1.loganalyticsloggroup.oc1..xxxx"
+la_log_group_id = "<OCI_LOG_ANALYTICS_OCID>"
 
 ###############################################################################
 # APM Domain + RUM endpoint. RUM web-app registration is still a one-time

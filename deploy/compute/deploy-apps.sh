@@ -10,8 +10,8 @@
 #   ./deploy/compute/deploy-apps.sh --profile <OCI_PROFILE> --role shop --shop-image iad.ocir.io/ns/octo-drone-shop:20260505 --apply
 #   ./deploy/compute/deploy-apps.sh --profile <OCI_PROFILE> --role shop --shop-image iad.ocir.io/ns/octo-drone-shop:20260505 --java-apm-image iad.ocir.io/ns/octo-apm-java-demo:20260505 --apply
 #   ./deploy/compute/deploy-apps.sh --profile <OCI_PROFILE> --role shop --image-tag 20260505 --workflow-gateway-image iad.ocir.io/ns/octo-workflow-gateway:20260505 --apply
-#   ./deploy/compute/deploy-apps.sh --outputs-json outputs.json --compartment-id ocid1.compartment.oc1..xxxx --repo-ref main --apply
-#   ./deploy/compute/deploy-apps.sh --shop-instance-id ocid1.instance.oc1..shop --crm-instance-id ocid1.instance.oc1..crm --compartment-id ocid1.compartment.oc1..xxxx --apply
+#   ./deploy/compute/deploy-apps.sh --outputs-json outputs.json --compartment-id <OCI_COMPARTMENT_OCID> --repo-ref main --apply
+#   ./deploy/compute/deploy-apps.sh --shop-instance-id <COMPUTE_INSTANCE_OCID> --crm-instance-id <COMPUTE_INSTANCE_OCID> --compartment-id <OCI_COMPARTMENT_OCID> --apply
 #
 # Larger generated commands are uploaded to Object Storage and referenced via
 # Run Command OBJECT_STORAGE_TUPLE because OCI rejects oversized inline TEXT

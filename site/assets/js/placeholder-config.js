@@ -52,7 +52,7 @@
       pattern: "<COMPARTMENT_OCID>",
       key: "compartment_ocid",
       label: "Compartment OCID",
-      placeholder: "ocid1.compartment.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      placeholder: "<OCI_COMPARTMENT_OCID>",
       help: "Target compartment OCID for this deployment",
     },
     {

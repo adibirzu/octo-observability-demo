@@ -64,7 +64,7 @@ def test_log_analytics_apply_dry_run_is_offline(monkeypatch, capsys) -> None:
     monkeypatch.setattr(helper, "existing_scheduled_task_id", _fail)
 
     saved_search = helper.saved_search_payload(
-        compartment_id="ocid1.compartment.oc1..example",
+        compartment_id="<OCI_COMPARTMENT_OCID>",
         display_name="Octo APM: Offline Dry Run",
         description="dry-run test",
         query="'Trace ID' != null | stats count as Events by 'Trace ID'",
@@ -73,7 +73,7 @@ def test_log_analytics_apply_dry_run_is_offline(monkeypatch, capsys) -> None:
     assert saved_search_id.startswith("<dry-run-saved-search:")
 
     scheduled_rule = helper.scheduled_task_payload(
-        compartment_id="ocid1.compartment.oc1..example",
+        compartment_id="<OCI_COMPARTMENT_OCID>",
         display_name="Octo APM Detection - Offline Dry Run",
         saved_search_id=saved_search_id,
         rule={
@@ -93,7 +93,7 @@ def test_dashboard_payload_compiles_every_widget_without_oci_calls() -> None:
     helper = _load_apply_helper()
 
     for dashboard_path in sorted((ROOT / "deploy/oci/log_analytics/dashboards").glob("*.json")):
-        payload = helper.build_dashboard_payload("ocid1.compartment.oc1..example", dashboard_path)
+        payload = helper.build_dashboard_payload("<OCI_COMPARTMENT_OCID>", dashboard_path)
         assert payload["displayName"]
         assert payload["tiles"]
         assert payload["savedSearches"]

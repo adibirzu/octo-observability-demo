@@ -46,7 +46,7 @@ Or create/update the stack directly from the repo:
 
 ```bash
 OCI_PROFILE=DEFAULT \
-OCI_COMPARTMENT_ID=ocid1.compartment.oc1..xxxx \
+OCI_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 ./deploy/resource-manager/upsert-stack.sh
 ```
 

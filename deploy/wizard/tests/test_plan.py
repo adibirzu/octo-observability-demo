@@ -9,7 +9,7 @@ def _plan(**overrides) -> DeploymentPlan:
     defaults = dict(
         runtime=RuntimeChoice.OKE_EXISTING,
         db=DBChoice.ATP_EXISTING,
-        compartment_id="ocid1.compartment.oc1..x",
+        compartment_id="<OCI_COMPARTMENT_OCID>",
         compartment_name="octo",
         region="eu-frankfurt-1",
         dns_domain="example.test",

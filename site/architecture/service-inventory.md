@@ -24,6 +24,11 @@ the app runtime. See [observability-stack](https://github.com/adibirzu/octo-obse
 | Langfuse (LLM/agent traces, token cost, judge scores) | `deploy/k8s/oke/langfuse/` + `deploy/oke/deploy-langfuse.sh` | `https://langfuse.${DNS_DOMAIN}` | `octo-langfuse` |
 | Grafana (GenAI FinOps / LLM ops dashboards) | `deploy/k8s/oke/grafana/` + `deploy/oke/deploy-grafana.sh` | `https://grafana.${DNS_DOMAIN}` | `octo-grafana` |
 
+The OKE app namespace also owns the scheduled `octo-genai-langfuse-apm-sync`
+CronJob. It reuses the `octo-genai-studio` image, reads Langfuse through
+`octo-llmetry`, and publishes the aggregate GenAI metrics into OCI Monitoring
+namespace `octo_genai`.
+
 ## Platform services (OCI 360)
 
 | # | Service | Source | Purpose |
@@ -71,7 +76,7 @@ preferred join is always APM `TraceId` to Log Analytics `Trace ID`.
 | service | APM service/query coverage | log mapping | high-value joins |
 | --- | --- | --- | --- |
 | `octo-drone-shop` | `checkout-end-to-end`, `login-auth-flow`, `assistant-genai-llmetry`, `service-errors` | `octo-shop-v2` parser maps `trace_id`, `oracleApmTraceId`, `span_id`, `request_id`, `workflow_id` | `Order ID`, `Payment Gateway Request ID`, `Session ID`, `Application Hash`, `User ID` |
-| `octo-genai-studio` | `ai-studio-token-cost`, `ai-studio-agent-fanout` (+ `genai-token-cost` LA search); cost/score also published to OCI Monitoring `octo_genai` by the Langfuse→APM sync | app logs carry `oracleApmTraceId`, `studio.run_id`, `gen_ai.*`; same run mirrored to Langfuse | `studio.run_id`, `session.id`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`/`output_tokens`/`cost_usd`, `studio.data_source` |
+| `octo-genai-studio` | `ai-studio-token-cost`, `ai-studio-agent-fanout` (+ `genai-token-cost` LA search); cost/score also published to OCI Monitoring `octo_genai` by `octo-genai-langfuse-apm-sync` | app logs carry `oracleApmTraceId`, `studio.run_id`, `gen_ai.*`; same run mirrored to Langfuse | `studio.run_id`, `session.id`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`/`output_tokens`/`cost_usd`, `studio.data_source` |
 | `enterprise-crm-portal` | `checkout-end-to-end`, `login-auth-flow`, `service-errors` | `octo-crm-v2` parser maps the same trace/log contract | `Source Order ID`, `Order ID`, `Request ID`, `DB Statement`, `User ID` |
 | `octo-java-app-server` | `payment-java-sidecar`, `service-errors` | Java logs carry MDC `trace_id`/`span_id`; Shop logs also map `java_apm.*` sidecar call results | `Payment Gateway Request ID`, `Transaction ID`, `Response Code`, `Java APM Error Type` |
 | `octo-workflow-gateway` / `octo-workflow-gateway-oke` | `db-slow-spans`, `platform-workflows` | Go telemetry emits JSON logs with `oracleApmTraceId`, `trace_id`, `service.name` | `Workflow ID`, `Run ID`, `DB Statement`, `Trace ID` |

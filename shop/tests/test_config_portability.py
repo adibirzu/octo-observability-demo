@@ -194,7 +194,7 @@ class TestAssistantTelemetryConfig:
         assert cfg.langfuse_project_name == "custom-drone-assistant"
 
     def test_genai_configured_requires_endpoint_model_and_compartment(self, env):
-        env.setenv("OCI_COMPARTMENT_ID", "ocid1.compartment.oc1..example")
+        env.setenv("OCI_COMPARTMENT_ID", "<OCI_COMPARTMENT_OCID>")
         env.setenv("OCI_GENAI_ENDPOINT", "https://inference.generativeai.uk-london-1.oci.oraclecloud.com")
         env.setenv("OCI_GENAI_MODEL_ID", "cohere.command-r-08-2024")
         cfg = _fresh_config(env)

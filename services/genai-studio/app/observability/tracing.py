@@ -12,7 +12,7 @@ import logging
 from opentelemetry import trace
 from opentelemetry.sdk.resources import SERVICE_NAME, SERVICE_VERSION, Resource
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +68,7 @@ def init_tracing(
         provider.add_span_processor(BatchSpanProcessor(exporter))
         logger.info("OTel OTLP exporter -> OCI APM (%s)", service_name)
     else:
-        provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+        provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
         logger.info("OTel console exporter (no APM configured): %s", service_name)
 
     trace.set_tracer_provider(provider)

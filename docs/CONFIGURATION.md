@@ -392,6 +392,7 @@ into every enabled namespace (`shop.namespace`, `crm.namespace`):
 | `octo-atp` | `dsn`, `username`, `password`, `wallet-password` |
 | `octo-auth` | `token-secret`, `internal-service-key`, `app-secret-key`, `seed-admin-password`, `bootstrap-admin-password` |
 | `octo-apm` | `endpoint`, `private-key`, `public-key`, `rum-endpoint`, `rum-web-application-ocid` |
+| `octo-apm-ai` | `endpoint`, `private-key`, `public-key` |
 | `octo-logging` | `log-group-id`, `log-id`, `log-chaos-audit-id`, `log-security-id` |
 | `octo-oci-config` | `compartment-id`, `genai-endpoint`, `genai-model-id`, `selectai-profile-name` |
 | `octo-llmetry` | `langfuse-enabled`, `langfuse-host`, `langfuse-public-key`, `langfuse-secret-key`, `langfuse-otel-export-enabled` |
@@ -522,7 +523,7 @@ SYNTHETIC_USERS_ENABLED=true
 
 ### Minimum env vars for a production OCI deployment
 
-For OKE via Helm, populate the seven referenced secrets (see Section I) and
+For OKE via Helm, populate the referenced secrets (see Section I) and
 the following Helm values:
 
 ```yaml
@@ -541,12 +542,19 @@ Required secret keys before `helm install`:
 * `octo-atp`: `dsn`, `username`, `password`, `wallet-password`
 * `octo-auth`: `token-secret`, `internal-service-key`, `app-secret-key`, `seed-admin-password`, `bootstrap-admin-password`
 * `octo-apm`: `endpoint`, `private-key`, `public-key`, `rum-endpoint`, `rum-web-application-ocid`
+* `octo-apm-ai`: `endpoint`, `private-key`, `public-key`
 * `octo-logging`: `log-group-id`, `log-id`, `log-chaos-audit-id`, `log-security-id`
 * `octo-oci-config`: `compartment-id`, `genai-endpoint`, `genai-model-id`, `selectai-profile-name`
 * `octo-atp-wallet`: binary `wallet.zip`
 
 SSO (`octo-sso`) and Langfuse (`octo-llmetry`) secrets are optional and can be
 left empty when those integrations are disabled.
+
+OKE topology values are intentionally variable-only. Set
+`OKE_EXTERNAL_INGRESS_CIDR` and `OKE_WORKER_SUBNET_CIDR` from local operator
+credentials or ignored variable files before running the OKE scripts; do not
+commit resolved CIDRs, public/private IPs, OCIDs, APM datakeys, API-key
+fingerprints, or OCIR tenancy namespaces.
 
 ---
 

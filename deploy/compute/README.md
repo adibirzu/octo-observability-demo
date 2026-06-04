@@ -88,9 +88,9 @@ Default new network:
 
 | Tier | CIDR | Public IPs | Purpose |
 |---|---:|---:|---|
-| Public LB subnet | `10.42.10.0/24` | yes | OCI Load Balancer only |
-| Private app subnet | `10.42.20.0/24` | no | Shop and CRM Compute instances |
-| Private DB subnet | `10.42.30.0/24` | no | ATP private endpoint and optional DBMan/OPSI endpoints |
+| Public LB subnet | `<OCTO_PUBLIC_LB_SUBNET_CIDR>` | yes | OCI Load Balancer only |
+| Private app subnet | `<OCTO_APP_PRIVATE_SUBNET_CIDR>` | no | Shop and CRM Compute instances |
+| Private DB subnet | `<OCTO_DB_PRIVATE_SUBNET_CIDR>` | no | ATP private endpoint and optional DBMan/OPSI endpoints |
 
 Ingress is `Internet -> WAF -> OCI Load Balancer -> private app
 instances:8080`. The app NSG accepts port `8080` only from the LB NSG
@@ -139,7 +139,7 @@ the same shape, AD, ATP, and LB settings you plan to use:
 
 ```bash
 OCI_PROFILE=<OCI_PROFILE> \
-COMPARTMENT_ID=ocid1.compartment.oc1..xxxx \
+COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 SHOP_AVAILABILITY_DOMAIN="YLXT:EU-FRANKFURT-1-AD-2" \
 CRM_AVAILABILITY_DOMAIN="YLXT:EU-FRANKFURT-1-AD-1" \
 INSTANCE_SHAPE=VM.Standard.E5.Flex \
@@ -277,7 +277,7 @@ operator-held secrets:
 export OCIR_REGION=<region>
 export OCIR_TENANCY=<namespace>
 export IMAGE_TAG=<image-tag>
-export OCI_COMPARTMENT_ID=ocid1.compartment.oc1..xxxx
+export OCI_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID>
 export INTERNAL_SERVICE_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
 export AUTH_TOKEN_SECRET="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
 export APP_SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"

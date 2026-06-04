@@ -27,7 +27,7 @@ For the current unified deployment path, run the root bootstrap flow:
 
 ```bash
 OCI_PROFILE=DEFAULT \
-OCI_COMPARTMENT_ID=ocid1.compartment.oc1..xxxx \
+OCI_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 DNS_BASE_DOMAIN=example.test \
 REMOTE_BUILD_HOST=control-plane-oci \
 ./deploy/bootstrap.sh

@@ -39,6 +39,18 @@ wallet/
 secrets/
 credentials/
 config/local/
+.oci/
+.kube/
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+*.tfplan
+tfplan
+tfplan.*
+crash.log
+crash.*.log
+.envrc
+.direnv/
 
 # Internal tenancy details — never commit real values, use <PLACEHOLDER> tokens
 # Documented in .planning/SECURITY.md and ~/.claude/CLAUDE.md "OCI Tenancy Boundaries".

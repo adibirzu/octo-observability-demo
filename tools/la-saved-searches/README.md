@@ -18,7 +18,7 @@ directions.
 
 ```bash
 LA_NAMESPACE=<oci-tenancy-la-namespace> \
-LA_LOG_GROUP_ID=ocid1.loganalyticsloggroup.oc1..xxx \
+LA_LOG_GROUP_ID=<OCI_LOG_ANALYTICS_OCID> \
 ./tools/la-saved-searches/apply.sh
 ```
 

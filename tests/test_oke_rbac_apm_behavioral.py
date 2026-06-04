@@ -134,7 +134,7 @@ def _render_rolebinding() -> list[dict]:
     rendered = (
         text.replace("${K8S_NAMESPACE_SHOP}", "octo-drone-shop")
         .replace("${OKE_RBAC_SUBJECT_KIND}", "User")
-        .replace("${OKE_RBAC_SUBJECT_NAME}", "ocid1.user.oc1..aaaa")
+        .replace("${OKE_RBAC_SUBJECT_NAME}", "<OCI_USER_OCID>")
     )
     return [d for d in yaml.safe_load_all(rendered) if d]
 

@@ -37,7 +37,7 @@ OUTPUTS_FILE="${OUTPUTS_FILE:-${REPO_ROOT}/credentials/${OCI_PROFILE:-DEFAULT}/o
 : "${OCI_PROFILE:=DEFAULT}"
 : "${OCI_REGION:=us-phoenix-1}"
 : "${OKE_WORKER_SUBNET_NAME:=octo-demo-oke-workers-private-subnet}"
-: "${OKE_WORKER_SUBNET_CIDR:=10.42.40.0/24}"
+: "${OKE_WORKER_SUBNET_CIDR:?Set OKE_WORKER_SUBNET_CIDR from local credentials/vars; do not commit private topology CIDRs}"
 : "${OKE_WORKER_SECURITY_LIST_NAME:=octo-demo-oke-workers-private-sl}"
 : "${OKE_SHOP_NODEPORT:=30080}"
 : "${OKE_CRM_NODEPORT:=30081}"

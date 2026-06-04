@@ -106,6 +106,10 @@ second login. AI Studio reads the shared database through the read-only
 - **Langfuse** (`lf.<DNS_DOMAIN>`) — the full multi-agent trace tree with
   per-model token and cost detail. The same tracer exports to APM and Langfuse,
   so the trace id is identical in both panes.
+- **OCI Monitoring** — the hourly `octo-genai-langfuse-apm-sync` CronJob reads
+  Langfuse aggregates and publishes tokens, cost, latency, and judge-score
+  metrics into the `octo_genai` namespace for Management Dashboard and Grafana
+  tiles.
 - **OCI Logging Analytics** — AI Studio app logs carry `oracleApmTraceId`,
   `studio.run_id`, and the `gen_ai.*` fields for `trace_id <-> log` joins.
 - **OPS Insights + Database Management** — `ask` and `rag` reads against
@@ -121,6 +125,7 @@ makes a single business journey readable across the OCI observability stack.
 | OCI APM (main) | Shop / CRM / Java / workflow traces and topology | `workflow_id`, `oracleApmTraceId`, `payment.gateway.request_id` |
 | octo-ai-apm domain | GenAI numerics (tokens, `cost_usd`, retrieved docs) | `studio.run_id`, `studio.mode`, `gen_ai.request.model` |
 | Langfuse (`lf.<DNS_DOMAIN>`) | Multi-agent trace tree, per-model token + cost | `studio.run_id` (= APM trace id), `session.id` |
+| OCI Monitoring `octo_genai` | Langfuse-derived GenAI token, cost, latency, and judge-score metrics | `service=octo-genai-studio`, model, agent, run dimensions |
 | OCI Logging Analytics | App / edge / DB logs with trace ids | `Trace ID`, `Order ID`, `Payment Gateway Request ID` |
 | OPS Insights | ATP SQL + database performance | `OCTOATP` SQL id, wait events |
 | Database Management | `OCTOATP` health + SQL diagnostics | database / SQL diagnostics |
@@ -134,9 +139,11 @@ makes a single business journey readable across the OCI observability stack.
 3. For an AI Studio run, switch to the **octo-ai-apm** domain and filter by
    `studio.run_id` to read tokens, `cost_usd`, and `studio.mode`; the same
    `run_id` opens the matching **Langfuse** multi-agent trace tree.
-4. Jump to **Logging Analytics** on the same `Trace ID` to read the structured
+4. Use **OCI Monitoring** namespace `octo_genai` to confirm the hourly
+   Langfuse-derived aggregate tiles are fresh.
+5. Jump to **Logging Analytics** on the same `Trace ID` to read the structured
    log line for any hop.
-5. Drop into **OPS Insights / Database Management** for the SQL and database
+6. Drop into **OPS Insights / Database Management** for the SQL and database
    health behind the writes against `OCTOATP`.
 
 ## Demo levers

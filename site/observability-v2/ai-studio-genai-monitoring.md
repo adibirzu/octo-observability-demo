@@ -21,8 +21,10 @@ flowchart TD
     LF --> LLM[Langfuse traces, tokens, cost]
 ```
 
-- The **APM exporter** uses the same endpoint shape and `Authorization: dataKey …` header as
-  the rest of the platform, so studio spans land in the same APM domain and correlate by trace id.
+- The **APM exporter** uses the same endpoint shape and `Authorization: dataKey ...` header as
+  the rest of the platform, but points at the dedicated `octo-ai-apm` domain so
+  GenAI numeric attributes have their own activation slots while preserving
+  trace-id correlation back to Shop and CRM.
 - The **Langfuse filter** (`should_export_span`) only forwards spans whose names start with the
   agent-path prefixes — infra spans stay APM-only, keeping Langfuse focused on the GenAI path.
 - The shop proxy forwards W3C `traceparent`, so the trace is **continuous** from the shop click
@@ -106,6 +108,12 @@ The dashboards read the `octo-genai-studio` Log Source, so import them into the 
 AI Studio actually runs (otherwise the tiles render empty). Tiles drill out to Langfuse
 (`lf.${DNS_DOMAIN}`) and Grafana (`grafana.${DNS_DOMAIN}`) for prompt/cost detail.
 
+On OKE, the Monitoring namespace is refreshed by the hourly
+`octo-genai-langfuse-apm-sync` CronJob in `octo-drone-shop`. After deploying or
+rotating credentials, create a one-off job from that CronJob to backfill the
+dashboard immediately; a successful run can still publish zero-valued aggregates
+when Langfuse has no recent generations in the queried window.
+
 ## RAG over the Oracle 19c knowledge base
 
 The **Ask the catalog (RAG)** mode answers product/spec/policy questions with
@@ -167,7 +175,17 @@ See [Lab 16 — GenAI RAG retrieval lineage](../workshop/lab-16-genai-rag-retrie
 
 ## Enabling
 
-Set on the studio: `OCI_APM_ENDPOINT` + `OCI_APM_PRIVATE_DATA_KEY` (APM) and
-`LANGFUSE_BASE_URL` + `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` (Langfuse). Either pane is
-independently optional — with neither configured the studio still runs and traces to the
-console. Validate in a staging tenancy before enabling against the production APM domain.
+Set on the studio: `OCI_APM_ENDPOINT` + `OCI_APM_PRIVATE_DATA_KEY` from
+`octo-apm-ai`, `LANGFUSE_BASE_URL` + `LANGFUSE_PUBLIC_KEY` +
+`LANGFUSE_SECRET_KEY` from `octo-llmetry`, and
+`OCI_MONITORING_COMPARTMENT_ID` + `OCI_REGION` from `octo-oci-config`. The
+shop also keeps LLMetry/Langfuse controls in `octo-llmetry` for the classic
+assistant path. Either APM or Langfuse is independently optional — with neither
+configured the studio still runs and traces to the console.
+
+For `emdemo` OKE, validate the local kubeconfig before changing runtime
+secrets: the active context's OCI exec stanza must include `--profile emdemo`,
+and `kubectl auth can-i get pods -n octo-drone-shop` should return `yes`.
+Topology and credential values stay in environment variables, ignored tfvars,
+or OCI/Kubernetes secrets; committed docs and manifests only use placeholders.
+Validate in a staging tenancy before enabling against the production APM domain.

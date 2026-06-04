@@ -43,7 +43,7 @@ def test_dry_run_emits_payload_json() -> None:
         "--la-namespace",
         "acme",
         "--la-log-group-id",
-        "ocid1.loganalyticsloggroup.oc1..xxxx",
+        "<OCI_LOG_ANALYTICS_OCID>",
     )
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
@@ -61,7 +61,7 @@ def test_dry_run_does_not_require_oci_sdk() -> None:
         "--la-namespace",
         "acme",
         "--la-log-group-id",
-        "ocid1.loganalyticsloggroup.oc1..xxxx",
+        "<OCI_LOG_ANALYTICS_OCID>",
     )
     assert "ModuleNotFoundError" not in result.stderr
     assert result.returncode == 0
@@ -76,7 +76,7 @@ def test_apply_without_credentials_fails_clearly() -> None:
         "--la-namespace",
         "acme",
         "--la-log-group-id",
-        "ocid1.loganalyticsloggroup.oc1..xxxx",
+        "<OCI_LOG_ANALYTICS_OCID>",
         env={"OCI_CLI_AUTH": "instance_principal", "HOME": "/nonexistent"},
     )
     # Acceptable: non-zero with an OCI-related message, OR the oci package

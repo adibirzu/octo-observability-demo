@@ -1,12 +1,43 @@
 # Current Status
 
-Snapshot date: **May 14, 2026** for the private OCTO deployment.
-Private Compute and OKE validation updated on **May 14, 2026**.
+Snapshot date: **June 4, 2026** for the private OCTO deployment.
+Private Compute and OKE validation last updated on **June 4, 2026**.
 
 This page records the latest observed state of the shared `DEFAULT`
 deployment surface tracked by this repo. It is a runtime snapshot, not a
 guarantee that the shared environment will remain healthy without checking
 the validation commands below.
+
+June 4, 2026 OKE GenAI monitoring update: the active local kubeconfig for
+`octo-apm-demo-oke` was corrected to use the `emdemo` OCI profile in its exec
+stanza, then Kubernetes RBAC was revalidated with `kubectl auth can-i get pods
+-n octo-drone-shop`. The `octo-drone-shop` namespace has the expected AI
+monitoring secret surface: `octo-apm-ai` for the dedicated GenAI APM domain,
+`octo-llmetry` for Langfuse/LLMetry keys, `octo-apm` for the main APM/RUM
+domain, and `octo-oci-config` for compartment, GenAI, and Monitoring
+coordinates. `octo-genai-studio` binds `OCI_APM_ENDPOINT`,
+`OCI_APM_PRIVATE_DATA_KEY`, `LANGFUSE_BASE_URL`, `LANGFUSE_PUBLIC_KEY`,
+`LANGFUSE_SECRET_KEY`, `OCI_MONITORING_COMPARTMENT_ID`, and `OCI_REGION`; the
+Shop binds the classic assistant `LLMETRY_*`, `LANGFUSE_*`, and main APM
+variables. No secret values, OCIDs, IPs, namespaces, or datakeys are committed
+to the repo.
+
+June 4, 2026 Langfuse -> OCI Monitoring update: the
+`octo-genai-langfuse-apm-sync` CronJob is installed in `octo-drone-shop` on the
+hourly `0 * * * *` schedule and is not suspended. A one-off backfill job
+completed from that CronJob and published GenAI aggregate samples to OCI
+Monitoring namespace `octo_genai`; the run reported no recent Langfuse
+generations in its query window, so the published aggregates were zero-valued
+health samples rather than user-content telemetry.
+
+June 4, 2026 sanitization update: deployment docs and manifests now use
+placeholder tokens or required variables for topology and credential inputs.
+`OKE_EXTERNAL_INGRESS_CIDR` and `OKE_WORKER_SUBNET_CIDR` must be supplied from
+local operator variables or ignored tfvars. The repo ignore rules cover local
+OCI/kube configs, kubeconfig files, Terraform plans, crash logs, envrc files,
+and private Terraform/credential outputs. A tracked-file redaction scan found no
+committed OCID-shaped literals, internal IP ranges, known tenancy namespaces,
+APM domain IDs, or internal service keys.
 
 May 14, 2026 deployment update: Shop, Admin/CRM, the Java payment gateway,
 and the Workflow Gateway are deployed on VM and OKE with immutable image tag

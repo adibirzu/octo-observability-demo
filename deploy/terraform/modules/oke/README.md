@@ -24,7 +24,7 @@ our demo workload.
 ## Inputs you must supply
 
 ```hcl
-compartment_id            = "ocid1.compartment.oc1..xxx"
+compartment_id            = "<OCI_COMPARTMENT_OCID>"
 availability_domain_names = ["FHlk:EU-FRANKFURT-1-AD-1", "FHlk:EU-FRANKFURT-1-AD-2", "FHlk:EU-FRANKFURT-1-AD-3"]
 node_image_id             = "ocid1.image.oc1.eu-frankfurt-1.xxx"   # OKE-managed image
 ```

@@ -112,6 +112,7 @@ Capacity target:
 Provision and deploy:
 
 ```bash
+OKE_WORKER_SUBNET_CIDR=<OKE_WORKER_SUBNET_CIDR> \
 ./deploy/oke/ensure-demo-worker-subnet.sh
 
 OKE_WORKER_SUBNET_ID=<worker-subnet-ocid> \
@@ -242,8 +243,9 @@ drains during upgrades never kill every pod at once.
   discovery CronJob would re-enable Resource Manager service-log
   automation while `OCI_ONM_ENABLE_SERVICE_LOGS=false`.
 - NetworkPolicies allow the existing LB/NodePort path only from
-  `OKE_EXTERNAL_INGRESS_CIDR`, defaulting to the demo VCN range
-  `10.42.0.0/16`.
+  `OKE_EXTERNAL_INGRESS_CIDR`. The value is required at deploy time and must
+  come from local operator variables or ignored tfvars, not from committed
+  topology defaults.
 - Pods disable service-account token automount, run as UID/GID `10001`
   where the image supports it, use the runtime-default seccomp profile,
   drop Linux capabilities, and disallow privilege escalation.
