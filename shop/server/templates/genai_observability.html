@@ -54,33 +54,81 @@
   <!-- Recent runs -->
   <div class="genai-obs__recent card">
     <h3>Recent generations</h3>
-    <table>
-      <thead><tr><th>Time</th><th>Span</th><th>Model</th><th>In</th><th>Out</th><th>Cost $</th><th>Latency</th><th>Trace</th></tr></thead>
-      <tbody id="obs-rows"><tr><td colspan="8" class="muted">Loading…</td></tr></tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Recent GenAI generations with time, span, model, token counts, cost, latency, and trace id</caption>
+        <thead><tr><th scope="col">Time</th><th scope="col">Span</th><th scope="col">Model</th><th scope="col">In</th><th scope="col">Out</th><th scope="col">Cost $</th><th scope="col">Latency</th><th scope="col">Trace</th></tr></thead>
+        <tbody id="obs-rows"><tr><td colspan="8" class="muted">Loading…</td></tr></tbody>
+      </table>
+    </div>
   </div>
 </section>
 
 <style nonce="{{ csp_nonce }}">
-  .genai-obs { max-width: 1200px; }
-  .genai-obs__intro p { max-width: 70ch; }
-  .genai-obs__controls { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; }
+  /* ===== Bento control-room — GenAI observability (WS4b) ===== */
+  .genai-obs { max-width: 1240px; }
+  .genai-obs__intro p { max-width: 70ch; color: var(--muted); line-height: 1.6; }
+  .genai-obs__controls { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin: 1.25rem 0; }
   .genai-obs__controls select { width: auto; }
-  .genai-obs__status { font-size: .85rem; opacity: .8; }
-  .genai-obs__tiles, .genai-obs__links { margin: 1rem 0; }
-  .tile { display: flex; flex-direction: column; gap: .25rem; }
-  .tile__label { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
-  .tile__value { font-family: "Orbitron", sans-serif; font-size: 1.6rem; }
-  .tile__sub { font-size: .78rem; }
-  .link-card { display: flex; flex-direction: column; gap: .25rem; transition: 180ms ease; }
-  .link-card:hover { box-shadow: 0 0 0 1px var(--teal); }
+  .genai-obs__status { font-size: .85rem; color: var(--muted); }
+  .genai-obs__tiles, .genai-obs__links { margin: 1.25rem 0; }
+
+  /* KPI tiles — accent edge, dominant tabular value, elevation, hover lift */
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(165deg, rgba(108, 210, 224, 0.07), rgba(255, 255, 255, 0.015));
+    box-shadow: var(--shadow);
+    transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  }
+  .tile::before {
+    content: "";
+    position: absolute; inset: 0 0 auto 0; height: 3px;
+    background: linear-gradient(90deg, var(--teal), transparent 70%);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .tile:hover { transform: translateY(-3px); border-color: rgba(108, 210, 224, 0.4); }
+  .tile__label { font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+  .tile__value {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .tile__sub { font-size: .76rem; }
+
+  /* Deep-link pivot cards — hover lift */
+  .link-card {
+    display: flex; flex-direction: column; gap: .35rem;
+    border-radius: var(--radius-md);
+    transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  }
+  .link-card:hover { transform: translateY(-2px); border-color: rgba(108, 210, 224, 0.45); }
   .link-card strong { color: var(--teal); }
   .link-card.is-off { opacity: .5; }
-  .genai-obs__lookup, .genai-obs__recent { padding: 20px; margin: 1rem 0; }
+
+  .genai-obs__lookup, .genai-obs__recent { padding: 20px; margin: 1.25rem 0; }
   .lookup-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
   .lookup-row input { max-width: 420px; }
-  .genai-obs__recent td, .genai-obs__recent th { font-size: .82rem; }
-  .genai-obs__recent code { font-size: .76rem; }
+
+  /* Recent generations — scrollable on narrow, wrap-guarded trace ids */
+  .table-wrap { overflow-x: auto; }
+  .genai-obs__recent table { width: 100%; border-collapse: collapse; }
+  .genai-obs__recent th {
+    text-align: left; font-size: .72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .1em; padding: 9px 10px;
+    border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  .genai-obs__recent td { font-size: .82rem; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  .genai-obs__recent tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
+  .genai-obs__recent code { font-size: .76rem; word-break: break-all; overflow-wrap: anywhere; }
 </style>
 
 <script nonce="{{ csp_nonce }}">
