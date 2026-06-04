@@ -724,7 +724,7 @@ crm_domain          = "${CRM_SUBDOMAIN}.${DNS_BASE_DOMAIN}"
 ops_domain          = "ops.${DNS_BASE_DOMAIN}"
 coordinator_domain  = "coordinator.${DNS_BASE_DOMAIN}"
 la_namespace        = "${LA_NAMESPACE:-unused}"
-la_log_group_id     = "ocid1.loganalyticsloggroup.oc1..xxxx"
+la_log_group_id     = "<OCI_LOG_ANALYTICS_OCID>"
 
 create_atp          = true
 atp_admin_password  = "${ATP_ADMIN_PW}"

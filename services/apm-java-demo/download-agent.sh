@@ -13,7 +13,7 @@
 #              `kubectl cp` pulls it back to the host.
 #
 # Usage:
-#   OCI_APM_COMPARTMENT_ID=ocid1.compartment.oc1..xxx \
+#   OCI_APM_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 #   OCI_APM_DOMAIN_ID=ocid1.apmdomain.oc1..xxx \
 #     ./services/apm-java-demo/download-agent.sh
 #

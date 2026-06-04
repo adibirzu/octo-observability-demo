@@ -10,9 +10,9 @@ Everything is Terraform-managed (see `deploy/terraform/modules/{apm_domain,loggi
 
 ```hcl
 # deploy/terraform/terraform.tfvars
-compartment_id     = "ocid1.compartment.oc1..xxxx"
+compartment_id     = "<OCI_COMPARTMENT_OCID>"
 la_namespace       = "<la namespace from oci log-analytics namespace list>"
-la_log_group_id    = "ocid1.loganalyticsloggroup.oc1..xxxx"
+la_log_group_id    = "<OCI_LOG_ANALYTICS_OCID>"
 
 create_apm_domain          = true
 create_logging             = true

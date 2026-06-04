@@ -226,7 +226,7 @@ variables:
   vcn_cidr:
     type: string
     title: "New VCN CIDR"
-    default: "10.42.0.0/16"
+    default: ""
     visible:
       eq:
         - create_network
@@ -235,7 +235,7 @@ variables:
   public_lb_subnet_cidr:
     type: string
     title: "New public LB subnet CIDR"
-    default: "10.42.10.0/24"
+    default: ""
     visible:
       eq:
         - create_network
@@ -244,7 +244,7 @@ variables:
   app_private_subnet_cidr:
     type: string
     title: "New private app subnet CIDR"
-    default: "10.42.20.0/24"
+    default: ""
     visible:
       eq:
         - create_network
@@ -253,7 +253,7 @@ variables:
   db_private_subnet_cidr:
     type: string
     title: "New private DB subnet CIDR"
-    default: "10.42.30.0/24"
+    default: ""
     visible:
       eq:
         - create_network
@@ -263,7 +263,7 @@ variables:
     type: string
     title: "Existing app private subnet CIDR"
     description: "Used for security-list rules when attaching to an existing VCN."
-    default: "10.42.20.0/24"
+    default: ""
     visible:
       eq:
         - create_network
@@ -1052,7 +1052,7 @@ variables:
   public_subnet_cidr:
     type: string
     title: "Deprecated public subnet CIDR alias"
-    default: "10.42.10.0/24"
+    default: ""
 
   atp_whitelisted_ips:
     type: array

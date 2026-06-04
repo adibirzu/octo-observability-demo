@@ -130,7 +130,7 @@ if [[ -z "${CLUSTER_ID}" ]]; then
         exit 1
     fi
     echo "  DRY RUN: cluster lookup skipped (no live OCI credentials); using placeholder."
-    CLUSTER_ID="ocid1.cluster.oc1..dry-run-placeholder"
+    CLUSTER_ID="<OKE_CLUSTER_OCID>-run-placeholder"
 fi
 
 # Render the JSON config with the operator-supplied node pool OCID. envsubst
@@ -147,7 +147,7 @@ fi
 
 echo "Probing existing add-ons via oci ce cluster list-addons..."
 EXISTING_ADDON=""
-if [[ "${APPLY}" == "true" || "${CLUSTER_ID}" != "ocid1.cluster.oc1..dry-run-placeholder" ]]; then
+if [[ "${APPLY}" == "true" || "${CLUSTER_ID}" != "<OKE_CLUSTER_OCID>-run-placeholder" ]]; then
     EXISTING_ADDON="$(oci ce cluster list-addons \
         --profile "${OCI_PROFILE}" \
         --region "${OCI_REGION}" \

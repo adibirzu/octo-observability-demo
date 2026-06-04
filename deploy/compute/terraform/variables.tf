@@ -331,7 +331,7 @@ variable "boot_volume_size_gbs" {
 
 variable "vcn_cidr" {
   type    = string
-  default = "10.42.0.0/16"
+  default = null
 }
 
 variable "create_network" {
@@ -372,31 +372,31 @@ variable "existing_db_private_subnet_id" {
 
 variable "public_lb_subnet_cidr" {
   type        = string
-  default     = "10.42.10.0/24"
+  default     = null
   description = "CIDR for the public Load Balancer subnet when create_network=true."
 }
 
 variable "public_subnet_cidr" {
   type        = string
-  default     = "10.42.10.0/24"
+  default     = null
   description = "Deprecated alias retained for docs/tests; use public_lb_subnet_cidr."
 }
 
 variable "app_private_subnet_cidr" {
   type        = string
-  default     = "10.42.20.0/24"
+  default     = null
   description = "CIDR for the private app subnet when create_network=true."
 }
 
 variable "db_private_subnet_cidr" {
   type        = string
-  default     = "10.42.30.0/24"
+  default     = null
   description = "CIDR for the private DB subnet when create_network=true."
 }
 
 variable "app_private_cidr" {
   type        = string
-  default     = "10.42.20.0/24"
+  default     = null
   description = "Existing private app subnet CIDR used for security rules when create_network=false."
 }
 

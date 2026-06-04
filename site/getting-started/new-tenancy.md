@@ -34,7 +34,7 @@ placeholder values before you start touching the tenancy.
 
 ```bash
 OCI_PROFILE=DEFAULT \
-OCI_COMPARTMENT_ID=ocid1.compartment.oc1..xxxx \
+OCI_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 DNS_BASE_DOMAIN=example.test \
 REMOTE_BUILD_HOST=control-plane-oci \
 ./deploy/bootstrap.sh
@@ -65,7 +65,7 @@ already managed out-of-band:
 DNS_DOMAIN=<your-domain> \
 OCIR_REGION=<region> \
 OCIR_TENANCY=<namespace> \
-OCI_COMPARTMENT_ID=ocid1.compartment.oc1..xxxx \
+OCI_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 ./deploy/init-tenancy.sh
 
 OCIR_REGION=<region> \

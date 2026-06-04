@@ -16,7 +16,7 @@
 #   DNS_DOMAIN=tenant-a.customer.example \
 #   OCIR_REGION=eu-frankfurt-1 \
 #   OCIR_TENANCY=<ns> \
-#   OCI_COMPARTMENT_ID=ocid1.compartment.oc1..xxxx \
+#   OCI_COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 #   K8S_NAMESPACE=octo-drone-shop \
 #   ./deploy/init-tenancy.sh
 

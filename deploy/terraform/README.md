@@ -38,9 +38,9 @@ See [`terraform.tfvars.example`](terraform.tfvars.example) for the full
 parameter set. The minimal portable config is:
 
 ```hcl
-compartment_id     = "ocid1.compartment.oc1..xxxx"
+compartment_id     = "<OCI_COMPARTMENT_OCID>"
 la_namespace       = "<lognamespace>"
-la_log_group_id    = "ocid1.loganalyticsloggroup.oc1..xxxx"
+la_log_group_id    = "<OCI_LOG_ANALYTICS_OCID>"
 waf_log_group_id   = "ocid1.loggroup.oc1..xxxx"
 
 shop_domain        = "shop.<your-domain>"

@@ -1,8 +1,8 @@
 # Copy to terraform.tfvars and fill before `terraform plan`.
 # Do not commit terraform.tfvars; it contains secrets.
 
-tenancy_ocid   = "ocid1.tenancy.oc1..example"
-compartment_id = "ocid1.compartment.oc1..example"
+tenancy_ocid   = "<OCI_TENANCY_OCID>"
+compartment_id = "<OCI_COMPARTMENT_OCID>"
 oci_profile    = "DEFAULT"
 dns_domain     = "example.com"
 shop_hostname  = "" # Optional. Empty = shop.<dns_domain>.
@@ -18,10 +18,10 @@ shop_availability_domain_name = "" # Optional AD-specific capacity override.
 crm_availability_domain_name  = "" # Optional AD-specific capacity override.
 
 create_network          = true
-vcn_cidr                = "10.42.0.0/16"
-public_lb_subnet_cidr   = "10.42.10.0/24"
-app_private_subnet_cidr = "10.42.20.0/24"
-db_private_subnet_cidr  = "10.42.30.0/24"
+vcn_cidr                = "<OCTO_VCN_CIDR>"
+public_lb_subnet_cidr   = "<OCTO_PUBLIC_LB_SUBNET_CIDR>"
+app_private_subnet_cidr = "<OCTO_APP_PRIVATE_SUBNET_CIDR>"
+db_private_subnet_cidr  = "<OCTO_DB_PRIVATE_SUBNET_CIDR>"
 create_service_gateway  = true
 
 create_load_balancer = true

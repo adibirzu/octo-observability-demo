@@ -5,8 +5,8 @@
 #
 # Usage:
 #   OCI_PROFILE=<OCI_PROFILE> \
-#   TENANCY_OCID=ocid1.tenancy.oc1..example \
-#   COMPARTMENT_ID=ocid1.compartment.oc1..example \
+#   TENANCY_OCID=<OCI_TENANCY_OCID> \
+#   COMPARTMENT_ID=<OCI_COMPARTMENT_OCID> \
 #   ./deploy/compute/check-oci-limits.sh
 
 set -euo pipefail

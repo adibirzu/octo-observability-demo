@@ -24,6 +24,7 @@ without collisions.
 DNS_DOMAIN=example.tld \
 OCIR_REGION=eu-frankfurt-1 \
 OCIR_TENANCY=<namespace> \
+OKE_EXTERNAL_INGRESS_CIDR=<LB_OR_VCN_INGRESS_CIDR> \
 IMAGE_TAG=<immutable-image-tag> \
 ./deploy/oke/deploy-oke.sh
 ```
@@ -35,7 +36,9 @@ NetworkPolicies, and optionally a SecretProviderClass per namespace when
 the OCI Secrets Store CSI driver and Vault OCID variables are available.
 It fails fast when required Kubernetes Secrets are missing, rejects
 mutable `latest` image tags by default, and server-side dry-runs rendered
-manifests before applying them. Set `APPLY=false` to run preflight and
+manifests before applying them. `OKE_EXTERNAL_INGRESS_CIDR` is required and
+must be supplied from local operator variables, not committed topology values.
+Set `APPLY=false` to run preflight and
 server-side validation without changing the cluster. The Shop container is
 pre-wired with `JAVA_APM_SERVICE_URL`, `WORKFLOW_API_BASE_URL`,
 `PAYMENT_PROVIDER=simulated`, and `PAYMENT_GATEWAY_SIMULATION_ENABLED=true`
@@ -110,6 +113,7 @@ Validated <OCI_PROFILE> state on May 13, 2026:
 Runbook:
 
 ```bash
+OKE_WORKER_SUBNET_CIDR=<OKE_WORKER_SUBNET_CIDR> \
 ./deploy/oke/ensure-<OCI_PROFILE>-worker-subnet.sh
 ./deploy/oke/create-<OCI_PROFILE>-small-cluster.sh
 ./deploy/oke/bootstrap-<OCI_PROFILE>-secrets.sh
@@ -118,6 +122,7 @@ OCIR_REGION=eu-frankfurt-1 \
 OCIR_TENANCY=<OCIR_NAMESPACE> \
 IMAGE_TAG=<image-tag> \
 DNS_DOMAIN=<DNS_DOMAIN> \
+OKE_EXTERNAL_INGRESS_CIDR=<LB_OR_VCN_INGRESS_CIDR> \
 OKE_CLUSTER_NAME=octo-apm-demo-oke \
 ./deploy/oke/deploy-oke.sh
 

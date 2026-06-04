@@ -228,7 +228,7 @@ if command -v helm >/dev/null 2>&1; then
             --set secrets.data.auth.internalServiceKey=verify-internal-service-key \
             --set secrets.data.auth.appSecretKey=verify-app-secret-key \
             --set secrets.data.auth.bootstrapAdminPassword=verify-admin-password \
-            --set secrets.data.ociConfig.compartmentId=ocid1.compartment.oc1..verify \
+            --set secrets.data.ociConfig.compartmentId=<OCI_COMPARTMENT_OCID> \
             --set-string secrets.atpWallet=verify-wallet-bytes \
             >"${helm_secrets_render}" 2>"${helm_secrets_err}" && \
         python3 -c "import yaml,sys; list(yaml.safe_load_all(open(sys.argv[1])))" "${helm_secrets_render}" 2>/dev/null; then
