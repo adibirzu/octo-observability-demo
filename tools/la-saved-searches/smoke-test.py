@@ -63,8 +63,10 @@ def main() -> int:
         return 2
 
     query = (
-        f"'Log Source' = 'octo-shop-app-json' "
-        f"and oracleApmTraceId = '{args.trace_id}' | head limit = 1"
+        "'Log Source' = 'OCI Unified Schema Logs' "
+        "and 'OCI Resource Name' in ('octo-drone-shop', 'enterprise-crm-portal') "
+        "| jsonextract field = Message 'Trace ID' = '$.trace_id' "
+        f"| where 'Trace ID' = '{args.trace_id}' | head limit = 1"
     )
 
     deadline = time.time() + args.timeout

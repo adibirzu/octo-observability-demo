@@ -2,6 +2,6 @@
   "name": "octo-slow-checkout-spans",
   "description": "Checkout requests slower than 1s, correlated back to their log records. trace_id is the pivot column — click through to APM.",
   "displayName": "OCTO — slow checkouts (p99 candidates)",
-  "queryString": "'Log Source' = 'octo-shop-app-json' and route = '/api/orders' and Duration > 1000 | stats count(), avg(Duration), max(Duration) by oracleApmTraceId | sort -max(Duration) | head limit = 25",
+  "queryString": "'Log Source' = 'OCI Unified Schema Logs' and 'OCI Resource Name' in ('octo-drone-shop', 'enterprise-crm-portal') | jsonextract field = Message 'URL Path' = '$.url_path' | jsonextract field = Message 'Trace ID' = '$.trace_id' | jsonextract field = Message 'Response Time ms' = '$.http_response_time_ms' | where 'URL Path' = '/api/orders' and 'Response Time ms' > 1000 | stats count(), avg('Response Time ms'), max('Response Time ms') by 'Trace ID' | sort -max('Response Time ms') | head limit = 25",
   "widgetType": "TABLE"
 }
