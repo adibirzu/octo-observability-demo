@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
-# Workshop certification — re-runs every per-lab verifier and prints a
-# completion passport.
+# Workshop certification — the "core-10 passport". Re-runs the shipped
+# verifiers for labs 01–10 and prints a completion passport.
+#
+# Scope: labs 01–10 only. Labs 11–18 (OKE autoscaling, GenAI, RCA capstones)
+# use inline Verify blocks in each lab rather than verify-NN.sh scripts, so
+# they are not certified here — see each lab's Verify section.
 #
 # Each verifier may need lab-specific args (trace_id, run_id) — this
 # script reads them from CERT_TRACE_ID, CERT_TRACE_ID_03, CERT_RUN_ID
 # env vars to keep the contract explicit.
 #
-# Exit code 0 = all 10 labs pass. Anything else = at least one lab
-# incomplete.
+# Exit code 0 = all 10 core labs pass. Anything else = at least one
+# core lab incomplete.
 
 set -uo pipefail
 
@@ -70,8 +74,8 @@ if [[ "${failed}" -gt 0 ]]; then
     exit 1
 fi
 if [[ "${passed}" -eq 10 ]]; then
-    green "🎓 GRADUATED"; printf " — every lab passed.\n"
+    green "🎓 GRADUATED"; printf " — all 10 core labs passed (labs 11–18 verify inline).\n"
     exit 0
 fi
-yellow "INCOMPLETE"; printf " — pass all 10 to graduate.\n"
+yellow "INCOMPLETE"; printf " — pass all 10 core labs to graduate (labs 11–18 use inline verify blocks).\n"
 exit 0
