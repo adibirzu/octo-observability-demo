@@ -63,5 +63,6 @@ Lowest identity risk, highest demo impact for an observability product.
 - [x] Direction chosen — **Bento control-room**
 - [x] Palette (semantic roles)
 - [x] Type pairing + scale
-- [ ] WS4a: shared token sheet extracted (shop inline + crm style.css → one source)
-- [ ] Grounded by `gui-redesign-review` workflow punch list (running)
+- [x] WS4a (shop app): `shop/server/static/css/tokens.css` — canonical + base + shop scopes, values preserved, `--shop-dim` contrast fixed. base.html/shop.html `:root` removed.
+- [ ] WS4a (CRM): separate app/static-mount — fold into WS4b with screenshots
+- [x] Grounded by `gui-redesign-review` punch list → `gui-review-punchlist.md`
