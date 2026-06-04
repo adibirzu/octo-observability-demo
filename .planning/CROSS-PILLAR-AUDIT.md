@@ -21,7 +21,7 @@ telemetry. Fixes are surgical repoints + honest disclosures.
 | 7 | workshop | HIGH | `certify.sh` caps at 10 labs while index sells 18 | scope as core-10 passport + reword index | ✅ fixed |
 | 8 | workshop | MED | `verify-17/18.sh` absent; lab-17 has no Verify section | add self-disclosing TODO note in lab-17 | ✅ fixed |
 | 9 | workshop | LOW | index:82 format table overstates verifier coverage | soften wording | ✅ fixed |
-| 10 | app-telemetry | MED | genai-studio `service.namespace`=`octo-drone-shop` vs fleet `octo` | align code default to `octo` (deploy override → user) | code default fixed; flagged |
+| 10 | app-telemetry | MED | genai-studio `service.namespace`=`octo-drone-shop` vs fleet `octo` | align code default + `.env.example` + deploy yaml to `octo` | ✅ fixed (re-apply manifest to land in prod) |
 | 11 | app-telemetry | LOW | genai-studio lacks `HTTPXClientInstrumentor` | add if/when it calls app peers over HTTP | deferred (no traced HTTP peer today) |
 | 12 | correlation-backbone | LOW | contract doc marks emitting services "(planned)" | drop stale markers | ✅ fixed |
 

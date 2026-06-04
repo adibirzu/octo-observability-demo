@@ -61,7 +61,7 @@ class Settings:
 
     # Observability — OTEL -> OCI APM
     otel_service_name: str = field(default_factory=lambda: _env("OTEL_SERVICE_NAME", "octo-genai-studio"))
-    service_namespace: str = field(default_factory=lambda: _env("SERVICE_NAMESPACE", "octo-drone-shop"))
+    service_namespace: str = field(default_factory=lambda: _env("SERVICE_NAMESPACE", "octo"))
     app_version: str = field(default_factory=lambda: _env("APP_VERSION", "0.1.0"))
     apm_endpoint: str = field(default_factory=lambda: _env("OCI_APM_ENDPOINT"))
     apm_private_data_key: str = field(default_factory=lambda: _env("OCI_APM_PRIVATE_DATA_KEY"))
