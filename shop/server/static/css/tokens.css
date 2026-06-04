@@ -1,0 +1,74 @@
+/*
+ * OCTO shop — design tokens (single source of truth). WS4a.
+ * Canonical brand layer + per-surface scopes. Loaded once via base.html.
+ * Values preserved exactly from the previous inline :root blocks so this
+ * refactor is visually neutral — except --shop-dim, nudged for WCAG contrast.
+ *
+ * @import must precede other rules (it sat after :root in base.html before).
+ */
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap");
+
+:root {
+  /* ---- Canonical brand ---- */
+  --color-surface: #07111c;
+  --color-surface-soft: #0d1824;
+  --color-panel: rgba(9, 20, 34, 0.78);
+  --color-text: #eef6ff;
+  --color-text-muted: #95a8bd;
+  --color-line: rgba(140, 190, 230, 0.14);
+  --color-accent: #6cd2e0;
+  --color-accent-strong: #2da7d7;
+  --color-warn: #ffbd59;
+  --color-danger: #ff6b7a;
+  --color-success: #5be59f;
+  --shadow: 0 24px 60px rgba(3, 10, 18, 0.48);
+
+  /* ---- Scale ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --space-xs: 6px;
+  --space-sm: 12px;
+  --space-md: 18px;
+  --space-lg: 28px;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+
+  /* ---- Fonts ---- */
+  --font-display: "Orbitron", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* ---- base.html surface aliases (back-compat; identical resolved values) ---- */
+  --bg: var(--color-surface);
+  --bg-soft: var(--color-surface-soft);
+  --bg-panel: var(--color-panel);
+  --ink: var(--color-text);
+  --muted: var(--color-text-muted);
+  --line: var(--color-line);
+  --teal: var(--color-accent);
+  --teal-strong: var(--color-accent-strong);
+  --amber: var(--color-warn);
+  --rose: var(--color-danger);
+  --ok: var(--color-success);
+
+  /* ---- shop.html storefront scope (distinct identity; values preserved) ---- */
+  --shop-bg-0: #07090c;
+  --shop-bg-1: #0c1014;
+  --shop-bg-2: #11161c;
+  --shop-bg-3: #161c24;
+  --shop-line: #1f2730;
+  --shop-line-2: #2a3340;
+  --shop-ink: #f1f4f7;
+  --shop-muted: #a8b2bd;
+  --shop-dim: #8a96a2; /* WCAG fix: was #6b7682 (3.87:1) -> ~4.6:1 */
+  --shop-accent: #6ef0c5;
+  --shop-accent-2: #c8ff4a;
+  --shop-warm: #ff8a3d;
+  --shop-danger: #ff5577;
+  --shop-radius-sm: var(--radius-sm);
+  --shop-radius-md: var(--radius-md);
+  --shop-radius-lg: var(--radius-lg);
+  --shop-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.78),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
