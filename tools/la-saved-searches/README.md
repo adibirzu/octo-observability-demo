@@ -55,13 +55,21 @@ A passing run prints:
 [poll 3] trace_id=abc...def found in LA after 28s
 ```
 
+The searches query the live ingestion source — `OCI Unified Schema Logs`
+filtered by `OCI Resource Name in ('octo-drone-shop', 'enterprise-crm-portal')`
+— and `jsonextract` fields (`$.trace_id`, `$.url_path`, `$.http_status_code`,
+`$.http_response_time_ms`) from `Message`. This matches the SQL correlation
+searches in `deploy/oci/log_analytics/searches/`, so no custom source is
+required for them to return rows.
+
 If it times out, check:
 
-- The Service Connector `la-pipeline-octo-shop-app` exists
-  (created by `deploy/terraform/main.tf::la_pipeline_app_logs`).
-- The shop's `server/observability/logging_sdk.py` is stamping
-  `oracleApmTraceId` (it should — the correlation.py shim handles this).
-- LA has `octo-shop-app-json` as a registered source
-  (run `tools/create_la_source.py --apply`).
+- App logs are reaching LA via the Service Connector Hub (they land as
+  `OCI Unified Schema Logs`, or `SOC Application Logs` for direct/OKE ingestion).
+- The shop's `server/observability/logging_sdk.py` is stamping `trace_id`
+  + `oracleApmTraceId` (it should — the correlation shim handles this).
+- (Optional) For a dedicated promoted-field source, run
+  `tools/create_la_source.py --apply` to register `octo-shop-app-json` and set
+  `app_log_id` so the `la_pipeline_app_logs` connector is provisioned.
 
 Typical ingestion latency on OCI: 30–120 s.

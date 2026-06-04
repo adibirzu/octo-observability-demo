@@ -2,6 +2,6 @@
   "name": "octo-errors-by-route",
   "description": "5xx + 4xx response breakdown by HTTP route across shop + CRM. Fuels the 'error rate' widget on the operations dashboard.",
   "displayName": "OCTO — errors by route (last 1h)",
-  "queryString": "'Log Source' = 'octo-shop-app-json' and http_status >= 400 | stats count() by route, http_status | sort -count | head limit = 50",
+  "queryString": "'Log Source' = 'OCI Unified Schema Logs' and 'OCI Resource Name' in ('octo-drone-shop', 'enterprise-crm-portal') | jsonextract field = Message 'URL Path' = '$.url_path' | jsonextract field = Message 'HTTP Status Code' = '$.http_status_code' | where 'HTTP Status Code' >= 400 | stats count() by 'URL Path', 'HTTP Status Code' | sort -count | head limit = 50",
   "widgetType": "BAR_CHART"
 }
