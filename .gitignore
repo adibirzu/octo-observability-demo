@@ -138,6 +138,10 @@ deploy/compute/build/
 .claude/
 .mcp.json
 
+# WS4c preview harness artifacts (keep scripts, ignore generated)
+shop/server/_preview/
+.planning/design/preview/shots/
+
 # Private inputs and credentials for every deployment.
 .env
 .env.*
