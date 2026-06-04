@@ -9,7 +9,7 @@ guarantee that the shared environment will remain healthy without checking
 the validation commands below.
 
 June 4, 2026 OKE GenAI monitoring update: the active local kubeconfig for
-`octo-apm-demo-oke` was corrected to use the `emdemo` OCI profile in its exec
+`octo-apm-demo-oke` was corrected to use the production OCI profile in its exec
 stanza, then Kubernetes RBAC was revalidated with `kubectl auth can-i get pods
 -n octo-drone-shop`. The `octo-drone-shop` namespace has the expected AI
 monitoring secret surface: `octo-apm-ai` for the dedicated GenAI APM domain,

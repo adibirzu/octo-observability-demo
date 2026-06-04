@@ -124,7 +124,7 @@ Top-right, scope to your APM domain:
 
 ```text
 Compartment = LogAnalytics
-APM Domain  = octo-emdemo-apm
+APM Domain  = octo-<TENANCY>-apm
 Time range  = Last 7 days
 ```
 
@@ -364,7 +364,7 @@ again and prevents the false RCA this lab walks you out of.
 **C. Make the decline visible to operators.** Activate the antifraud custom
 attributes (`payment.antifraud_reasons`, `payment.verification.decision`,
 `payment.error_code`, `payment.decision_source`, `payment.risk_score`) in
-the `octo-emdemo-apm` domain so the decline reason is readable without
+the `octo-<TENANCY>-apm` domain so the decline reason is readable without
 opening every span. (This is a change in the LogAnalytics-owned APM domain —
 out of scope for a read-only lab, but the right operational follow-up.)
 

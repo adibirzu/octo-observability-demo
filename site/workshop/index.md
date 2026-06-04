@@ -1,15 +1,15 @@
 ---
 title: OCI Observability Workshop
-description: A hands-on, ten-lab workshop that teaches the OCI APM + RUM + Logging Analytics + Monitoring + Stack Monitoring chain end-to-end using octo-apm-demo as the playground.
+description: A hands-on, eighteen-lab workshop that teaches the OCI APM + RUM + Logging Analytics + Monitoring + Stack Monitoring + GenAI observability chain end-to-end using octo-apm-demo as the playground.
 ---
 
 # OCI Observability Onboarding Workshop
 
 A hands-on workshop that teaches how to operate the full OCI Observability
 stack — APM, APM RUM, Logging, Log Analytics, Monitoring, Stack Monitoring,
-and Cloud Guard — using `octo-apm-demo` as the playground. **Ten labs**,
-~6 hours total if done in one sitting; designed to be split across two
-half-days.
+and Cloud Guard — plus end-to-end GenAI observability — using
+`octo-apm-demo` as the playground. **Eighteen labs**, ~9.5 hours total if
+done in one sitting; designed to be split across two to three half-days.
 
 !!! tip "How to use this workshop"
     Every page in the workshop section has a **Configure your deployment**
@@ -35,7 +35,7 @@ Engineers, SREs, and platform operators who:
 
 ## What you'll be able to do at the end
 
-By the end of the ten labs you'll be able to:
+By the end of the eighteen labs you'll be able to:
 
 1. **Find any HTTP request's full distributed trace** across browser
    (APM RUM), edge (load balancer + WAF), application (FastAPI Python +
@@ -60,6 +60,13 @@ By the end of the ten labs you'll be able to:
    recognise an antifraud DECLINE (HTTP 200, `is-fault=false`) that *looks*
    like a silent error, and root-cause it from the failing payment-gateway
    span to the upstream antifraud decision.
+10. **Monitor a GenAI agent end-to-end**: follow an AI Studio answer from the
+    browser through APM spans, Langfuse generations, token/cost accounting,
+    and an LLM-as-judge score — pivoting between APM, Langfuse, and Grafana.
+11. **Trace a database root cause** from an APM span through Log Analytics,
+    Operations Insights, and Database Management to the offending SQL.
+12. **Observe OKE pod autoscaling** react to load, with HPA and Cluster
+    Autoscaler events correlated to traces and Kubernetes container logs.
 
 ## Workshop format
 
@@ -76,7 +83,13 @@ Each lab follows the same shape so you can scan ahead and plan:
 | **Troubleshooting** | The three most common things that go sideways. |
 | **Read more** | Underlying docs, OCI service references, related code paths. |
 
-## The 10 labs
+## The 18 labs
+
+The arc covers all six observability pillars: **application telemetry**
+(labs 01–04), **metrics, alarms & gateways** (05–06), **Log Analytics
+correlation** (02, 07), **infrastructure & DB health** (08, 11, 17),
+**security log use-cases** (06), **GenAI monitoring** (12–16), and two
+**end-to-end root-cause capstones** (10, 18).
 
 | # | Lab | Time | Pre-reqs |
 |---|---|---|---|

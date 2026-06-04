@@ -65,4 +65,4 @@ echo "Expect genai_total_tokens / genai_cost_usd in OCI Monitoring namespace oct
 ## Read More
 
 - [GenAI monitoring (APM + Langfuse)](../observability-v2/ai-studio-genai-monitoring.md)
-- [Observability stack install](../../services/observability-stack/README.md)
+- [Observability stack install](https://github.com/<github-username>/octo-apm-demo/tree/main/services/observability-stack)

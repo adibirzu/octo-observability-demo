@@ -121,8 +121,8 @@ spanning observability *and* security.
 ## Guardrails
 
 - **Plan only** — no live changes. Any apply is staged in **cap (staging)**
-  first, reviewed, then promoted to `emdemo` within the `LogAnalytics`
-  compartment scope.
+  first, reviewed, then promoted to the production tenancy within the
+  `LogAnalytics` compartment scope.
 - **Masking on clones only** — sensitive-data masking runs against
   `OCTOATP_MASKDEMO`, never the live shared database.
 - **Redaction** — all examples use placeholders (`<COMPARTMENT_OCID>`,

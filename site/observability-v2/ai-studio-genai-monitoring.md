@@ -183,8 +183,8 @@ shop also keeps LLMetry/Langfuse controls in `octo-llmetry` for the classic
 assistant path. Either APM or Langfuse is independently optional — with neither
 configured the studio still runs and traces to the console.
 
-For `emdemo` OKE, validate the local kubeconfig before changing runtime
-secrets: the active context's OCI exec stanza must include `--profile emdemo`,
+For the production OKE, validate the local kubeconfig before changing runtime
+secrets: the active context's OCI exec stanza must include `--profile <OCI_PROFILE>`,
 and `kubectl auth can-i get pods -n octo-drone-shop` should return `yes`.
 Topology and credential values stay in environment variables, ignored tfvars,
 or OCI/Kubernetes secrets; committed docs and manifests only use placeholders.
