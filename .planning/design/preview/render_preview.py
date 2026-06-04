@@ -73,6 +73,25 @@ FETCH_STUB = """<script>
 })();
 </script>"""
 
+GENAI_METRICS = {
+    "summary": {
+        "genai_total_tokens": 184200,
+        "genai_input_tokens": 120400,
+        "genai_output_tokens": 63800,
+        "genai_cost_usd": 0.4213,
+        "genai_latency_p50_ms": 820,
+        "genai_latency_p95_ms": 2140,
+        "genai_judge_scores": 36,
+        "genai_judge_score_avg": 0.871,
+    },
+    "recent": [
+        {"time": "2026-06-04T14:22:07", "name": "agent.plan", "model": "cohere.command-r-plus", "input_tokens": 1820, "output_tokens": 540, "cost_usd": 0.0041, "latency_ms": 1840, "trace_id": "92fa17c4d9e0b3a1f7"},
+        {"time": "2026-06-04T14:19:55", "name": "agent.answer", "model": "meta.llama-3.3-70b", "input_tokens": 2950, "output_tokens": 1120, "cost_usd": 0.0067, "latency_ms": 2210, "trace_id": "4471aa20ffbce81d3c"},
+        {"time": "2026-06-04T14:15:31", "name": "judge.score", "model": "cohere.command-r", "input_tokens": 640, "output_tokens": 90, "cost_usd": 0.0008, "latency_ms": 540, "trace_id": "bd09c5e7712a44f0aa"},
+    ],
+    "langfuse_configured": True,
+}
+
 CONTEXT = {
     "title": "Workspace",
     "module": "dashboard",
@@ -83,9 +102,17 @@ CONTEXT = {
     "app_name": "OCTO Drone Commerce",
     "java_apm_enabled": False,
     "payment_gateway_simulation_enabled": True,
+    # genai_observability.html deep-link targets (rendered as active link-cards)
+    "apm_console_url": "#apm",
+    "langfuse_url": "#langfuse",
+    "grafana_url": "#grafana",
+    "genai_command_center_url": "#command-center",
 }
 
-ROUTES = {"/api/dashboard/summary": DASHBOARD_SUMMARY}
+ROUTES = {
+    "/api/dashboard/summary": DASHBOARD_SUMMARY,
+    "/api/ai-studio/metrics": GENAI_METRICS,
+}
 
 
 def render(page: str) -> pathlib.Path:
