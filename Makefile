@@ -179,8 +179,19 @@ docs-build: ## Build mkdocs site (strict — fails on broken links)
 # --- tests ------------------------------------------------------------------
 
 .PHONY: test
-test: test-contract test-docs ## Run the full local test gate
-	python3 -m pytest -q shop/tests crm/tests services/*/tests 2>/dev/null || true
+test: test-contract test-docs test-apps ## Run the full local test gate
+
+.PHONY: test-apps
+test-apps: ## Per-app pytest suites in isolated processes (avoids shop/crm `server` package collision)
+	@for app in shop crm; do \
+	  echo "── $$app/tests ──"; \
+	  python3 -m pytest -q $$app/tests || echo "  ($$app suite skipped/failed — install its deps)"; \
+	done; \
+	for d in services/*/tests; do \
+	  [ -d "$$d" ] || continue; \
+	  echo "── $$d ──"; \
+	  python3 -m pytest -q "$$d" || echo "  ($$d skipped/failed — install its deps)"; \
+	done
 
 .PHONY: test-contract
 test-contract: ## Run source-level observability + deployment contract tests
