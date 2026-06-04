@@ -1,60 +1,116 @@
 {% extends "base.html" %}
 {% block head %}
 <style>
-    .hero-panel {
-        padding: 38px 34px;
-        display: grid;
-        grid-template-columns: 1.3fr 0.7fr;
-        gap: 22px;
+    /* ===== Bento control-room — dashboard (WS4b) ===== */
+    /* Section rhythm: tight within tiles, generous between bands. */
+    .dashboard-grid, .dashboard-row { margin-top: var(--space-lg); }
+    .section-eyebrow {
+        display: flex;
         align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-family: var(--font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.7rem;
+        margin-bottom: 12px;
+    }
+    .section-eyebrow::before {
+        content: "";
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--teal);
+        box-shadow: 0 0 0 4px rgba(108, 210, 224, 0.16);
+    }
+
+    /* Hero band */
+    .hero-panel {
+        padding: clamp(24px, 3vw, 40px) clamp(22px, 3vw, 36px);
+        display: grid;
+        grid-template-columns: 1.4fr 0.6fr;
+        gap: 26px;
+        align-items: center;
+        border-radius: var(--radius-lg);
+        background:
+            radial-gradient(120% 140% at 100% 0%, rgba(108, 210, 224, 0.10), transparent 55%),
+            var(--bg-panel);
     }
     .hero-kicker {
         color: var(--teal);
-        font-family: "Orbitron", sans-serif;
+        font-family: var(--font-display);
         text-transform: uppercase;
-        letter-spacing: 0.18em;
-        font-size: 0.74rem;
-        margin-bottom: 12px;
+        letter-spacing: 0.2em;
+        font-size: 0.72rem;
+        margin-bottom: 14px;
     }
-    .hero-copy {
-        color: var(--muted);
-        line-height: 1.6;
-        margin-top: 14px;
-        max-width: 62ch;
-    }
+    .hero-panel h1 { max-width: 22ch; }
+    .hero-copy { color: var(--muted); line-height: 1.6; margin-top: 16px; max-width: 62ch; }
     .demo-notice {
         margin-top: 18px;
         border: 1px solid rgba(91, 229, 159, 0.26);
-        border-radius: 16px;
-        padding: 14px 16px;
-        background: rgba(91, 229, 159, 0.08);
-        color: var(--text);
+        border-left-width: 3px;
+        border-radius: var(--radius-md);
+        padding: 12px 16px;
+        background: rgba(91, 229, 159, 0.07);
+        color: var(--muted);
         line-height: 1.55;
+        font-size: 0.9rem;
     }
     .hero-logo {
-        width: min(100%, 280px);
+        width: min(100%, 260px);
         justify-self: end;
-        opacity: 0.92;
-        filter: drop-shadow(0 18px 32px rgba(108, 210, 224, 0.18));
+        opacity: 0.95;
+        filter: drop-shadow(0 18px 32px rgba(108, 210, 224, 0.2));
     }
+
+    /* KPI tiles — the primary row: value dominates, label recedes, accent edge */
     .dashboard-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 16px;
-        margin-top: 18px;
     }
-    .metric-card { min-height: 132px; }
+    .metric-card {
+        position: relative;
+        min-height: 138px;
+        padding: 18px 18px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(165deg, rgba(108, 210, 224, 0.07), rgba(255, 255, 255, 0.015));
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
+    }
+    .metric-card::before {
+        content: "";
+        position: absolute; inset: 0 0 auto 0; height: 3px;
+        background: linear-gradient(90deg, var(--teal), transparent 70%);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .metric-card:hover { transform: translateY(-3px); border-color: rgba(108, 210, 224, 0.4); }
+    .metric-card h3 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 0.72rem;
+        color: var(--muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
     .metric-value {
-        font-size: clamp(1.35rem, 2.4vw, 2rem);
-        font-family: "Orbitron", sans-serif;
-        margin-top: 12px;
+        font-size: clamp(1.9rem, 3vw, 2.7rem);
+        font-family: var(--font-display);
+        font-weight: 900;
+        line-height: 1;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
         overflow-wrap: anywhere;
     }
+
+    /* Secondary bands — lighter surface, smaller radius (depth tier below KPI tiles) */
     .dashboard-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px;
-        margin-top: 18px;
     }
     .dashboard-row-wide { grid-template-columns: 1fr; }
     .signal-grid, .shop-path-grid {
@@ -64,50 +120,73 @@
     }
     .signal-card, .shop-path-card {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius-md);
         padding: 16px;
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.025);
+        transition: transform var(--duration-fast) ease, background var(--duration-fast) ease;
     }
+    .shop-path-card:hover { transform: translateY(-2px); background: rgba(108, 210, 224, 0.06); }
     .signal-label {
         display: block;
         color: var(--muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
-        font-size: 0.74rem;
+        font-size: 0.72rem;
         margin-bottom: 10px;
     }
     .signal-value-pill {
         display: inline-flex;
-        padding: 6px 10px;
+        padding: 5px 11px;
         border-radius: 999px;
-        font-size: 0.78rem;
+        font-size: 0.72rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.12em;
-        margin-bottom: 10px;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+        background: rgba(108, 210, 224, 0.12);
+        color: var(--teal);
+        border: 1px solid rgba(108, 210, 224, 0.28);
     }
-    .signal-value-pill { background: rgba(91, 229, 159, 0.12); color: var(--ok); }
+    .signal-card p, .shop-path-card span { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
     .shop-path-card {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        min-height: 110px;
-        justify-content: space-between;
+        display: flex; flex-direction: column; gap: 10px;
+        min-height: 110px; justify-content: space-between;
     }
-    .shop-path-card strong { color: var(--teal); }
-    .data-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .shop-path-card strong { color: var(--teal); font-size: 0.82rem; }
+
+    /* Data table — scrollable on narrow, hover affordance, semantic status badges */
+    .table-wrap { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+        text-align: left; font-size: 0.72rem; color: var(--muted);
+        text-transform: uppercase; letter-spacing: 0.1em; padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+    }
+    .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); }
+    .data-table tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
     .badge {
         display: inline-flex;
         align-items: center;
-        padding: 5px 10px;
+        padding: 4px 11px;
+        min-height: 24px;
         border-radius: 999px;
-        font-size: 0.76rem;
+        font-size: 0.72rem;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         border: 1px solid var(--line);
     }
-    .badge-processing, .badge-pending, .badge-queued { color: var(--amber); }
-    .badge-completed, .badge-delivered { color: var(--ok); }
-    .badge-cancelled, .badge-failed { color: var(--rose); }
+    .badge-processing, .badge-pending, .badge-queued {
+        color: var(--amber); border-color: rgba(255, 189, 89, 0.3); background: rgba(255, 189, 89, 0.1);
+    }
+    .badge-completed, .badge-delivered {
+        color: var(--ok); border-color: rgba(91, 229, 159, 0.3); background: rgba(91, 229, 159, 0.1);
+    }
+    .badge-cancelled, .badge-failed {
+        color: var(--rose); border-color: rgba(255, 107, 122, 0.3); background: rgba(255, 107, 122, 0.1);
+    }
+
+    /* Featured products — bento cards with media + hover lift */
     .featured-products-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -115,26 +194,23 @@
     }
     .featured-product {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius-md);
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.025);
+        transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
     }
+    .featured-product:hover { transform: translateY(-3px); border-color: rgba(108, 210, 224, 0.35); }
     .featured-product img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
+        width: 100%; height: 168px; object-fit: cover;
         background: rgba(255, 255, 255, 0.02);
     }
-    .featured-product-body {
-        padding: 14px 16px 16px;
-        display: grid;
-        gap: 10px;
-    }
+    .featured-product-body { padding: 14px 16px 16px; display: grid; gap: 10px; }
+
     @media (max-width: 1180px) {
         .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .dashboard-row, .signal-grid, .shop-path-grid, .featured-products-grid { grid-template-columns: 1fr; }
         .hero-panel { grid-template-columns: 1fr; }
-        .hero-logo { justify-self: start; }
+        .hero-logo { justify-self: start; order: -1; width: min(100%, 180px); }
         .form-grid, .form-grid-orders { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 760px) {
@@ -147,7 +223,7 @@
 <section class="hero-card hero-panel">
     <div>
         <p class="hero-kicker">OCTO drone shop demo</p>
-        <h2>Explore a simulated drone storefront built for OCI observability demos.</h2>
+        <h1>Explore a simulated drone storefront built for OCI observability demos.</h1>
         <p class="hero-copy">
             Browse demo drones, place test orders, and watch the resulting user actions appear as traces, logs,
             metrics, and browser sessions across OCI Application Performance Monitoring, OCI Logging, Log Analytics,
@@ -192,10 +268,13 @@
     </div>
     <div class="card">
         <h3>Simulated Recent Orders</h3>
-        <table class="data-table">
-            <thead><tr><th>ID</th><th>Persona</th><th>Total</th><th>Status</th></tr></thead>
-            <tbody id="recent-orders-body"></tbody>
-        </table>
+        <div class="table-wrap">
+            <table class="data-table">
+                <caption class="sr-only">Simulated recent demo orders with persona, total, and status</caption>
+                <thead><tr><th scope="col">ID</th><th scope="col">Persona</th><th scope="col">Total</th><th scope="col">Status</th></tr></thead>
+                <tbody id="recent-orders-body"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 

@@ -137,3 +137,7 @@ deploy/compute/build/
 # Personal Claude Code session state
 .claude/
 .mcp.json
+
+# WS4c preview harness artifacts (keep scripts, ignore generated)
+shop/server/_preview/
+.planning/design/preview/shots/
