@@ -109,9 +109,31 @@ CONTEXT = {
     "genai_command_center_url": "#command-center",
 }
 
+def _product(pid, name, cat, price, stock, img, desc):
+    return {"id": pid, "name": name, "category": cat, "price": price, "stock": stock,
+            "image_url": img, "description": desc, "sku": pid.upper()}
+
+
+STOREFRONT = {
+    "products": [
+        _product("drn_004", "Tactical Drone X1", "Drones", 2499, 12, "/static/img/products/drn_004.jpg", "Long-range tactical platform with thermal payload and redundant GPS."),
+        _product("drn_005", "Recon Hexacopter", "Drones", 3299, 6, "/static/img/products/drn_005.jpg", "Six-rotor recon platform with extended endurance."),
+        _product("cam_001", "Thermal Camera Pod", "Payloads", 899, 7, "/static/img/products/cam_001.jpg", "High-res thermal imaging module for night operations."),
+        _product("cam_002", "EO/IR Gimbal", "Payloads", 1450, 9, "/static/img/products/cam_002.jpg", "Stabilised electro-optical / infrared gimbal."),
+        _product("flc_001", "Field Link Controller", "Control", 349, 20, "/static/img/products/flc_001.jpg", "Rugged field link controller with encrypted telemetry."),
+        _product("prp_001", "Carbon Propeller Set", "Parts", 89, 54, "/static/img/products/prp_001.jpg", "Balanced carbon-fibre propellers (set of 4)."),
+    ],
+    "categories": ["Drones", "Payloads", "Control", "Parts"],
+    "stats": {"products": 42, "in_stock": 38, "categories": 4},
+    "backend": {"apm_configured": True},
+    "crm_sync": {"configured": True},
+}
+
 ROUTES = {
     "/api/dashboard/summary": DASHBOARD_SUMMARY,
     "/api/ai-studio/metrics": GENAI_METRICS,
+    "/api/shop/storefront": STOREFRONT,
+    "/api/cart": {"items": [], "total": 0},
 }
 
 
