@@ -24,12 +24,21 @@ tracer_fn = get_tracer
 
 
 async def _reconcile_invoices_safe(tracer) -> None:
-    """Best-effort: create invoices + PDFs for newly-paid orders. Never breaks the caller."""
+    """Best-effort bulk reconcile (sync path). Never breaks the caller."""
     try:
         from server.modules.invoices import reconcile_invoices
         await reconcile_invoices(tracer)
     except Exception as exc:  # noqa: BLE001 — payment hook must not fail the order op
         push_log("WARNING", f"invoice reconcile hook failed: {exc}", **{"invoices.hook": "failed"})
+
+
+async def _ensure_invoice_safe(order_id, customer_id, total, tracer) -> None:
+    """Best-effort single-order invoice + PDF (real-time on paid). Never breaks the caller."""
+    try:
+        from server.modules.invoices import ensure_invoice_for_order
+        await ensure_invoice_for_order(order_id, customer_id, total, tracer)
+    except Exception as exc:  # noqa: BLE001
+        push_log("WARNING", f"invoice hook failed for order {order_id}: {exc}", **{"invoices.hook": "failed"})
 
 
 def _serialize_order(order: Order) -> dict:
@@ -419,9 +428,11 @@ async def update_order_status(order_id: int, request: Request):
                 return {"error": "Order not found"}
             order.status = new_status
             order.backlog_status = "backlog" if new_status in {"pending", "processing", "queued"} else "current"
+            paid_customer_id = order.customer_id
+            paid_total = order.total
             await db.flush()
 
-        # Real-time hook: an order moving to paid gets its invoice + PDF in ATP.
+        # Real-time hook: this specific order moving to paid gets its invoice + PDF in ATP.
         if new_status == "paid":
-            await _reconcile_invoices_safe(tracer)
+            await _ensure_invoice_safe(order_id, paid_customer_id, paid_total, tracer)
         return {"status": "updated", "order_id": order_id, "new_status": new_status}

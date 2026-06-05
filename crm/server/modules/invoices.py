@@ -151,6 +151,40 @@ async def _create_invoices_for_paid_orders(db, tracer, limit: int = 200) -> int:
         return created
 
 
+async def ensure_invoice_for_order(order_id, customer_id, total, tracer=None):
+    """Create (idempotently) the invoice + Oracle-BLOB PDF for ONE just-paid order.
+
+    This is the real-time hook target: deterministic and cheap (one order), unlike
+    the bulk reconcile. Returns the invoice id, or None if the order can't be invoiced.
+    """
+    if customer_id is None:
+        return None
+    tracer = tracer or tracer_fn()
+    with tracer.start_as_current_span("invoices.ensure_for_order") as span:
+        span.set_attribute("invoices.order_id", order_id)
+        async with get_db() as db:
+            existing = (await db.execute(
+                text("SELECT id FROM invoices WHERE order_id = :oid"), {"oid": order_id})).fetchone()
+            if existing:
+                inv_id = existing[0]
+            else:
+                now = datetime.utcnow()
+                with tracer.start_as_current_span("db.write.invoice_create") as wspan:
+                    wspan.set_attribute("db.system", "oracle")
+                    await db.execute(text(
+                        "INSERT INTO invoices (order_id, customer_id, invoice_number, amount, "
+                        "status, currency, issued_at, paid_at) "
+                        "VALUES (:oid, :cid, :num, :amt, 'paid', 'USD', :ts, :ts)"),
+                        {"oid": order_id, "cid": customer_id,
+                         "num": f"INV-ORD-{order_id}", "amt": float(total or 0), "ts": now})
+                inv_id = (await db.execute(
+                    text("SELECT id FROM invoices WHERE order_id = :oid"), {"oid": order_id})).fetchone()[0]
+            invoice = await _fetch_invoice(db, inv_id)
+            if invoice and not invoice.get("pdf_generated_at"):
+                await _generate_and_store_pdf(db, tracer, invoice)
+        return inv_id
+
+
 @router.get("")
 async def list_invoices(
     request: Request,
