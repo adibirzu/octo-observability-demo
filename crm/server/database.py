@@ -7,7 +7,7 @@ from typing import AsyncGenerator
 
 from sqlalchemy import (
     Column, Integer, String, Text, Float, DateTime, ForeignKey,
-    UniqueConstraint, Identity, create_engine, inspect, text,
+    UniqueConstraint, Identity, LargeBinary, create_engine, inspect, text,
 )
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, relationship
@@ -233,6 +233,12 @@ class Invoice(Base):
     status = Column(String(50), default="unpaid")
     due_date = Column(DateTime)
     created_at = Column(DateTime, server_default=func.now())
+    # Invoice document stored directly in Oracle ATP as a SecureFile BLOB —
+    # showcases the database's native file-storage capability (no object store).
+    pdf_data = Column(LargeBinary)
+    pdf_filename = Column(String(200))
+    pdf_size = Column(Integer)
+    pdf_generated_at = Column(DateTime)
     order = relationship("Order")
 
 

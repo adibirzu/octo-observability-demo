@@ -357,6 +357,13 @@ async def catalog_page(request: Request):
     return _render_page(request, "catalog", "Storefront Operations", nav_key="catalog")
 
 
+@app.get("/shop", include_in_schema=False)
+async def shop_redirect() -> RedirectResponse:
+    """Admin-host convenience: /shop → the public drone storefront."""
+    target = cfg.octo_drone_shop_url or f"https://shop.{cfg.dns_domain}"
+    return RedirectResponse(url=target, status_code=307)
+
+
 @app.get("/invoices", response_class=HTMLResponse)
 async def invoices_page(request: Request):
     return _render_page(request, "page", "Invoices", module="invoices", nav_key="invoices")
