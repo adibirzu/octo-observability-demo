@@ -64,6 +64,7 @@ async def bootstrap_database() -> None:
         await conn.run_sync(Base.metadata.create_all)
         await conn.run_sync(_ensure_audit_log_columns)
         await conn.run_sync(_ensure_order_columns)
+        await conn.run_sync(_ensure_invoice_columns)
         await conn.run_sync(_ensure_product_columns)
         await conn.run_sync(_ensure_catalog_schema)
 
@@ -315,6 +316,27 @@ def _ensure_order_columns(sync_conn) -> None:
     tables = set(inspector.get_table_names())
     if "order_sync_audit" not in tables:
         OrderSyncAudit.__table__.create(sync_conn, checkfirst=True)
+
+
+def _ensure_invoice_columns(sync_conn) -> None:
+    """Add invoice-document columns (PDF stored as an Oracle SecureFile BLOB)."""
+    inspector = inspect(sync_conn)
+    if "invoices" not in inspector.get_table_names():
+        return
+    existing = {column["name"].lower() for column in inspector.get_columns("invoices")}
+    dialect = sync_conn.dialect.name
+    type_map = {
+        "pdf_data": "BLOB",
+        "pdf_filename": "VARCHAR2(200 CHAR)" if dialect == "oracle" else "VARCHAR(200)",
+        "pdf_size": "NUMBER(12)" if dialect == "oracle" else "INTEGER",
+        "pdf_generated_at": "TIMESTAMP",
+    }
+    for column_name, ddl_type in type_map.items():
+        if column_name not in existing:
+            sync_conn.execute(text(
+                f"ALTER TABLE invoices ADD ({column_name} {ddl_type})" if dialect == "oracle"
+                else f"ALTER TABLE invoices ADD COLUMN {column_name} {ddl_type}"
+            ))
 
 
 def _ensure_product_columns(sync_conn) -> None:
