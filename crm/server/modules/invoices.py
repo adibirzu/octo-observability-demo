@@ -85,14 +85,17 @@ def _lob_to_bytes(value):
 
 async def _fetch_invoice(db, invoice_id: int) -> dict | None:
     result = await db.execute(
-        text("SELECT i.id, i.order_id, i.invoice_number, i.amount, i.tax, i.status, "
-             "c.name AS customer_name "
+        text("SELECT i.*, c.name AS customer_name "
              "FROM invoices i LEFT JOIN orders o ON i.order_id = o.id "
              "LEFT JOIN customers c ON o.customer_id = c.id WHERE i.id = :id"),
         {"id": invoice_id},
     )
     row = result.fetchone()
-    return dict(row._mapping) if row else None
+    if not row:
+        return None
+    d = dict(row._mapping)
+    d.pop("pdf_data", None)  # never carry the BLOB around for PDF building
+    return d
 
 
 async def _generate_and_store_pdf(db, tracer, invoice: dict) -> bytes:
@@ -126,9 +129,7 @@ async def list_invoices(
     with tracer.start_as_current_span("invoices.list"):
         async with get_db() as db:
             with tracer.start_as_current_span("db.query.invoices_list"):
-                query = ("SELECT i.id, i.order_id, i.invoice_number, i.amount, i.tax, "
-                         "i.status, i.created_at, i.pdf_filename, i.pdf_size, "
-                         "i.pdf_generated_at, o.customer_id, c.name as customer_name "
+                query = ("SELECT i.*, o.customer_id, c.name as customer_name "
                          "FROM invoices i LEFT JOIN orders o ON i.order_id = o.id "
                          "LEFT JOIN customers c ON o.customer_id = c.id WHERE 1=1")
                 params = {}
