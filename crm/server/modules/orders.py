@@ -23,6 +23,15 @@ router = APIRouter(prefix="/api/orders", tags=["Orders"])
 tracer_fn = get_tracer
 
 
+async def _reconcile_invoices_safe(tracer) -> None:
+    """Best-effort: create invoices + PDFs for newly-paid orders. Never breaks the caller."""
+    try:
+        from server.modules.invoices import reconcile_invoices
+        await reconcile_invoices(tracer)
+    except Exception as exc:  # noqa: BLE001 — payment hook must not fail the order op
+        push_log("WARNING", f"invoice reconcile hook failed: {exc}", **{"invoices.hook": "failed"})
+
+
 def _serialize_order(order: Order) -> dict:
     return {
         "id": order.id,
@@ -145,6 +154,9 @@ async def sync_orders(request: Request):
         business_metrics.record_order_sync(
             result.get("created", 0), result.get("updated", 0), result.get("failed", 0)
         )
+        # Real-time hook: newly-synced paid orders get a real invoice + PDF in ATP.
+        if result.get("created", 0) or result.get("updated", 0):
+            await _reconcile_invoices_safe(tracer)
         return result
 
 
@@ -409,4 +421,7 @@ async def update_order_status(order_id: int, request: Request):
             order.backlog_status = "backlog" if new_status in {"pending", "processing", "queued"} else "current"
             await db.flush()
 
+        # Real-time hook: an order moving to paid gets its invoice + PDF in ATP.
+        if new_status == "paid":
+            await _reconcile_invoices_safe(tracer)
         return {"status": "updated", "order_id": order_id, "new_status": new_status}
