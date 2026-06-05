@@ -1,0 +1,66 @@
+# node-growfs — expand each worker node's root filesystem to its full boot volume.
+#
+# OKE's Oracle Linux node bootstrap does NOT grow the root LVM/xfs filesystem to
+# the configured boot-volume size, so nodes come up with ~35 GB usable on a much
+# larger disk. Under image churn (a multi-service redeploy) that tips kubelet into
+# disk-pressure and blocks scheduling. This DaemonSet runs the standard online
+# grow chain (growpart -> partx -> pvresize -> lvextend -> xfs_growfs) once per
+# node at startup, then idles. Every step is idempotent and guarded, so it is a
+# no-op on already-grown nodes and self-applies to future/autoscaled nodes.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-growfs
+  namespace: kube-system
+  labels:
+    app: node-growfs
+    managed-by: octo-apm-demo
+spec:
+  selector:
+    matchLabels:
+      app: node-growfs
+  template:
+    metadata:
+      labels:
+        app: node-growfs
+    spec:
+      hostPID: true
+      priorityClassName: system-node-critical
+      tolerations:
+        - operator: Exists # run on every node, including tainted/control nodes
+      containers:
+        - name: growfs
+          image: busybox:1.36
+          securityContext:
+            privileged: true
+          command:
+            - chroot
+            - /host
+            - /bin/bash
+            - -c
+            - |
+              set +e
+              echo "[node-growfs] before:"; df -h / 2>/dev/null | tail -1
+              dev=/dev/sda; part=3
+              growpart "$dev" "$part" 2>&1 | tail -1 || true
+              partx -u "$dev" 2>/dev/null || partprobe "$dev" 2>/dev/null || true
+              pvresize "${dev}${part}" 2>&1 | tail -1 || true
+              lvextend -l +100%FREE /dev/ocivolume/root 2>&1 | tail -1 || true
+              xfs_growfs / 2>&1 | tail -1 || true
+              echo "[node-growfs] after:"; df -h / 2>/dev/null | tail -1
+              echo "[node-growfs] done; idling."
+              exec sleep infinity
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: host
+              mountPath: /host
+      volumes:
+        - name: host
+          hostPath:
+            path: /
+      terminationGracePeriodSeconds: 5

@@ -152,6 +152,10 @@ echo
 echo "[1/6] Applying namespaces..."
 apply_manifest "${OKE_DIR}/common/namespaces.yaml"
 
+# Grow each node's root filesystem to its full boot volume (OKE bootstrap does
+# not). Idempotent DaemonSet; self-applies to future/autoscaled nodes.
+apply_manifest "${OKE_DIR}/common/node-growfs-daemonset.yaml"
+
 echo
 echo "[2/6] Checking bootstrap Secrets..."
 missing_required_secret=false
