@@ -22,6 +22,26 @@ per public frontend with:
 
 * `policy_ocid` — attach to your load balancer / WAAS enablement.
 * `mode` — normalised to upper case.
+* `waf_log_id` — OCID of the optional WAF SERVICE log (empty unless WAF logging is enabled).
+
+## WAF logging → Log Analytics
+
+The portable stack uses an **external** load balancer, so it cannot create the
+WAF enforcement point (firewall) itself — and a WAF SERVICE log must source from
+that firewall. To light up WAF detections in Log Analytics (the
+`waf-vs-app-errors` and `attack-lab-detections` searches):
+
+1. Attach this module's `policy_ocid` to your LB, creating an
+   `oci_waf_web_app_firewall`. Note its OCID.
+2. Set on the module: `enable_waf_logging = true` and
+   `web_app_firewall_id = "<that firewall OCID>"` (plus `log_group_id`). The
+   module creates the WAF SERVICE log and exposes it as `waf_log_id`.
+3. Feed `waf_log_id` into the root stack's `la_pipeline_waf_*` connector, e.g.
+   `waf_log_id_shop = module.waf_shop.waf_log_id`, so detections route to LA.
+
+> The **compute** stack (`deploy/compute/terraform`) wires the LB + firewall +
+> log + connector turnkey via `enable_waf_logging`. Use it if you want WAF
+> logging without attaching an external LB.
 
 ## Flipping to BLOCK
 

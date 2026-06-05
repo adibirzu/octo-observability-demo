@@ -61,6 +61,24 @@ variable "admin_allow_cidrs" {
   description = "CIDRs allowed to hit /api/admin/* — others are flagged (not blocked in DETECTION)."
 }
 
+variable "enable_waf_logging" {
+  type        = bool
+  default     = false
+  description = "Create an OCI WAF SERVICE log for this firewall and emit it to log_group_id. Requires web_app_firewall_id."
+}
+
+variable "web_app_firewall_id" {
+  type        = string
+  default     = ""
+  description = "OCID of the oci_waf_web_app_firewall the policy is attached to (the LB enforcement point) — the source of the WAF SERVICE log. Operator-supplied because the portable stack uses an external load balancer."
+}
+
+variable "log_retention_days" {
+  type        = number
+  default     = 30
+  description = "Retention (days) for the WAF log."
+}
+
 locals {
   effective_action = upper(var.mode) == "BLOCK" ? "block" : "check"
 }
@@ -117,10 +135,37 @@ resource "oci_waf_web_app_firewall_policy" "this" {
   }
 }
 
+# Optional WAF SERVICE log, sourced from the externally-attached firewall and
+# emitted to log_group_id. Feed its id into the la_pipeline_waf_* connector so
+# WAF detections reach Log Analytics (closes the "WAF dark by default" gap).
+resource "oci_logging_log" "waf" {
+  count              = var.enable_waf_logging && var.web_app_firewall_id != "" ? 1 : 0
+  display_name       = "${var.display_name}-log"
+  log_group_id       = var.log_group_id
+  log_type           = "SERVICE"
+  is_enabled         = true
+  retention_duration = var.log_retention_days
+
+  configuration {
+    compartment_id = var.compartment_id
+    source {
+      category    = "all"
+      resource    = var.web_app_firewall_id
+      service     = "waf"
+      source_type = "OCISERVICE"
+    }
+  }
+}
+
 output "policy_ocid" {
   value = oci_waf_web_app_firewall_policy.this.id
 }
 
 output "mode" {
   value = upper(var.mode)
+}
+
+output "waf_log_id" {
+  value       = try(oci_logging_log.waf[0].id, "")
+  description = "OCID of the WAF SERVICE log (empty when enable_waf_logging is false). Feed into la_pipeline_waf_*."
 }
