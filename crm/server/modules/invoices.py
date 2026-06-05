@@ -86,7 +86,7 @@ def _lob_to_bytes(value):
 async def _fetch_invoice(db, invoice_id: int) -> dict | None:
     result = await db.execute(
         text("SELECT i.id, i.order_id, i.invoice_number, i.amount, i.tax, i.status, "
-             "i.due_date, c.name AS customer_name "
+             "c.name AS customer_name "
              "FROM invoices i LEFT JOIN orders o ON i.order_id = o.id "
              "LEFT JOIN customers c ON o.customer_id = c.id WHERE i.id = :id"),
         {"id": invoice_id},
@@ -127,7 +127,7 @@ async def list_invoices(
         async with get_db() as db:
             with tracer.start_as_current_span("db.query.invoices_list"):
                 query = ("SELECT i.id, i.order_id, i.invoice_number, i.amount, i.tax, "
-                         "i.status, i.due_date, i.created_at, i.pdf_filename, i.pdf_size, "
+                         "i.status, i.created_at, i.pdf_filename, i.pdf_size, "
                          "i.pdf_generated_at, o.customer_id, c.name as customer_name "
                          "FROM invoices i LEFT JOIN orders o ON i.order_id = o.id "
                          "LEFT JOIN customers c ON o.customer_id = c.id WHERE 1=1")
