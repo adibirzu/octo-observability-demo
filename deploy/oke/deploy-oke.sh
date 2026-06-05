@@ -198,6 +198,30 @@ echo
 echo "[6/6] Applying NetworkPolicies..."
 apply_manifest "${OKE_DIR}/common/network-policies.yaml"
 
+# ── Optional: central OTel gateway ──────────────────────────────────────────
+# Off by default — apps export directly to OCI APM. The gateway adds a central
+# sampling / redaction (credit-card stripping) / batching policy plane in the
+# trace path. Enable with DEPLOY_OTEL_GATEWAY=true, then repoint each app's
+# exporter to it and re-apply the app deployments.
+if [[ "${DEPLOY_OTEL_GATEWAY:-false}" == "true" ]]; then
+    echo
+    echo "[opt] Deploying central OTel gateway (namespace octo-otel)..."
+    GW_DIR="${REPO_ROOT}/../services/otel-gateway"
+    if [[ "${APPLY}" == "true" ]]; then
+        envsubst < "${GW_DIR}/k8s/deployment.yaml" | kubectl apply -f -
+        kubectl create configmap otel-collector-config -n octo-otel \
+            --from-file=otel-collector.yaml="${GW_DIR}/config/otel-collector.yaml" \
+            --dry-run=client -o yaml | kubectl apply -f -
+        kubectl rollout restart deployment/otel-gateway -n octo-otel >/dev/null 2>&1 || true
+        echo "  ▶ Gateway up. Repoint app exporters to:"
+        echo "      OTEL_EXPORTER_OTLP_ENDPOINT=http://gateway.octo-otel.svc.cluster.local:4318"
+        echo "    then re-apply shop/crm/workflow-gateway/apm-java-demo deployments."
+    else
+        envsubst < "${GW_DIR}/k8s/deployment.yaml" | kubectl apply --dry-run=server -f - >/dev/null \
+            && echo "  ✓ gateway manifest validates (APPLY=false)"
+    fi
+fi
+
 echo
 echo "Waiting for rollouts..."
 if [[ "${APPLY}" == "true" ]]; then
