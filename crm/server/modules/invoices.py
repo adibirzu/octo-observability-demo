@@ -127,22 +127,25 @@ async def _create_invoices_for_paid_orders(db, tracer, limit: int = 200) -> int:
     with tracer.start_as_current_span("invoices.sync_from_orders") as span:
         with tracer.start_as_current_span("db.query.paid_orders_without_invoice"):
             result = await db.execute(text(
-                "SELECT o.id, o.total FROM orders o "
+                "SELECT o.id, o.total, o.customer_id FROM orders o "
                 "LEFT JOIN invoices i ON i.order_id = o.id "
-                "WHERE (o.status = 'paid' OR o.payment_status = 'paid') AND i.id IS NULL "
+                "WHERE (o.status = 'paid' OR o.payment_status = 'paid') "
+                "AND o.customer_id IS NOT NULL AND i.id IS NULL "
                 f"ORDER BY o.id DESC FETCH FIRST {int(limit)} ROWS ONLY"))
             rows = result.fetchall()
         created = 0
         for r in rows:
-            order_id = r[0]
-            total = float(r[1] or 0)
+            order_id, total, customer_id = r[0], float(r[1] or 0), r[2]
             with tracer.start_as_current_span("db.write.invoice_create") as wspan:
                 wspan.set_attribute("db.system", "oracle")
                 wspan.set_attribute("invoices.order_id", order_id)
+                now = datetime.utcnow()
                 await db.execute(text(
-                    "INSERT INTO invoices (order_id, invoice_number, amount, status) "
-                    "VALUES (:oid, :num, :amt, 'paid')"),
-                    {"oid": order_id, "num": f"INV-ORD-{order_id}", "amt": total})
+                    "INSERT INTO invoices (order_id, customer_id, invoice_number, amount, "
+                    "status, currency, issued_at, paid_at) "
+                    "VALUES (:oid, :cid, :num, :amt, 'paid', 'USD', :ts, :ts)"),
+                    {"oid": order_id, "cid": customer_id,
+                     "num": f"INV-ORD-{order_id}", "amt": total, "ts": now})
             created += 1
         span.set_attribute("invoices.created_from_orders", created)
         return created
