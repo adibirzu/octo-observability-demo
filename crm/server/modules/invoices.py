@@ -117,6 +117,37 @@ async def _generate_and_store_pdf(db, tracer, invoice: dict) -> bytes:
     return pdf_bytes
 
 
+async def _create_invoices_for_paid_orders(db, tracer, limit: int = 200) -> int:
+    """Create a real invoice for every paid order that doesn't have one yet.
+
+    This is what makes the invoices list *real* and consistent with the shop:
+    paid shop orders sync into CRM `orders`, and each gets an invoice here.
+    Idempotent (skips orders that already have an invoice).
+    """
+    with tracer.start_as_current_span("invoices.sync_from_orders") as span:
+        with tracer.start_as_current_span("db.query.paid_orders_without_invoice"):
+            result = await db.execute(text(
+                "SELECT o.id, o.total FROM orders o "
+                "LEFT JOIN invoices i ON i.order_id = o.id "
+                "WHERE (o.status = 'paid' OR o.payment_status = 'paid') AND i.id IS NULL "
+                f"ORDER BY o.id DESC FETCH FIRST {int(limit)} ROWS ONLY"))
+            rows = result.fetchall()
+        created = 0
+        for r in rows:
+            order_id = r[0]
+            total = float(r[1] or 0)
+            with tracer.start_as_current_span("db.write.invoice_create") as wspan:
+                wspan.set_attribute("db.system", "oracle")
+                wspan.set_attribute("invoices.order_id", order_id)
+                await db.execute(text(
+                    "INSERT INTO invoices (order_id, invoice_number, amount, status) "
+                    "VALUES (:oid, :num, :amt, 'paid')"),
+                    {"oid": order_id, "num": f"INV-ORD-{order_id}", "amt": total})
+            created += 1
+        span.set_attribute("invoices.created_from_orders", created)
+        return created
+
+
 @router.get("")
 async def list_invoices(
     request: Request,
@@ -199,11 +230,17 @@ async def pay_invoice(invoice_id: int, request: Request):
 
 @router.post("/generate-missing")
 async def generate_missing(request: Request):
-    """Backfill: store a PDF for every paid invoice that doesn't have one yet."""
+    """Reconcile invoices with paid orders, then store a PDF for each paid invoice.
+
+    1) create a real invoice for every paid order that lacks one (shop -> CRM sync),
+    2) generate + store the PDF (Oracle BLOB) for every paid invoice without one.
+    Idempotent — safe to call repeatedly / on a schedule.
+    """
     tracer = tracer_fn()
     generated = 0
-    with tracer.start_as_current_span("invoices.generate_missing"):
+    with tracer.start_as_current_span("invoices.reconcile"):
         async with get_db() as db:
+            created = await _create_invoices_for_paid_orders(db, tracer)
             with tracer.start_as_current_span("db.query.paid_without_pdf"):
                 result = await db.execute(
                     text("SELECT id FROM invoices WHERE status = 'paid' AND pdf_generated_at IS NULL"))
@@ -213,9 +250,17 @@ async def generate_missing(request: Request):
                 if invoice:
                     await _generate_and_store_pdf(db, tracer, invoice)
                     generated += 1
-        push_log("INFO", f"Backfilled {generated} invoice PDFs into ATP",
-                 **{"invoices.pdf_backfilled": generated})
-    return {"generated": generated, "candidates": len(ids)}
+        push_log("INFO",
+                 f"Reconciled invoices: {created} created from paid orders, {generated} PDFs stored in ATP",
+                 **{"invoices.created_from_orders": created, "invoices.pdf_backfilled": generated})
+    return {"invoices_created_from_orders": created, "pdfs_generated": generated,
+            "pdf_candidates": len(ids)}
+
+
+# Convenience alias — same reconcile behavior under a clearer name.
+@router.post("/reconcile")
+async def reconcile(request: Request):
+    return await generate_missing(request)
 
 
 @router.get("/{invoice_id}/pdf")
