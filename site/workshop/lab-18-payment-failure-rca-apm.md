@@ -447,12 +447,11 @@ Expected:
 PASS — Lab 18 complete
 ```
 
-!!! note "verify-18.sh status"
-    Like `verify-17.sh`, this verifier is a **TODO**: it is referenced here
-    to keep the lab self-consistent with the verifier convention, but the
-    script does not yet ship in `tools/workshop/`. Until it lands, run the
-    Step 1-5 APM queries by hand to confirm each ✓ line above. Contributions
-    welcome.
+!!! note "verify-18.sh"
+    This verifier ships in `tools/workshop/`. Run it with the trace id from
+    Step 1 (`verify-18.sh <trace_id>`, or export `CERT_TRACE_ID_18`). It needs
+    `oci` + `LA_NAMESPACE`, and optionally `SHOP_BASE_URL` for the Java
+    payment-verify check. Checks degrade to warnings while data is still landing.
 
 ## Troubleshooting
 

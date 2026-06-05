@@ -79,7 +79,7 @@ Each lab follows the same shape so you can scan ahead and plan:
 | **Prerequisites** | Specific OCI policies, env access, prior labs. |
 | **Steps** | OCI Console + CLI walkthroughs in parallel — pick whichever you prefer. |
 | **What you should see** | Screenshots and example outputs. If your screen looks different, the troubleshooting section probably covers it. |
-| **Verify** | A `tools/workshop/verify-NN.sh` script (labs 01–10) **or** an inline runnable check in the lab (labs 11–18; a few verifiers are still TODO and say so); exit 0 = lab complete. |
+| **Verify** | A `tools/workshop/verify-NN.sh` script (labs 01–11, 17, 18) **or** an inline runnable check in the lab (the GenAI labs 12–16); exit 0 = lab complete. |
 | **Troubleshooting** | The three most common things that go sideways. |
 | **Read more** | Underlying docs, OCI service references, related code paths. |
 
@@ -386,9 +386,9 @@ It re-runs the shipped `verify-01.sh`–`verify-10.sh` in sequence and prints a
 passport showing which of the core labs you completed. Save the output — it's
 evidence you can attach to internal training records or PR descriptions.
 
-Labs 11–18 (OKE autoscaling, the GenAI labs, and the RCA capstones) are verified
-by the **inline Verify block** in each lab rather than by `certify.sh`; a few of
-those verifiers are still TODO and disclose it in-lab.
+Labs 11–18 are verified per-lab, not by `certify.sh`: labs 11, 17, and 18 ship
+their own `verify-NN.sh` (run it from the lab's Verify section), and the GenAI
+labs 12–16 use an inline runnable check.
 
 ## Troubleshooting common setup issues
 
