@@ -1,0 +1,58 @@
+# Drain the historical paid-order backlog into invoices + Oracle-BLOB PDFs.
+#
+# New payments are invoiced in real time by the order-payment hook
+# (PATCH /orders/{id}/status -> paid, and the shop->CRM sync). This CronJob just
+# catches up the pre-existing backlog: POST /api/invoices/reconcile is idempotent
+# and capped (200/run), so repeated runs converge without overlap or duplication.
+#
+# Uses the CRM's own OCIR image (already on the nodes + pull secret) and a stdlib
+# urllib POST — OKE nodes can't pull public Docker Hub images.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: crm-invoice-reconcile
+  namespace: enterprise-crm
+  labels:
+    app: crm-invoice-reconcile
+    managed-by: octo-apm-demo
+spec:
+  schedule: "*/5 * * * *" # every 5 minutes
+  concurrencyPolicy: Forbid # never overlap runs
+  startingDeadlineSeconds: 120
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 240
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: crm-invoice-reconcile
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: ocir-pull-secret
+          containers:
+            - name: reconcile
+              image: ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}/enterprise-crm-portal:${IMAGE_TAG}
+              command:
+                - python
+                - -c
+                - >-
+                  import urllib.request as u;
+                  r=u.urlopen(u.Request('http://enterprise-crm-portal.enterprise-crm.svc.cluster.local:8080/api/invoices/reconcile',
+                  method='POST'), timeout=120);
+                  print('reconcile:', r.status, r.read().decode()[:200])
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
+                limits:
+                  memory: 192Mi
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 10001 # image USER is the name 'appuser' (uid 10001); set numeric so kubelet can verify non-root
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
