@@ -14,7 +14,7 @@
       }
       body {
         font-family: "Inter", sans-serif;
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
         min-height: 100vh;
         background:
           radial-gradient(circle at top, rgba(108, 210, 224, 0.12), transparent 30%),
@@ -61,7 +61,7 @@
         letter-spacing: 0.08em;
       }
       .brand-copy span {
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
         font-size: 0.88rem;
       }
       .nav-links {
@@ -73,13 +73,13 @@
       .nav-links a {
         padding: 10px 14px;
         border-radius: 999px;
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
         transition: 180ms ease;
         font-size: 0.92rem;
       }
       .nav-links a:hover,
       .nav-links a.active {
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
         background: rgba(108, 210, 224, 0.12);
         box-shadow: inset 0 0 0 1px rgba(108, 210, 224, 0.18);
       }
@@ -94,11 +94,11 @@
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid var(--line);
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
         font-size: 0.83rem;
       }
       .status-pill strong {
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
       }
       .status-pill.ok strong {
         color: var(--ok);
@@ -165,7 +165,7 @@
         font-family: inherit;
       }
       .muted {
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
       }
       .grid {
         display: grid;
@@ -204,13 +204,13 @@
       }
       .btn-outline {
         background: transparent;
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
         border: 1px solid var(--line);
       }
       .btn-outline:hover {
-        border-color: var(--ink);
+        border-color: var(--ink, #eef6ff);
         background: rgba(255, 255, 255, 0.05);
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
         box-shadow: none;
       }
       .chip {
@@ -220,14 +220,14 @@
         padding: 8px 12px;
         border-radius: 999px;
         border: 1px solid var(--line);
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
         background: rgba(255, 255, 255, 0.03);
         font-size: 0.82rem;
       }
       table {
         width: 100%;
         border-collapse: collapse;
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
       }
       th,
       td {
@@ -236,7 +236,7 @@
         text-align: left;
       }
       th {
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
         font-size: 0.76rem;
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -249,7 +249,7 @@
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.16);
         background: rgba(255, 255, 255, 0.04);
-        color: var(--ink);
+        color: var(--ink, #eef6ff);
         font-family: "Inter", sans-serif;
         transition: border-color 0.3s ease;
       }
@@ -267,7 +267,7 @@
         margin-top: 28px;
         padding: 24px 8px 10px;
         text-align: center;
-        color: var(--muted);
+        color: var(--muted, #95a8bd);
         font-size: 0.88rem;
       }
       @media (max-width: 1100px) {
