@@ -12,7 +12,7 @@ telemetry. Fixes are surgical repoints + honest disclosures.
 
 | # | Pillar | Sev | Gap | Fix | Status |
 |---|--------|-----|-----|-----|--------|
-| 1 | gateways | HIGH | `otel-gateway` collector deployed nowhere; apps export direct to APM; redaction plane never in path; ARCHITECTURE.md:142 misdescribes it | (a) deploy it + repoint exporters, or (b) delete + fix docs | **DECISION → user**; doc corrected |
+| 1 | gateways | HIGH | `otel-gateway` collector deployed nowhere; apps export direct to APM; redaction plane never in path | wire as flag-gated opt-in (`DEPLOY_OTEL_GATEWAY`) + align docs | ✅ resolved (opt-in; off by default — operator repoints exporters to activate) |
 | 2 | la-correlation | HIGH | 3 saved searches target source `octo-shop-app-json` not provisioned by default | repoint to `OCI Unified Schema Logs`/`SOC Application Logs` | ✅ fixed |
 | 3 | la-correlation | HIGH | searches join on `route`/`http_status`/`Duration` no service emits | use `url_path`/`http_status_code`/`http_response_time_ms` | ✅ fixed |
 | 4 | security | HIGH | `checkout-security-checks.sql` queries fields no parser maps (orphaned) | add fieldMaps to `octo-shop-v2.json`/`octo-crm-v2.json` | ✅ fixed |

@@ -5,6 +5,13 @@ every service's OTLP export, single egress to OCI APM + Monitoring +
 Logging. Sits between apps and OCI so sampling, batching, enrichment,
 and redaction policies change in one place without app redeploys.
 
+> **Status: opt-in — not in the default deploy path.** By default the apps
+> export directly to OCI APM. Deploy this gateway with
+> `DEPLOY_OTEL_GATEWAY=true ./deploy/oke/deploy-oke.sh`, then repoint each app's
+> exporter to `http://gateway.octo-otel.svc.cluster.local:4318`
+> (`OTEL_EXPORTER_OTLP_ENDPOINT`) and re-apply the app deployments. Until then
+> the sampling/redaction policy plane below is available but not in the trace path.
+
 ## Why a gateway instead of direct export
 
 | Problem | Direct OTLP → OCI | Gateway → OCI |
