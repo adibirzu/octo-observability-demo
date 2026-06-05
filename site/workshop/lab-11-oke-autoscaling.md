@@ -241,13 +241,11 @@ Expected:
 PASS — Lab 11 complete
 ```
 
-!!! note "verify-11.sh status"
-    This verifier is a **TODO**: it is referenced here to keep the lab
-    self-consistent with the verifier convention, but the script does not yet
-    ship in `tools/workshop/` (only `verify-01.sh`–`verify-10.sh` exist). Until
-    it lands, confirm each ✓ line by hand: `kubectl get hpa -n octo-drone-shop`,
-    the `stress_run_count` metric in OCI Monitoring (namespace `octo_apm_demo`),
-    and the `run_id`-tagged traces in APM. Contributions welcome.
+!!! note "verify-11.sh"
+    This verifier ships in `tools/workshop/`. Run it with your stress run id
+    (`verify-11.sh <run_id>`, or export `CERT_RUN_ID`). It needs `oci` +
+    `kubectl` + `LA_NAMESPACE` (and `OCI_MONITORING_COMPARTMENT_ID` for the
+    metric check); checks degrade to warnings when scale-out hasn't happened yet.
 
 ## Troubleshooting
 
