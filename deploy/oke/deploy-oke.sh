@@ -197,6 +197,7 @@ echo
 echo "[5/6] Applying Shop/CRM Deployments + Services + HPA + PDB..."
 apply_manifest "${OKE_DIR}/shop/deployment.yaml"
 apply_manifest "${OKE_DIR}/crm/deployment.yaml"
+apply_manifest "${OKE_DIR}/crm/invoice-reconcile-cronjob.yaml"
 
 echo
 echo "[6/6] Applying NetworkPolicies..."
