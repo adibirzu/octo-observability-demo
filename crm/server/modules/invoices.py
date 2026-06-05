@@ -231,16 +231,17 @@ async def pay_invoice(invoice_id: int, request: Request):
         return {"status": "paid", "invoice_id": invoice_id, "pdf_generated": generated}
 
 
-@router.post("/generate-missing")
-async def generate_missing(request: Request):
+async def reconcile_invoices(tracer=None) -> dict:
     """Reconcile invoices with paid orders, then store a PDF for each paid invoice.
 
     1) create a real invoice for every paid order that lacks one (shop -> CRM sync),
     2) generate + store the PDF (Oracle BLOB) for every paid invoice without one.
-    Idempotent — safe to call repeatedly / on a schedule.
+    Idempotent — only touches orders/invoices that are missing. Safe to call from
+    the order-payment hooks (real-time) or on a schedule.
     """
-    tracer = tracer_fn()
+    tracer = tracer or tracer_fn()
     generated = 0
+    ids = []
     with tracer.start_as_current_span("invoices.reconcile"):
         async with get_db() as db:
             created = await _create_invoices_for_paid_orders(db, tracer)
@@ -253,17 +254,24 @@ async def generate_missing(request: Request):
                 if invoice:
                     await _generate_and_store_pdf(db, tracer, invoice)
                     generated += 1
-        push_log("INFO",
-                 f"Reconciled invoices: {created} created from paid orders, {generated} PDFs stored in ATP",
-                 **{"invoices.created_from_orders": created, "invoices.pdf_backfilled": generated})
+        if created or generated:
+            push_log("INFO",
+                     f"Reconciled invoices: {created} created from paid orders, {generated} PDFs stored in ATP",
+                     **{"invoices.created_from_orders": created, "invoices.pdf_backfilled": generated})
     return {"invoices_created_from_orders": created, "pdfs_generated": generated,
             "pdf_candidates": len(ids)}
+
+
+@router.post("/generate-missing")
+async def generate_missing(request: Request):
+    """Reconcile invoices with paid orders + generate PDFs (idempotent)."""
+    return await reconcile_invoices()
 
 
 # Convenience alias — same reconcile behavior under a clearer name.
 @router.post("/reconcile")
 async def reconcile(request: Request):
-    return await generate_missing(request)
+    return await reconcile_invoices()
 
 
 @router.get("/{invoice_id}/pdf")
