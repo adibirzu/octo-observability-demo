@@ -1,6 +1,6 @@
 # Architecture diagrams (drawio)
 
-Four diagrams describing the platform from different angles. Open any
+Five diagrams describing the platform from different angles. Open any
 of them at [app.diagrams.net](https://app.diagrams.net) → *File* →
 *Open from → Device* and select the `.drawio` file.
 
@@ -10,6 +10,7 @@ of them at [app.diagrams.net](https://app.diagrams.net) → *File* →
 | [`platform-overview.drawio`](./platform-overview.drawio) | Full topology - users, edge controls, private Compute reference, OKE support path, data plane, Java sidecar, and OCI observability services |
 | [`observability-flow.drawio`](./observability-flow.drawio) | MELTS signal flow — how traces / logs / metrics / events / SQL-perf reach OCI APM / Logging / Log Analytics / Stack Monitoring / Events |
 | [`deploy-topology.drawio`](./deploy-topology.drawio) | Build path + OCIR + three deploy targets (OKE, single-VM, local-stack) with per-target trade-offs |
+| [`octo-workflows.drawio`](./octo-workflows.drawio) | The four end-to-end workflows (storefront checkout, CRM order sync, AI Studio, observability fan-out) and which signals land in APM, Log Analytics, OPS Insights, Database Management, Monitoring, and RUM |
 
 ## Platform overview preview
 

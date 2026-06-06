@@ -142,3 +142,9 @@ deploy/compute/build/
 shop/server/_preview/
 .planning/design/preview/shots/
 crm/server/_preview/
+
+# drawio/electron CLI log artifact
+firepit-log.txt
+
+# Article draft — kept local, published externally (Medium / learnoci.cloud)
+docs/articles/end-to-end-observability.md

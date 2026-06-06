@@ -5,17 +5,20 @@ the storefront through CRM order sync, into the AI Studio agentic GenAI modes,
 and finally out to the OCI observability fan-out. For each stage it names **which
 signals land where** so a reader knows exactly where to look in observability.
 
-The companion diagram is authored in [Excalidraw](https://excalidraw.com) so
-presenters can re-lay it out without a desktop tool.
+The companion diagram is authored in [draw.io](https://www.drawio.com/), the same
+format as the other architecture diagrams, so it renders consistently in the docs
+and on GitHub and re-lays out cleanly.
 
 ## Diagram
 
-[Download editable Excalidraw source](diagrams/octo-workflows.excalidraw)
+![OCTO four workflows and the observability fan-out](diagrams/octo-workflows.svg)
 
-The `.excalidraw` file is editable at
-[excalidraw.com](https://excalidraw.com) (*File → Open* and select the
-downloaded file) or in VS Code with the
-[Excalidraw extension](https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor).
+[Download editable draw.io source](diagrams/octo-workflows.drawio)
+
+The `.drawio` file is editable at
+[app.diagrams.net](https://app.diagrams.net) (*File → Open from → Device*) or in
+VS Code with the
+[Draw.io Integration extension](https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio).
 It depicts a left-to-right flow:
 
 ```
