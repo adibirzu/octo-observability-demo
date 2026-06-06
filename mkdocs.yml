@@ -103,7 +103,7 @@ nav:
     - Database Integration: architecture/database-integration.md
     - Framework Approach: architecture/framework.md
     - "Diagrams (drawio)": architecture/diagrams/README.md
-    - "Workflows (Excalidraw)": architecture/workflows.md
+    - "Workflows": architecture/workflows.md
   - Drone Shop:
     - drone-shop/index.md
     - Modules: drone-shop/modules.md
