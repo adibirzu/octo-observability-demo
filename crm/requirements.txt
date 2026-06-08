@@ -38,4 +38,4 @@ packaging>=26.2
 redis[hiredis]>=8.0.0,<9.0
 
 # Alembic — schema migrations against ATP / local Postgres
-alembic>=1.13,<2.0
+alembic>=1.18.4,<2.0
