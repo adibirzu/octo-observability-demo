@@ -35,7 +35,7 @@ psutil>=7.2.2
 packaging>=26.2
 
 # Redis client — rate limit + cache + async order stream
-redis[hiredis]>=7.4.0,<8.0
+redis[hiredis]>=8.0.0,<9.0
 
 # Alembic — schema migrations against ATP / local Postgres
 alembic>=1.18.4,<2.0
