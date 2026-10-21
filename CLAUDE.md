@@ -59,3 +59,4 @@ locally under QEMU. See deploy docs and the global build/deploy guidance.
 - Many small, focused files; explicit error handling; validate at boundaries.
 - TDD with pytest; contract tests gate observability/deployment invariants (`make test-contract`).
 - Docs are tested — keep MkDocs strict-clean (`make docs-build`).
+
