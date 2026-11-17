@@ -1,27 +1,27 @@
-fastapi==0.136.3
-uvicorn[standard]==0.48.0
-sqlalchemy[asyncio]==2.0.50
+fastapi==0.140.0
+uvicorn[standard]==0.51.0
+sqlalchemy[asyncio]==2.0.51
 asyncpg==0.31.0
 psycopg2-binary==2.9.12
-oracledb==4.0.1
+oracledb==4.0.2
 httpx==0.28.1
-python-multipart==0.0.30
+python-multipart==0.0.32
 jinja2==3.1.6
 aiofiles==25.1.0
 
 # OpenTelemetry
-opentelemetry-api==1.42.1
-opentelemetry-sdk==1.42.1
-opentelemetry-exporter-otlp-proto-http==1.42.1
-opentelemetry-instrumentation-fastapi==0.63b1
-opentelemetry-instrumentation-sqlalchemy==0.63b1
-opentelemetry-instrumentation-httpx==0.63b1
-opentelemetry-instrumentation-logging==0.63b1
-opentelemetry-exporter-prometheus==0.63b1
-prometheus-client==0.25.0
+opentelemetry-api==1.44.0
+opentelemetry-sdk==1.44.0
+opentelemetry-exporter-otlp-proto-http==1.44.0
+opentelemetry-instrumentation-fastapi==0.65b0
+opentelemetry-instrumentation-sqlalchemy==0.65b0
+opentelemetry-instrumentation-httpx==0.65b0
+opentelemetry-instrumentation-logging==0.65b0
+opentelemetry-exporter-prometheus==0.65b0
+prometheus-client==0.26.0
 
 # OCI SDK (for logging)
-oci==2.176.0
+oci==2.182.1
 
 # Security (bcrypt for password hashing, PyJWT for IDCS SSO ID-token verification)
 bcrypt==5.0.0
