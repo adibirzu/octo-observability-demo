@@ -2,7 +2,7 @@ fastapi==0.136.3
 uvicorn[standard]==0.48.0
 fpdf2==2.8.2
 sqlalchemy==2.0.50
-oracledb==3.4.2
+oracledb==4.0.1
 python-dotenv==1.2.2
 python-multipart==0.0.30
 python-jose[cryptography]==3.5.0
