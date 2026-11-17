@@ -82,7 +82,7 @@ coexists with an ancestor's target and takes precedence for its subtree. Keep
 
 ## Validated in cap (2026-06-02)
 
-Applied live against cap (`staging`, eu-frankfurt-1) with `oracle/oci`
+Applied live against cap (`staging-tenancy`, eu-frankfurt-1) with `oracle/oci`
 **8.16.0**: cloned all three managed detector recipes + the managed responder
 recipe, and attached a target on a dedicated child compartment
 (`octo-apm-demo-sec`) — `responder_rule_state = DETECT` (notify-only). cap's

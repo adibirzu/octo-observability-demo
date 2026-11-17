@@ -341,10 +341,10 @@ Security Posture dashboard → phased flag flips, staged in `cap` before `produc
 
 ## 8. cap validation results (2026-06-02)
 
-Phase 1 was staged **live in cap** (`staging`, eu-frankfurt-1) ahead of
+Phase 1 was staged **live in cap** (`staging-tenancy`, eu-frankfurt-1) ahead of
 production, via an isolated root (`deploy/terraform/validation/security-modules/`) with
 a cap-pinned provider and its own state — *not* the repo-root stack, whose local
-`terraform.tfstate` describes demo resources and would mis-reconcile against
+`terraform.tfstate` describes another tenancy resources and would mis-reconcile against
 cap. Validated against `oracle/oci` **8.16.0**.
 
 **Result: PASS.** Live + `ACTIVE`: a dedicated compartment, the Data Safe target

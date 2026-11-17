@@ -61,6 +61,6 @@ Run `./security-modules.sh --help` for the full list.
 
 ## cap reference run (2026-06-02)
 
-Validated live in cap (`staging`, eu-frankfurt-1) against `oracle/oci`
+Validated live in cap (`staging-tenancy`, eu-frankfurt-1) against `oracle/oci`
 8.16.0 — all resources `ACTIVE`, responders `DETECT`. See
 `docs/security-expansion-data-safe-cloud-guard.md` §8.

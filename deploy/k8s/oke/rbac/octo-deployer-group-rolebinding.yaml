@@ -26,7 +26,7 @@
 #      Shell, which is admin). The group being granted cannot apply it itself.
 #
 # APPLY (group OCID via envsubst; never commit a real OCID):
-#   export OKE_RBAC_GROUP_OCID=$(oci iam group list --profile production \
+#   export OKE_RBAC_GROUP_OCID=$(oci iam group list --profile "${OCI_PROFILE:?Set OCI_PROFILE}" \
 #     --query "data[?name=='octo-oke-deployers'].id | [0]" --raw-output)
 #   envsubst < deploy/k8s/oke/rbac/octo-deployer-group-rolebinding.yaml | kubectl apply -f -
 # (Run from a context that IS cluster-admin on octo-apm-demo-oke.)

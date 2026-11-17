@@ -19,7 +19,7 @@
 # it themselves — that is the access they are missing.
 #
 # APPLY (envsubst the user OCID from your local OCI config; never commit the OCID):
-#   export OKE_RBAC_USER_OCID=$(awk '/^\[production\]/{f=1;next}/^\[/{f=0}f&&/^user/{print $3}' ~/.oci/config | head -1)
+#   export OKE_RBAC_USER_OCID="${OCI_USER_OCID:?Set OCI_USER_OCID}"
 #   envsubst < deploy/k8s/oke/rbac/octo-deployer-rolebinding.yaml | kubectl apply -f -
 # (Run from a context that IS cluster-admin on octo-apm-demo-oke.)
 # ─────────────────────────────────────────────────────────────────────────────

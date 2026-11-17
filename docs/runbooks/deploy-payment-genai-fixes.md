@@ -31,7 +31,7 @@ provide credentials."* Fix it with the RoleBinding in this repo.
 
 ```bash
 # user OCID pulled from your local config — stays local, never committed
-export OKE_RBAC_USER_OCID=$(awk '/^\[production\]/{f=1;next}/^\[/{f=0}f&&/^user/{print $3}' ~/.oci/config | head -1)
+export OKE_RBAC_USER_OCID="${OCI_USER_OCID:?Set OCI_USER_OCID}"
 envsubst < deploy/k8s/oke/rbac/octo-deployer-rolebinding.yaml | kubectl apply -f -
 ```
 
@@ -47,14 +47,14 @@ cluster (suffix `…cm67gejykua`, us-phoenix-1):
 
 ```bash
 oci ce cluster create-kubeconfig --cluster-id <OKE_CLUSTER_OCID> \
-  --region us-phoenix-1 --file ~/.kube/config --token-version 2.0.0 --profile production
+  --region us-phoenix-1 --file ~/.kube/config --token-version 2.0.0 --profile "${OCI_PROFILE:?Set OCI_PROFILE}"
 kubectl config current-context        # MUST map to …cm67gejykua, not another cluster
 kubectl get pods -n octo-drone-shop   # should now succeed (RBAC bound)
 ```
 
-If `oci ce cluster generate-token --profile production` works but `kubectl` still
+If `oci ce cluster generate-token --profile "${OCI_PROFILE:?Set OCI_PROFILE}"` works but `kubectl` still
 returns an authentication or RBAC error, inspect the kubeconfig exec stanza. The
-active context must pass `--profile production`; a stale stanza using `DEFAULT` can
+active context must pass `--profile "${OCI_PROFILE:?Set OCI_PROFILE}"`; a stale stanza using `DEFAULT` can
 mint a valid OCI token for the wrong identity and fail Kubernetes authorization.
 Keep kubeconfig backups and profile fixes local-only.
 
@@ -115,7 +115,7 @@ kubectl get deploy octo-drone-shop -n octo-drone-shop \
   -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
 
 # octo_genai metrics fresh (datapoint within the last hour)
-oci monitoring metric-data summarize-metrics-data --profile production \
+oci monitoring metric-data summarize-metrics-data --profile "${OCI_PROFILE:?Set OCI_PROFILE}" \
   --compartment-id <LOGANALYTICS_COMPARTMENT_OCID> \
   --namespace octo_genai \
   --query-text "genai_total_tokens[1h].max()"
@@ -129,12 +129,12 @@ kubectl get cronjob octo-genai-langfuse-apm-sync -n octo-drone-shop
   region values from `octo-oci-config`. The CronJob uses the same image and
   secret bindings as the studio Deployment, so it should not need any committed
   credentials or resolved OCIDs.
-- **Payment fix:** in OCI APM (`octo-production-apm`), open a *declined* checkout
+- **Payment fix:** in OCI APM (`example-apm-domain`), open a *declined* checkout
   trace — `payment_gateway.credit_card.merchant_authorization_result` should now
   have **no** `otel.status_code=ERROR` (the trace stays `is-fault=false`). Follow
   **Lab 18** for the trace-path.
 - **GenAI traces** were never missing — they're in the **`octo-ai-apm`** domain,
-  not `octo-production-apm`. This runbook only fixes the aggregate `octo_genai`
+  not `example-apm-domain`. This runbook only fixes the aggregate `octo_genai`
   Monitoring metrics.
 
 ---
@@ -153,7 +153,7 @@ kubectl delete rolebinding octo-deployer -n octo-drone-shop      # revoke access
 
 Separately from this deploy, the antifraud attributes (`payment.decision_source`,
 `payment.risk_score`, `payment.antifraud_reasons`) are not activated in the
-`octo-production-apm` domain, so the *reason* for a decline isn't queryable in Trace
+`example-apm-domain` domain, so the *reason* for a decline isn't queryable in Trace
 Explorer. Activating custom span attributes is an APM-domain config change in the
 `LogAnalytics` compartment (often Console-bound, like the Log Analytics
 field/parser work) — stage and review before applying to production.

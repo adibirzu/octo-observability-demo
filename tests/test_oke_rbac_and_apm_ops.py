@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
+import subprocess
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,8 +39,24 @@ def test_apm_payment_attribute_activation_script_targets_decline_contract() -> N
 
     assert "DRY_RUN=true" in script
     assert "oci apm-traces attributes activate" in script
-    assert "APM_DOMAIN_DISPLAY_NAME:-octo-production-apm" in script
+    assert 'APM_DOMAIN_DISPLAY_NAME="${APM_DOMAIN_DISPLAY_NAME:-}"' in script
     assert '"attributeType": "NUMERIC"' in script
+
+
+def test_apm_activation_requires_explicit_target_before_discovery(tmp_path: Path) -> None:
+    oci = tmp_path / "oci"
+    oci.write_text("#!/bin/sh\necho UNEXPECTED_OCI_CALL >&2\nexit 99\n")
+    oci.chmod(0o700)
+    env = {key: value for key, value in os.environ.items()
+           if not key.startswith(("APM_", "COMPARTMENT_ID", "OCI_"))}
+    env.update(PATH=f"{tmp_path}:/usr/bin:/bin", COMPARTMENT_ID="example-compartment")
+    result = subprocess.run(
+        ["bash", str(ROOT / "deploy/oci/apm/activate_payment_attributes.sh"), "--apply"],
+        env=env, text=True, capture_output=True,
+    )
+    assert result.returncode == 2
+    assert "Set APM_DOMAIN_ID" in result.stderr
+    assert "UNEXPECTED_OCI_CALL" not in result.stderr
 
 
 def test_post_rbac_fix_script_checks_auth_before_apply() -> None:

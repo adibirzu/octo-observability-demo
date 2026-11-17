@@ -75,17 +75,8 @@ outputs.json
 # Local agent-tooling caches (not part of the repo).
 .agentsroom/
 
-# production is the PRODUCTION tenancy — its credentials/state/outputs are LOCAL
-# DEVELOPMENT data only and must NEVER be pushed. The rules above (credentials/,
-# *.tfvars, *.tfstate, **/outputs.json, wallets, keys) already cover these;
-# the explicit guards below ignore production data even if it lands outside those.
-credentials/production/
-**/production/credentials/
-*production*.tfvars
-*production*.tfstate
-*production*.tfstate.*
-**/vars/production.tfvars
-**/state/production.tfstate*
+# All tenancy credentials, Terraform inputs/state and outputs stay local.
+# Generic guards above apply to every profile and tenancy.
 **/oci_api_key_*.pem
 
 # Logs + test output
@@ -148,15 +139,3 @@ firepit-log.txt
 
 # Article draft — kept local, published externally (Medium / learnoci.cloud)
 docs/articles/end-to-end-observability.md
-
-# Private inputs and credentials for every deployment.
-.env
-.env.*
-*.tfvars
-*.tfstate
-*.tfstate.*
-credentials/
-secrets/
-*.pem
-*.key
-*.wallet

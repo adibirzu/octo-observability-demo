@@ -33,4 +33,3 @@ Search KB.md (and ~/dev/OCI-DEMO/KB.md for OCI issues) before debugging; add an 
 ## Done
 
 Run `make verify` to validate tests, docs, diagrams, and deployment verification.
-

@@ -92,7 +92,7 @@ plan, then promote to `production` inside the `LogAnalytics` compartment scope.*
 
 ## Validated in cap (2026-06-02)
 
-Applied live against cap (`staging`, eu-frankfurt-1) with `oracle/oci`
+Applied live against cap (`staging-tenancy`, eu-frankfurt-1) with `oracle/oci`
 **8.16.0**: registered a public-access ADB (`oci-demo-shared-atp`) as a target
 and provisioned scheduled Security + User Assessment baselines — all `ACTIVE`.
 See `deploy/terraform/validation/security-modules/`.

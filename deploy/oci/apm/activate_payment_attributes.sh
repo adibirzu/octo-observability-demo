@@ -8,7 +8,7 @@
 # Or discover by display name:
 #
 #   COMPARTMENT_ID=<COMPARTMENT_OCID> \
-#   APM_DOMAIN_DISPLAY_NAME=octo-production-apm \
+#   APM_DOMAIN_DISPLAY_NAME=example-apm-domain \
 #   ./deploy/oci/apm/activate_payment_attributes.sh --apply
 
 set -euo pipefail
@@ -29,11 +29,11 @@ case "${1:-}" in
 esac
 
 OCI_PROFILE="${OCI_CLI_PROFILE:-${OCI_PROFILE:-DEFAULT}}"
-APM_DOMAIN_DISPLAY_NAME="${APM_DOMAIN_DISPLAY_NAME:-octo-production-apm}"
+APM_DOMAIN_DISPLAY_NAME="${APM_DOMAIN_DISPLAY_NAME:-}"
 APM_DOMAIN_ID="${APM_DOMAIN_ID:-}"
 COMPARTMENT_ID="${COMPARTMENT_ID:-}"
-# Numeric attributes are OPT-IN: the shared prod domain octo-production-apm has a
-# finite (and exhausted) NUMERIC attribute budget, and bulk activation is atomic
+# Numeric attributes are OPT-IN: shared production domains can have an exhausted
+# NUMERIC attribute budget, and bulk activation is atomic
 # — defaulting payment.risk_score on could fail the whole batch. The 4 STRING
 # "reason" attributes (the core value: WHY a payment declined) are the safe
 # default; set APM_PAYMENT_INCLUDE_NUMERIC=true to also request the numeric one.
@@ -124,7 +124,7 @@ fi
 require_tool oci
 
 if [[ -z "${APM_DOMAIN_ID}" ]]; then
-  if [[ -z "${COMPARTMENT_ID}" ]]; then
+  if [[ -z "${COMPARTMENT_ID}" || -z "${APM_DOMAIN_DISPLAY_NAME}" ]]; then
     echo "Set APM_DOMAIN_ID, or set COMPARTMENT_ID plus APM_DOMAIN_DISPLAY_NAME." >&2
     exit 2
   fi
