@@ -199,7 +199,7 @@ if command -v helm >/dev/null 2>&1; then
         fail "deploy/helm/octo-apm-demo renders via helm template"
         sed 's/^/         /' "${helm_render_err}" | head -10
     fi
-    if [[ -s "${helm_render}" ]]; then
+    if [[ -s "${helm_render}" && "${VERIFY_KUBECTL_CLIENT_DRY_RUN:-0}" == 1 ]]; then
         if command -v kubectl >/dev/null 2>&1; then
             if kubectl create --dry-run=client --validate=false -f "${helm_render}" >/dev/null 2>&1; then
                 ok "deploy/helm/octo-apm-demo passes kubectl client dry-run"
@@ -208,8 +208,10 @@ if command -v helm >/dev/null 2>&1; then
                 kubectl create --dry-run=client --validate=false -f "${helm_render}" 2>&1 | sed 's/^/         /' | head -10
             fi
         else
-            warn "kubectl not installed — skipped Helm client dry-run"
+            warn "kubectl unavailable for the requested Helm client dry-run"
         fi
+    elif [[ -s "${helm_render}" ]]; then
+        warn "Helm Kubernetes API discovery skipped. Set VERIFY_KUBECTL_CLIENT_DRY_RUN=1 to check with the configured context."
     fi
 
     if helm template octo-apm-demo "${REPO_ROOT}/deploy/helm/octo-apm-demo" \
@@ -228,7 +230,7 @@ if command -v helm >/dev/null 2>&1; then
             --set secrets.data.auth.internalServiceKey=verify-internal-service-key \
             --set secrets.data.auth.appSecretKey=verify-app-secret-key \
             --set secrets.data.auth.bootstrapAdminPassword=verify-admin-password \
-            --set secrets.data.ociConfig.compartmentId=<OCI_COMPARTMENT_OCID> \
+            --set-string secrets.data.ociConfig.compartmentId=verify-compartment \
             --set-string secrets.atpWallet=verify-wallet-bytes \
             >"${helm_secrets_render}" 2>"${helm_secrets_err}" && \
         python3 -c "import yaml,sys; list(yaml.safe_load_all(open(sys.argv[1])))" "${helm_secrets_render}" 2>/dev/null; then
@@ -403,11 +405,16 @@ fi
 
 # ── Python tests (shop, crm, tools) ───────────────────────────────────
 section "Python test suites"
-if (cd "${REPO_ROOT}" && python3 -m pytest -q tests/test_unified_deploy_surface.py >/dev/null 2>&1); then
+root_deploy_tests=(tests/test_unified_deploy_surface.py tests/test_sbom_orm_and_cp_pipeline.py)
+if [[ ! -f "${REPO_ROOT}/deploy/oke/bootstrap-demo-secrets.sh" ]]; then
+    root_deploy_tests+=(--deselect "tests/test_unified_deploy_surface.py::test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse")
+    warn "Local OKE secrets bootstrap contract unavailable in this checkout"
+fi
+if (cd "${REPO_ROOT}" && python3 -m pytest -q "${root_deploy_tests[@]}" >/dev/null 2>&1); then
     ok "root unified deploy pytest"
 else
     fail "root unified deploy pytest"
-    (cd "${REPO_ROOT}" && python3 -m pytest -q tests/test_unified_deploy_surface.py 2>&1 | tail -20 | sed 's/^/         /')
+    (cd "${REPO_ROOT}" && python3 -m pytest -q "${root_deploy_tests[@]}" 2>&1 | tail -20 | sed 's/^/         /')
 fi
 
 if (cd "${REPO_ROOT}" && python3 -m pytest -q deploy/wizard/tests/test_plan.py >/dev/null 2>&1); then

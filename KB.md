@@ -15,3 +15,9 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Fix: <what changed, with file/command>
 - Prevention: <how to avoid it next time>
 ```
+
+## Resource Manager validation on macOS
+
+- Symptom. `terraform validate` reports `Unrecognized remote plugin message`. Terraform debug output shows `listen unix ... bind: invalid argument` when the provider socket path exceeds the macOS limit.
+- Resolution. Set `PLUGIN_UNIX_SOCKET_DIR=.` while running Terraform in the configuration directory. Keep `TMPDIR` in the approved scratch directory.
+- Verification. Run `terraform init -backend=false` and `terraform validate` against the source and extracted archive with a CLI version that satisfies `required_version`.

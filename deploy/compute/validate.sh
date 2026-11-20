@@ -48,7 +48,9 @@ for script in "${SCRIPT_DIR}/install.sh" "${SCRIPT_DIR}/render-runtime-env.sh" "
     fi
 done
 
-tmp_env="$(mktemp)"
+scratch="$(mktemp -d)"
+trap 'rm -rf "${scratch}"' EXIT
+tmp_env="${scratch}/runtime.env"
 cat >"${tmp_env}" <<'EOF'
 OCTO_COMPUTE_ROLE=shop
 CONTAINER_RUNTIME=podman
@@ -115,9 +117,9 @@ else
 fi
 
 if OCTO_PUBLIC_HOSTNAME=shop.verify.example.invalid \
-    envsubst '${OCTO_PUBLIC_HOSTNAME}' < "${SCRIPT_DIR}/nginx/app.conf.template" >/tmp/octo-compute-nginx.conf; then
+    envsubst '${OCTO_PUBLIC_HOSTNAME}' < "${SCRIPT_DIR}/nginx/app.conf.template" >"${scratch}/nginx.conf"; then
     if command -v nginx >/dev/null 2>&1; then
-        if nginx -t -c /tmp/octo-compute-nginx.conf >/dev/null 2>&1; then
+        if nginx -t -c "${scratch}/nginx.conf" >/dev/null 2>&1; then
             ok "deploy/compute nginx template validates"
         else
             fail "deploy/compute nginx template validates"
@@ -177,21 +179,21 @@ else
 fi
 
 if command -v terraform >/dev/null 2>&1; then
-    if terraform -chdir="${SCRIPT_DIR}/terraform" init -backend=false -input=false -no-color >/tmp/octo-compute-tf-init.log 2>&1 && \
-       terraform -chdir="${SCRIPT_DIR}/terraform" validate -no-color >/tmp/octo-compute-tf-validate.log 2>&1; then
+    if terraform -chdir="${SCRIPT_DIR}/terraform" init -backend=false -input=false -no-color >"${scratch}/tf-init.log" 2>&1 && \
+       terraform -chdir="${SCRIPT_DIR}/terraform" validate -no-color >"${scratch}/tf-validate.log" 2>&1; then
         ok "deploy/compute terraform validates"
-    elif is_network_dependency_error /tmp/octo-compute-tf-init.log /tmp/octo-compute-tf-validate.log; then
+    elif is_network_dependency_error "${scratch}/tf-init.log" "${scratch}/tf-validate.log"; then
         warn "deploy/compute terraform validate skipped — provider registry unavailable"
-        cat /tmp/octo-compute-tf-init.log /tmp/octo-compute-tf-validate.log 2>/dev/null | tail -16 | sed 's/^/         /'
+        cat "${scratch}/tf-init.log" "${scratch}/tf-validate.log" 2>/dev/null | tail -16 | sed 's/^/         /'
     else
         fail "deploy/compute terraform validates"
-        cat /tmp/octo-compute-tf-init.log /tmp/octo-compute-tf-validate.log 2>/dev/null | tail -40 | sed 's/^/         /'
+        cat "${scratch}/tf-init.log" "${scratch}/tf-validate.log" 2>/dev/null | tail -40 | sed 's/^/         /'
     fi
 else
     warn "terraform not installed — skipped compute terraform validate"
 fi
 
-package_log="$(mktemp)"
+package_log="${scratch}/package.log"
 if bash "${SCRIPT_DIR}/stack-package.sh" >"${package_log}" 2>&1; then
     ok "deploy/compute Resource Manager package builds"
 else
@@ -209,20 +211,17 @@ fi
 if command -v terraform >/dev/null 2>&1 && [[ -f "${stack_zip}" ]]; then
     stack_tmp="$(mktemp -d)"
     if unzip -q "${stack_zip}" -d "${stack_tmp}" && \
-       terraform -chdir="${stack_tmp}" init -backend=false -input=false -no-color >/tmp/octo-compute-stack-init.log 2>&1 && \
-       terraform -chdir="${stack_tmp}" validate -no-color >/tmp/octo-compute-stack-validate.log 2>&1; then
+       terraform -chdir="${stack_tmp}" init -backend=false -input=false -no-color >"${scratch}/stack-init.log" 2>&1 && \
+       terraform -chdir="${stack_tmp}" validate -no-color >"${scratch}/stack-validate.log" 2>&1; then
         ok "deploy/compute Resource Manager package terraform validates"
-    elif is_network_dependency_error /tmp/octo-compute-stack-init.log /tmp/octo-compute-stack-validate.log; then
+    elif is_network_dependency_error "${scratch}/stack-init.log" "${scratch}/stack-validate.log"; then
         warn "deploy/compute Resource Manager package terraform validate skipped — provider registry unavailable"
-        cat /tmp/octo-compute-stack-init.log /tmp/octo-compute-stack-validate.log 2>/dev/null | tail -16 | sed 's/^/         /'
+        cat "${scratch}/stack-init.log" "${scratch}/stack-validate.log" 2>/dev/null | tail -16 | sed 's/^/         /'
     else
         fail "deploy/compute Resource Manager package terraform validates"
-        cat /tmp/octo-compute-stack-init.log /tmp/octo-compute-stack-validate.log 2>/dev/null | tail -40 | sed 's/^/         /'
+        cat "${scratch}/stack-init.log" "${scratch}/stack-validate.log" 2>/dev/null | tail -40 | sed 's/^/         /'
     fi
     rm -rf "${stack_tmp}"
 fi
-
-rm -f "${tmp_env}" /tmp/octo-compute-nginx.conf /tmp/octo-compute-tf-init.log /tmp/octo-compute-tf-validate.log \
-    /tmp/octo-compute-stack-init.log /tmp/octo-compute-stack-validate.log "${package_log}"
 
 exit "${FAILED}"

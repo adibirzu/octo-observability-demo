@@ -1,15 +1,10 @@
 # OCI Resource Manager stack
 
-[Deploy to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip)
+Download `octo-stack.zip` from the tagged [GitHub Release](https://github.com/adibirzu/octo-observability-demo/releases) or build it locally.
 
-One-click tenancy bootstrap for the observability + integration surface
-(APM Domain + RUM, Log Analytics app-log pipeline, WAF policies).
-Uploaded to **OCI Console → Resource Manager → Stacks**.
+The stack bootstraps APM, Log Analytics connectors, and WAF policies for an existing OKE deployment. Upload the file in **OCI Console → Resource Manager → Stacks**.
 
-Private branch note: build `deploy/resource-manager/build/octo-stack.zip`
-locally and upload it manually. The placeholder GitHub release URL previously
-used by the deploy button currently returns HTTP 404 and cannot be imported by
-OCI Resource Manager.
+For a private repository or an untagged build, build the archive locally and upload it through the Console.
 
 The stack does **not** create OKE, VCNs, or the Autonomous Database —
 those are selected from existing tenancy resources via the picker
@@ -54,14 +49,14 @@ Then in the OCI Console:
 
 1. Developer Services → Resource Manager → Stacks → Create Stack
 2. Source = **My Configuration** → upload `octo-stack.zip`
-3. Pick the compartment + DB/log pickers guided by the schema
+3. Set the compartment, `dns_domain`, and requested logging inputs
 4. Plan → Apply
 
 ## What gets created
 
 | Resource | Controlled by |
 |---|---|
-| `oci_apm_apm_domain` + RUM `oci_apm_config_config` | `create_apm_domain = true` |
+| APM Domain | `create_apm_domain = true`. Register a RUM web application through the APM Console when you use application-level grouping. |
 | WAF policies (`octo-waf-{shop,crm,ops,coordinator}`) | always |
 | Log Analytics Service Connectors (WAF logs) | `waf_log_id_*` when populated |
 | Log Analytics Service Connector (app log) | `app_log_id` when populated |

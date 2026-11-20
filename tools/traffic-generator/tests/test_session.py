@@ -19,6 +19,7 @@ from octo_traffic.telemetry import init_tracing
 def _cfg(**overrides) -> TrafficConfig:
     return TrafficConfig(
         shop_base_url="https://shop.test.invalid",
+        crm_base_url="https://crm.test.invalid",
         target_rps=1.0,
         concurrent_session_limit=1,
         otel_exporter_otlp_endpoint="",  # no real export
@@ -38,7 +39,7 @@ async def test_browse_only_session_completes_without_checkout(tracer) -> None:
     dist.set_seed(100)
     cfg = _cfg(p_add_to_cart=0.0, failure_injection_rate=0.0)
 
-    respx.get(url__regex=r"^https://shop\.test\.invalid/.*").mock(
+    respx.get(url__regex=r"^https://(?:shop|crm)\.test\.invalid/.*").mock(
         return_value=Response(200, json={"ok": True})
     )
 
@@ -54,7 +55,7 @@ async def test_successful_checkout(tracer) -> None:
     dist.set_seed(200)
     cfg = _cfg(p_add_to_cart=1.0, p_checkout_given_cart=1.0, p_sso_login=0.0, failure_injection_rate=0.0)
 
-    respx.get(url__regex=r"^https://shop\.test\.invalid/.*").mock(
+    respx.get(url__regex=r"^https://(?:shop|crm)\.test\.invalid/.*").mock(
         return_value=Response(200, json={"ok": True})
     )
     checkout_route = respx.post("https://shop.test.invalid/api/orders").mock(
@@ -79,7 +80,7 @@ async def test_forced_failure_hits_error_path(tracer) -> None:
         failure_injection_rate=1.0,  # every session triggers failure
     )
 
-    respx.get(url__regex=r"^https://shop\.test\.invalid/.*").mock(
+    respx.get(url__regex=r"^https://(?:shop|crm)\.test\.invalid/.*").mock(
         return_value=Response(200, json={"ok": True})
     )
     checkout_route = respx.post("https://shop.test.invalid/api/orders").mock(
@@ -99,7 +100,7 @@ async def test_rate_limit_detected(tracer) -> None:
     dist.set_seed(400)
     cfg = _cfg(p_add_to_cart=1.0, p_checkout_given_cart=1.0, p_sso_login=0.0, failure_injection_rate=0.0)
 
-    respx.get(url__regex=r"^https://shop\.test\.invalid/.*").mock(
+    respx.get(url__regex=r"^https://(?:shop|crm)\.test\.invalid/.*").mock(
         return_value=Response(200, json={"ok": True})
     )
     respx.post("https://shop.test.invalid/api/orders").mock(

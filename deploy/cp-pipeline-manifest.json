@@ -1,0 +1,191 @@
+{
+  "$schema": "./cp-pipeline-manifest.schema.json",
+  "schemaVersion": 1,
+  "repository": "adibirzu/octo-observability-demo",
+  "componentIds": [
+    "c2",
+    "c27",
+    "c28"
+  ],
+  "domainVariable": "DNS_DOMAIN",
+  "routes": {
+    "cp": "https://cp.<DNS_DOMAIN>",
+    "shop": "https://shop.<DNS_DOMAIN>",
+    "crm": "https://crm.<DNS_DOMAIN>",
+    "ai": "https://ai.<DNS_DOMAIN>"
+  },
+  "containerBuilds": [
+    {
+      "id": "shop",
+      "dockerfile": "shop/Dockerfile",
+      "context": ".",
+      "image": "octo-drone-shop",
+      "stages": [
+        "builder",
+        "stage-2"
+      ]
+    },
+    {
+      "id": "crm",
+      "dockerfile": "crm/Dockerfile",
+      "context": ".",
+      "image": "enterprise-crm-portal",
+      "stages": [
+        "builder",
+        "stage-2"
+      ]
+    },
+    {
+      "id": "workflow-gateway",
+      "dockerfile": "shop/services/workflow-gateway/Dockerfile",
+      "context": "shop/services/workflow-gateway",
+      "image": "octo-workflow-gateway",
+      "stages": [
+        "builder",
+        "stage-2"
+      ]
+    },
+    {
+      "id": "java-apm",
+      "dockerfile": "services/apm-java-demo/Dockerfile",
+      "context": ".",
+      "image": "octo-apm-java-demo",
+      "stages": [
+        "builder",
+        "stage-2"
+      ]
+    },
+    {
+      "id": "async-worker",
+      "dockerfile": "services/async-worker/Dockerfile",
+      "context": "services/async-worker",
+      "image": "octo-async-worker",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "browser-runner",
+      "dockerfile": "services/browser-runner/Dockerfile",
+      "context": "services/browser-runner",
+      "image": "octo-browser-runner",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "genai-studio",
+      "dockerfile": "services/genai-studio/Dockerfile",
+      "context": "services/genai-studio",
+      "image": "octo-genai-studio",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "load-control",
+      "dockerfile": "services/load-control/Dockerfile",
+      "context": "services/load-control",
+      "image": "octo-load-control",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "object-pipeline",
+      "dockerfile": "services/object-pipeline/Dockerfile",
+      "context": "services/object-pipeline",
+      "image": "octo-object-pipeline",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "otel-gateway",
+      "dockerfile": "services/otel-gateway/Dockerfile",
+      "context": "services/otel-gateway",
+      "image": "octo-otel-gateway",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "remediator",
+      "dockerfile": "services/remediator/Dockerfile",
+      "context": "services/remediator",
+      "image": "octo-remediator",
+      "stages": [
+        "stage-1"
+      ]
+    },
+    {
+      "id": "stress-runner",
+      "dockerfile": "tools/stress-runner/Dockerfile",
+      "context": "tools/stress-runner",
+      "image": "octo-stress-runner",
+      "stages": [
+        "k6",
+        "stage-2"
+      ]
+    },
+    {
+      "id": "traffic-generator",
+      "dockerfile": "tools/traffic-generator/Dockerfile",
+      "context": "tools/traffic-generator",
+      "image": "octo-traffic-generator",
+      "stages": [
+        "stage-1"
+      ]
+    }
+  ],
+  "smoke": {
+    "health": [
+      {
+        "route": "cp",
+        "path": "/api/health"
+      },
+      {
+        "route": "shop",
+        "path": "/ready"
+      },
+      {
+        "route": "crm",
+        "path": "/ready"
+      },
+      {
+        "route": "ai",
+        "path": "/health"
+      },
+      {
+        "route": "ai",
+        "path": "/readyz"
+      }
+    ],
+    "meltS": [
+      {
+        "route": "shop",
+        "path": "/api/observability/melts"
+      },
+      {
+        "route": "crm",
+        "path": "/api/observability/melts"
+      }
+    ],
+    "sso": [
+      {
+        "route": "shop",
+        "path": "/api/auth/sso/status"
+      },
+      {
+        "route": "crm",
+        "path": "/api/auth/sso/status"
+      }
+    ]
+  },
+  "ormPackageScripts": [
+    "deploy/resource-manager/stack-package.sh",
+    "deploy/compute/stack-package.sh",
+    "shop/deploy/resource-manager/stack-package.sh"
+  ],
+  "sbom": "sbom/octo-observability-demo.cdx.json"
+}

@@ -65,9 +65,8 @@ resource "oci_sch_service_connector" "this" {
   }
 
   target {
-    kind            = "loganalytics"
-    log_group_id    = var.la_log_group_id
-    log_source_name = var.la_source_name
+    kind         = "loggingAnalytics"
+    log_group_id = var.la_log_group_id
   }
 
   freeform_tags = {

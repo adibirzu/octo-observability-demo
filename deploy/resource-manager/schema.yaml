@@ -2,12 +2,12 @@ title: "OCTO Drone Shop + Enterprise CRM — Tenancy Bootstrap"
 description: |
   Provisions the observability and integration surface required to run
   the OCTO Drone Shop and Enterprise CRM Portal in a fresh OCI tenancy:
-  APM Domain, RUM Web Application, Log Analytics app-log pipeline, and
+  an APM Domain, Log Analytics app-log connectors, and
   WAF policies. Container workloads (OKE) and the Autonomous Database
   are selected from the tenancy — they are NOT created by this stack.
 
 schemaVersion: 1.1.0
-version: "20260422"
+version: "20261120"
 
 locale: "en"
 
@@ -20,6 +20,7 @@ variableGroups:
 
   - title: "DNS + service hostnames"
     variables:
+      - dns_domain
       - shop_domain
       - crm_domain
       - ops_domain
@@ -71,34 +72,36 @@ variables:
     required: true
     default: compartment_ocid
 
+  dns_domain:
+    type: string
+    title: "Public DNS zone"
+    description: "Base domain for the stack hostnames, for example lab.example.test."
+    required: true
+
   shop_domain:
     type: string
-    title: "Shop public hostname"
-    description: "e.g. shop.tenant-a.customer.example"
-    required: true
-    pattern: "^[a-z0-9.-]+$"
+    title: "Shop hostname override"
+    description: "Leave empty to use shop.<DNS_DOMAIN>."
 
   crm_domain:
     type: string
-    title: "CRM public hostname"
-    description: "e.g. crm.tenant-a.customer.example"
-    required: true
-    pattern: "^[a-z0-9.-]+$"
+    title: "Crm hostname override"
+    description: "Leave empty to use crm.<DNS_DOMAIN>."
 
   ops_domain:
     type: string
-    title: "Ops portal hostname"
-    default: "ops.example.invalid"
+    title: "Ops hostname override"
+    description: "Leave empty to use ops.<DNS_DOMAIN>."
 
   coordinator_domain:
     type: string
-    title: "Coordinator hostname"
-    default: "coordinator.example.invalid"
+    title: "Coordinator hostname override"
+    description: "Leave empty to use coordinator.<DNS_DOMAIN>."
 
   create_apm_domain:
     type: boolean
-    title: "Provision an APM Domain + RUM Web Application"
-    description: "When disabled you must supply the APM data keys out of band."
+    title: "Provision an APM Domain"
+    description: "Supply existing APM data keys if disabled. Register RUM web applications separately."
     default: true
 
   apm_domain_display_name:

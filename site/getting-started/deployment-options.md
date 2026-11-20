@@ -4,7 +4,7 @@ The platform ships four supported install paths. Pick the one that
 matches the environment; all four target the same container images
 and the same Oracle Autonomous Database integration contract.
 
-[Deploy to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=%%GITHUB_REPO_URL%%/releases/download/resource-manager-stack/octo-stack.zip)
+[Download the OKE bootstrap archive](%%GITHUB_REPO_URL%%/releases) from the matching release, or build it locally.
 
 [Deploy Full Private Compute Stack to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=%%GITHUB_REPO_URL%%/releases/download/compute-resource-manager-stack-20260504/octo-compute-stack.zip)
 
@@ -95,11 +95,7 @@ Stacks → Create Stack** (source = My Configuration, file =
 `octo-stack.zip`). The schema groups variables into Tenancy, DNS,
 APM/RUM, Log Analytics, and WAF sections with native OCI pickers.
 
-The historical deploy button used the GitHub Release stack package at
-`%%GITHUB_REPO_URL%%/releases/download/resource-manager-stack/octo-stack.zip`.
-That placeholder URL currently returns HTTP 404. On a private branch, build the
-zip and upload it manually, or publish a real private release asset before
-using a deploy button.
+For a private repository or an untagged build, build the archive locally and upload it through the Console. See the [ORM and control-plane pipeline guide](orm-and-cp-pipeline.md) for checksums and stack validation.
 
 Full details: [deploy/resource-manager/README.md](%%GITHUB_REPO_URL%%/blob/main/deploy/resource-manager/README.md).
 

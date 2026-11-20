@@ -77,7 +77,7 @@ class TrafficConfig(BaseSettings):
         description="0 = run forever (K8s Deployment mode). >0 = exit after N seconds (K8s Job/one-shot).",
     )
     log_level: str = "INFO"
-    user_agent: str = "octo-traffic-sim/1.0 (+https://github.com/example-org/octo-apm-demo)"
+    user_agent: str = "octo-traffic-sim/1.0 (+https://github.com/adibirzu/octo-observability-demo)"
     seed: int = 0  # 0 = non-deterministic; any other value = reproducible run
 
     @field_validator("target_rps", "concurrent_session_limit")

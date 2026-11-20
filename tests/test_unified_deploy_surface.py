@@ -39,18 +39,20 @@ def test_bootstrap_uses_declared_ingress_service_port() -> None:
     assert "number: ${port}" in bootstrap
 
 
-def test_root_oke_manifests_use_shop_and_crm_hostnames() -> None:
+def test_root_oke_manifests_use_configurable_public_hostnames() -> None:
     shop_manifest = read_text("deploy/k8s/oke/shop/deployment.yaml")
     crm_manifest = read_text("deploy/k8s/oke/crm/deployment.yaml")
 
-    assert 'https://admin.${DNS_DOMAIN}' in shop_manifest
-    assert 'drones.${DNS_DOMAIN}' in shop_manifest
+    deploy_oke = read_text("deploy/oke/deploy-oke.sh")
+    assert 'value: "${CRM_PUBLIC_URL}"' in shop_manifest
+    assert '${SHOP_PUBLIC_URL:=https://drones.${DNS_DOMAIN}}' in deploy_oke
+    assert '${CRM_PUBLIC_URL:=https://admin.${DNS_DOMAIN}}' in deploy_oke
     assert (
         'http://enterprise-crm-portal.${K8S_NAMESPACE_CRM}.svc.cluster.local:8080'
         in shop_manifest
     )
 
-    assert 'https://admin.${DNS_DOMAIN}' in crm_manifest
+    assert 'value: "${CRM_PUBLIC_URL}"' in crm_manifest
     assert (
         'http://octo-drone-shop.${K8S_NAMESPACE_SHOP}.svc.cluster.local:8080'
         in crm_manifest
@@ -64,12 +66,12 @@ def test_root_oke_manifests_use_shop_and_crm_hostnames() -> None:
     assert "drone.${DNS_DOMAIN}" not in combined
 
 
-def test_resource_manager_and_root_tf_defaults_match_live_host_pattern() -> None:
+def test_resource_manager_derives_hosts_and_root_tf_keeps_example_defaults() -> None:
     resource_manager_variables = read_text("deploy/resource-manager/variables.tf")
     terraform_variables = read_text("deploy/terraform/variables.tf")
 
-    assert 'default = "shop.example.invalid"' in resource_manager_variables
-    assert 'default = "crm.example.invalid"' in resource_manager_variables
+    assert 'variable "dns_domain"' in resource_manager_variables
+    assert "example.invalid" not in resource_manager_variables
     assert 'default     = "shop.example.test"' in terraform_variables
     assert 'default     = "crm.example.test"' in terraform_variables
 
@@ -275,12 +277,12 @@ def test_resource_manager_deploy_button_and_docs_publish_zip_url() -> None:
 
     # README.md and deploy/ READMEs use hardcoded URLs (GitHub renders them directly).
     for text in (readme, resource_manager_readme):
-        assert "Deploy to Oracle Cloud" in text
-        assert RESOURCE_MANAGER_BUTTON_URL in text
+        assert "https://github.com/adibirzu/octo-observability-demo/releases" in text
+        assert "octo-stack.zip" in text
 
     # site/ docs use %%GITHUB_REPO_URL%% placeholders resolved by the mkdocs hook.
-    assert "Deploy to Oracle Cloud" in deployment_options
-    assert "%%GITHUB_REPO_URL%%/releases/download/resource-manager-stack/octo-stack.zip" in deployment_options
+    assert "[Download the OKE bootstrap archive](%%GITHUB_REPO_URL%%/releases)" in deployment_options
+    assert "orm-and-cp-pipeline.md" in deployment_options
 
     for text in (readme, compute_readme):
         assert "Deploy Full Compute Stack to Oracle Cloud" in text or "Deploy Full Private Compute Stack to Oracle Cloud" in text

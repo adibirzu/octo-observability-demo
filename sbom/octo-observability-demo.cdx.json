@@ -1,0 +1,4792 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "octo-observability-demo",
+      "purl": "pkg:github/adibirzu/octo-observability-demo"
+    },
+    "properties": [
+      {
+        "name": "octo:input-sha256",
+        "value": "crm/Dockerfile eef7dec9074f20544da29c6b5d925335bef40a54e67f00a9039febf165ff3c92"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "crm/requirements-dev.txt 6deb82dfc7f162a5e57cf7dbc6ad4ab530bdd66d58d2ea5010fb8e91f39e784b"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "crm/requirements.txt c9095d0a5127a89839baf6a6a07b1bd99fc68f53f4d7e9e9f874e640d1577b2d"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "deploy/wizard/pyproject.toml 92b7ee1dcc59136b95a7711340ed7437989272f01d64e68046d90241dd612e33"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "requirements-docs.txt 449f26c83a0cb784ac3d7b2e82ea87b42110755966ec9450cb3a6ff156ea878d"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/apm-java-demo/Dockerfile a57235fc268189c03a71b6c572e1fc8f147d7bf055520f19a3c3d49993119ed0"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/apm-java-demo/pom.xml 06b09ea1a378f8da1bf9bd6d2f8d349722b1b2f769472fafff7c6334e44a0610"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/async-worker/Dockerfile 98a1dfe6f4f83e7065ee78746c8c10b562e8f8b7bb45d2dfab4cc0d9f7704cda"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/async-worker/pyproject.toml e9adb79d13edd813f9c6e05a1eac311cbbae94df535ac609e64f837da6a3d8bf"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/auto-remediator/requirements.txt a1e2442ef70c0aee8ad3db785a0ed9a15f0a6ddf8fbe8e8090e1820216a19647"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/browser-runner/Dockerfile 64c6d37575ec2036af9dc7fd5656bb2868b1244ec36600e3ba62c54991109bba"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/browser-runner/package-lock.json cf60a65c7fd448e72db66a0e961c34a6d8066ce18e915be79479b51f7d3802ea"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/browser-runner/package.json 38e92a8d1b409e72e5cb95162b8cbf259f6c510b09f2a35448386f893d8dfa84"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/cache/client/pyproject.toml d9bd9c641229f53d0c115b7f96017e0f6d5d98053eb3d774ab451214a3ac2e8b"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/edge-fuzz/pyproject.toml 6e6d846d717ea14c3297ba461a09affec57bfcc5f4241fc558b262968d248715"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/genai-studio/Dockerfile 7bb658029e89c33ea99f9c522a4e28246ae8eb410d600c7ad98e8b89104fd37b"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/genai-studio/pyproject.toml 92373794f243f55f02af3960dd5b98ea5fb509d9feaf2c37d6bd94e06b3d34c9"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/load-control/Dockerfile 671e37b00ff65f4df05c73cd2e4c24332cf8637406187ae3fa3ae03474844f8b"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/load-control/pyproject.toml a87bf2b7c50400790d08654c1f49dd92870c1357b3485fc34fe91a952972a069"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/object-pipeline/Dockerfile ab3d05dd1624458186e958e99d2d1aaac221dd2cfc5d26512b33408c7cac522d"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/object-pipeline/pyproject.toml 06a801eaf7368f282b3a8b96d622d6902d3579c410e21941494b7039d91b1ba2"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/otel-gateway/Dockerfile dad699f9a8e1f1f1037b52d6cf070b5394716614856cf4018586724fc312bfe7"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/remediator/Dockerfile 339944a87c46d23bfdad329b0091e0ff57c42bfaf966bb166838e1a3daaaca92"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "services/remediator/pyproject.toml c5534260962118608d2a6584f5f82c78620c23c280330481479762ec64acdc98"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/Dockerfile 02342c735734efc1a8d7cca295d7b42dae9ddefd0f8b944d2eee4cf164a35c14"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/package-lock.json 1bbdc404807feeece1bb933fd8d2ed1d313f712e2e5fd535fc764fadee67877b"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/package.json a58164626a591135a4c9cd2396a016f67fa30d1a919faafb8707cfe1381ab924"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/requirements-dev.txt 8156c3df46242a79dbfd54a043f597a4883b7456d9632a662227f556038dffa1"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/requirements.txt 29a2c3a4e3a9fa982c776246cff4416e6825190f3e1f5a887c1914d56bfbe1d9"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/services/workflow-gateway/Dockerfile c6828322be00b8840f7973bd27961a56fab28164a55bc4edf4894040ff084c9f"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "shop/services/workflow-gateway/go.mod 5b8e956b19b93e2d55c1e7e62dcc06463609f8fe40d48d276446a7ad0cd19b4d"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "tools/stress-runner/Dockerfile c031df1c6bba4581313d52958528a6e3a80f60572ddf6bcbdac8911b0c9d450e"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "tools/stress-runner/pyproject.toml 3fe0e5c1dc59ff7141a9d7806652a2c055c8c1ba29b573ea7a688b9b69edb7f1"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "tools/traffic-generator/Dockerfile 050abda53bdd483d4b305e2686cbbfaee2ad0b5ee781ba0dc40ad634df13ffb3"
+      },
+      {
+        "name": "octo:input-sha256",
+        "value": "tools/traffic-generator/pyproject.toml fba01f4868bac9516871338b02ba9cb5b53215470003f1e16b645173a3409a53"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "container",
+      "name": "eclipse-temurin",
+      "purl": "pkg:docker/docker.io/library/eclipse-temurin@21-jre",
+      "bom-ref": "pkg:docker/docker.io/library/eclipse-temurin@21-jre",
+      "group": "docker.io/library",
+      "version": "21-jre",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/Dockerfile: docker.io/library/eclipse-temurin:21-jre"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "maven",
+      "purl": "pkg:docker/docker.io/library/maven@3.9-eclipse-temurin-21",
+      "bom-ref": "pkg:docker/docker.io/library/maven@3.9-eclipse-temurin-21",
+      "group": "docker.io/library",
+      "version": "3.9-eclipse-temurin-21",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/Dockerfile: docker.io/library/maven:3.9-eclipse-temurin-21"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "python",
+      "purl": "pkg:docker/docker.io/library/python@3.11-slim",
+      "bom-ref": "pkg:docker/docker.io/library/python@3.11-slim",
+      "group": "docker.io/library",
+      "version": "3.11-slim",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/Dockerfile: docker.io/library/python:3.11-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "python",
+      "purl": "pkg:docker/docker.io/library/python@3.12-slim",
+      "bom-ref": "pkg:docker/docker.io/library/python@3.12-slim",
+      "group": "docker.io/library",
+      "version": "3.12-slim",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/Dockerfile: docker.io/library/python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "base-debian12",
+      "purl": "pkg:docker/gcr.io/distroless/base-debian12@latest",
+      "bom-ref": "pkg:docker/gcr.io/distroless/base-debian12@latest",
+      "group": "gcr.io/distroless",
+      "version": "latest",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/services/workflow-gateway/Dockerfile: gcr.io/distroless/base-debian12"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "golang",
+      "purl": "pkg:docker/golang@1.25",
+      "bom-ref": "pkg:docker/golang@1.25",
+      "version": "1.25",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/services/workflow-gateway/Dockerfile: golang:1.25"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "k6",
+      "purl": "pkg:docker/grafana/k6@0.55.0",
+      "bom-ref": "pkg:docker/grafana/k6@0.55.0",
+      "group": "grafana",
+      "version": "0.55.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/Dockerfile: grafana/k6:0.55.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "playwright",
+      "purl": "pkg:docker/mcr.microsoft.com/playwright@v1.55.1-jammy",
+      "bom-ref": "pkg:docker/mcr.microsoft.com/playwright@v1.55.1-jammy",
+      "group": "mcr.microsoft.com",
+      "version": "v1.55.1-jammy",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/Dockerfile: mcr.microsoft.com/playwright:v1.55.1-jammy"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "opentelemetry-collector-contrib",
+      "purl": "pkg:docker/otel/opentelemetry-collector-contrib@0.110.0",
+      "bom-ref": "pkg:docker/otel/opentelemetry-collector-contrib@0.110.0",
+      "group": "otel",
+      "version": "0.110.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/otel-gateway/Dockerfile: otel/opentelemetry-collector-contrib:0.110.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/otel-gateway/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "python",
+      "purl": "pkg:docker/python@3.12-slim",
+      "bom-ref": "pkg:docker/python@3.12-slim",
+      "version": "3.12-slim",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/Dockerfile"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/Dockerfile"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/Dockerfile"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/Dockerfile"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/Dockerfile"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/Dockerfile"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "builder",
+      "purl": "pkg:generic/builder?dockerfile=crm%2FDockerfile",
+      "bom-ref": "pkg:generic/builder?dockerfile=crm%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/Dockerfile: docker.io/library/python:3.11-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "builder",
+      "purl": "pkg:generic/builder?dockerfile=services%2Fapm-java-demo%2FDockerfile",
+      "bom-ref": "pkg:generic/builder?dockerfile=services%2Fapm-java-demo%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/Dockerfile: docker.io/library/maven:3.9-eclipse-temurin-21"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "builder",
+      "purl": "pkg:generic/builder?dockerfile=shop%2FDockerfile",
+      "bom-ref": "pkg:generic/builder?dockerfile=shop%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/Dockerfile: docker.io/library/python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "builder",
+      "purl": "pkg:generic/builder?dockerfile=shop%2Fservices%2Fworkflow-gateway%2FDockerfile",
+      "bom-ref": "pkg:generic/builder?dockerfile=shop%2Fservices%2Fworkflow-gateway%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/services/workflow-gateway/Dockerfile: golang:1.25"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "k6",
+      "purl": "pkg:generic/k6?dockerfile=tools%2Fstress-runner%2FDockerfile",
+      "bom-ref": "pkg:generic/k6?dockerfile=tools%2Fstress-runner%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/Dockerfile: grafana/k6:0.55.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fasync-worker%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fasync-worker%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fbrowser-runner%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fbrowser-runner%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/Dockerfile: mcr.microsoft.com/playwright:v1.55.1-jammy"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fgenai-studio%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fgenai-studio%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fload-control%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fload-control%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fobject-pipeline%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fobject-pipeline%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fotel-gateway%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fotel-gateway%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/otel-gateway/Dockerfile: otel/opentelemetry-collector-contrib:0.110.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/otel-gateway/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=services%2Fremediator%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=services%2Fremediator%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-1",
+      "purl": "pkg:generic/stage-1?dockerfile=tools%2Ftraffic-generator%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-1?dockerfile=tools%2Ftraffic-generator%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-2",
+      "purl": "pkg:generic/stage-2?dockerfile=crm%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-2?dockerfile=crm%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/Dockerfile: docker.io/library/python:3.11-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-2",
+      "purl": "pkg:generic/stage-2?dockerfile=services%2Fapm-java-demo%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-2?dockerfile=services%2Fapm-java-demo%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/Dockerfile: docker.io/library/eclipse-temurin:21-jre"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-2",
+      "purl": "pkg:generic/stage-2?dockerfile=shop%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-2?dockerfile=shop%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/Dockerfile: docker.io/library/python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-2",
+      "purl": "pkg:generic/stage-2?dockerfile=shop%2Fservices%2Fworkflow-gateway%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-2?dockerfile=shop%2Fservices%2Fworkflow-gateway%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/services/workflow-gateway/Dockerfile: gcr.io/distroless/base-debian12"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "stage-2",
+      "purl": "pkg:generic/stage-2?dockerfile=tools%2Fstress-runner%2FDockerfile",
+      "bom-ref": "pkg:generic/stage-2?dockerfile=tools%2Fstress-runner%2FDockerfile",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/Dockerfile: python:3.12-slim"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/Dockerfile"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "perks",
+      "purl": "pkg:golang/github.com/beorn7/perks@v1.0.1",
+      "bom-ref": "pkg:golang/github.com/beorn7/perks@v1.0.1",
+      "group": "github.com/beorn7",
+      "version": "v1.0.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "v5",
+      "purl": "pkg:golang/github.com/cenkalti/backoff/v5@v5.0.3",
+      "bom-ref": "pkg:golang/github.com/cenkalti/backoff/v5@v5.0.3",
+      "group": "github.com/cenkalti/backoff",
+      "version": "v5.0.3",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+      "bom-ref": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+      "group": "github.com/cespare/xxhash",
+      "version": "v2.3.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "httpsnoop",
+      "purl": "pkg:golang/github.com/felixge/httpsnoop@v1.0.4",
+      "bom-ref": "pkg:golang/github.com/felixge/httpsnoop@v1.0.4",
+      "group": "github.com/felixge",
+      "version": "v1.0.4",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "logr",
+      "purl": "pkg:golang/github.com/go-logr/logr@v1.4.3",
+      "bom-ref": "pkg:golang/github.com/go-logr/logr@v1.4.3",
+      "group": "github.com/go-logr",
+      "version": "v1.4.3",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "stdr",
+      "purl": "pkg:golang/github.com/go-logr/stdr@v1.2.2",
+      "bom-ref": "pkg:golang/github.com/go-logr/stdr@v1.2.2",
+      "group": "github.com/go-logr",
+      "version": "v1.2.2",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uuid",
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "group": "github.com/google",
+      "version": "v1.6.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/github.com/grpc-ecosystem/grpc-gateway/v2@v2.29.0",
+      "bom-ref": "pkg:golang/github.com/grpc-ecosystem/grpc-gateway/v2@v2.29.0",
+      "group": "github.com/grpc-ecosystem/grpc-gateway",
+      "version": "v2.29.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "goautoneg",
+      "purl": "pkg:golang/github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+      "bom-ref": "pkg:golang/github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+      "group": "github.com/munnerz",
+      "version": "v0.0.0-20191010083416-a7dc8b61c822",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "client_golang",
+      "purl": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
+      "bom-ref": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
+      "group": "github.com/prometheus",
+      "version": "v1.23.2",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "client_model",
+      "purl": "pkg:golang/github.com/prometheus/client_model@v0.6.2",
+      "bom-ref": "pkg:golang/github.com/prometheus/client_model@v0.6.2",
+      "group": "github.com/prometheus",
+      "version": "v0.6.2",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "common",
+      "purl": "pkg:golang/github.com/prometheus/common@v0.66.1",
+      "bom-ref": "pkg:golang/github.com/prometheus/common@v0.66.1",
+      "group": "github.com/prometheus",
+      "version": "v0.66.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "procfs",
+      "purl": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
+      "bom-ref": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
+      "group": "github.com/prometheus",
+      "version": "v0.16.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/github.com/sijms/go-ora/v2@v2.9.0",
+      "bom-ref": "pkg:golang/github.com/sijms/go-ora/v2@v2.9.0",
+      "group": "github.com/sijms/go-ora",
+      "version": "v2.9.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sdk",
+      "purl": "pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1",
+      "group": "go.opentelemetry.io/auto",
+      "version": "v1.2.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "otelhttp",
+      "purl": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.69.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.69.0",
+      "group": "go.opentelemetry.io/contrib/instrumentation/net/http",
+      "version": "v0.69.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "otlptracehttp",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.44.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.44.0",
+      "group": "go.opentelemetry.io/otel/exporters/otlp/otlptrace",
+      "version": "v1.44.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "otlptrace",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.44.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.44.0",
+      "group": "go.opentelemetry.io/otel/exporters/otlp",
+      "version": "v1.44.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "metric",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/metric@v1.44.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/metric@v1.44.0",
+      "group": "go.opentelemetry.io/otel",
+      "version": "v1.44.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sdk",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.44.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.44.0",
+      "group": "go.opentelemetry.io/otel",
+      "version": "v1.44.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "trace",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/trace@v1.44.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/trace@v1.44.0",
+      "group": "go.opentelemetry.io/otel",
+      "version": "v1.44.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "otel",
+      "purl": "pkg:golang/go.opentelemetry.io/otel@v1.44.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel@v1.44.0",
+      "group": "go.opentelemetry.io",
+      "version": "v1.44.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "otlp",
+      "purl": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.10.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.10.0",
+      "group": "go.opentelemetry.io/proto",
+      "version": "v1.10.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
+      "bom-ref": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
+      "group": "go.yaml.in/yaml",
+      "version": "v2.4.2",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "net",
+      "purl": "pkg:golang/golang.org/x/net@v0.55.0",
+      "bom-ref": "pkg:golang/golang.org/x/net@v0.55.0",
+      "group": "golang.org/x",
+      "version": "v0.55.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sys",
+      "purl": "pkg:golang/golang.org/x/sys@v0.45.0",
+      "bom-ref": "pkg:golang/golang.org/x/sys@v0.45.0",
+      "group": "golang.org/x",
+      "version": "v0.45.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "text",
+      "purl": "pkg:golang/golang.org/x/text@v0.37.0",
+      "bom-ref": "pkg:golang/golang.org/x/text@v0.37.0",
+      "group": "golang.org/x",
+      "version": "v0.37.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "api",
+      "purl": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "bom-ref": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "group": "google.golang.org/genproto/googleapis",
+      "version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "rpc",
+      "purl": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "bom-ref": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "group": "google.golang.org/genproto/googleapis",
+      "version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "grpc",
+      "purl": "pkg:golang/google.golang.org/grpc@v1.81.1",
+      "bom-ref": "pkg:golang/google.golang.org/grpc@v1.81.1",
+      "group": "google.golang.org",
+      "version": "v1.81.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "protobuf",
+      "purl": "pkg:golang/google.golang.org/protobuf@v1.36.11",
+      "bom-ref": "pkg:golang/google.golang.org/protobuf@v1.36.11",
+      "group": "google.golang.org",
+      "version": "v1.36.11",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/services/workflow-gateway/go.mod"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "apm-java-demo",
+      "purl": "pkg:maven/com.octo/apm-java-demo@1.0.0",
+      "bom-ref": "pkg:maven/com.octo/apm-java-demo@1.0.0",
+      "group": "com.octo",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ojdbc11-production",
+      "purl": "pkg:maven/com.oracle.database.jdbc/ojdbc11-production@23.26.1.0.0",
+      "bom-ref": "pkg:maven/com.oracle.database.jdbc/ojdbc11-production@23.26.1.0.0",
+      "group": "com.oracle.database.jdbc",
+      "version": "23.26.1.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-api",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-api@1.62.0",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-api@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.62.0",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.62.0",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-maven-plugin",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-maven-plugin",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-maven-plugin",
+      "group": "org.springframework.boot",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/pom.xml: managed by parent"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-starter-actuator",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-actuator",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-actuator",
+      "group": "org.springframework.boot",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/pom.xml: managed by parent"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-starter-parent",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-parent@3.3.5?type=pom",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-parent@3.3.5?type=pom",
+      "group": "org.springframework.boot",
+      "version": "3.3.5",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-starter-test",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-test",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-test",
+      "group": "org.springframework.boot",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/pom.xml: managed by parent"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-starter-web",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-web",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-web",
+      "group": "org.springframework.boot",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/apm-java-demo/pom.xml: managed by parent"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/apm-java-demo/pom.xml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "aix-ppc64",
+      "purl": "pkg:npm/%40esbuild/aix-ppc64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/aix-ppc64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "android-arm64",
+      "purl": "pkg:npm/%40esbuild/android-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/android-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "android-arm",
+      "purl": "pkg:npm/%40esbuild/android-arm@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/android-arm@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "android-x64",
+      "purl": "pkg:npm/%40esbuild/android-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/android-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "darwin-arm64",
+      "purl": "pkg:npm/%40esbuild/darwin-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/darwin-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "darwin-x64",
+      "purl": "pkg:npm/%40esbuild/darwin-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/darwin-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "freebsd-arm64",
+      "purl": "pkg:npm/%40esbuild/freebsd-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/freebsd-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "freebsd-x64",
+      "purl": "pkg:npm/%40esbuild/freebsd-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/freebsd-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-arm64",
+      "purl": "pkg:npm/%40esbuild/linux-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-arm",
+      "purl": "pkg:npm/%40esbuild/linux-arm@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-arm@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-ia32",
+      "purl": "pkg:npm/%40esbuild/linux-ia32@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-ia32@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-loong64",
+      "purl": "pkg:npm/%40esbuild/linux-loong64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-loong64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-mips64el",
+      "purl": "pkg:npm/%40esbuild/linux-mips64el@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-mips64el@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-ppc64",
+      "purl": "pkg:npm/%40esbuild/linux-ppc64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-ppc64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-riscv64",
+      "purl": "pkg:npm/%40esbuild/linux-riscv64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-riscv64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-s390x",
+      "purl": "pkg:npm/%40esbuild/linux-s390x@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-s390x@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "linux-x64",
+      "purl": "pkg:npm/%40esbuild/linux-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/linux-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "netbsd-arm64",
+      "purl": "pkg:npm/%40esbuild/netbsd-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/netbsd-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "netbsd-x64",
+      "purl": "pkg:npm/%40esbuild/netbsd-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/netbsd-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "openbsd-arm64",
+      "purl": "pkg:npm/%40esbuild/openbsd-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/openbsd-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "openbsd-x64",
+      "purl": "pkg:npm/%40esbuild/openbsd-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/openbsd-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "openharmony-arm64",
+      "purl": "pkg:npm/%40esbuild/openharmony-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/openharmony-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sunos-x64",
+      "purl": "pkg:npm/%40esbuild/sunos-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/sunos-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "win32-arm64",
+      "purl": "pkg:npm/%40esbuild/win32-arm64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/win32-arm64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "win32-ia32",
+      "purl": "pkg:npm/%40esbuild/win32-ia32@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/win32-ia32@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "win32-x64",
+      "purl": "pkg:npm/%40esbuild/win32-x64@0.27.7",
+      "bom-ref": "pkg:npm/%40esbuild/win32-x64@0.27.7",
+      "group": "@esbuild",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "test",
+      "purl": "pkg:npm/%40playwright/test",
+      "bom-ref": "pkg:npm/%40playwright/test",
+      "group": "@playwright",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/package.json: ^1.60.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "test",
+      "purl": "pkg:npm/%40playwright/test@1.55.1",
+      "bom-ref": "pkg:npm/%40playwright/test@1.55.1",
+      "group": "@playwright",
+      "version": "1.55.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/package.json: 1.55.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "test",
+      "purl": "pkg:npm/%40playwright/test@1.60.0",
+      "bom-ref": "pkg:npm/%40playwright/test@1.60.0",
+      "group": "@playwright",
+      "version": "1.60.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "node",
+      "purl": "pkg:npm/%40types/node",
+      "bom-ref": "pkg:npm/%40types/node",
+      "group": "@types",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/package.json: ^25.9.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "node",
+      "purl": "pkg:npm/%40types/node@22.7.9",
+      "bom-ref": "pkg:npm/%40types/node@22.7.9",
+      "group": "@types",
+      "version": "22.7.9",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/package.json: 22.7.9"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "node",
+      "purl": "pkg:npm/%40types/node@25.9.1",
+      "bom-ref": "pkg:npm/%40types/node@25.9.1",
+      "group": "@types",
+      "version": "25.9.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "atomic-sleep",
+      "purl": "pkg:npm/atomic-sleep@1.0.0",
+      "bom-ref": "pkg:npm/atomic-sleep@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "esbuild",
+      "purl": "pkg:npm/esbuild@0.27.7",
+      "bom-ref": "pkg:npm/esbuild@0.27.7",
+      "version": "0.27.7",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-redact",
+      "purl": "pkg:npm/fast-redact@3.5.0",
+      "bom-ref": "pkg:npm/fast-redact@3.5.0",
+      "version": "3.5.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fsevents",
+      "purl": "pkg:npm/fsevents@2.3.2",
+      "bom-ref": "pkg:npm/fsevents@2.3.2",
+      "version": "2.3.2",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fsevents",
+      "purl": "pkg:npm/fsevents@2.3.3",
+      "bom-ref": "pkg:npm/fsevents@2.3.3",
+      "version": "2.3.3",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "get-tsconfig",
+      "purl": "pkg:npm/get-tsconfig@4.14.0",
+      "bom-ref": "pkg:npm/get-tsconfig@4.14.0",
+      "version": "4.14.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-browser-runner",
+      "purl": "pkg:npm/octo-browser-runner@1.0.0",
+      "bom-ref": "pkg:npm/octo-browser-runner@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-drone-shop-e2e",
+      "purl": "pkg:npm/octo-drone-shop-e2e@1.0.0",
+      "bom-ref": "pkg:npm/octo-drone-shop-e2e@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "on-exit-leak-free",
+      "purl": "pkg:npm/on-exit-leak-free@2.1.2",
+      "bom-ref": "pkg:npm/on-exit-leak-free@2.1.2",
+      "version": "2.1.2",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pino-abstract-transport",
+      "purl": "pkg:npm/pino-abstract-transport@2.0.0",
+      "bom-ref": "pkg:npm/pino-abstract-transport@2.0.0",
+      "version": "2.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pino-std-serializers",
+      "purl": "pkg:npm/pino-std-serializers@7.1.0",
+      "bom-ref": "pkg:npm/pino-std-serializers@7.1.0",
+      "version": "7.1.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pino",
+      "purl": "pkg:npm/pino@9.5.0",
+      "bom-ref": "pkg:npm/pino@9.5.0",
+      "version": "9.5.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/package.json: 9.5.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "playwright-core",
+      "purl": "pkg:npm/playwright-core@1.55.1",
+      "bom-ref": "pkg:npm/playwright-core@1.55.1",
+      "version": "1.55.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "playwright-core",
+      "purl": "pkg:npm/playwright-core@1.60.0",
+      "bom-ref": "pkg:npm/playwright-core@1.60.0",
+      "version": "1.60.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "playwright",
+      "purl": "pkg:npm/playwright@1.55.1",
+      "bom-ref": "pkg:npm/playwright@1.55.1",
+      "version": "1.55.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/package.json: 1.55.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "playwright",
+      "purl": "pkg:npm/playwright@1.60.0",
+      "bom-ref": "pkg:npm/playwright@1.60.0",
+      "version": "1.60.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "process-warning",
+      "purl": "pkg:npm/process-warning@4.0.1",
+      "bom-ref": "pkg:npm/process-warning@4.0.1",
+      "version": "4.0.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "quick-format-unescaped",
+      "purl": "pkg:npm/quick-format-unescaped@4.0.4",
+      "bom-ref": "pkg:npm/quick-format-unescaped@4.0.4",
+      "version": "4.0.4",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "real-require",
+      "purl": "pkg:npm/real-require@0.2.0",
+      "bom-ref": "pkg:npm/real-require@0.2.0",
+      "version": "0.2.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "resolve-pkg-maps",
+      "purl": "pkg:npm/resolve-pkg-maps@1.0.0",
+      "bom-ref": "pkg:npm/resolve-pkg-maps@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "safe-stable-stringify",
+      "purl": "pkg:npm/safe-stable-stringify@2.5.0",
+      "bom-ref": "pkg:npm/safe-stable-stringify@2.5.0",
+      "version": "2.5.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sonic-boom",
+      "purl": "pkg:npm/sonic-boom@4.2.1",
+      "bom-ref": "pkg:npm/sonic-boom@4.2.1",
+      "version": "4.2.1",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "split2",
+      "purl": "pkg:npm/split2@4.2.0",
+      "bom-ref": "pkg:npm/split2@4.2.0",
+      "version": "4.2.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "thread-stream",
+      "purl": "pkg:npm/thread-stream@3.1.0",
+      "bom-ref": "pkg:npm/thread-stream@3.1.0",
+      "version": "3.1.0",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tsx",
+      "purl": "pkg:npm/tsx@4.21.0",
+      "bom-ref": "pkg:npm/tsx@4.21.0",
+      "version": "4.21.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/package.json: 4.21.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "typescript",
+      "purl": "pkg:npm/typescript",
+      "bom-ref": "pkg:npm/typescript",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/package.json: ^6.0.3"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "typescript",
+      "purl": "pkg:npm/typescript@5.6.3",
+      "bom-ref": "pkg:npm/typescript@5.6.3",
+      "version": "5.6.3",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/browser-runner/package.json: 5.6.3"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "typescript",
+      "purl": "pkg:npm/typescript@6.0.3",
+      "bom-ref": "pkg:npm/typescript@6.0.3",
+      "version": "6.0.3",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "undici-types",
+      "purl": "pkg:npm/undici-types@6.19.8",
+      "bom-ref": "pkg:npm/undici-types@6.19.8",
+      "version": "6.19.8",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "services/browser-runner/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "undici-types",
+      "purl": "pkg:npm/undici-types@7.24.6",
+      "bom-ref": "pkg:npm/undici-types@7.24.6",
+      "version": "7.24.6",
+      "properties": [
+        {
+          "name": "octo:source",
+          "value": "shop/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "aiofiles",
+      "purl": "pkg:pypi/aiofiles@25.1.0",
+      "bom-ref": "pkg:pypi/aiofiles@25.1.0",
+      "version": "25.1.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: aiofiles==25.1.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "alembic",
+      "purl": "pkg:pypi/alembic",
+      "bom-ref": "pkg:pypi/alembic",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: alembic>=1.13,<2.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: alembic>=1.18.4,<2.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "asyncpg",
+      "purl": "pkg:pypi/asyncpg@0.31.0",
+      "bom-ref": "pkg:pypi/asyncpg@0.31.0",
+      "version": "0.31.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: asyncpg==0.31.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "bcrypt",
+      "purl": "pkg:pypi/bcrypt@4.3.0",
+      "bom-ref": "pkg:pypi/bcrypt@4.3.0",
+      "version": "4.3.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: bcrypt==4.3.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "bcrypt",
+      "purl": "pkg:pypi/bcrypt@5.0.0",
+      "bom-ref": "pkg:pypi/bcrypt@5.0.0",
+      "version": "5.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: bcrypt==5.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fakeredis",
+      "purl": "pkg:pypi/fakeredis",
+      "bom-ref": "pkg:pypi/fakeredis",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: fakeredis[lua]>=2.36.0,<3.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: fakeredis>=2.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: fakeredis>=2.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: fakeredis>=2.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: fakeredis[lua]>=2.36.0,<3.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "purl": "pkg:pypi/fastapi",
+      "bom-ref": "pkg:pypi/fastapi",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: fastapi>=0.112"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: fastapi>=0.112"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: fastapi>=0.112"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: fastapi>=0.110"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "purl": "pkg:pypi/fastapi@0.136.3",
+      "bom-ref": "pkg:pypi/fastapi@0.136.3",
+      "version": "0.136.3",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: fastapi==0.136.3"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: fastapi==0.136.3"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: fastapi==0.136.3"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fdk",
+      "purl": "pkg:pypi/fdk",
+      "bom-ref": "pkg:pypi/fdk",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: fdk>=0.1.66"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fpdf2",
+      "purl": "pkg:pypi/fpdf2@2.8.2",
+      "bom-ref": "pkg:pypi/fpdf2@2.8.2",
+      "version": "2.8.2",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: fpdf2==2.8.2"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "purl": "pkg:pypi/httpx",
+      "bom-ref": "pkg:pypi/httpx",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: httpx>=0.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: httpx>=0.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: httpx>=0.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: httpx>=0.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: httpx>=0.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: httpx>=0.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: httpx[http2]>=0.27"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "purl": "pkg:pypi/httpx@0.28.1",
+      "bom-ref": "pkg:pypi/httpx@0.28.1",
+      "version": "0.28.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: httpx==0.28.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: httpx==0.28.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: httpx==0.28.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "itsdangerous",
+      "purl": "pkg:pypi/itsdangerous@2.2.0",
+      "bom-ref": "pkg:pypi/itsdangerous@2.2.0",
+      "version": "2.2.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: itsdangerous==2.2.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jinja2",
+      "purl": "pkg:pypi/jinja2@3.1.6",
+      "bom-ref": "pkg:pypi/jinja2@3.1.6",
+      "version": "3.1.6",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: jinja2==3.1.6"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: jinja2==3.1.6"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jsonschema",
+      "purl": "pkg:pypi/jsonschema",
+      "bom-ref": "pkg:pypi/jsonschema",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: jsonschema>=4.23,<5"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "kubernetes",
+      "purl": "pkg:pypi/kubernetes",
+      "bom-ref": "pkg:pypi/kubernetes",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: kubernetes>=30.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "langchain",
+      "purl": "pkg:pypi/langchain",
+      "bom-ref": "pkg:pypi/langchain",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: langchain>=0.3.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "langchain-core",
+      "purl": "pkg:pypi/langchain-core",
+      "bom-ref": "pkg:pypi/langchain-core",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: langchain-core>=0.3.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "langchain-oci",
+      "purl": "pkg:pypi/langchain-oci",
+      "bom-ref": "pkg:pypi/langchain-oci",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: langchain-oci>=0.2.6,<0.3.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "langfuse",
+      "purl": "pkg:pypi/langfuse",
+      "bom-ref": "pkg:pypi/langfuse",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: langfuse>=4.0.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "langgraph",
+      "purl": "pkg:pypi/langgraph",
+      "bom-ref": "pkg:pypi/langgraph",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: langgraph>=0.2.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lxml",
+      "purl": "pkg:pypi/lxml@6.1.1",
+      "bom-ref": "pkg:pypi/lxml@6.1.1",
+      "version": "6.1.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: lxml==6.1.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "matplotlib",
+      "purl": "pkg:pypi/matplotlib",
+      "bom-ref": "pkg:pypi/matplotlib",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: matplotlib>=3.9.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mkdocs",
+      "purl": "pkg:pypi/mkdocs",
+      "bom-ref": "pkg:pypi/mkdocs",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "requirements-docs.txt: mkdocs>=1.6,<2"
+        },
+        {
+          "name": "octo:source",
+          "value": "requirements-docs.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mkdocs-material",
+      "purl": "pkg:pypi/mkdocs-material",
+      "bom-ref": "pkg:pypi/mkdocs-material",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "requirements-docs.txt: mkdocs-material>=9.5,<10"
+        },
+        {
+          "name": "octo:source",
+          "value": "requirements-docs.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mkdocs-mermaid2-plugin",
+      "purl": "pkg:pypi/mkdocs-mermaid2-plugin",
+      "bom-ref": "pkg:pypi/mkdocs-mermaid2-plugin",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "requirements-docs.txt: mkdocs-mermaid2-plugin>=1.2,<2"
+        },
+        {
+          "name": "octo:source",
+          "value": "requirements-docs.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "numpy",
+      "purl": "pkg:pypi/numpy",
+      "bom-ref": "pkg:pypi/numpy",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: numpy>=1.26"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "oci",
+      "purl": "pkg:pypi/oci",
+      "bom-ref": "pkg:pypi/oci",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "deploy/wizard/pyproject.toml: oci>=2.130"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: oci>=2.119.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: oci>=2.120.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: oci>=2.130"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: oci>=2.130"
+        },
+        {
+          "name": "octo:source",
+          "value": "deploy/wizard/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "oci",
+      "purl": "pkg:pypi/oci@2.176.0",
+      "bom-ref": "pkg:pypi/oci@2.176.0",
+      "version": "2.176.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: oci==2.176.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: oci==2.176.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-async-worker",
+      "purl": "pkg:pypi/octo-async-worker@1.0.0",
+      "bom-ref": "pkg:pypi/octo-async-worker@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: octo-async-worker==1.0.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: octo-async-worker==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-cache-client",
+      "purl": "pkg:pypi/octo-cache-client@1.0.0",
+      "bom-ref": "pkg:pypi/octo-cache-client@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: octo-cache-client==1.0.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: octo-cache-client==1.0.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: octo-cache-client==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-edge-fuzz",
+      "purl": "pkg:pypi/octo-edge-fuzz@1.0.0",
+      "bom-ref": "pkg:pypi/octo-edge-fuzz@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: octo-edge-fuzz==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-genai-studio",
+      "purl": "pkg:pypi/octo-genai-studio@0.1.0",
+      "bom-ref": "pkg:pypi/octo-genai-studio@0.1.0",
+      "version": "0.1.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: octo-genai-studio==0.1.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-load-control",
+      "purl": "pkg:pypi/octo-load-control@1.0.0",
+      "bom-ref": "pkg:pypi/octo-load-control@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: octo-load-control==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-object-pipeline",
+      "purl": "pkg:pypi/octo-object-pipeline@1.0.0",
+      "bom-ref": "pkg:pypi/octo-object-pipeline@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: octo-object-pipeline==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-provisioning-wizard",
+      "purl": "pkg:pypi/octo-provisioning-wizard@1.0.0",
+      "bom-ref": "pkg:pypi/octo-provisioning-wizard@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "deploy/wizard/pyproject.toml: octo-provisioning-wizard==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "deploy/wizard/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-remediator",
+      "purl": "pkg:pypi/octo-remediator@1.0.0",
+      "bom-ref": "pkg:pypi/octo-remediator@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: octo-remediator==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-stress-runner",
+      "purl": "pkg:pypi/octo-stress-runner@1.0.0",
+      "bom-ref": "pkg:pypi/octo-stress-runner@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: octo-stress-runner==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "octo-traffic-generator",
+      "purl": "pkg:pypi/octo-traffic-generator@1.0.0",
+      "bom-ref": "pkg:pypi/octo-traffic-generator@1.0.0",
+      "version": "1.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: octo-traffic-generator==1.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-api",
+      "purl": "pkg:pypi/opentelemetry-api",
+      "bom-ref": "pkg:pypi/opentelemetry-api",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: opentelemetry-api>=1.27.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: opentelemetry-api>=1.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: opentelemetry-api>=1.24"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-api",
+      "purl": "pkg:pypi/opentelemetry-api@1.42.1",
+      "bom-ref": "pkg:pypi/opentelemetry-api@1.42.1",
+      "version": "1.42.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-api==1.42.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-api==1.42.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-http",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-http",
+      "bom-ref": "pkg:pypi/opentelemetry-exporter-otlp-proto-http",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.27.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: opentelemetry-exporter-otlp-proto-http>=1.24"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-http",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.42.1",
+      "bom-ref": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.42.1",
+      "version": "1.42.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-exporter-otlp-proto-http==1.42.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-exporter-otlp-proto-http==1.42.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-prometheus",
+      "purl": "pkg:pypi/opentelemetry-exporter-prometheus@0.63b1",
+      "bom-ref": "pkg:pypi/opentelemetry-exporter-prometheus@0.63b1",
+      "version": "0.63b1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-exporter-prometheus==0.63b1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-exporter-prometheus==0.63b1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-fastapi",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-fastapi",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-fastapi",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: opentelemetry-instrumentation-fastapi>=0.48b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: opentelemetry-instrumentation-fastapi>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: opentelemetry-instrumentation-fastapi>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: opentelemetry-instrumentation-fastapi>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: opentelemetry-instrumentation-fastapi>=0.48b0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-fastapi",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.63b1",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.63b1",
+      "version": "0.63b1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-fastapi==0.63b1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-fastapi==0.63b1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-httpx",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-httpx",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-httpx",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: opentelemetry-instrumentation-httpx>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: opentelemetry-instrumentation-httpx>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: opentelemetry-instrumentation-httpx>=0.48b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: opentelemetry-instrumentation-httpx>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: opentelemetry-instrumentation-httpx>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: opentelemetry-instrumentation-httpx>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: opentelemetry-instrumentation-httpx>=0.45b0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-httpx",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-httpx@0.63b1",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-httpx@0.63b1",
+      "version": "0.63b1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-httpx==0.63b1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-httpx==0.63b1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-logging",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-logging",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-logging",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: opentelemetry-instrumentation-logging>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: opentelemetry-instrumentation-logging>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: opentelemetry-instrumentation-logging>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: opentelemetry-instrumentation-logging>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: opentelemetry-instrumentation-logging>=0.45b0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: opentelemetry-instrumentation-logging>=0.45b0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-logging",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-logging@0.63b1",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-logging@0.63b1",
+      "version": "0.63b1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-logging==0.63b1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-logging==0.63b1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-redis",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-redis",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-redis",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: opentelemetry-instrumentation-redis>=0.45b0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-requests",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-requests",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-requests",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: opentelemetry-instrumentation-requests>=0.45b0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-sqlalchemy",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.63b1",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.63b1",
+      "version": "0.63b1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-sqlalchemy==0.63b1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-sqlalchemy==0.63b1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:pypi/opentelemetry-sdk",
+      "bom-ref": "pkg:pypi/opentelemetry-sdk",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: opentelemetry-sdk>=1.27.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: opentelemetry-sdk>=1.27"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: opentelemetry-sdk>=1.24"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:pypi/opentelemetry-sdk@1.42.1",
+      "bom-ref": "pkg:pypi/opentelemetry-sdk@1.42.1",
+      "version": "1.42.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: opentelemetry-sdk==1.42.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: opentelemetry-sdk==1.42.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "oracledb",
+      "purl": "pkg:pypi/oracledb",
+      "bom-ref": "pkg:pypi/oracledb",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: oracledb>=2.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "oracledb",
+      "purl": "pkg:pypi/oracledb@3.4.2",
+      "bom-ref": "pkg:pypi/oracledb@3.4.2",
+      "version": "3.4.2",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: oracledb==3.4.2"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "oracledb",
+      "purl": "pkg:pypi/oracledb@4.0.1",
+      "bom-ref": "pkg:pypi/oracledb@4.0.1",
+      "version": "4.0.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: oracledb==4.0.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "packaging",
+      "purl": "pkg:pypi/packaging",
+      "bom-ref": "pkg:pypi/packaging",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: packaging>=26.2"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: packaging>=26.2"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pandas",
+      "purl": "pkg:pypi/pandas",
+      "bom-ref": "pkg:pypi/pandas",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: pandas>=2.2.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "passlib",
+      "purl": "pkg:pypi/passlib@1.7.4",
+      "bom-ref": "pkg:pypi/passlib@1.7.4",
+      "version": "1.7.4",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: passlib[bcrypt]==1.7.4"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "playwright",
+      "purl": "pkg:pypi/playwright",
+      "bom-ref": "pkg:pypi/playwright",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: playwright>=1.60.0,<2.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: playwright>=1.60.0,<2.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "prometheus-client",
+      "purl": "pkg:pypi/prometheus-client@0.25.0",
+      "bom-ref": "pkg:pypi/prometheus-client@0.25.0",
+      "version": "0.25.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: prometheus-client==0.25.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: prometheus-client==0.25.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "psutil",
+      "purl": "pkg:pypi/psutil",
+      "bom-ref": "pkg:pypi/psutil",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: psutil>=7.2.2"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: psutil>=7.2.2"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "psycopg2-binary",
+      "purl": "pkg:pypi/psycopg2-binary@2.9.12",
+      "bom-ref": "pkg:pypi/psycopg2-binary@2.9.12",
+      "version": "2.9.12",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: psycopg2-binary==2.9.12"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "purl": "pkg:pypi/pydantic",
+      "bom-ref": "pkg:pypi/pydantic",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "deploy/wizard/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: pydantic>=2.9,<3.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: pydantic>=2.5"
+        },
+        {
+          "name": "octo:source",
+          "value": "deploy/wizard/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pydantic-settings",
+      "purl": "pkg:pypi/pydantic-settings",
+      "bom-ref": "pkg:pypi/pydantic-settings",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: pydantic-settings>=2.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: pydantic-settings>=2.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: pydantic-settings>=2.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: pydantic-settings>=2.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pydantic-settings",
+      "purl": "pkg:pypi/pydantic-settings@2.14.1",
+      "bom-ref": "pkg:pypi/pydantic-settings@2.14.1",
+      "version": "2.14.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: pydantic-settings==2.14.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "purl": "pkg:pypi/pydantic@2.13.4",
+      "bom-ref": "pkg:pypi/pydantic@2.13.4",
+      "version": "2.13.4",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: pydantic==2.13.4"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pyjwt",
+      "purl": "pkg:pypi/pyjwt@2.13.0",
+      "bom-ref": "pkg:pypi/pyjwt@2.13.0",
+      "version": "2.13.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: PyJWT[crypto]==2.13.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pymdown-extensions",
+      "purl": "pkg:pypi/pymdown-extensions",
+      "bom-ref": "pkg:pypi/pymdown-extensions",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "requirements-docs.txt: pymdown-extensions>=10.14,<11"
+        },
+        {
+          "name": "octo:source",
+          "value": "requirements-docs.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pytest",
+      "purl": "pkg:pypi/pytest",
+      "bom-ref": "pkg:pypi/pytest",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: pytest>=9.0.3,<10.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "deploy/wizard/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: pytest>=8.0.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: pytest>=9.0.3,<10.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: pytest>=8"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "deploy/wizard/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pytest-asyncio",
+      "purl": "pkg:pypi/pytest-asyncio",
+      "bom-ref": "pkg:pypi/pytest-asyncio",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: pytest-asyncio>=1.4.0,<2.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: pytest-asyncio>=0.24.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: pytest-asyncio>=1.4.0,<2.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: pytest-asyncio>=0.23"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pytest-cov",
+      "purl": "pkg:pypi/pytest-cov",
+      "bom-ref": "pkg:pypi/pytest-cov",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: pytest-cov>=7.1.0,<8.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: pytest-cov>=7.1.0,<8.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pytest-mock",
+      "purl": "pkg:pypi/pytest-mock",
+      "bom-ref": "pkg:pypi/pytest-mock",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: pytest-mock>=3.15.1,<4.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: pytest-mock>=3.15.1,<4.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pytest-xdist",
+      "purl": "pkg:pypi/pytest-xdist",
+      "bom-ref": "pkg:pypi/pytest-xdist",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: pytest-xdist>=3.8.0,<4.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "python-dotenv",
+      "purl": "pkg:pypi/python-dotenv@1.2.2",
+      "bom-ref": "pkg:pypi/python-dotenv@1.2.2",
+      "version": "1.2.2",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: python-dotenv==1.2.2"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "python-jose",
+      "purl": "pkg:pypi/python-jose@3.5.0",
+      "bom-ref": "pkg:pypi/python-jose@3.5.0",
+      "version": "3.5.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: python-jose[cryptography]==3.5.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "purl": "pkg:pypi/python-multipart",
+      "bom-ref": "pkg:pypi/python-multipart",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "requirements-docs.txt: python-multipart>=0.0.27"
+        },
+        {
+          "name": "octo:source",
+          "value": "requirements-docs.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "purl": "pkg:pypi/python-multipart@0.0.29",
+      "bom-ref": "pkg:pypi/python-multipart@0.0.29",
+      "version": "0.0.29",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: python-multipart==0.0.29"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "purl": "pkg:pypi/python-multipart@0.0.30",
+      "bom-ref": "pkg:pypi/python-multipart@0.0.30",
+      "version": "0.0.30",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: python-multipart==0.0.30"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: python-multipart==0.0.30"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pyyaml",
+      "purl": "pkg:pypi/pyyaml@6.0.3",
+      "bom-ref": "pkg:pypi/pyyaml@6.0.3",
+      "version": "6.0.3",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: pyyaml==6.0.3"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "questionary",
+      "purl": "pkg:pypi/questionary",
+      "bom-ref": "pkg:pypi/questionary",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "deploy/wizard/pyproject.toml: questionary>=2.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "deploy/wizard/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "redis",
+      "purl": "pkg:pypi/redis",
+      "bom-ref": "pkg:pypi/redis",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: redis[hiredis]>=8.0.0,<9.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: redis>=5.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/cache/client/pyproject.toml: redis>=5.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: redis>=5.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: redis[hiredis]>=7.4.0,<8.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/cache/client/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "requests",
+      "purl": "pkg:pypi/requests",
+      "bom-ref": "pkg:pypi/requests",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/auto-remediator/requirements.txt: requests>=2.31.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/auto-remediator/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "respx",
+      "purl": "pkg:pypi/respx",
+      "bom-ref": "pkg:pypi/respx",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements-dev.txt: respx>=0.23.1,<1.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: respx>=0.21"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements-dev.txt: respx>=0.23.1,<1.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: respx>=0.21"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements-dev.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "rich",
+      "purl": "pkg:pypi/rich",
+      "bom-ref": "pkg:pypi/rich",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "deploy/wizard/pyproject.toml: rich>=13.7"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: rich>=13.7"
+        },
+        {
+          "name": "octo:source",
+          "value": "deploy/wizard/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ruff",
+      "purl": "pkg:pypi/ruff",
+      "bom-ref": "pkg:pypi/ruff",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: ruff>=0.6.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "setuptools",
+      "purl": "pkg:pypi/setuptools",
+      "bom-ref": "pkg:pypi/setuptools",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: setuptools>=68"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: setuptools>=68"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sqlalchemy",
+      "purl": "pkg:pypi/sqlalchemy@2.0.50",
+      "bom-ref": "pkg:pypi/sqlalchemy@2.0.50",
+      "version": "2.0.50",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: sqlalchemy==2.0.50"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: sqlalchemy[asyncio]==2.0.50"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "structlog",
+      "purl": "pkg:pypi/structlog",
+      "bom-ref": "pkg:pypi/structlog",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/async-worker/pyproject.toml: structlog>=24.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/edge-fuzz/pyproject.toml: structlog>=24.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: structlog>=24.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: structlog>=24.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: structlog>=24.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: structlog>=24.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/async-worker/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/edge-fuzz/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "purl": "pkg:pypi/uvicorn",
+      "bom-ref": "pkg:pypi/uvicorn",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "services/load-control/pyproject.toml: uvicorn[standard]>=0.30"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/object-pipeline/pyproject.toml: uvicorn[standard]>=0.30"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/remediator/pyproject.toml: uvicorn[standard]>=0.30"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: uvicorn[standard]>=0.27"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/load-control/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/object-pipeline/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/remediator/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "purl": "pkg:pypi/uvicorn@0.48.0",
+      "bom-ref": "pkg:pypi/uvicorn@0.48.0",
+      "version": "0.48.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: uvicorn[standard]==0.48.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "services/genai-studio/pyproject.toml: uvicorn[standard]==0.48.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: uvicorn[standard]==0.48.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
+        },
+        {
+          "name": "octo:source",
+          "value": "services/genai-studio/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "wheel",
+      "purl": "pkg:pypi/wheel",
+      "bom-ref": "pkg:pypi/wheel",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "tools/stress-runner/pyproject.toml: wheel"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "tools/traffic-generator/pyproject.toml: wheel"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/stress-runner/pyproject.toml"
+        },
+        {
+          "name": "octo:source",
+          "value": "tools/traffic-generator/pyproject.toml"
+        }
+      ]
+    }
+  ]
+}

@@ -27,10 +27,10 @@ module "stack" {
   source = "../terraform"
 
   compartment_id     = var.compartment_id
-  shop_domain        = var.shop_domain
-  crm_domain         = var.crm_domain
-  ops_domain         = var.ops_domain
-  coordinator_domain = var.coordinator_domain
+  shop_domain        = coalesce(var.shop_domain, "shop.${var.dns_domain}")
+  crm_domain         = coalesce(var.crm_domain, "crm.${var.dns_domain}")
+  ops_domain         = coalesce(var.ops_domain, "ops.${var.dns_domain}")
+  coordinator_domain = coalesce(var.coordinator_domain, "coordinator.${var.dns_domain}")
 
   waf_mode          = var.waf_mode
   waf_log_group_id  = var.waf_log_group_id

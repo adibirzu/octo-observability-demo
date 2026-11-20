@@ -137,7 +137,7 @@ spec:
             - name: WORKFLOW_POLL_SECONDS
               value: "90"
             - name: WORKFLOW_ALLOWED_ORIGINS
-              value: "https://drones.${DNS_DOMAIN},https://admin.${DNS_DOMAIN}"
+              value: "${SHOP_PUBLIC_URL},${CRM_PUBLIC_URL}"
             - name: WORKFLOW_FAULTY_QUERY_ENABLED
               value: "false"
             - name: SELECTAI_PROFILE_NAME

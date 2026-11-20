@@ -74,8 +74,8 @@ check() {
     local expected_substr="${3:-}"
 
     local response
-    response=$(curl -sS --max-time 10 "$url" 2>&1) || {
-        red "✗ ${label}: unreachable"
+    response=$(curl -fsS --max-time 10 "$url" 2>&1) || {
+        red "✗ ${label}: request failed"
         FAIL=$((FAIL + 1))
         return
     }
@@ -99,7 +99,7 @@ check_json_field() {
     local expected="$4"
 
     local actual
-    actual=$(curl -sS --max-time 10 "$url" 2>&1 | jq -r "$jq_filter" 2>/dev/null) || {
+    actual=$(curl -fsS --max-time 10 "$url" 2>&1 | jq -r "$jq_filter" 2>/dev/null) || {
         red "✗ ${label}: unreachable or invalid JSON"
         FAIL=$((FAIL + 1))
         return
@@ -135,13 +135,11 @@ echo
 
 bold "--- Admin / CRM reachability ---"
 check "Admin HTML"     "https://${ADMIN_HOST}/"
-check "Admin /ready"   "https://${ADMIN_HOST}/ready"  '"ready"'
+check_json_field "CRM database reachable" "https://${ADMIN_HOST}/ready" '.ready' "true"
 echo
 
 bold "--- Java payment sidecar (via shop) ---"
-# Java APM sidecar isn't usually exposed publicly; check via shop's
-# health proxy if one exists.
-check "Shop /app-server/health" "https://${SHOP_HOST}/app-server/health" || true
+check_json_field "Java app server reachable" "https://${SHOP_HOST}/api/shop/app-server/health" '.java_app_server.status' "ok"
 echo
 
 bold "--- Summary ---"
