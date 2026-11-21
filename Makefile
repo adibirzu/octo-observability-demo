@@ -127,20 +127,21 @@ deploy-java-apm: env-check ## Deploy the Java payment sidecar
 .PHONY: deploy-helm
 deploy-helm: env-check ## Deploy via the Helm chart instead of raw manifests
 	helm upgrade --install octo-apm-demo deploy/helm/octo-apm-demo \
-	  --set image.region=$(OCIR_REGION) \
-	  --set image.tenancy=$(OCIR_TENANCY) \
-	  --set ociConfig.compartmentId=$(OCI_COMPARTMENT_ID) \
-	  --set dnsDomain=$(DNS_DOMAIN)
+	  --set-string global.image.region="$(OCIR_REGION)" \
+	  --set-string global.image.tenancy="$(OCIR_TENANCY)" \
+	  --set-string secrets.data.ociConfig.compartmentId="$(OCI_COMPARTMENT_ID)" \
+	  --set-string global.dnsDomain="$(DNS_DOMAIN)"
 
 # --- verification -----------------------------------------------------------
 
 .PHONY: verify
-verify: ## Run the full local validation gate (tests + mkdocs + drawio + deploy/verify.sh)
+verify: sbom-check ## Verify the SBOM, local tests, docs, and deploy assets
 	./deploy/verify.sh
 
 .PHONY: smoke
 smoke: env-check ## Smoke-check public endpoints (DNS + /ready + APM/RUM/logging configured)
-	./deploy/validate-deployment.sh
+	SHOP_HOST="$${SHOP_HOST:-shop.$${DNS_DOMAIN}}" ADMIN_HOST="$${ADMIN_HOST:-crm.$${DNS_DOMAIN}}" \
+	  ./deploy/validate-deployment.sh
 
 # --- teardown ---------------------------------------------------------------
 
@@ -175,6 +176,13 @@ docs-serve: ## Serve mkdocs site locally at http://localhost:8000
 .PHONY: docs-build
 docs-build: ## Build mkdocs site (strict — fails on broken links)
 	python3 -m mkdocs build --strict
+
+.PHONY: sbom sbom-check
+sbom: ## Regenerate the CycloneDX 1.6 SBOM
+	python3 tools/generate_sbom.py --write
+
+sbom-check: ## Check that the committed SBOM matches its inputs
+	python3 tools/generate_sbom.py --check
 
 # --- tests ------------------------------------------------------------------
 
@@ -221,4 +229,5 @@ rm-stack-info: ## Show one-click Deploy-to-OCI URL for the packaged stack
 
 .PHONY: info
 info: ## Show current cluster + APM/logging configuration
-	@./deploy/validate-deployment.sh --info-only
+	@SHOP_HOST="$${SHOP_HOST:-shop.$${DNS_DOMAIN}}" ADMIN_HOST="$${ADMIN_HOST:-crm.$${DNS_DOMAIN}}" \
+	  ./deploy/validate-deployment.sh --info-only

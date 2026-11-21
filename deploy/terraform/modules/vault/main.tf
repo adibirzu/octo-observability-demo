@@ -95,13 +95,14 @@ resource "oci_kms_key" "master" {
 }
 
 locals {
-  nonempty_secrets = {
-    for k, v in var.secrets : k => v if trimspace(v) != ""
-  }
+  # Expose resource names only. Secret contents retain their sensitivity.
+  nonempty_secret_names = nonsensitive(toset([
+    for name, value in var.secrets : name if trimspace(value) != ""
+  ]))
 }
 
 resource "oci_vault_secret" "this" {
-  for_each       = local.nonempty_secrets
+  for_each       = local.nonempty_secret_names
   compartment_id = var.compartment_id
   vault_id       = oci_kms_vault.this.id
   key_id         = oci_kms_key.master.id
@@ -110,7 +111,7 @@ resource "oci_vault_secret" "this" {
 
   secret_content {
     content_type = "BASE64"
-    content      = base64encode(each.value)
+    content      = base64encode(var.secrets[each.key])
   }
 
   freeform_tags = {

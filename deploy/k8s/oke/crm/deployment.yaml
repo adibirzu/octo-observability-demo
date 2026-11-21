@@ -97,7 +97,7 @@ spec:
             - name: DNS_DOMAIN
               value: "${DNS_DOMAIN}"
             - name: CRM_BASE_URL
-              value: "https://admin.${DNS_DOMAIN}"
+              value: "${CRM_PUBLIC_URL}"
             - name: SERVICE_SHOP_URL
               value: "http://octo-drone-shop.${K8S_NAMESPACE_SHOP}.svc.cluster.local:8080"
             - name: OCI_AUTH_MODE

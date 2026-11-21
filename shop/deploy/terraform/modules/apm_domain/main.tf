@@ -37,11 +37,4 @@ data "oci_apm_data_keys" "private" {
   data_key_type = "PRIVATE"
 }
 
-# Register a RUM Web Application config (optional).
-resource "oci_apm_config_config" "rum_web_app" {
-  count         = var.create_rum_web_app ? 1 : 0
-  apm_domain_id = oci_apm_apm_domain.this.id
-  config_type   = "WEB_APPLICATION"
-  display_name  = var.web_application_display_name
-  freeform_tags = var.freeform_tags
-}
+# Register RUM web applications in the OCI Console using the APM Domain output.

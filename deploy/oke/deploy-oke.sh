@@ -48,6 +48,11 @@ OKE_DIR="${REPO_ROOT}/k8s/oke"
 : "${SERVER_DRY_RUN:=true}"
 : "${APPLY:=true}"
 
+# Keep existing OKE aliases as defaults and allow the ingress URLs supplied by the pipeline.
+: "${SHOP_PUBLIC_URL:=https://drones.${DNS_DOMAIN}}"
+: "${CRM_PUBLIC_URL:=https://admin.${DNS_DOMAIN}}"
+
+export SHOP_PUBLIC_URL CRM_PUBLIC_URL
 export DNS_DOMAIN OCIR_REGION OCIR_TENANCY IMAGE_TAG \
     K8S_NAMESPACE_SHOP K8S_NAMESPACE_CRM OKE_CLUSTER_NAME \
     OKE_EXTERNAL_INGRESS_CIDR OCI_REGION
@@ -140,8 +145,8 @@ echo "   Shop namespace:      ${K8S_NAMESPACE_SHOP}"
 echo "   CRM namespace:       ${K8S_NAMESPACE_CRM}"
 echo "   OKE cluster:         ${OKE_CLUSTER_NAME}"
 echo "   External ingress:    ${OKE_EXTERNAL_INGRESS_CIDR}"
-echo "   Shop URL:            https://drones.${DNS_DOMAIN}"
-echo "   CRM URL:             https://admin.${DNS_DOMAIN}"
+echo "   Shop URL:            ${SHOP_PUBLIC_URL}"
+echo "   CRM URL:             ${CRM_PUBLIC_URL}"
 echo "   OCIR:                ${OCIR_REGION}.ocir.io/${OCIR_TENANCY}"
 echo "   OCI region:          ${OCI_REGION}"
 echo "   IMAGE_TAG:           ${IMAGE_TAG}"

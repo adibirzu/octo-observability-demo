@@ -13,8 +13,6 @@ terraform {
   }
 }
 
-provider "oci" {}
-
 module "waf_shop" {
   source            = "./modules/waf"
   compartment_id    = var.compartment_id

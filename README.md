@@ -2,7 +2,7 @@
 
 **An end-to-end OCI Observability reference platform — a multi-service drone retail stack instrumented so every browser click, FastAPI request, Spring Boot span, and Oracle ATP query share one trace context.**
 
-[![Docs](https://img.shields.io/badge/docs-mkdocs--material-blue)](https://<github-username>.github.io/octo-apm-demo)
+[![Docs](https://img.shields.io/badge/docs-mkdocs--material-blue)](site/getting-started/index.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -11,11 +11,11 @@
 
 [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260602/octo-compute-stack.zip)
 
-One-click stacks: **[Deploy Full Private Compute Stack to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260602/octo-compute-stack.zip)** (single private VM) · **[Deploy to Oracle Cloud — OKE stack](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip)** (Kubernetes).
+**[Deploy Full Private Compute Stack to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/compute-resource-manager-stack-20260602/octo-compute-stack.zip)** (two private instances). For the OKE bootstrap, download `octo-stack.zip` from the tagged [GitHub Release](https://github.com/adibirzu/octo-observability-demo/releases) and upload it to Resource Manager.
 
 | Path | When to use | How |
 |---|---|---|
-| **One-click Resource Manager** | First evaluation, no local tooling | Click the **Deploy to Oracle Cloud** button above + fill 3 stack variables |
+| **One-click Resource Manager** | First evaluation, no local tooling | Choose the OKE or Compute archive and configure the inputs for the selected stack |
 | **`make` quickstart** | Engineers extending the platform | `cp env.template .env && make doctor && make deploy && make smoke` |
 | **Local stack (no OCI)** | First exploration / code reading | `make local-up` then browse `http://localhost:18080` |
 
@@ -92,7 +92,7 @@ The documentation site is the canonical entry point. Direct links by audience:
 - **Deploying to a fresh OCI tenancy?** Use the [New Tenancy bootstrap](site/getting-started/new-tenancy.md).
 - **Two-instance Compute deployment?** Splitting services across a public LB/WAF, private Shop and CRM Compute instances, private ATP (see [Compute Deployment](site/getting-started/compute-deployment.md) and `deploy/compute/`).
 - **OKE / Kubernetes deployment?** See [OKE Deployment](site/getting-started/oke-deployment.md), `deploy/oke/`, and `deploy/helm/`.
-- **OCI Resource Manager stack?** [Deploy to Oracle Cloud](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip) directly from the Console.
+- **OCI Resource Manager stack?** Use the artifacts from the matching Git tag or build a local archive. See the [ORM and pipeline runbook](docs/ORM-AND-PIPELINE.md) and the [MkDocs operator guide](site/getting-started/orm-and-cp-pipeline.md).
 - **Want to understand the architecture first?** Read [Platform Overview](site/architecture/platform-overview.md), [Service Inventory](site/architecture/service-inventory.md), and [Correlation Contract](site/architecture/correlation-contract.md).
 - **Want hands-on labs?** Work through the [Workshop](site/workshop/index.md) — ten labs from first trace through chaos drill.
 
@@ -100,12 +100,12 @@ A minimal local stack lives under `deploy/local-stack/` for laptop-scale explora
 
 ```bash
 # Clone and preview the documentation locally
-git clone https://github.com/<github-username>/octo-observability-demo.git
+git clone https://github.com/adibirzu/octo-observability-demo.git
 cd octo-observability-demo
 
 pip install -r requirements-docs.txt
 mkdocs serve
-# → open http://127.0.0.1:8000
+# Open http://localhost:8000
 ```
 
 For an OCI deployment, the high-level path is:
@@ -171,7 +171,7 @@ octo-apm-demo/
 
 ## Documentation site
 
-Full documentation is published at **https://&lt;github-username&gt;.github.io/octo-apm-demo** and is built from `site/` via GitHub Actions (`.github/workflows/mkdocs-deploy.yml`). The mkdocs-material configuration lives in `mkdocs.yml`. To preview locally, run `mkdocs serve` after installing `requirements-docs.txt`.
+The [documentation source](site/index.md) lives in `site/` and the MkDocs configuration lives in `mkdocs.yml`. To preview locally, run `mkdocs serve` after installing `requirements-docs.txt`.
 
 ### Private Demo Environment
 

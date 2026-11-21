@@ -33,7 +33,7 @@ variable "web_application_display_name" {
 variable "create_rum_web_app" {
   type        = bool
   default     = true
-  description = "Whether to register a RUM web application config in the APM Domain."
+  description = "Retained compatibility no-op: RUM web applications are registered in the OCI Console, so this module no longer creates one."
 }
 
 variable "freeform_tags" {

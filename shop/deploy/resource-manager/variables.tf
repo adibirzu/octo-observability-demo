@@ -18,24 +18,34 @@ variable "compartment_id" {
   type = string
 }
 
+variable "dns_domain" {
+  type        = string
+  description = "Public DNS zone used to derive the application hostnames."
+
+  validation {
+    condition     = can(regex("^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$", var.dns_domain))
+    error_message = "Enter a DNS zone name without a scheme or trailing dot."
+  }
+}
+
 variable "shop_domain" {
   type    = string
-  default = "shop.example.invalid"
+  default = ""
 }
 
 variable "crm_domain" {
   type    = string
-  default = "crm.example.invalid"
+  default = ""
 }
 
 variable "ops_domain" {
   type    = string
-  default = "ops.example.invalid"
+  default = ""
 }
 
 variable "coordinator_domain" {
   type    = string
-  default = "coordinator.example.invalid"
+  default = ""
 }
 
 variable "waf_mode" {

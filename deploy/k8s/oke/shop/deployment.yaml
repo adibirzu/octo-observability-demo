@@ -103,7 +103,7 @@ spec:
             - name: SERVICE_CRM_URL
               value: "http://enterprise-crm-portal.${K8S_NAMESPACE_CRM}.svc.cluster.local:8080"
             - name: CRM_PUBLIC_URL
-              value: "https://admin.${DNS_DOMAIN}"
+              value: "${CRM_PUBLIC_URL}"
             - name: JAVA_APM_ENABLED
               value: "true"
             - name: JAVA_APM_SERVICE_URL

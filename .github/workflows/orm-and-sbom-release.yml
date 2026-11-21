@@ -1,0 +1,77 @@
+name: ORM and SBOM release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.3"
+          terraform_wrapper: false
+      - name: Check the manifest and SBOM
+        run: |
+          python -m pip install pytest pyyaml jsonschema
+          python -m pytest -q tests/test_sbom_orm_and_cp_pipeline.py
+          python tools/generate_sbom.py --check
+      - name: Package and validate the published stacks
+        env:
+          TF_IN_AUTOMATION: "1"
+          CHECKPOINT_DISABLE: "1"
+        run: |
+          mkdir -p release
+          bash deploy/resource-manager/stack-package.sh --output-dir release
+          bash deploy/compute/stack-package.sh --output-dir release
+          for archive in release/*.zip; do
+            unzip -tq "$archive"
+            extracted="$(mktemp -d)"
+            unzip -q "$archive" -d "$extracted"
+            for file in main.tf variables.tf schema.yaml; do
+              test -f "$extracted/$file"
+            done
+            test -z "$(find "$extracted" -name backend.tf -print -quit)"
+            terraform -chdir="$extracted" init -backend=false -input=false -no-color
+            terraform -chdir="$extracted" validate -no-color
+            rm -rf "$extracted"
+          done
+          cp sbom/octo-observability-demo.cdx.json release/
+          cd release
+          sha256sum octo-stack.zip octo-compute-stack.zip octo-observability-demo.cdx.json > SHA256SUMS
+          sha256sum --check SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: orm-and-sbom
+          path: release/
+          if-no-files-found: error
+
+  attach:
+    if: github.event_name == 'release'
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: orm-and-sbom
+          path: release
+      - name: Attach verified artifacts to the existing release
+        working-directory: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          sha256sum --check SHA256SUMS
+          gh release upload -- "$RELEASE_TAG" octo-stack.zip octo-compute-stack.zip octo-observability-demo.cdx.json SHA256SUMS
