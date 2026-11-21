@@ -8,7 +8,6 @@ import sys
 from pathlib import Path, PurePosixPath
 from zipfile import ZipFile
 
-import jsonschema
 import pytest
 import yaml
 
@@ -110,6 +109,8 @@ def test_active_deployment_surfaces_use_portable_domains_and_repository():
 def test_control_plane_manifest_contract():
     manifest = json.loads((ROOT / "deploy/cp-pipeline-manifest.json").read_text())
     schema = json.loads((ROOT / "deploy/cp-pipeline-manifest.schema.json").read_text())
+    import jsonschema
+
     jsonschema.validate(manifest, schema)
     assert manifest["schemaVersion"] == 1
     assert manifest["repository"] == "adibirzu/octo-observability-demo"
@@ -130,6 +131,64 @@ def test_control_plane_manifest_contract():
         f"{packager}/stack-package.sh" for _, packager, _ in STACKS
     }
     assert manifest["sbom"] == SBOM
+
+
+def test_deploy_verification_without_jsonschema(tmp_path):
+    (tmp_path / "sitecustomize.py").write_text(
+        """import sys
+
+class BlockJsonschema:
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == "jsonschema":
+            raise ModuleNotFoundError("No module named 'jsonschema'", name=fullname)
+
+sys.meta_path.insert(0, BlockJsonschema())
+""",
+    )
+    # Keep package paths added by the host's sitecustomize, such as Homebrew's.
+    site_packages = [
+        path for path in sys.path if Path(path).name in {"site-packages", "dist-packages"}
+    ]
+    env = {
+        **os.environ,
+        "PYTHONPATH": os.pathsep.join([str(tmp_path), *site_packages]),
+        "PYTEST_ADDOPTS": "",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    }
+    module = "tests/test_sbom_orm_and_cp_pipeline.py"
+    contract = f"{module}::test_control_plane_manifest_contract"
+    pytest_command = [sys.executable, "-m", "pytest", "-q"]
+    direct = subprocess.run(
+        [*pytest_command, contract], cwd=ROOT, env=env,
+        capture_output=True, text=True, timeout=60,
+    )
+    remaining = subprocess.run(
+        [*pytest_command, module, "--deselect", contract,
+         "--deselect", f"{module}::test_deploy_verification_without_jsonschema"],
+        cwd=ROOT, env=env, capture_output=True, text=True, timeout=60,
+    )
+    assert remaining.returncode == 0, remaining.stdout + remaining.stderr
+    assert direct.returncode == 1, direct.stdout + direct.stderr
+    assert "ModuleNotFoundError: No module named 'jsonschema'" in direct.stdout
+
+    deploy = tmp_path / "deploy"
+    deploy.mkdir()
+    shutil.copy(ROOT / "deploy/verify.sh", deploy)
+    (tmp_path / "tests").symlink_to(ROOT / "tests", target_is_directory=True)
+    python3 = tmp_path / "python3"
+    python3.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} "$@"\n')
+    python3.chmod(0o700)
+    verification = subprocess.run(
+        ["/bin/bash", str(deploy / "verify.sh")], cwd=tmp_path,
+        env={
+            **env,
+            "PATH": f"{tmp_path}:{os.defpath}",
+            "PYTEST_ADDOPTS": "-k 'sbom_covers_dependency_inputs_and_is_fresh or control_plane_manifest_contract'",
+        },
+        capture_output=True, text=True, timeout=60,
+    )
+    assert "jsonschema not installed in python3" in verification.stdout, verification.stdout + verification.stderr
+    assert re.search(r"PASS[^\n]* root unified deploy pytest", verification.stdout), verification.stdout
 
 
 def test_make_helm_overrides_the_values_consumed_by_templates():

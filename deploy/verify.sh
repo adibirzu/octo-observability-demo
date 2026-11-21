@@ -410,6 +410,10 @@ if [[ ! -f "${REPO_ROOT}/deploy/oke/bootstrap-demo-secrets.sh" ]]; then
     root_deploy_tests+=(--deselect "tests/test_unified_deploy_surface.py::test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse")
     warn "Local OKE secrets bootstrap contract unavailable in this checkout"
 fi
+if ! python3 -c "import jsonschema" >/dev/null 2>&1; then
+    root_deploy_tests+=(--deselect "tests/test_sbom_orm_and_cp_pipeline.py::test_control_plane_manifest_contract")
+    warn "jsonschema not installed in python3 - skipping CP manifest JSON Schema test (install shop/requirements-dev.txt)"
+fi
 if (cd "${REPO_ROOT}" && python3 -m pytest -q "${root_deploy_tests[@]}" >/dev/null 2>&1); then
     ok "root unified deploy pytest"
 else
