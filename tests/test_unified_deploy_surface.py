@@ -4,6 +4,8 @@ import zipfile
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[1]
 RESOURCE_MANAGER_ZIP_URL = "https://github.com/adibirzu/octo-observability-demo/releases/download/resource-manager-stack/octo-stack.zip"
@@ -39,33 +41,42 @@ def test_bootstrap_uses_declared_ingress_service_port() -> None:
     assert "number: ${port}" in bootstrap
 
 
+def render_oke_manifest(relative_path: str, env: dict[str, str]) -> list[dict]:
+    rendered = subprocess.run(
+        ["envsubst"], input=read_text(relative_path), text=True, capture_output=True, check=True,
+        env={"PATH": os.environ["PATH"], **env},
+    ).stdout
+    return [doc for doc in yaml.safe_load_all(rendered) if doc]
+
+
+def pod_spec(documents: list[dict]) -> dict:
+    return next(doc["spec"]["template"]["spec"] for doc in documents if doc.get("kind") == "Deployment")
+
+
 def test_root_oke_manifests_use_configurable_public_hostnames() -> None:
-    shop_manifest = read_text("deploy/k8s/oke/shop/deployment.yaml")
-    crm_manifest = read_text("deploy/k8s/oke/crm/deployment.yaml")
-
-    assert (
-        'http://enterprise-crm-portal.${K8S_NAMESPACE_CRM}.svc.cluster.local:8080'
-        in shop_manifest
-    )
-
-    assert (
-        'http://octo-drone-shop.${K8S_NAMESPACE_SHOP}.svc.cluster.local:8080'
-        in crm_manifest
-    )
-
-    combined = shop_manifest + crm_manifest
-    assert "imagePullSecrets:" in shop_manifest
-    assert "imagePullSecrets:" in crm_manifest
-    assert "name: ocir-pull-secret" in combined
-    assert "backend.${DNS_DOMAIN}" not in combined
-    assert "drone.${DNS_DOMAIN}" not in combined
-
-
-def test_resource_manager_derives_hosts_and_root_tf_keeps_example_defaults() -> None:
-    terraform_variables = read_text("deploy/terraform/variables.tf")
-
-    assert 'default     = "shop.example.test"' in terraform_variables
-    assert 'default     = "crm.example.test"' in terraform_variables
+    env = {
+        "DNS_DOMAIN": "lab.example.test", "CRM_PUBLIC_URL": "https://crm.lab.example.test",
+        "SHOP_PUBLIC_URL": "https://shop.lab.example.test", "K8S_NAMESPACE_SHOP": "shop-ns",
+        "K8S_NAMESPACE_CRM": "crm-ns", "OCIR_REGION": "region", "OCIR_TENANCY": "namespace",
+        "IMAGE_TAG": "tag",
+    }
+    specs = {
+        name: pod_spec(render_oke_manifest(f"deploy/k8s/oke/{name}/deployment.yaml", env))
+        for name in ("shop", "crm")
+    }
+    values = {
+        name: {item["name"]: item.get("value") for item in spec["containers"][0]["env"]}
+        for name, spec in specs.items()
+    }
+    assert "http://enterprise-crm-portal.crm-ns.svc.cluster.local:8080" in values["shop"].values()
+    assert "http://octo-drone-shop.shop-ns.svc.cluster.local:8080" in values["crm"].values()
+    assert values["shop"]["CRM_PUBLIC_URL"] == "https://crm.lab.example.test"
+    assert values["crm"]["CRM_BASE_URL"] == "https://crm.lab.example.test"
+    for spec in specs.values():
+        assert spec["imagePullSecrets"] == [{"name": "ocir-pull-secret"}]
+    rendered_text = yaml.safe_dump(specs)
+    assert "backend.lab.example.test" not in rendered_text
+    assert "drone.lab.example.test" not in rendered_text
 
 
 def test_oke_assets_use_unified_namespaces_and_hostnames() -> None:

@@ -235,11 +235,105 @@ def test_orm_packager_excludes_local_module_input_values(tmp_path):
         assert not any(name.endswith(".tfvars") for name in package.namelist())
 
 
-def test_make_smoke_defaults_to_the_pipeline_routes():
+@pytest.mark.parametrize("overrides, shop, crm", (
+    ({}, "shop.lab.example.test", "crm.lab.example.test"),
+    ({"SHOP_HOST": "s.custom.test", "ADMIN_HOST": "a.custom.test"}, "s.custom.test", "a.custom.test"),
+))
+def test_make_smoke_probes_the_pipeline_routes(tmp_path, overrides, shop, crm):
+    log = tmp_path / "urls.log"
+    curl = tmp_path / "curl"
+    curl.write_text(f"""#!/usr/bin/env bash
+printf '%s\\n' "${{@: -1}}" >> {log}
+printf '%s\\n' '<!doctype html><html>'
+""")
+    curl.chmod(0o700)
     result = subprocess.run(
-        ["make", "-n", "smoke", "DNS_DOMAIN=lab.example.test", "OCIR_REGION=region",
+        ["make", "smoke", "DNS_DOMAIN=lab.example.test", "OCIR_REGION=region",
          "OCIR_TENANCY=namespace", "OCI_COMPARTMENT_ID=compartment"],
-        cwd=ROOT, capture_output=True, text=True, check=True,
+        cwd=ROOT, capture_output=True, text=True,
+        env={**os.environ, "PATH": f"{tmp_path}:{os.environ['PATH']}", **overrides},
     )
-    assert 'SHOP_HOST="${SHOP_HOST:-shop.${DNS_DOMAIN}}"' in result.stdout
-    assert 'ADMIN_HOST="${ADMIN_HOST:-crm.${DNS_DOMAIN}}"' in result.stdout
+    assert log.exists(), result.stdout + result.stderr
+    hosts = {url.split("/")[2] for url in log.read_text().split()}
+    assert hosts == {shop, crm}
+
+
+def strip_hcl_comments(text):
+    out, i, quote = [], 0, False
+    while i < len(text):
+        two = text[i:i + 2]
+        if quote:
+            out.append(text[i])
+            if text[i] == "\\":
+                out.append(text[i + 1])
+                i += 1
+            elif text[i] == '"':
+                quote = False
+        elif text[i] == '"':
+            quote = True
+            out.append('"')
+        elif text[i] == "#" or two == "//":
+            while i < len(text) and text[i] != "\n":
+                i += 1
+            continue
+        elif two == "/*":
+            i = text.index("*/", i) + 1
+        else:
+            out.append(text[i])
+        i += 1
+    return "".join(out)
+
+
+def hcl_block_body(text, header):
+    start = strip_hcl_comments(text)
+    match = re.search(re.escape(header) + r"\s*\{", start)
+    assert match, header
+    depth, quote, i = 1, False, match.end()
+    begin = i
+    while depth:
+        char = start[i]
+        if quote:
+            if char == "\\":
+                i += 1
+            elif char == '"':
+                quote = False
+        elif char == '"':
+            quote = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+        i += 1
+    return start[begin:i - 1]
+
+
+def hcl_attributes(body):
+    return {name: value.strip() for name, value in re.findall(r"^\s*(\w+)\s*=\s*(.+)$", body, re.M)}
+
+
+def derived_host(expression, variables):
+    match = re.fullmatch(r'coalesce\(var\.(\w+),\s*"([^"]*)"\)', expression)
+    assert match, expression
+    override, template = match.groups()
+    return variables[override] or template.replace("${var.dns_domain}", variables["dns_domain"])
+
+
+@pytest.mark.parametrize("root", ("deploy/resource-manager", "shop/deploy/resource-manager"))
+def test_orm_bootstrap_derives_hosts_from_dns_domain(root):
+    main = (ROOT / root / "main.tf").read_text()
+    variables = (ROOT / root / "variables.tf").read_text()
+    attributes = hcl_attributes(hcl_block_body(main, 'module "stack"'))
+    services = ("shop", "crm", "ops", "coordinator")
+    for service in services:
+        assert hcl_attributes(hcl_block_body(variables, f'variable "{service}_domain"'))["default"] == '""'
+        inputs = {f"{name}_domain": "" for name in services} | {"dns_domain": "lab.example.test"}
+        assert derived_host(attributes[f"{service}_domain"], inputs) == f"{service}.lab.example.test"
+        assert derived_host(attributes[f"{service}_domain"], inputs | {f"{service}_domain": "x.test"}) == "x.test"
+    assert "default" not in hcl_attributes(hcl_block_body(variables, 'variable "dns_domain"'))
+
+
+def test_root_terraform_keeps_example_host_defaults():
+    variables = (ROOT / "deploy/terraform/variables.tf").read_text()
+    for service in ("shop", "crm"):
+        defaults = hcl_attributes(hcl_block_body(variables, f'variable "{service}_domain"'))
+        assert defaults["default"] == f'"{service}.example.test"'
