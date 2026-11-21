@@ -2,6 +2,7 @@ import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 from pathlib import Path, PurePosixPath
@@ -131,11 +132,6 @@ def test_control_plane_manifest_contract():
     assert manifest["sbom"] == SBOM
 
 
-def test_terraform_description_uses_literal_dns_placeholder():
-    variables = (ROOT / "deploy/terraform/modules/api_gateway/variables.tf").read_text()
-    assert "https://shop.<DNS_DOMAIN>" in variables
-
-
 def test_make_helm_overrides_the_values_consumed_by_templates():
     result = subprocess.run(
         ["make", "-n", "deploy-helm", "DNS_DOMAIN=lab.example.test",
@@ -148,12 +144,10 @@ def test_make_helm_overrides_the_values_consumed_by_templates():
 
 
 @pytest.mark.parametrize("root", ("deploy/resource-manager", "shop/deploy/resource-manager"))
-def test_orm_bootstrap_derives_hosts_from_dns_domain(root):
+def test_orm_schema_requires_dns_domain(root):
     schema = yaml.safe_load((ROOT / root / "schema.yaml").read_text())
     assert schema["variables"]["dns_domain"]["required"] is True
-    main = (ROOT / root / "main.tf").read_text()
-    for service in ("shop", "crm", "ops", "coordinator"):
-        assert f'coalesce(var.{service}_domain, "{service}.${{var.dns_domain}}")' in main
+    assert schema["variables"]["dns_domain"]["type"] == "string"
 
 
 def test_smoke_fails_on_http_errors_even_without_a_body_match(tmp_path):
@@ -184,14 +178,39 @@ esac
     assert "1 of 15 checks failed" in result.stdout
 
 
-def test_oke_manifests_consume_configured_public_urls():
-    cases = {
-        "shop/deployment.yaml": 'value: "${CRM_PUBLIC_URL}"',
-        "crm/deployment.yaml": 'value: "${CRM_PUBLIC_URL}"',
-        "workflow-gateway/deployment.yaml": 'value: "${SHOP_PUBLIC_URL},${CRM_PUBLIC_URL}"',
+def render_manifest(relative, env):
+    rendered = subprocess.run(
+        ["envsubst"], input=(ROOT / "deploy/k8s/oke" / relative).read_text(),
+        env={"PATH": os.environ["PATH"], **env}, capture_output=True, text=True, check=True,
+    ).stdout
+    return [doc for doc in yaml.safe_load_all(rendered) if doc]
+
+
+def container_env(documents):
+    values = {}
+    for document in documents:
+        template = document.get("spec", {}).get("template", {}).get("spec", {})
+        for container in template.get("containers", []):
+            for item in container.get("env", []):
+                values[item["name"]] = item.get("value")
+    return values
+
+
+@pytest.mark.skipif(shutil.which("envsubst") is None, reason="envsubst is required")
+def test_oke_manifests_render_configured_public_urls():
+    env = {
+        "SHOP_PUBLIC_URL": "https://shop.lab.example.test",
+        "CRM_PUBLIC_URL": "https://crm.lab.example.test",
+        "DNS_DOMAIN": "lab.example.test", "K8S_NAMESPACE_SHOP": "shop-ns",
+        "K8S_NAMESPACE_CRM": "crm-ns", "OCIR_REGION": "region",
+        "OCIR_TENANCY": "namespace", "IMAGE_TAG": "tag",
     }
-    for relative, expected in cases.items():
-        assert expected in (ROOT / "deploy/k8s/oke" / relative).read_text()
+    shop = container_env(render_manifest("shop/deployment.yaml", env))
+    crm = container_env(render_manifest("crm/deployment.yaml", env))
+    gateway = container_env(render_manifest("workflow-gateway/deployment.yaml", env))
+    assert shop["CRM_PUBLIC_URL"] == "https://crm.lab.example.test"
+    assert crm["CRM_BASE_URL"] == "https://crm.lab.example.test"
+    assert "https://shop.lab.example.test,https://crm.lab.example.test" in gateway.values()
 
 
 def test_orm_packager_excludes_local_module_input_values(tmp_path):

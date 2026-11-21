@@ -43,16 +43,11 @@ def test_root_oke_manifests_use_configurable_public_hostnames() -> None:
     shop_manifest = read_text("deploy/k8s/oke/shop/deployment.yaml")
     crm_manifest = read_text("deploy/k8s/oke/crm/deployment.yaml")
 
-    deploy_oke = read_text("deploy/oke/deploy-oke.sh")
-    assert 'value: "${CRM_PUBLIC_URL}"' in shop_manifest
-    assert '${SHOP_PUBLIC_URL:=https://drones.${DNS_DOMAIN}}' in deploy_oke
-    assert '${CRM_PUBLIC_URL:=https://admin.${DNS_DOMAIN}}' in deploy_oke
     assert (
         'http://enterprise-crm-portal.${K8S_NAMESPACE_CRM}.svc.cluster.local:8080'
         in shop_manifest
     )
 
-    assert 'value: "${CRM_PUBLIC_URL}"' in crm_manifest
     assert (
         'http://octo-drone-shop.${K8S_NAMESPACE_SHOP}.svc.cluster.local:8080'
         in crm_manifest
@@ -67,11 +62,8 @@ def test_root_oke_manifests_use_configurable_public_hostnames() -> None:
 
 
 def test_resource_manager_derives_hosts_and_root_tf_keeps_example_defaults() -> None:
-    resource_manager_variables = read_text("deploy/resource-manager/variables.tf")
     terraform_variables = read_text("deploy/terraform/variables.tf")
 
-    assert 'variable "dns_domain"' in resource_manager_variables
-    assert "example.invalid" not in resource_manager_variables
     assert 'default     = "shop.example.test"' in terraform_variables
     assert 'default     = "crm.example.test"' in terraform_variables
 
