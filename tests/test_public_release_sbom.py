@@ -223,3 +223,73 @@ def test_vulnerability_summary_omits_raw_package_locations(tmp_path):
     summary = (tmp_path / "summary.json").read_text()
     assert "/private/" not in summary
     assert "CVE-2026-12345" in summary
+
+
+def test_release_binds_artifacts_to_exact_registry_digest(tmp_path):
+    import os
+    import yaml
+    jobs = yaml.safe_load((ROOT / ".github/workflows/orm-and-sbom-release.yml").read_text())["jobs"]
+    script = next(step["run"] for step in jobs["images"]["steps"]
+                  if step.get("id") == "push")
+    digest = "sha256:" + "a" * 64
+    docker = tmp_path / "docker"
+    docker.write_text(f"""#!{sys.executable}
+import json,sys
+args=sys.argv[1:]
+if args[0] == "push": pass
+elif args[:2] == ["image","inspect"]:
+ print(json.dumps(["ghcr.io/public/demo@{digest}"]))
+elif args[:3] == ["buildx","imagetools","inspect"]:
+ if "{{{{json .Manifest}}}}" in args: print(json.dumps({{"digest":"{digest}"}}))
+ else: print("Name: public-image"); print("Digest: {digest}")
+else: raise SystemExit(88)
+""")
+    docker.chmod(0o700)
+    (tmp_path / "release").mkdir()
+    (tmp_path / "tools").symlink_to(ROOT / "tools", target_is_directory=True)
+    (tmp_path / "image-raw.cdx.json").write_text(json.dumps(bom()))
+    (tmp_path / "image-vulns-raw.json").write_text(json.dumps({"Results": []}))
+    env = {**os.environ, "PATH": f"{tmp_path}:{os.environ['PATH']}",
+           "IMAGE": "ghcr.io/public/demo", "IMAGE_TAG": "ghcr.io/public/demo:sha-test",
+           "IMAGE_NAME": "demo", "GITHUB_SHA": "b" * 40,
+           "GITHUB_OUTPUT": str(tmp_path / "output")}
+    result = subprocess.run(["bash", "-euo", "pipefail", "-c", script],
+                            cwd=tmp_path, env=env, capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f"digest={digest}" in (tmp_path / "output").read_text()
+    assert digest in (tmp_path / "release/demo.cdx.json").read_text()
+
+
+@pytest.mark.parametrize("purl", [
+    "pkg:docker/phx.ocir.io/private-tenant/shop@v1",
+    "pkg:pypi/payments.svc.cluster.local@1",
+    "pkg:pypi/10.42.0.7@1",
+    "pkg:golang/build.acme.co/pkg@v1",
+    "pkg:golang/%5Bfd00%3A%3A1%5D/pkg@v1",
+])
+def test_private_package_urls_cannot_reach_release_sboms(tmp_path, purl):
+    result, output = run_export(tmp_path, bom({"type": "library", "name": "package", "purl": purl}))
+    assert result.returncode != 0
+    assert not output.exists()
+
+
+def test_manifest_images_have_unique_public_release_artifact_names():
+    import re
+    manifest = json.loads((ROOT / "deploy/cp-pipeline-manifest.json").read_text())
+    ids = set()
+    names = {"octo-stack.zip", "octo-compute-stack.zip",
+             "octo-observability-demo.cdx.json", "source-vulnerabilities.json", "SHA256SUMS"}
+    for item in manifest["containerBuilds"]:
+        assert {"id", "image", "context", "dockerfile"} <= item.keys()
+        assert re.fullmatch(r"[a-z0-9-]+", item["id"])
+        assert re.fullmatch(r"[a-z0-9-]+", item["image"])
+        assert item["id"] not in ids
+        ids.add(item["id"])
+        context = (ROOT / item["context"]).resolve()
+        dockerfile = (ROOT / item["dockerfile"]).resolve()
+        assert context.is_relative_to(ROOT) and context.is_dir()
+        assert dockerfile.is_relative_to(context) and dockerfile.is_file()
+        outputs = {item["image"] + suffix for suffix in
+                   (".cdx.json", "-vulnerabilities.json", "-digest.txt", "-SHA256SUMS")}
+        assert not names & outputs
+        names.update(outputs)

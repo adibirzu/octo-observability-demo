@@ -171,7 +171,8 @@ jobs:
             python -c 'import json,os,sys; matches=[x for x in json.load(sys.stdin) if x.startswith(os.environ["IMAGE"]+"@")]; assert len(matches)==1; print(matches[0])')"
           digest="${reference##*@}"
           [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
-          remote="$(docker buildx imagetools inspect "$IMAGE@$digest" --format '{{.Manifest.Digest}}')"
+          remote="$(docker buildx imagetools inspect "$IMAGE@$digest" --format '{{json .Manifest}}' |
+            python -c 'import json,sys; print(json.load(sys.stdin)["digest"])')"
           test "$remote" = "$digest"
           python tools/public_sbom.py --input image-raw.cdx.json \
             --output "release/$IMAGE_NAME.cdx.json" --name "$IMAGE_NAME" --version "$GITHUB_SHA" --digest "$digest" \

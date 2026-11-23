@@ -83,7 +83,10 @@ not a general detector for arbitrary private names. This workflow is intended
 for builds containing public dependencies; review newly added package sources
 before release. The same
 guard checks the offline declaration inventory. New public dependency hosts
-require an explicit allowlist review and regression test. Raw scanner files are
+require an explicit allowlist review and regression test. Package URL qualifiers, including OS architecture/distro qualifiers, are omitted;
+identical package URLs after this projection are deduplicated. This is a public
+package inventory rather than a dependency graph or complete scanner document.
+Raw scanner files are
 not uploaded as workflow artifacts or release assets. Private local receipts
 under `.gate/` are excluded from Git and the Docker build context.
 
