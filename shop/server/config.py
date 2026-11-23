@@ -65,6 +65,7 @@ class Config:
     auth_token_secret = _env_secret("AUTH_TOKEN_SECRET", "")
 
     # ── Database ──
+    allow_destructive_db_bootstrap = _env_bool("ALLOW_DESTRUCTIVE_DB_BOOTSTRAP")
     # PostgreSQL (preferred for non-ATP deployments)
     _pg_url = _env_secret("DATABASE_URL", "")
     _pg_sync_url = _env_secret("DATABASE_SYNC_URL", "")

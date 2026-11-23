@@ -106,3 +106,29 @@ considered runnable.
 - **Readiness**: `/ready` every 12s (18s initial delay)
 - **Image pull**: OCIR with `ocir-pull-secret`
 - **ATP wallet**: Mounted as read-only volume
+
+## Preserve database data during restarts
+
+Leave `ALLOW_DESTRUCTIVE_DB_BOOTSTRAP` unset. It defaults to false, and no
+deployment manifest enables it. Setting it explicitly permits the legacy Shop
+identity-repair reset when the users table is empty; that reset drops all modeled
+application tables. It is intended only for an isolated database under a
+separately reviewed recovery procedure.
+
+Shop seeding and CRM bootstrap seed only when every modeled application table
+is empty. If any application record exists, they preserve existing accounts,
+password hashes, roles, catalog data and inventory. They also skip partially
+populated databases, including a catalog with an empty users table. An existing
+database does not receive a new CRM bootstrap account or automatic seed
+reconciliation on restart. Manage existing accounts and data through the
+application's normal administration flows.
+
+For a new empty CRM database, configure the bootstrap admin password before
+the first start. A populated database does not need a bootstrap credential just
+to skip seeding.
+
+Schema compatibility checks still run. They can add legacy columns or backfill
+missing values, so this change does not make all startup database activity
+read-only. Review schema changes and the database recovery plan before a rollout.
+The state-preservation regressions use local SQLite fixtures; live Oracle and
+PostgreSQL startup behavior requires separate provider validation.

@@ -59,7 +59,7 @@ def _bootstrap_users() -> dict[str, tuple[str, str, str]]:
 
 
 async def bootstrap_database() -> None:
-    """Create tables and seed a compact demo dataset."""
+    """Create tables and seed only an empty application schema."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         await conn.run_sync(_ensure_audit_log_columns)
@@ -70,43 +70,13 @@ async def bootstrap_database() -> None:
 
     from server.database import async_session_factory
 
-    bootstrap_users = _bootstrap_users()
-
-    from server.database import async_session_factory
-
     async with async_session_factory() as session:
-        existing_user = await session.scalar(select(User.id).limit(1))
-        if existing_user:
-            # Reconcile the CRM bootstrap admin without overwriting shop-owned
-            # users in the shared database.
-            for username, (password, role, email) in bootstrap_users.items():
-                row = await session.execute(
-                    text("SELECT id FROM users WHERE email = :email"),
-                    {"email": email},
-                )
-                if row.first():
-                    await session.execute(
-                        text("UPDATE users SET password_hash = :hash, role = :role WHERE email = :email"),
-                        {"hash": bcrypt.hash(password), "role": role, "email": email},
-                    )
-                else:
-                    # CRM bootstrap user doesn't exist yet — create with a
-                    # CRM-prefixed username if the base username is taken.
-                    existing_name = await session.execute(
-                        text("SELECT id FROM users WHERE username = :user"), {"user": username},
-                    )
-                    actual_username = f"crm-{username}" if existing_name.first() else username
-                    await session.execute(
-                        text(
-                            "INSERT INTO users (username, email, password_hash, role) "
-                            "VALUES (:user, :email, :hash, :role)"
-                        ),
-                        {"user": actual_username, "email": email, "hash": bcrypt.hash(password), "role": role},
-                    )
-            await _ensure_demo_shops(session)
-            await session.commit()
-            return
+        for table in Base.metadata.sorted_tables:
+            if await session.scalar(select(table.primary_key.columns[0]).limit(1)) is not None:
+                logger.info("Application data already exists; skipping demo bootstrap")
+                return
 
+        bootstrap_users = _bootstrap_users()
         now = datetime.utcnow()
         users = [
             User(username=u, email=e, password_hash=bcrypt.hash(p), role=r)

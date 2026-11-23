@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy import Column, Integer, String, Float, Text, DateTime, ForeignKey, Identity, UniqueConstraint, create_engine, text, inspect
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, select
 
 from server.config import cfg
 from server.storefront import ADDITIONAL_PRODUCTS
@@ -851,7 +851,7 @@ def init_tables():
         insp = inspect(sync_engine)
         existing_tables = insp.get_table_names()
 
-        if "users" in existing_tables and not cfg.use_postgres:
+        if cfg.allow_destructive_db_bootstrap and "users" in existing_tables and not cfg.use_postgres:
             # Oracle-specific: check if tables need Identity column fix
             from sqlalchemy.orm import Session
             with Session(sync_engine) as session:
@@ -1143,19 +1143,15 @@ def _reconcile_seed_users(session) -> None:
 
 
 def seed_data():
-    """Insert seed data if tables are empty."""
+    """Seed only a completely empty application schema."""
     if sync_engine is None:
         return
     from sqlalchemy.orm import Session
     try:
         with Session(sync_engine) as session:
-            if session.query(User).count() > 0:
-                _reconcile_seed_users(session)
-                _reconcile_product_catalog(session)
-                _reconcile_services(session)
-                _reconcile_invoices(session)
-                session.commit()
-                logger.info("Database already seeded — reconciled users, catalog, services, and invoices")
+            if any(session.execute(select(table.primary_key.columns[0]).limit(1)).first() is not None
+                   for table in Base.metadata.sorted_tables):
+                logger.info("Application data already exists; skipping demo seed")
                 return
 
             # Users
