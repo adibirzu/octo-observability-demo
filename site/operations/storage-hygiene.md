@@ -156,7 +156,7 @@ and the [kubelet flags](https://kubernetes.io/docs/reference/command-line-tools-
 
 1. Resolve the authoritative Terraform state owner and current live variable overrides.
 2. Set `oke_node_boot_volume_gbs=100` in the private deployment inputs.
-3. After Adi's separate GO for the real stack's saved-plan run, generate that plan with its authoritative backend and private input files.
+3. After the operator's separate GO for the real stack's saved-plan run, generate that plan with its authoritative backend and private input files.
    Enable `oke_node_image_gc_bootstrap_enabled=true` only if the same review explicitly includes the bootstrap change.
 4. Review the complete plan, including size, Kubernetes version, image, desired node count, and unrelated drift.
 5. Reject any plan that destroys a resource, cycles workers, or changes the desired node count without separate approval.
