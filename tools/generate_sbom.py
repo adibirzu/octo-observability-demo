@@ -13,6 +13,8 @@ from collections import defaultdict
 from pathlib import Path
 from urllib.parse import quote
 
+from public_sbom import validate_public_bom
+
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "sbom/octo-observability-demo.cdx.json"
@@ -245,6 +247,7 @@ def main():
     args = parser.parse_args()
     try:
         bom = generate()
+        validate_public_bom(bom)
         expected = json.dumps(bom, indent=2, ensure_ascii=True) + "\n"
         if args.write:
             OUTPUT.parent.mkdir(parents=True, exist_ok=True)

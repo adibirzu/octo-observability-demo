@@ -42,3 +42,6 @@ k6/
 tests/
 tmp/
 *.log
+
+# Private local validation and tenancy receipts.
+.gate/

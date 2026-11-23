@@ -139,3 +139,6 @@ firepit-log.txt
 
 # Article draft — kept local, published externally (Medium / learnoci.cloud)
 docs/articles/end-to-end-observability.md
+
+# Private local validation and tenancy receipts.
+.gate/

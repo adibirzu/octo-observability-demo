@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Build and push the OKE images used by octo-apm-demo.
 #
-# Uses docker buildx for linux/amd64 by default so ARM workstations can publish
-# images runnable on OKE worker nodes.
+# Uses a native amd64 host or CI for the default linux/amd64 target.
 
 set -euo pipefail
 
@@ -38,6 +37,11 @@ case "${1:-}" in
         exit 2
         ;;
 esac
+
+if [[ "${PLATFORM:-linux/amd64}" == *amd64* ]] && [[ "$(uname -m)" != "x86_64" ]]; then
+    echo "Use an approved native amd64 builder or CI for linux/amd64 images." >&2
+    exit 1
+fi
 
 : "${OCI_PROFILE:=DEFAULT}"
 : "${OCIR_REGION:=us-phoenix-1}"
