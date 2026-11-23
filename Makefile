@@ -193,10 +193,10 @@ test: test-contract test-docs test-apps ## Run the full local test gate
 test-apps: ## Per-app pytest suites in isolated processes (avoids shop/crm `server` package collision)
 	@for app in shop crm services/* tools/traffic-generator deploy/wizard; do \
 	  [ -d "$$app/tests" ] || continue; \
-	  if ! find "$$app/tests" -name 'test_*.py' -print -quit | grep -q .; then \
+	  case "$$app" in services/browser-runner|services/otel-gateway) \
 	    echo "$$app/tests uses a non-Python runner; run its declared test command separately"; \
-	    continue; \
-	  fi; \
+	    continue;; \
+	  esac; \
 	  echo "── $$app/tests ──"; \
 	  (cd "$$app" && python3 -m pytest -q tests) || exit $$?; \
 	done

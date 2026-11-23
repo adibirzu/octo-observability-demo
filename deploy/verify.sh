@@ -423,10 +423,12 @@ fi
 for testpath in "${REPO_ROOT}/shop" "${REPO_ROOT}/crm" "${REPO_ROOT}"/services/* "${REPO_ROOT}/tools/traffic-generator"; do
     testdir="${testpath#${REPO_ROOT}/}"
     if [[ -d "${REPO_ROOT}/${testdir}/tests" ]]; then
-        if ! find "${REPO_ROOT}/${testdir}/tests" -name 'test_*.py' -print -quit | grep -q .; then
-            warn "${testdir}/tests uses a non-Python runner; run its declared test command separately"
-            continue
-        fi
+        case "${testdir}" in
+            services/browser-runner|services/otel-gateway)
+                warn "${testdir}/tests uses a non-Python runner; run its declared test command separately"
+                continue
+                ;;
+        esac
         if (cd "${REPO_ROOT}/${testdir}" && python3 -m pytest -q tests); then
             ok "${testdir} pytest"
         else
