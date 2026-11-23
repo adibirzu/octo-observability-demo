@@ -35,3 +35,10 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Root cause. The Makefile used `|| echo`, ran app tests outside their owning directories, and omitted tool suites. Deployment verification converted app failures into warnings and inferred success from output text.
 - Fix. Both gates use pytest exit status from isolated suite directories. Deployment verification counts suite failures as errors. The private bootstrap source contract reports an explicit pytest skip when its local-only script is absent; dependency collection failures remain fatal.
 - Verification. `python3.11 -m pytest -q tests/test_local_test_gates.py` covers success, test failure, collection error, no tests collected, and owning-directory execution.
+
+## KB-003. Verification skips suites under paths containing glob characters
+
+- Error. A workspace path containing brackets can make deployment verification skip every app suite.
+- Root cause. The unquoted repository prefix in Bash parameter removal is treated as a glob pattern, so the derived suite path can remain absolute.
+- Fix. Quote the repository prefix when removing it from each suite path in `deploy/verify.sh`.
+- Verification. `python3.11 -m pytest -q tests/test_local_test_gates.py` exercises every suite with normal and bracketed workspace paths and checks its owning directory.

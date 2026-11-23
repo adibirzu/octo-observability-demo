@@ -421,7 +421,7 @@ else
 fi
 
 for testpath in "${REPO_ROOT}/shop" "${REPO_ROOT}/crm" "${REPO_ROOT}"/services/* "${REPO_ROOT}/tools/traffic-generator"; do
-    testdir="${testpath#${REPO_ROOT}/}"
+    testdir="${testpath#"${REPO_ROOT}/"}"
     if [[ -d "${REPO_ROOT}/${testdir}/tests" ]]; then
         case "${testdir}" in
             services/browser-runner|services/otel-gateway)
