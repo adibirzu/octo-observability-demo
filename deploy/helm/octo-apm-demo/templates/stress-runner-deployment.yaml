@@ -9,6 +9,7 @@ metadata:
   name: octo-stress-runner
   namespace: {{ $sr.namespace }}
   labels:
+    {{- include "octo.labels" . | nindent 4 }}
     app: octo-stress-runner
     app.kubernetes.io/part-of: octo-apm-demo
     app.kubernetes.io/component: stress-runner
@@ -26,6 +27,7 @@ spec:
   template:
     metadata:
       labels:
+        {{- include "octo.labels" . | nindent 8 }}
         app: octo-stress-runner
         app.kubernetes.io/part-of: octo-apm-demo
         app.kubernetes.io/component: stress-runner

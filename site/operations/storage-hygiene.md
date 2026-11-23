@@ -77,7 +77,9 @@ ReplicaSet cleanup requires a fully available, observed Deployment, a zero-repli
 and a revision older than the Deployment's retained history.
 All demo Deployments declare `revisionHistoryLimit: 5`.
 Deletes include UID and resourceVersion preconditions, so a stale report cannot delete a replacement object.
-A conflict or API error stops the run. No force deletion or finalizer removal exists.
+A delete returning 404 or 409 is logged and skipped because the object disappeared or changed after selection.
+Other API errors stop the run. No force deletion or finalizer removal exists.
+The stress-runner Deployment and pod template carry the same release labels, so their future ReplicaSets remain in scope.
 
 Unbound PVCs are reported by name without delete permission. PVs remain operator reports because the CronJob
 has no cluster-wide PV access. With read-only access to the verified cluster context, inspect:

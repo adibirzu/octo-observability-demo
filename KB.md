@@ -102,3 +102,8 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Future-node image GC user data is opt-in. Review the boot default change from 93 GB to 100 GB in the authoritative saved plan.
 - Namespace cleanup apply requires explicit dedicated-namespace confirmation. Registry retention overrides cannot go below versioned policy floors.
 - Verification: these findings have failing-before behavioral tests, including apply-mode chart rendering. The image is pinned by a verified official multi-platform manifest digest.
+
+- Kubernetes cleanup compares parsed timestamps, includes init-container terminations, and treats null revisionHistoryLimit as the Kubernetes default of ten. Empty first-page continuation tokens are omitted.
+- Per-object 404/409 delete races are logged and skipped; other API failures stop the pass. Stress-runner release labels make its objects selectable without changing its immutable Deployment selector.
+- Recheck hard-link count immediately before unlink. Registry policy ownership requirements must remain true, and only an exact instance-principal prefix identifies an instance creator.
+- Verification: additional Gemini review findings have failing-before tests for all changed behaviors.

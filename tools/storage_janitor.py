@@ -24,7 +24,7 @@ def creator(item):
         return "node-pool-principal-tag"
     if created == "oke":
         return "service-tag:oke"
-    if "instance" in created:
+    if created.startswith("ocid1.instance."):
         return "instance-principal-tag"
     return "user-tag" if created else "unknown"
 
@@ -179,6 +179,11 @@ def main():
     )
     if policy["mode"] != "report" or policy["registry"]["provider_policy_enabled"]:
         raise ValueError("only disabled provider policy and report mode are supported")
+    if any(
+        policy["registry"].get(key) is not True
+        for key in ("require_repository_allowlist", "require_project_tag")
+    ):
+        raise ValueError("registry ownership requirements must remain enabled")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compartment-id", required=True)
     parser.add_argument("--repository-id", action="append", default=[])

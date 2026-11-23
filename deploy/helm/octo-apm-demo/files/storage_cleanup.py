@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import ssl
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -44,11 +45,18 @@ def candidates(snapshot, now, age):
         ]
         times += [
             c["state"]["terminated"]["finishedAt"]
-            for c in status.get("containerStatuses", [])
+            for c in [
+                *status.get("containerStatuses", []),
+                *status.get("initContainerStatuses", []),
+            ]
             if c.get("state", {}).get("terminated", {}).get("finishedAt")
         ]
         if old(
-            max(times) if times else pod["metadata"].get("creationTimestamp"), now, age
+            max(times, key=timestamp)
+            if times
+            else pod["metadata"].get("creationTimestamp"),
+            now,
+            age,
         ):
             result.append(("pods", pod))
     for deployment in snapshot["deployments"]:
@@ -90,7 +98,9 @@ def candidates(snapshot, now, age):
             ),
             reverse=True,
         )
-        for rs in historical[max(0, spec.get("revisionHistoryLimit", 10)) :]:
+        keep = spec.get("revisionHistoryLimit")
+        keep = keep if keep is not None else 10
+        for rs in historical[max(0, keep) :]:
             if (
                 rs.get("spec", {}).get("replicas", 0) == 0
                 and all(
@@ -108,19 +118,32 @@ def process(items, apply, request):
         meta = item["metadata"]
         print(json.dumps({"kind": kind, "name": meta["name"], "apply": apply}))
         if apply:
-            request(
-                "DELETE",
-                kind + "/" + urllib.parse.quote(meta["name"], safe=""),
-                {
-                    "apiVersion": "v1",
-                    "kind": "DeleteOptions",
-                    "propagationPolicy": "Background",
-                    "preconditions": {
-                        "uid": meta["uid"],
-                        "resourceVersion": meta["resourceVersion"],
+            try:
+                request(
+                    "DELETE",
+                    kind + "/" + urllib.parse.quote(meta["name"], safe=""),
+                    {
+                        "apiVersion": "v1",
+                        "kind": "DeleteOptions",
+                        "propagationPolicy": "Background",
+                        "preconditions": {
+                            "uid": meta["uid"],
+                            "resourceVersion": meta["resourceVersion"],
+                        },
                     },
-                },
-            )
+                )
+            except urllib.error.HTTPError as error:
+                if error.code not in {404, 409}:
+                    raise
+                print(
+                    json.dumps(
+                        {
+                            "kind": kind,
+                            "name": meta["name"],
+                            "skipped_status": error.code,
+                        }
+                    )
+                )
 
 
 class Client:
@@ -165,9 +188,10 @@ class Client:
     def listing(self, kind, selector):
         items, token = [], ""
         while True:
-            query = urllib.parse.urlencode(
-                {"labelSelector": selector, "limit": 200, "continue": token}
-            )
+            parameters = {"labelSelector": selector, "limit": 200}
+            if token:
+                parameters["continue"] = token
+            query = urllib.parse.urlencode(parameters)
             data = self.request("GET", kind + "?" + query)
             items.extend(data.get("items", []))
             token = data.get("metadata", {}).get("continue", "")

@@ -73,6 +73,7 @@ def clean_files(root, cutoff, pattern, apply):
                 fresh = os.stat(name, dir_fd=fd, follow_symlinks=False)
                 if (
                     fresh.st_ino == info.st_ino
+                    and fresh.st_nlink == 1
                     and fresh.st_mtime < cutoff
                     and stat.S_ISREG(fresh.st_mode)
                 ):

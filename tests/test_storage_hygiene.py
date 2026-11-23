@@ -577,3 +577,171 @@ def test_oci_cli_cannot_reduce_versioned_retention_floors(
         j.main()
     assert exc.value.code == 2
     assert "policy floor" in capsys.readouterr().err
+
+
+def test_vm_rechecks_link_count_immediately_before_unlink(tmp_path, monkeypatch):
+    vm = load("deploy/compute/storage_hygiene.py")
+    target = tmp_path / "old.tmp"
+    target.write_text("keep")
+    os.utime(target, (1, 1))
+    original = vm.os.stat
+    calls = []
+
+    def raced_stat(path, *args, **kwargs):
+        info = original(path, *args, **kwargs)
+        if path == "old.tmp" and "dir_fd" in kwargs:
+            calls.append(path)
+            if len(calls) == 2:
+                values = list(info)
+                values[3] = 2
+                return os.stat_result(values)
+        return info
+
+    monkeypatch.setattr(vm.os, "stat", raced_stat)
+    vm.clean_files(tmp_path, 100, "*", True)
+    assert target.exists()
+
+
+@pytest.mark.parametrize("init_only", [False, True])
+def test_failed_pod_uses_latest_parsed_termination_timestamp(init_only):
+    k = load("deploy/helm/octo-apm-demo/files/storage_cleanup.py")
+    status = {
+        "phase": "Failed",
+        "conditions": [{"lastTransitionTime": "2026-11-16T00:00:00Z"}],
+    }
+    status["initContainerStatuses" if init_only else "containerStatuses"] = [
+        {"state": {"terminated": {"finishedAt": "2026-11-16T00:00:00.500Z"}}}
+    ]
+    snapshot = {
+        "jobs": [],
+        "pods": [obj("recent-failure", status)],
+        "replicasets": [],
+        "deployments": [],
+    }
+    assert k.candidates(snapshot, NOW, 7 * 86400) == []
+
+
+def test_null_revision_history_uses_kubernetes_default():
+    k = load("deploy/helm/octo-apm-demo/files/storage_cleanup.py")
+    deployment = obj(
+        "app",
+        {"observedGeneration": 1, "updatedReplicas": 1, "availableReplicas": 1},
+        spec={"replicas": 1, "revisionHistoryLimit": None},
+    )
+    deployment["metadata"].update(
+        generation=1, annotations={"deployment.kubernetes.io/revision": "12"}
+    )
+    replicas = []
+    for rev in range(1, 12):
+        rs = obj(
+            "rs" + str(rev),
+            {"replicas": 0},
+            [{"kind": "Deployment", "uid": "app-uid", "controller": True}],
+            spec={"replicas": 0},
+        )
+        rs["metadata"]["annotations"] = {"deployment.kubernetes.io/revision": str(rev)}
+        replicas.append(rs)
+    snapshot = {
+        "jobs": [],
+        "pods": [],
+        "replicasets": replicas,
+        "deployments": [deployment],
+    }
+    assert [
+        item["metadata"]["name"] for _, item in k.candidates(snapshot, NOW, 86400)
+    ] == ["rs1"]
+
+
+def test_cluster_pagination_omits_empty_continue_then_uses_returned_token():
+    from urllib.parse import parse_qs, urlsplit
+
+    k = load("deploy/helm/octo-apm-demo/files/storage_cleanup.py")
+    client = k.Client.__new__(k.Client)
+    calls = []
+
+    def request(method, resource):
+        query = parse_qs(urlsplit(resource).query, keep_blank_values=True)
+        calls.append(query)
+        return {
+            "items": [len(calls)],
+            "metadata": {"continue": "next"} if len(calls) == 1 else {},
+        }
+
+    client.request = request
+    assert client.listing("pods", "app.kubernetes.io/instance=test") == [1, 2]
+    assert "continue" not in calls[0] and calls[1]["continue"] == ["next"]
+
+
+@pytest.mark.parametrize("status", [404, 409])
+def test_cluster_gc_races_skip_stale_objects_and_continue(status, capsys):
+    from urllib.error import HTTPError
+
+    k = load("deploy/helm/octo-apm-demo/files/storage_cleanup.py")
+    calls = []
+
+    def request(method, resource, body):
+        calls.append(resource)
+        if len(calls) == 2:
+            raise HTTPError("https://example.invalid", status, "stale", {}, None)
+
+    k.process(
+        [("jobs", obj("job")), ("pods", obj("child")), ("pods", obj("next"))],
+        True,
+        request,
+    )
+    assert len(calls) == 3
+    assert '"skipped_status": ' + str(status) in capsys.readouterr().out
+
+
+def test_cluster_server_error_still_stops_cleanup():
+    from urllib.error import HTTPError
+
+    k = load("deploy/helm/octo-apm-demo/files/storage_cleanup.py")
+
+    def failed(*args):
+        raise HTTPError("https://example.invalid", 500, "failed", {}, None)
+
+    with pytest.raises(HTTPError):
+        k.process([("pods", obj("failed"))], True, failed)
+
+
+def test_oci_human_creator_with_instance_in_name_is_not_a_service():
+    j = load("tools/storage_janitor.py")
+    assert (
+        j.creator({"defined-tags": {"Oracle-Tags": {"CreatedBy": "instance-operator"}}})
+        == "user-tag"
+    )
+
+
+@pytest.mark.parametrize(
+    "setting", ["require_repository_allowlist", "require_project_tag"]
+)
+def test_oci_refuses_weakened_ownership_policy(monkeypatch, setting):
+    j = load("tools/storage_janitor.py")
+    policy = json.loads((ROOT / "deploy/storage-hygiene-policy.json").read_text())
+    policy["registry"][setting] = False
+    monkeypatch.setattr(j.json, "loads", lambda _: policy)
+    monkeypatch.setattr("sys.argv", ["storage_janitor.py", "--help"])
+    with pytest.raises(ValueError, match="ownership requirements"):
+        j.main()
+
+
+def test_stress_workload_uses_release_labels_without_changing_selector():
+    result = helm_hygiene("stressRunner.enabled=true")
+    assert result.returncode == 0
+    docs = [x for x in yaml.safe_load_all(result.stdout) if x]
+    deployment = next(
+        x
+        for x in docs
+        if x["kind"] == "Deployment" and x["metadata"]["name"] == "octo-stress-runner"
+    )
+    assert deployment["metadata"]["labels"]["app.kubernetes.io/instance"] == "test"
+    assert (
+        deployment["spec"]["template"]["metadata"]["labels"][
+            "app.kubernetes.io/instance"
+        ]
+        == "test"
+    )
+    assert deployment["spec"]["selector"]["matchLabels"] == {
+        "app": "octo-stress-runner"
+    }
