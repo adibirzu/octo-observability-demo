@@ -187,8 +187,9 @@ sys.meta_path.insert(0, BlockJsonschema())
         },
         capture_output=True, text=True, timeout=60,
     )
-    assert "jsonschema not installed in python3" in verification.stdout, verification.stdout + verification.stderr
-    assert re.search(r"PASS[^\n]* root unified deploy pytest", verification.stdout), verification.stdout
+    assert verification.returncode != 0, verification.stdout + verification.stderr
+    assert "No module named 'jsonschema'" in verification.stdout, verification.stdout
+    assert re.search(r"FAIL[^\n]* root unified deploy pytest", verification.stdout), verification.stdout
 
 
 def test_make_helm_overrides_the_values_consumed_by_templates():
