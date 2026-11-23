@@ -22,9 +22,11 @@ jobs:
         with:
           terraform_version: "1.14.3"
           terraform_wrapper: false
+      - name: Install package verification dependencies
+        working-directory: shop
+        run: python -m pip install -r requirements-dev.txt pyyaml
       - name: Check the manifest and SBOM
         run: |
-          python -m pip install pytest pyyaml jsonschema
           python -m pytest -q tests/test_sbom_orm_and_cp_pipeline.py tests/test_public_release_sbom.py
           python tools/generate_sbom.py --check
           python tools/public_sbom.py --check sbom/octo-observability-demo.cdx.json
