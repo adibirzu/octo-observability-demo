@@ -16,11 +16,11 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "crm/requirements-dev.txt 6deb82dfc7f162a5e57cf7dbc6ad4ab530bdd66d58d2ea5010fb8e91f39e784b"
+        "value": "crm/requirements-dev.txt a2bd592fa85f0518714975e666c76fc4558c6bd080982d6781e286feafc959f4"
       },
       {
         "name": "octo:input-sha256",
-        "value": "crm/requirements.txt c9095d0a5127a89839baf6a6a07b1bd99fc68f53f4d7e9e9f874e640d1577b2d"
+        "value": "crm/requirements.txt 10a1e731faa0512aa358e4bba76a0461d524694d3fa1bbc021ea37b1c3758d2a"
       },
       {
         "name": "octo:input-sha256",
@@ -44,7 +44,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/async-worker/pyproject.toml e9adb79d13edd813f9c6e05a1eac311cbbae94df535ac609e64f837da6a3d8bf"
+        "value": "services/async-worker/pyproject.toml 5ddeb31abcce675a189143bb6de1f320856ee349102190672f27380037864e78"
       },
       {
         "name": "octo:input-sha256",
@@ -64,7 +64,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/cache/client/pyproject.toml d9bd9c641229f53d0c115b7f96017e0f6d5d98053eb3d774ab451214a3ac2e8b"
+        "value": "services/cache/client/pyproject.toml 757c31ccf3756347a673f460a25a4e27760b2820bdcf2da1a34bf9bd893f6ee2"
       },
       {
         "name": "octo:input-sha256",
@@ -104,7 +104,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/remediator/pyproject.toml c5534260962118608d2a6584f5f82c78620c23c280330481479762ec64acdc98"
+        "value": "services/remediator/pyproject.toml 4b6ca6f5c242c1569e17a09fa513b6866319f272fca77d3194e7c46bec708a16"
       },
       {
         "name": "octo:input-sha256",
@@ -120,11 +120,11 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "shop/requirements-dev.txt 8156c3df46242a79dbfd54a043f597a4883b7456d9632a662227f556038dffa1"
+        "value": "shop/requirements-dev.txt df992d51ad0c148d70c8b124377cf5959ab3a62dfd4154e32134e6174b981fd6"
       },
       {
         "name": "octo:input-sha256",
-        "value": "shop/requirements.txt 29a2c3a4e3a9fa982c776246cff4416e6825190f3e1f5a887c1914d56bfbe1d9"
+        "value": "shop/requirements.txt e11eabc25ff4c947bda6d862f279c570cac088d5428d0c3cbc662fbdf44d1cc5"
       },
       {
         "name": "octo:input-sha256",
@@ -2255,28 +2255,29 @@
     {
       "type": "library",
       "name": "fakeredis",
-      "purl": "pkg:pypi/fakeredis",
-      "bom-ref": "pkg:pypi/fakeredis",
+      "purl": "pkg:pypi/fakeredis@2.40.0",
+      "bom-ref": "pkg:pypi/fakeredis@2.40.0",
+      "version": "2.40.0",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements-dev.txt: fakeredis[lua]>=2.36.0,<3.0"
+          "value": "crm/requirements-dev.txt: fakeredis[lua]==2.40.0"
         },
         {
           "name": "octo:declaration",
-          "value": "services/async-worker/pyproject.toml: fakeredis>=2.23"
+          "value": "services/async-worker/pyproject.toml: fakeredis==2.40.0"
         },
         {
           "name": "octo:declaration",
-          "value": "services/cache/client/pyproject.toml: fakeredis>=2.23"
+          "value": "services/cache/client/pyproject.toml: fakeredis==2.40.0"
         },
         {
           "name": "octo:declaration",
-          "value": "services/remediator/pyproject.toml: fakeredis>=2.23"
+          "value": "services/remediator/pyproject.toml: fakeredis==2.40.0"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements-dev.txt: fakeredis[lua]>=2.36.0,<3.0"
+          "value": "shop/requirements-dev.txt: fakeredis[lua]==2.40.0"
         },
         {
           "name": "octo:source",
@@ -4445,28 +4446,29 @@
     {
       "type": "library",
       "name": "redis",
-      "purl": "pkg:pypi/redis",
-      "bom-ref": "pkg:pypi/redis",
+      "purl": "pkg:pypi/redis@8.0.0",
+      "bom-ref": "pkg:pypi/redis@8.0.0",
+      "version": "8.0.0",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: redis[hiredis]>=8.0.0,<9.0"
+          "value": "crm/requirements.txt: redis[hiredis]==8.0.0"
         },
         {
           "name": "octo:declaration",
-          "value": "services/async-worker/pyproject.toml: redis>=5.0"
+          "value": "services/async-worker/pyproject.toml: redis==8.0.0"
         },
         {
           "name": "octo:declaration",
-          "value": "services/cache/client/pyproject.toml: redis>=5.0"
+          "value": "services/cache/client/pyproject.toml: redis==8.0.0"
         },
         {
           "name": "octo:declaration",
-          "value": "services/remediator/pyproject.toml: redis>=5.0"
+          "value": "services/remediator/pyproject.toml: redis==8.0.0"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: redis[hiredis]>=7.4.0,<8.0"
+          "value": "shop/requirements.txt: redis[hiredis]==8.0.0"
         },
         {
           "name": "octo:source",

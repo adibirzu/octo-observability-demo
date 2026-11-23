@@ -14,7 +14,7 @@ pytest-cov>=7.1.0,<8.0
 pytest-xdist>=3.8.0,<4.0
 respx>=0.23.1,<1.0
 jsonschema>=4.23,<5
-fakeredis[lua]>=2.36.0,<3.0
+fakeredis[lua]==2.40.0
 
 # Playwright — E2E browser regression
 playwright>=1.60.0,<2.0
