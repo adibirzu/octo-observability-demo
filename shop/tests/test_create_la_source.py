@@ -10,6 +10,9 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
+import sys
+from types import SimpleNamespace
 import subprocess
 from pathlib import Path
 
@@ -68,22 +71,21 @@ def test_dry_run_does_not_require_oci_sdk() -> None:
 
 
 @pytest.mark.portability
-def test_apply_without_credentials_fails_clearly() -> None:
-    """With --apply set but no OCI config, fail with an informative error —
-    never silently."""
-    result = _run(
-        "--apply",
-        "--la-namespace",
-        "acme",
-        "--la-log-group-id",
-        "<OCI_LOG_ANALYTICS_OCID>",
-        env={"OCI_CLI_AUTH": "instance_principal", "HOME": "/nonexistent"},
-    )
-    # Acceptable: non-zero with an OCI-related message, OR the oci package
-    # is not even installed (also a clear signal).
-    assert result.returncode != 0
-    combined = result.stderr + result.stdout
-    assert any(
-        needle in combined
-        for needle in ("oci", "OCI", "InstancePrincipal", "ModuleNotFoundError")
-    )
+def test_apply_without_credentials_fails_clearly(monkeypatch, capsys) -> None:
+    """Missing credentials fail locally without probing metadata or OCI."""
+    script = runpy.run_path(str(SCRIPT))
+    main = script["_main"]
+
+    def missing_config():
+        raise FileNotFoundError("No test credentials")
+
+    monkeypatch.setitem(sys.modules, "oci", SimpleNamespace(
+        config=SimpleNamespace(from_file=missing_config),
+    ))
+    monkeypatch.setitem(main.__globals__, "_imds_reachable", lambda **kwargs: False)
+    result = main([
+        "--apply", "--la-namespace", "example",
+        "--la-log-group-id", "<LOG_GROUP_ID>",
+    ])
+    assert result == 3
+    assert "cannot resolve credentials" in capsys.readouterr().err

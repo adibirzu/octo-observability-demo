@@ -4,6 +4,7 @@ import zipfile
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+import pytest
 import yaml
 
 
@@ -140,6 +141,8 @@ def test_oke_image_build_requires_immutable_tag_and_runtime_uid() -> None:
 
 
 def test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse() -> None:
+    if not (ROOT / "deploy/oke/bootstrap-demo-secrets.sh").exists():
+        pytest.skip("Private local bootstrap script is absent; its source contract requires the operator checkout")
     bootstrap = read_text("deploy/oke/bootstrap-demo-secrets.sh")
 
     assert "command -v envsubst" in bootstrap
@@ -243,7 +246,7 @@ def test_verify_script_renders_helm_templates_instead_of_parsing_go_templates_ra
     assert "terraform -chdir=\"${REPO_ROOT}/deploy/terraform\" init -backend=false" in verify
     assert "terraform validate" in verify
     assert "deploy/wizard/tests/test_plan.py" in verify
-    assert "services/load-control" in verify
+    assert '"${REPO_ROOT}"/services/*' in verify
 
 
 def test_deploy_scripts_show_help_without_running_preflight() -> None:

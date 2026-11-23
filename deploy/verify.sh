@@ -405,15 +405,7 @@ fi
 
 # ── Python tests (shop, crm, tools) ───────────────────────────────────
 section "Python test suites"
-root_deploy_tests=(tests/test_unified_deploy_surface.py tests/test_sbom_orm_and_cp_pipeline.py)
-if [[ ! -f "${REPO_ROOT}/deploy/oke/bootstrap-demo-secrets.sh" ]]; then
-    root_deploy_tests+=(--deselect "tests/test_unified_deploy_surface.py::test_oke_secret_bootstrap_renders_namespaces_and_validates_langfuse")
-    warn "Local OKE secrets bootstrap contract unavailable in this checkout"
-fi
-if ! python3 -c "import jsonschema" >/dev/null 2>&1; then
-    root_deploy_tests+=(--deselect "tests/test_sbom_orm_and_cp_pipeline.py::test_control_plane_manifest_contract")
-    warn "jsonschema not installed in python3 - skipping CP manifest JSON Schema test (install shop/requirements-dev.txt)"
-fi
+root_deploy_tests=(tests/ --ignore=tests/e2e)
 if (cd "${REPO_ROOT}" && python3 -m pytest -q "${root_deploy_tests[@]}" >/dev/null 2>&1); then
     ok "root unified deploy pytest"
 else
@@ -428,12 +420,17 @@ else
     (cd "${REPO_ROOT}" && python3 -m pytest -q deploy/wizard/tests/test_plan.py 2>&1 | tail -20 | sed 's/^/         /')
 fi
 
-for testdir in services/load-control shop crm tools/traffic-generator; do
-    if [[ -d "${REPO_ROOT}/${testdir}" ]] && find "${REPO_ROOT}/${testdir}" -name "test_*.py" -print -quit | grep -q .; then
-        if (cd "${REPO_ROOT}/${testdir}" && python -m pytest -q --no-header 2>&1 | tail -1 | grep -q "passed"); then
+for testpath in "${REPO_ROOT}/shop" "${REPO_ROOT}/crm" "${REPO_ROOT}"/services/* "${REPO_ROOT}/tools/traffic-generator"; do
+    testdir="${testpath#${REPO_ROOT}/}"
+    if [[ -d "${REPO_ROOT}/${testdir}/tests" ]]; then
+        if ! find "${REPO_ROOT}/${testdir}/tests" -name 'test_*.py' -print -quit | grep -q .; then
+            warn "${testdir}/tests uses a non-Python runner; run its declared test command separately"
+            continue
+        fi
+        if (cd "${REPO_ROOT}/${testdir}" && python3 -m pytest -q tests); then
             ok "${testdir} pytest"
         else
-            warn "${testdir} pytest had failures or was not runnable here"
+            fail "${testdir} pytest failed or could not be collected"
         fi
     fi
 done

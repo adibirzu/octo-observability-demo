@@ -36,7 +36,9 @@ def stub_python(tmp_path, failing_suite, status):
 def test_make_test_apps_propagates_suite_exit(tmp_path, suite, status):
     (tmp_path / "Makefile").write_text((ROOT / "Makefile").read_text())
     for directory in SUITES:
-        (tmp_path / directory / "tests").mkdir(parents=True)
+        tests = tmp_path / directory / "tests"
+        tests.mkdir(parents=True)
+        (tests / "test_example.py").touch()
     result = subprocess.run(
         ["make", "test-apps"], cwd=tmp_path,
         env=stub_python(tmp_path, suite, status), capture_output=True, text=True,
