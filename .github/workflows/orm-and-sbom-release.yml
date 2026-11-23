@@ -113,8 +113,10 @@ jobs:
         run: |
           image="ghcr.io/${GITHUB_REPOSITORY,,}/${IMAGE_NAME}"
           echo "IMAGE=$image" >> "$GITHUB_ENV"
-          echo "IMAGE_TAG=$image:sha-$GITHUB_SHA" >> "$GITHUB_ENV"
+          echo "IMAGE_TAG=$image:sha-$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_ENV"
           mkdir -p release
+      - name: Require native amd64
+        run: test "$(uname -m)" = x86_64
       - name: Build once on the native amd64 runner
         uses: docker/build-push-action@562e51947939164e4fe808a6eab5101977e509e0
         with:
@@ -128,6 +130,8 @@ jobs:
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
           provenance: false
+      - name: Verify built image architecture
+        run: test "$(docker image inspect "$IMAGE_TAG" --format '{{.Os}}/{{.Architecture}}')" = linux/amd64
       - name: Inventory the built image
         uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
         with:
@@ -163,9 +167,15 @@ jobs:
           IMAGE_NAME: ${{ matrix.image }}
         run: |
           docker push "$IMAGE_TAG"
-          reference="$(docker image inspect "$IMAGE_TAG" --format '{{index .RepoDigests 0}}')"
+          reference="$(docker image inspect "$IMAGE_TAG" --format '{{json .RepoDigests}}' |
+            python -c 'import json,os,sys; matches=[x for x in json.load(sys.stdin) if x.startswith(os.environ["IMAGE"]+"@")]; assert len(matches)==1; print(matches[0])')"
           digest="${reference##*@}"
           [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
+          remote="$(docker buildx imagetools inspect "$IMAGE@$digest" --format '{{.Manifest.Digest}}')"
+          test "$remote" = "$digest"
+          python tools/public_sbom.py --input image-raw.cdx.json \
+            --output "release/$IMAGE_NAME.cdx.json" --name "$IMAGE_NAME" --version "$GITHUB_SHA" --digest "$digest" \
+            --vulnerabilities image-vulns-raw.json --summary "release/$IMAGE_NAME-vulnerabilities.json"
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           printf '%s@%s\n' "$IMAGE" "$digest" > "release/$IMAGE_NAME-digest.txt"
       - name: Attest the public SBOM to the GHCR digest

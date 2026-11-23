@@ -38,7 +38,11 @@ case "${1:-}" in
         ;;
 esac
 
-if [[ "${PLATFORM:-linux/amd64}" == *amd64* ]] && [[ "$(uname -m)" != "x86_64" ]]; then
+host_arch="$(uname -m)"
+if [[ "$(uname -s)" == "Darwin" ]] && [[ "$(sysctl -n hw.optional.arm64 2>/dev/null || true)" == "1" ]]; then
+    host_arch=arm64
+fi
+if [[ "${PLATFORM:-linux/amd64}" == *amd64* ]] && [[ "${host_arch}" != "x86_64" && "${host_arch}" != "amd64" ]]; then
     echo "Use an approved native amd64 builder or CI for linux/amd64 images." >&2
     exit 1
 fi
