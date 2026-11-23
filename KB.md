@@ -58,3 +58,21 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Compatibility. Preserve numeric-only issued-at policy; require expiry and reject missing/empty audience under the approved stricter policies. Non-finite issued-at values fail closed. Verify each live identity-provider client separately before deployment.
 - Framework regression. FastAPI included-router entries no longer expose the same path attributes. Verify the metrics GET operation through public OpenAPI instead of inspecting the internal route list.
 - Verification. Run the offline OIDC regressions, full isolated suites, blocking requirements audits and make verify. The dependency refresh document records the proposal ledger and acceptance limits.
+
+## KB-006. Native amd64 builds must reject ARM before OCI lookup
+
+- Component: `deploy/oke/build-push-images.sh`.
+- Symptom: the default amd64 image build starts OCI namespace discovery on an ARM workstation before checking the host architecture.
+- Cause: image platform defaults and credential-dependent discovery precede any architecture guard.
+- Fix: reject amd64 on a non-x86_64 host before resolving the OCI profile or registry namespace. Use an approved native builder or CI.
+- Verification: `tests/test_public_release_sbom.py` runs the helper with a synthetic ARM host and fails if a cloud or build command runs.
+- Status: locally verified; no image build, push, or deployment executed.
+
+## KB-007. Release packaging regression needs application collection dependencies
+
+- Component: ORM and SBOM release workflow.
+- Symptom: the missing-jsonschema regression fails with a prior FastAPI collection error in the minimal release environment.
+- Cause: pytest collects root modules before applying the regression's selection; pytest, PyYAML and jsonschema alone do not provide the app imports.
+- Fix: install the Shop development requirements from the Shop directory, plus PyYAML, before package contract tests. Keep the schema-failure regression and its exact-cause assertion.
+- Verification: the original minimal environment reproduces the failure; the declared package verification environment runs the same regression successfully.
+- Status: local reproduction and repair; no release, image publication or provider action.

@@ -11,6 +11,8 @@ permissions:
 jobs:
   package:
     runs-on: ubuntu-latest
+    outputs:
+      images: ${{ steps.matrix.outputs.images }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -20,11 +22,18 @@ jobs:
         with:
           terraform_version: "1.14.3"
           terraform_wrapper: false
+      - name: Install package verification dependencies
+        working-directory: shop
+        run: python -m pip install -r requirements-dev.txt pyyaml
       - name: Check the manifest and SBOM
         run: |
-          python -m pip install pytest pyyaml jsonschema
-          python -m pytest -q tests/test_sbom_orm_and_cp_pipeline.py
+          python -m pytest -q tests/test_sbom_orm_and_cp_pipeline.py tests/test_public_release_sbom.py
           python tools/generate_sbom.py --check
+          python tools/public_sbom.py --check sbom/octo-observability-demo.cdx.json
+      - name: Select every release container from the manifest
+        id: matrix
+        run: |
+          python -c 'import json,os; m=json.load(open("deploy/cp-pipeline-manifest.json")); f=open(os.environ["GITHUB_OUTPUT"],"a"); f.write("images="+json.dumps({"include":m["containerBuilds"]})+"\n")'
       - name: Package and validate the published stacks
         env:
           TF_IN_AUTOMATION: "1"
@@ -45,9 +54,35 @@ jobs:
             terraform -chdir="$extracted" validate -no-color
             rm -rf "$extracted"
           done
-          cp sbom/octo-observability-demo.cdx.json release/
+      - name: Inventory resolved source dependencies
+        uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
+        with:
+          version: v0.76.2
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: source-raw.cdx.json
+          cache: "false"
+      - name: Scan source dependency vulnerabilities
+        uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
+        with:
+          version: v0.76.2
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          format: json
+          output: source-vulns-raw.json
+          cache: "false"
+      - name: Export public source inventory and summary
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          python tools/public_sbom.py --input source-raw.cdx.json \
+            --output release/octo-observability-demo.cdx.json \
+            --name octo-observability-demo --version "$SOURCE_SHA" \
+            --vulnerabilities source-vulns-raw.json --summary release/source-vulnerabilities.json
           cd release
-          sha256sum octo-stack.zip octo-compute-stack.zip octo-observability-demo.cdx.json > SHA256SUMS
+          sha256sum ./*.zip ./*.json > SHA256SUMS
           sha256sum --check SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
@@ -55,16 +90,126 @@ jobs:
           path: release/
           if-no-files-found: error
 
-  attach:
+  images:
     if: github.event_name == 'release'
     needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix: ${{ fromJSON(needs.package.outputs.images) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: docker/setup-buildx-action@bf8388060db527dff14f48b6a5fdbe70763c1213
+      - name: Set public image coordinates
+        env:
+          IMAGE_NAME: ${{ matrix.image }}
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}/${IMAGE_NAME}"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+          echo "IMAGE_TAG=$image:sha-$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_ENV"
+          mkdir -p release
+      - name: Require native amd64
+        run: test "$(uname -m)" = x86_64
+      - name: Build once on the native amd64 runner
+        uses: docker/build-push-action@562e51947939164e4fe808a6eab5101977e509e0
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: ${{ env.IMAGE_TAG }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          provenance: false
+      - name: Verify built image architecture
+        run: test "$(docker image inspect "$IMAGE_TAG" --format '{{.Os}}/{{.Architecture}}')" = linux/amd64
+      - name: Inventory the built image
+        uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
+        with:
+          version: v0.76.2
+          image-ref: ${{ env.IMAGE_TAG }}
+          format: cyclonedx
+          output: image-raw.cdx.json
+          cache: "false"
+      - name: Scan image vulnerabilities
+        uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
+        with:
+          version: v0.76.2
+          image-ref: ${{ env.IMAGE_TAG }}
+          scanners: vuln
+          format: json
+          output: image-vulns-raw.json
+          cache: "false"
+      - name: Export public image inventory and summary
+        env:
+          IMAGE_NAME: ${{ matrix.image }}
+        run: |
+          python tools/public_sbom.py --input image-raw.cdx.json \
+            --output "release/$IMAGE_NAME.cdx.json" --name "$IMAGE_NAME" --version "$GITHUB_SHA" \
+            --vulnerabilities image-vulns-raw.json --summary "release/$IMAGE_NAME-vulnerabilities.json"
+      - uses: docker/login-action@d0b8297dd55199249f38268efae35fcb03f75aab
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the scanned image and record its immutable digest
+        id: push
+        env:
+          IMAGE_NAME: ${{ matrix.image }}
+        run: |
+          docker push "$IMAGE_TAG"
+          reference="$(docker image inspect "$IMAGE_TAG" --format '{{json .RepoDigests}}' |
+            python -c 'import json,os,sys; matches=[x for x in json.load(sys.stdin) if x.startswith(os.environ["IMAGE"]+"@")]; assert len(matches)==1; print(matches[0])')"
+          digest="${reference##*@}"
+          [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
+          remote="$(docker buildx imagetools inspect "$IMAGE@$digest" --format '{{json .Manifest}}' |
+            python -c 'import json,sys; print(json.load(sys.stdin)["digest"])')"
+          test "$remote" = "$digest"
+          python tools/public_sbom.py --input image-raw.cdx.json \
+            --output "release/$IMAGE_NAME.cdx.json" --name "$IMAGE_NAME" --version "$GITHUB_SHA" --digest "$digest" \
+            --vulnerabilities image-vulns-raw.json --summary "release/$IMAGE_NAME-vulnerabilities.json"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          printf '%s@%s\n' "$IMAGE" "$digest" > "release/$IMAGE_NAME-digest.txt"
+      - name: Attest the public SBOM to the GHCR digest
+        uses: actions/attest-sbom@4c8abdcbea4a6b66f70fd1169e70af4bf5b13701
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          sbom-path: release/${{ matrix.image }}.cdx.json
+          push-to-registry: true
+      - name: Checksum public image artifacts
+        env:
+          IMAGE_NAME: ${{ matrix.image }}
+        working-directory: release
+        run: sha256sum ./*.json ./*.txt > "$IMAGE_NAME-SHA256SUMS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: image-sbom-${{ matrix.id }}
+          path: release/
+          if-no-files-found: error
+
+  attach:
+    if: github.event_name == 'release'
+    needs: [package, images]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: orm-and-sbom
+          pattern: "*sbom*"
+          merge-multiple: true
           path: release
       - name: Attach verified artifacts to the existing release
         working-directory: release
@@ -74,4 +219,5 @@ jobs:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           sha256sum --check SHA256SUMS
-          gh release upload -- "$RELEASE_TAG" octo-stack.zip octo-compute-stack.zip octo-observability-demo.cdx.json SHA256SUMS
+          for checksum in *-SHA256SUMS; do sha256sum --check "$checksum"; done
+          gh release upload -- "$RELEASE_TAG" ./*
