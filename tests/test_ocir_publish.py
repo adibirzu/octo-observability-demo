@@ -35,13 +35,15 @@ def publisher(tmp_path):
         "fault=os.environ.get('FAULT','')\n"
         "if args[:2]==['image','inspect']:\n"
         " image=args[2]; remote='region.ocir.io/synthetic/demo-shop'\n"
-        " print(json.dumps([{'Id':'sha256:local','Os':'linux',"
+        " changed = fault=='image-id' and image.startswith('region.')\n"
+        " print(json.dumps([{'Id':'sha256:changed' if changed else 'sha256:local','Os':'linux',"
         "'Architecture':'arm64' if fault=='architecture' else 'amd64',"
-        "'Config':{'User':'10001','Labels':{'org.opencontainers.image.revision':"
+        "'Config':{'User':'0' if fault=='user' else '10001','Labels':{'org.opencontainers.image.revision':"
         "'c'*40 if fault=='source' else 'a'*40}},"
-        "'RepoDigests':[remote+'@sha256:'+'b'*64]}]))\n"
+        "'RepoDigests':[] if fault=='zero-digests' else [remote+'@sha256:'+'b'*64,remote+'@sha256:'+'c'*64] if fault=='multiple-digests' else [remote+'@sha256:'+'b'*64]}]))\n"
         "elif args[:2]==['buildx','imagetools']:\n"
-        " print(json.dumps({'digest':'sha256:'+('c' if fault=='digest' else 'b')*64}))\n"
+        " mismatch = fault=='digest' or (fault=='tag-retargeted' and ':sha-' in args[3])\n"
+        " print(json.dumps({'digest':'sha256:'+('c' if mismatch else 'b')*64}))\n"
         "elif args[0]=='push' and fault=='push':\n"
         " print('synthetic-test-token region.ocir.io/synthetic',file=sys.stderr);sys.exit(1)\n"
         "elif args[0]=='push':\n"
@@ -56,12 +58,12 @@ def publisher(tmp_path):
     return tmp_path, config, token, env
 
 
-def run(publisher, **changes):
+def run(publisher, run_tag="123-1", **changes):
     tmp, config, token, env = publisher
     env.update(changes)
     result = subprocess.run([
         sys.executable, str(SCRIPT), "--role", "shop", "--source-sha", SHA,
-        "--run-tag", "123-1", "--config-file", str(config),
+        "--run-tag", run_tag, "--config-file", str(config),
         "--token-file", str(token), "--receipt", str(tmp / "receipt.json"),
     ], env=env, capture_output=True, text=True)
     log = tmp / "calls.jsonl"
@@ -83,7 +85,7 @@ def test_publish_pins_source_and_remote_digest_without_disclosing_destination(pu
     assert "synthetic-test-token" not in result.stdout + result.stderr
 
 
-@pytest.mark.parametrize("fault", ["architecture", "source"])
+@pytest.mark.parametrize("fault", ["architecture", "source", "user"])
 def test_mismatched_candidate_never_reaches_registry(publisher, fault):
     result, calls = run(publisher, FAULT=fault)
     assert result.returncode != 0
@@ -108,7 +110,7 @@ def test_world_readable_token_is_rejected_before_docker(publisher):
 
 @pytest.mark.parametrize("field,value", [
     ("registry", "https://region.ocir.io"), ("namespace", "../other"),
-    ("repositories", {"shop": "../outside"}), ("username", "injected\nvalue"),
+    ("repositories", {"shop": "../outside", "crm": "demo-crm", "java-apm": "demo-java-payment", "workflow-gateway": "demo-workflow"}), ("username", "injected\nvalue"),
 ])
 def test_invalid_destination_never_invokes_docker(publisher, field, value):
     config = publisher[1]
@@ -140,7 +142,10 @@ def test_workflow_requires_manual_main_and_a_protected_environment():
     scan = next(i for i, x in enumerate(steps) if "Scan vulnerabilities" == x.get("name"))
     publish = next(i for i, x in enumerate(steps) if "Publish the scanned image" == x.get("name"))
     assert scan < publish
-    assert all("secrets.OCIR_PUSH_TOKEN" not in json.dumps(x) for x in steps[:publish])
+    for name in ("OCIR_PUSH_TOKEN", "OCIR_PUBLISH_CONFIG"):
+        assert "secrets." + name not in json.dumps(job.get("env", {}))
+        assert all("secrets." + name not in json.dumps(step)
+                   for index, step in enumerate(steps) if index != publish)
     for step in steps:
         if "uses" in step:
             assert len(step["uses"].rsplit("@", 1)[-1]) == 40
@@ -161,5 +166,82 @@ def test_symlink_token_is_rejected_before_docker(publisher):
     token.rename(target)
     token.symlink_to(target)
     result, calls = run(publisher)
+    assert result.returncode != 0
+    assert not calls
+
+
+def test_workflow_blocks_fixable_high_findings_and_keeps_unfixed_in_the_inventory():
+    workflow = yaml.safe_load((ROOT / ".github/workflows/ocir-publish.yml").read_text())
+    steps = workflow["jobs"]["publish"]["steps"]
+    gate = next(x for x in steps if x.get("name") == "Scan vulnerabilities")["with"]
+    assert gate["severity"] == "HIGH,CRITICAL"
+    assert gate["exit-code"] == "1"
+    assert gate["ignore-unfixed"] == "true"
+    inventory = next(x for x in steps if x.get("name") == "Inventory vulnerabilities")["with"]
+    assert inventory["exit-code"] == "0"
+    assert inventory.get("ignore-unfixed", "false") == "false"
+    assert inventory["output"] == "image-vulns-raw.json"
+
+
+def test_each_publisher_role_has_one_build_in_the_reviewed_manifest():
+    workflow = yaml.safe_load((ROOT / ".github/workflows/ocir-publish.yml").read_text())
+    roles = workflow["jobs"]["publish"]["strategy"]["matrix"]["role"]
+    builds = json.loads((ROOT / "deploy/cp-pipeline-manifest.json").read_text())["containerBuilds"]
+    for role in roles:
+        matches = [item for item in builds if item["id"] == role]
+        assert len(matches) == 1, role
+        for key in ("dockerfile", "context"):
+            path = (ROOT / matches[0][key]).resolve()
+            assert path.is_relative_to(ROOT) and path.exists()
+
+
+def test_repositories_array_is_rejected_without_a_traceback(publisher):
+    config = publisher[1]
+    data = json.loads(config.read_text())
+    data["repositories"] = ["shop", "crm", "java-apm", "workflow-gateway"]
+    config.write_text(json.dumps(data))
+    result, calls = run(publisher)
+    assert result.returncode != 0
+    assert "Publication failed;" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not calls
+
+
+def test_remote_tag_must_resolve_to_the_pushed_digest(publisher):
+    result, _ = run(publisher, FAULT="tag-retargeted")
+    assert result.returncode != 0
+    assert not (publisher[0] / "receipt.json").exists()
+
+
+def test_manifest_newline_cannot_inject_environment_into_publish_step(tmp_path):
+    workflow = yaml.safe_load((ROOT / ".github/workflows/ocir-publish.yml").read_text())
+    select = next(x for x in workflow["jobs"]["publish"]["steps"]
+                  if x.get("name") == "Select one approved application build")["run"]
+    code = select.split("python - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+    source = tmp_path / "source"
+    (source / "deploy").mkdir(parents=True)
+    malicious = ".\nOCIR_PUSH_TOKEN=overridden"
+    (source / malicious).mkdir()
+    (source / "Dockerfile").write_text("FROM scratch\n")
+    (source / "deploy/cp-pipeline-manifest.json").write_text(json.dumps({
+        "containerBuilds": [{"id": "shop", "context": malicious, "dockerfile": "Dockerfile"}],
+    }))
+    output = tmp_path / "github-env"
+    result = subprocess.run([sys.executable, "-c", code], cwd=tmp_path,
+                            env=dict(os.environ, ROLE="shop", SOURCE_SHA=SHA, GITHUB_ENV=str(output)),
+                            capture_output=True, text=True)
+    assert result.returncode != 0
+    assert not output.exists()
+
+
+@pytest.mark.parametrize("fault", ["zero-digests", "multiple-digests", "image-id"])
+def test_ambiguous_or_changed_pushed_image_has_no_receipt(publisher, fault):
+    result, _ = run(publisher, FAULT=fault)
+    assert result.returncode != 0
+    assert not (publisher[0] / "receipt.json").exists()
+
+
+def test_invalid_run_tag_never_invokes_docker(publisher):
+    result, calls = run(publisher, run_tag="123/1")
     assert result.returncode != 0
     assert not calls

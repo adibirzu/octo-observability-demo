@@ -35,6 +35,8 @@ def destination(config):
         raise ValueError("Invalid namespace")
     if not username or any(c.isspace() or ord(c) < 32 for c in username):
         raise ValueError("Invalid registry login")
+    if not isinstance(repositories, dict):
+        raise ValueError("A repository object is required")
     if set(repositories) != set(ROLES) or len(set(repositories.values())) != len(ROLES):
         raise ValueError("Exactly four distinct approved repositories are required")
     for repository in repositories.values():
@@ -98,7 +100,7 @@ def publish(args):
         if not re.fullmatch(r"sha256:[a-f0-9]{64}", digest):
             raise ValueError("Invalid pushed digest")
         remote = json.loads(docker(
-            "buildx", "imagetools", "inspect", image + "@" + digest,
+            "buildx", "imagetools", "inspect", target,
             "--format", "{{json .Manifest}}",
         ))
         if remote.get("digest") != digest:

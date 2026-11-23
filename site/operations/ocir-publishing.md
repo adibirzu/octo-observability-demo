@@ -28,9 +28,11 @@ full 40-character reviewed source commit. The workflow runs only from main and
 requires the source commit to be an ancestor of main. A commit from before the
 publisher PR can be built after that PR merges.
 
-Each matrix job builds a local candidate, produces an inventory, rejects HIGH and
-CRITICAL vulnerabilities, and exports the sanitized SBOM with the existing public
-exporter. The publisher requires linux/amd64, runtime UID 10001 and the selected
+Each matrix job builds a local candidate, produces a complete vulnerability
+inventory, rejects fixable HIGH and CRITICAL vulnerabilities, and exports the
+sanitized SBOM with the existing public exporter. Unfixed findings do not block
+publishing. They remain in the full sanitized vulnerability summary for review.
+The blocking scan uses a separate filtered report, which is never uploaded. The publisher requires linux/amd64, runtime UID 10001 and the selected
 source revision label before it tags or pushes anything. Credentials are supplied
 only to the final publishing step, through mode-0600 files. Docker uses an isolated
 temporary credential directory. Subprocess output that could contain registry
@@ -46,3 +48,8 @@ Rotate by issuing a replacement dedicated token, updating the protected environm
 secret, approving a verification build, and confirming all consumers switched.
 Revocation and cleanup require separate approval. Keep staging image references
 and credentials available until the operator accepts the rollout rollback window.
+
+A failure after push can leave an unverified tag named
+`sha-<source-sha>-<run-id>-<attempt>`. Inspect that exact run's tag before retrying.
+A missing receipt means publication was not accepted. The helper leaves the tag
+in place because deleting it requires separate approval.

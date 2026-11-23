@@ -70,6 +70,8 @@ jobs:
           # Paths come from the reviewed source manifest, never dispatch inputs.
           root = Path("source").resolve()
           for key in ("context", "dockerfile"):
+              assert isinstance(item[key], str)
+              assert not any(ord(c) < 32 or ord(c) == 127 for c in item[key])
               path = (root / item[key]).resolve()
               assert path.is_relative_to(root) and path.exists()
           with open(os.environ["GITHUB_ENV"], "a") as output:
@@ -97,7 +99,7 @@ jobs:
           format: cyclonedx
           output: image-raw.cdx.json
           cache: "false"
-      - name: Scan vulnerabilities
+      - name: Inventory vulnerabilities
         uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
         with:
           version: v0.76.2
@@ -105,7 +107,18 @@ jobs:
           scanners: vuln
           format: json
           output: image-vulns-raw.json
+          exit-code: "0"
+          cache: "false"
+      - name: Scan vulnerabilities
+        uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec
+        with:
+          version: v0.76.2
+          image-ref: ${{ env.LOCAL_IMAGE }}
+          scanners: vuln
+          format: json
+          output: image-gate-raw.json
           severity: HIGH,CRITICAL
+          ignore-unfixed: "true"
           exit-code: "1"
           cache: "false"
       - name: Export the sanitized inventory
