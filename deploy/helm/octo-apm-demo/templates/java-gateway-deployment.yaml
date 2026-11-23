@@ -12,8 +12,8 @@ metadata:
     app.kubernetes.io/component: java-payment-gateway
     demo.role: app-server-populator
 spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ $java.replicas }}
-  revisionHistoryLimit: 5
   progressDeadlineSeconds: 300
   strategy:
     rollingUpdate:

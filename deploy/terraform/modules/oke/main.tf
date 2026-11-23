@@ -73,10 +73,10 @@ variable "node_memory_gbs" {
 
 variable "node_boot_volume_gbs" {
   type    = number
-  default = 93
+  default = 100
   validation {
     condition     = var.node_boot_volume_gbs >= 50
-    error_message = "node_boot_volume_gbs must be >= 50 GiB. Default 37 GiB hits disk-pressure evictions (KB-OCTO-06)."
+    error_message = "node_boot_volume_gbs must be >= 50 GiB. Use 100 GiB for future nodes; verify measured filesystem and image-cache headroom."
   }
 }
 
@@ -248,6 +248,10 @@ resource "oci_containerengine_node_pool" "this" {
   node_shape_config {
     ocpus         = var.node_ocpus
     memory_in_gbs = var.node_memory_gbs
+  }
+
+  node_metadata = {
+    user_data = base64encode(file("${path.module}/cloud-init.sh"))
   }
 
   node_source_details {

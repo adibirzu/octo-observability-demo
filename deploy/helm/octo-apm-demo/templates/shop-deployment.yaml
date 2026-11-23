@@ -10,6 +10,7 @@ metadata:
     {{- include "octo.shop.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: shop
 spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ $shop.replicas }}
   strategy:
     type: RollingUpdate

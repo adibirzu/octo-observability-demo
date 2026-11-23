@@ -13,6 +13,7 @@ metadata:
     app.kubernetes.io/part-of: octo-apm-demo
     app.kubernetes.io/component: stress-runner
 spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: 1
   strategy:
     type: RollingUpdate

@@ -311,3 +311,15 @@ stressRunner:
     tenancy: ""
     tag: ""
   internalKeySecret: octo-stress-runner-key
+
+# No resources until enabled. First installation is suspended and report-only.
+storageHygiene:
+  enabled: false
+  suspend: true
+  apply: false
+  schedule: "23 3 * * *"
+  ageDays: 7
+  ttlSecondsAfterFinished: 86400
+  image: python:3.12.11-alpine3.22
+
+revisionHistoryLimit: 5

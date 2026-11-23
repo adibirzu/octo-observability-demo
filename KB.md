@@ -85,3 +85,12 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Fix: install the Shop development requirements from the Shop directory, plus PyYAML, before package contract tests. Keep the schema-failure regression and its exact-cause assertion.
 - Verification: the original minimal environment reproduces the failure; the declared package verification environment runs the same regression successfully.
 - Status: local reproduction and repair; no release, image publication or provider action.
+
+## Storage hygiene collection and local validation
+
+- OCI boot attachment listing requires an availability domain even though boot volume listing can span ADs. Enumerate the selected compartment's ADs, list all boot attachments per AD, and join across the scoped inventory before calling a volume unattached.
+- Successful OCI CLI empty-list calls can emit no stdout. Treat this separately from a nonzero response and retain exit receipts.
+- Node-pool creator tags are service-principal clues. Match the exact current pool ID privately before calling their resources demo-owned.
+- Local gates require compatible docs, plotting, and OpenTelemetry packages. Use a disposable workspace venv; install shop requirements from `shop/` because editable dependency paths are relative to that working directory.
+- A report timer must see the host's dedicated temporary directory. PrivateTmp hides that directory and produces an incomplete report.
+- Verification: storage-hygiene regression tests capture failures before these fixes. No live cleanup or configuration changes are part of local verification.

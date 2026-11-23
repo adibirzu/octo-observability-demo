@@ -188,7 +188,7 @@ variable "oke_node_memory_gbs" {
 
 variable "oke_node_boot_volume_gbs" {
   type    = number
-  default = 93
+  default = 100
 }
 
 variable "oke_node_image_id" {

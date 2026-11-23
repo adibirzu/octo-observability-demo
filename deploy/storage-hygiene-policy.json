@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "mode": "report",
+  "registry": {
+    "provider_policy_enabled": false,
+    "keep_images": 10,
+    "minimum_age_days": 30,
+    "require_repository_allowlist": true,
+    "require_project_tag": true
+  }
+}
