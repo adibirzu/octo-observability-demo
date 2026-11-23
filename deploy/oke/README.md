@@ -387,3 +387,8 @@ their OCI availability-domain and fault-domain metadata, and
 drivers registered on both workers. Keep the Management Agent on
 `MGMT_AGENT_STATE_STORAGE=emptyDir` for this low-resource test cluster
 unless the demo explicitly needs PVC-backed agent state.
+
+## Manual private-registry publishing
+
+See [the publishing runbook](../../site/operations/ocir-publishing.md) for the
+approval-gated native-amd64 workflow, scoped credentials, and digest receipts.
