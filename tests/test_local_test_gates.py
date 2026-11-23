@@ -67,3 +67,30 @@ def test_verify_counts_suite_failures(tmp_path, status):
         env=env, capture_output=True, text=True,
     )
     assert (result.returncode == 0) == (status == 0), result.stdout + result.stderr
+
+
+def test_make_empty_python_suite_is_fatal(tmp_path):
+    (tmp_path / "Makefile").write_text((ROOT / "Makefile").read_text())
+    (tmp_path / "shop/tests").mkdir(parents=True)
+    result = subprocess.run(
+        ["make", "test-apps"], cwd=tmp_path,
+        env=stub_python(tmp_path, "shop", 5), capture_output=True, text=True,
+    )
+    assert result.returncode != 0, result.stdout + result.stderr
+
+
+def test_verify_empty_python_suite_is_fatal(tmp_path):
+    source = (ROOT / "deploy/verify.sh").read_text()
+    section = source.split('section "Python test suites"', 1)[1].split(
+        '# ── Template import smoke', 1
+    )[0]
+    (tmp_path / "shop/tests").mkdir(parents=True)
+    env = stub_python(tmp_path, "shop", 5)
+    env["REPO_ROOT"] = str(tmp_path)
+    result = subprocess.run(
+        ["bash", "-c", 'set -uo pipefail; errors=0; ok() { :; }; '
+         'warn() { :; }; fail() { errors=$((errors + 1)); }; '
+         + section + '\nexit "$errors"'],
+        env=env, capture_output=True, text=True,
+    )
+    assert result.returncode != 0, result.stdout + result.stderr
