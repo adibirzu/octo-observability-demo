@@ -42,3 +42,19 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Root cause. The unquoted repository prefix in Bash parameter removal is treated as a glob pattern, so the derived suite path can remain absolute.
 - Fix. Quote the repository prefix when removing it from each suite path in `deploy/verify.sh`.
 - Verification. `python3.11 -m pytest -q tests/test_local_test_gates.py` exercises every suite with normal and bracketed workspace paths and checks its owning directory.
+
+## KB-004. fakeredis setup fails with Redis 8.2
+
+- Error. FakeRedis construction raises `AttributeError: 'method_descriptor' object has no attribute '__closure__'` before service tests can run.
+- Root cause. Redis 8.2's client constructor decorator contains a callable closure value that fakeredis 2.40.0 inspects as a Python function. fakeredis 2.36.1 has the same failure.
+- Fix. Pin Redis 8.0.0 with fakeredis 2.40.0 in the async worker, cache client and remediator manifests, and align the Shop/CRM consumer requirements. Redis 7.4.1 also passes the service suites but conflicts with the consumers' Redis 8 constraints.
+- Verification. Run the full async-worker, cache, remediator, Shop and CRM suites in separate environments; all pass with the selected pair. Keep dependency setup failures fatal.
+
+## KB-005. App security updates need coupled pins and a JWT backend replacement
+
+- Error. Requirements audits report vulnerable OTel API, multipart, JWT, settings, PDF and cryptography versions; the old OCI SDK excludes the fixed cryptography version.
+- Root cause. Older OCI constraints exclude fixed cryptography, exact OTel dependencies must move together, and the previous JWT backend has no fixed release.
+- Fix. Align OTel API/SDK/exporters and instrumentation, select OCI 2.184.2 with cryptography 50.0.0, and apply the consolidated app dependency updates. Replace the unfixed python-jose/ecdsa backend with PyJWT 2.15.1.
+- Compatibility. Preserve numeric-only issued-at policy; require expiry and reject missing/empty audience under the approved stricter policies. Non-finite issued-at values fail closed. Verify each live identity-provider client separately before deployment.
+- Framework regression. FastAPI included-router entries no longer expose the same path attributes. Verify the metrics GET operation through public OpenAPI instead of inspecting the internal route list.
+- Verification. Run the offline OIDC regressions, full isolated suites, blocking requirements audits and make verify. The dependency refresh document records the proposal ledger and acceptance limits.

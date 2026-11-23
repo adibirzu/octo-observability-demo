@@ -443,12 +443,12 @@ async def _verify_id_token(
          miss so we survive key rotation without a restart).
       3. `iss` matches the discovery document's `issuer` field.
       4. `aud` matches the CRM's registered client_id.
-      5. `exp` is in the future (jose does this automatically).
+      5. `exp` is in the future (PyJWT verifies this).
       6. `nonce` matches the value the server sent in the authorize request.
 
     Returns the verified claims dict on success, or `None` on any failure.
     """
-    from jose import jwt, jwk, exceptions as jose_exc
+    import jwt
 
     try:
         discovery = await _fetch_oidc_discovery(cfg.idcs_domain_url)
@@ -465,7 +465,7 @@ async def _verify_id_token(
     # Extract kid from the unverified header to select the right JWK
     try:
         unverified_header = jwt.get_unverified_header(id_token)
-    except jose_exc.JWTError:
+    except jwt.PyJWTError:
         logger.warning("ID token has malformed header")
         return None
     kid = unverified_header.get("kid")
@@ -495,23 +495,26 @@ async def _verify_id_token(
     try:
         claims = jwt.decode(
             id_token,
-            jwk.construct(key_data).to_dict(),
+            jwt.PyJWK.from_dict(key_data, algorithm=alg).key,
             algorithms=[alg],
             audience=expected_audience,
             issuer=expected_issuer,
-            options={"verify_at_hash": False},  # we don't pass access_token
+            options={"verify_at_hash": False, "verify_iat": False, "require": ["exp"]},
         )
-    except jose_exc.ExpiredSignatureError:
+        # Preserve numeric-only issued-at validation; future iat was accepted.
+        if "iat" in claims:
+            int(claims["iat"])
+    except jwt.ExpiredSignatureError:
         logger.warning("ID token expired")
         return None
-    except jose_exc.JWTClaimsError as e:
+    except (jwt.InvalidAudienceError, jwt.InvalidIssuerError, jwt.MissingRequiredClaimError) as e:
         logger.warning("ID token claims invalid: %s", type(e).__name__)
         return None
-    except jose_exc.JWTError as e:
+    except (jwt.PyJWTError, ValueError, TypeError, OverflowError) as e:
         logger.warning("ID token signature invalid: %s", type(e).__name__)
         return None
 
-    # Nonce check is not done by jose.decode — verify manually.
+    # Nonce check is not done by jwt.decode — verify manually.
     if not expected_nonce or claims.get("nonce") != expected_nonce:
         logger.warning("ID token nonce mismatch")
         return None
