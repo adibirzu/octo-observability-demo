@@ -499,7 +499,7 @@ async def _verify_id_token(
             algorithms=[alg],
             audience=expected_audience,
             issuer=expected_issuer,
-            options={"verify_at_hash": False, "verify_iat": False},
+            options={"verify_at_hash": False, "verify_iat": False, "require": ["exp"]},
         )
         # Preserve numeric-only issued-at validation; future iat was accepted.
         if "iat" in claims:
@@ -507,10 +507,10 @@ async def _verify_id_token(
     except jwt.ExpiredSignatureError:
         logger.warning("ID token expired")
         return None
-    except (jwt.InvalidAudienceError, jwt.InvalidIssuerError) as e:
+    except (jwt.InvalidAudienceError, jwt.InvalidIssuerError, jwt.MissingRequiredClaimError) as e:
         logger.warning("ID token claims invalid: %s", type(e).__name__)
         return None
-    except (jwt.PyJWTError, ValueError, TypeError) as e:
+    except (jwt.PyJWTError, ValueError, TypeError, OverflowError) as e:
         logger.warning("ID token signature invalid: %s", type(e).__name__)
         return None
 

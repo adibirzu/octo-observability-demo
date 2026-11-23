@@ -33,9 +33,9 @@ python-jose 3.5.0 and its mandatory ecdsa dependency have no released fixes for 
 
 Generated local RSA fixtures verify RS256/RS384/RS512 signatures, key selection and refresh, issuer, audience, expiry, not-before, nonce, signature rejection, malformed tokens and HMAC/unsigned-token rejection. Numeric issued-at values retain the old policy: future iat is not itself a validity bound. Malformed issued-at values fail closed.
 
-The coordinator explicitly approved one intentional tightening: with a configured audience, a missing or empty aud claim is rejected. The configured client must appear in a non-empty audience string or list. This must be stated in any later PR description.
+The coordinator explicitly approved two intentional tightenings: an ID token must include exp, and with a configured audience, a missing or empty aud claim is rejected. The configured client must appear in a non-empty audience string or list. Both policy changes must be stated in any later PR description. Non-finite issued-at values fail closed rather than escaping as exceptions.
 
-Live identity-provider acceptance is unverified. Before deployment, verify a normally issued token for every configured client has a non-empty audience containing that client's configured ID. Use sanitized client aliases and pass/fail receipts; do not retain full tokens, real client IDs or credentials. No live client configuration or token was inspected here.
+Live identity-provider acceptance is unverified. Before deployment, verify a normally issued token for every configured client has an expiry and a non-empty audience containing that client's configured ID. Use sanitized client aliases and pass/fail receipts; do not retain full tokens, real client IDs or credentials. No live client configuration or token was inspected here. The existing RSA-family behavior is preserved: an allowed RSA token algorithm can differ from the JWK alg hint. Tightening this alignment remains a recorded separate policy finding, as directed by the coordinator.
 
 ## Local checks and limitations
 

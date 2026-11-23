@@ -121,10 +121,12 @@ def test_future_issued_at_preserves_existing_jose_policy(oidc):
     assert verify(token) == body
 
 
-def test_non_numeric_issued_at_is_rejected(oidc):
+@pytest.mark.parametrize("issued_at", ["invalid", None, {}, [], float("inf"), float("-inf"), float("nan")],
+                         ids=["text", "null", "object", "array", "positive-infinity", "negative-infinity", "nan"])
+def test_non_numeric_issued_at_is_rejected(oidc, issued_at):
     key, _, _ = oidc
     body = claims()
-    body["iat"] = "invalid"
+    body["iat"] = issued_at
     token = jwt.encode(body, key, algorithm="RS256", headers={"kid": "current"})
     assert verify(token) is None
 
@@ -147,3 +149,11 @@ def test_audience_list_containing_configured_client_is_accepted(oidc):
     body["aud"] = ["crm-client", "another-client"]
     token = jwt.encode(body, key, algorithm="RS256", headers={"kid": "current"})
     assert verify(token) == body
+
+
+def test_missing_expiry_is_rejected(oidc):
+    key, _, _ = oidc
+    body = claims()
+    body.pop("exp")
+    token = jwt.encode(body, key, algorithm="RS256", headers={"kid": "current"})
+    assert verify(token) is None

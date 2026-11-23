@@ -53,7 +53,8 @@ Add an entry after every error that needed investigation and a fix. Use the next
 ## KB-005. App security updates need coupled pins and a JWT backend replacement
 
 - Error. Requirements audits report vulnerable OTel API, multipart, JWT, settings, PDF and cryptography versions; the old OCI SDK excludes the fixed cryptography version.
+- Root cause. Older OCI constraints exclude fixed cryptography, exact OTel dependencies must move together, and the previous JWT backend has no fixed release.
 - Fix. Align OTel API/SDK/exporters and instrumentation, select OCI 2.184.2 with cryptography 50.0.0, and apply the consolidated app dependency updates. Replace the unfixed python-jose/ecdsa backend with PyJWT 2.15.1.
-- Compatibility. Preserve numeric-only issued-at policy; reject missing/empty audience under the approved stricter policy. Verify each live identity-provider client separately before deployment.
+- Compatibility. Preserve numeric-only issued-at policy; require expiry and reject missing/empty audience under the approved stricter policies. Non-finite issued-at values fail closed. Verify each live identity-provider client separately before deployment.
 - Framework regression. FastAPI included-router entries no longer expose the same path attributes. Verify the metrics GET operation through public OpenAPI instead of inspecting the internal route list.
 - Verification. Run the offline OIDC regressions, full isolated suites, blocking requirements audits and make verify. The dependency refresh document records the proposal ledger and acceptance limits.
