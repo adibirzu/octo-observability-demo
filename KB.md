@@ -16,6 +16,15 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Prevention: <how to avoid it next time>
 ```
 
+## KB-008. Startup reset and seed reconciliation can replace existing data
+
+- Component: Shop database initialization and CRM bootstrap.
+- Symptom: an empty users table could trigger a full Shop schema reset; restarting populated apps could reconcile accounts, credentials and catalog records.
+- Cause: automatic identity repair lacked an opt-in guard, and seed helpers treated existing users as permission to reconcile live data.
+- Fix: default `ALLOW_DESTRUCTIVE_DB_BOOTSTRAP` off and never enable it in deployment assets; seed only when every modeled application table is empty.
+- Verification: failing-before local SQLite state snapshots now pass for empty-user catalogs, populated accounts, repeated initial seeding, and missing bootstrap credentials on a populated CRM.
+- Limitation: schema compatibility checks still run; no live database or deployment was changed.
+
 ## Resource Manager validation on macOS
 
 - Symptom. `terraform validate` reports `Unrecognized remote plugin message`. Terraform debug output shows `listen unix ... bind: invalid argument` when the provider socket path exceeds the macOS limit.
