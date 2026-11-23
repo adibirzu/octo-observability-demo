@@ -31,8 +31,8 @@ def test_obs_route_registered(app_with_studio):
 
 @pytest.mark.unit
 def test_obs_metrics_proxy_route_registered(app_with_studio):
-    paths = {getattr(r, "path", None) for r in app_with_studio.app.routes}
-    assert "/api/ai-studio/metrics" in paths
+    operations = app_with_studio.app.openapi()["paths"]["/api/ai-studio/metrics"]
+    assert "get" in operations
 
 
 @pytest.mark.unit

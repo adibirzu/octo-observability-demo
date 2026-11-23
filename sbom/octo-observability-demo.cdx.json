@@ -20,7 +20,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "crm/requirements.txt 10a1e731faa0512aa358e4bba76a0461d524694d3fa1bbc021ea37b1c3758d2a"
+        "value": "crm/requirements.txt 6163dcb8015d1e636264a2d41d023689bcd5b0bca2f81d78bde8da16a8859c36"
       },
       {
         "name": "octo:input-sha256",
@@ -28,7 +28,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "requirements-docs.txt 449f26c83a0cb784ac3d7b2e82ea87b42110755966ec9450cb3a6ff156ea878d"
+        "value": "requirements-docs.txt 66baf8d268a9c978fad4d0c4caeffaff1983202c8f1b7a6e132829ca4715c153"
       },
       {
         "name": "octo:input-sha256",
@@ -76,7 +76,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/genai-studio/pyproject.toml 92373794f243f55f02af3960dd5b98ea5fb509d9feaf2c37d6bd94e06b3d34c9"
+        "value": "services/genai-studio/pyproject.toml 60602eddb2ac9d09459e62a063a1b20b54f52b873c5867bafa5cfc4ec4c1f6c2"
       },
       {
         "name": "octo:input-sha256",
@@ -124,7 +124,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "shop/requirements.txt e11eabc25ff4c947bda6d862f279c570cac088d5428d0c3cbc662fbdf44d1cc5"
+        "value": "shop/requirements.txt f400e44743b9367f287ea498f67f0f441c382d534086d3e634e6e0fcd5d377ff"
       },
       {
         "name": "octo:input-sha256",
@@ -2185,7 +2185,7 @@
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: alembic>=1.13,<2.0"
+          "value": "crm/requirements.txt: alembic>=1.18.4,<2.0"
         },
         {
           "name": "octo:declaration",
@@ -2245,6 +2245,31 @@
         {
           "name": "octo:declaration",
           "value": "shop/requirements.txt: bcrypt==5.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "shop/requirements.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "cryptography",
+      "purl": "pkg:pypi/cryptography@50.0.0",
+      "bom-ref": "pkg:pypi/cryptography@50.0.0",
+      "version": "50.0.0",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: cryptography==50.0.0"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: cryptography==50.0.0"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
         },
         {
           "name": "octo:source",
@@ -2350,23 +2375,32 @@
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: fastapi==0.136.3"
-        },
-        {
-          "name": "octo:declaration",
           "value": "services/genai-studio/pyproject.toml: fastapi==0.136.3"
-        },
-        {
-          "name": "octo:declaration",
-          "value": "shop/requirements.txt: fastapi==0.136.3"
-        },
-        {
-          "name": "octo:source",
-          "value": "crm/requirements.txt"
         },
         {
           "name": "octo:source",
           "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "purl": "pkg:pypi/fastapi@0.141.1",
+      "bom-ref": "pkg:pypi/fastapi@0.141.1",
+      "version": "0.141.1",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: fastapi==0.141.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: fastapi==0.141.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
         },
         {
           "name": "octo:source",
@@ -2393,13 +2427,13 @@
     {
       "type": "library",
       "name": "fpdf2",
-      "purl": "pkg:pypi/fpdf2@2.8.2",
-      "bom-ref": "pkg:pypi/fpdf2@2.8.2",
-      "version": "2.8.2",
+      "purl": "pkg:pypi/fpdf2@2.8.8",
+      "bom-ref": "pkg:pypi/fpdf2@2.8.8",
+      "version": "2.8.8",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: fpdf2==2.8.2"
+          "value": "crm/requirements.txt: fpdf2==2.8.8"
         },
         {
           "name": "octo:source",
@@ -2661,13 +2695,13 @@
     {
       "type": "library",
       "name": "lxml",
-      "purl": "pkg:pypi/lxml@6.1.1",
-      "bom-ref": "pkg:pypi/lxml@6.1.1",
-      "version": "6.1.1",
+      "purl": "pkg:pypi/lxml@6.1.2",
+      "bom-ref": "pkg:pypi/lxml@6.1.2",
+      "version": "6.1.2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: lxml==6.1.1"
+          "value": "crm/requirements.txt: lxml==6.1.2"
         },
         {
           "name": "octo:source",
@@ -2806,17 +2840,17 @@
     {
       "type": "library",
       "name": "oci",
-      "purl": "pkg:pypi/oci@2.176.0",
-      "bom-ref": "pkg:pypi/oci@2.176.0",
-      "version": "2.176.0",
+      "purl": "pkg:pypi/oci@2.184.2",
+      "bom-ref": "pkg:pypi/oci@2.184.2",
+      "version": "2.184.2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: oci==2.176.0"
+          "value": "crm/requirements.txt: oci==2.184.2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: oci==2.176.0"
+          "value": "shop/requirements.txt: oci==2.184.2"
         },
         {
           "name": "octo:source",
@@ -3113,17 +3147,17 @@
     {
       "type": "library",
       "name": "opentelemetry-api",
-      "purl": "pkg:pypi/opentelemetry-api@1.42.1",
-      "bom-ref": "pkg:pypi/opentelemetry-api@1.42.1",
-      "version": "1.42.1",
+      "purl": "pkg:pypi/opentelemetry-api@1.45.2",
+      "bom-ref": "pkg:pypi/opentelemetry-api@1.45.2",
+      "version": "1.45.2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-api==1.42.1"
+          "value": "crm/requirements.txt: opentelemetry-api==1.45.2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-api==1.42.1"
+          "value": "shop/requirements.txt: opentelemetry-api==1.45.2"
         },
         {
           "name": "octo:source",
@@ -3218,17 +3252,17 @@
     {
       "type": "library",
       "name": "opentelemetry-exporter-otlp-proto-http",
-      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.42.1",
-      "bom-ref": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.42.1",
-      "version": "1.42.1",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.45.2",
+      "bom-ref": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.45.2",
+      "version": "1.45.2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-exporter-otlp-proto-http==1.42.1"
+          "value": "crm/requirements.txt: opentelemetry-exporter-otlp-proto-http==1.45.2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-exporter-otlp-proto-http==1.42.1"
+          "value": "shop/requirements.txt: opentelemetry-exporter-otlp-proto-http==1.45.2"
         },
         {
           "name": "octo:source",
@@ -3243,17 +3277,17 @@
     {
       "type": "library",
       "name": "opentelemetry-exporter-prometheus",
-      "purl": "pkg:pypi/opentelemetry-exporter-prometheus@0.63b1",
-      "bom-ref": "pkg:pypi/opentelemetry-exporter-prometheus@0.63b1",
-      "version": "0.63b1",
+      "purl": "pkg:pypi/opentelemetry-exporter-prometheus@0.66b2",
+      "bom-ref": "pkg:pypi/opentelemetry-exporter-prometheus@0.66b2",
+      "version": "0.66b2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-exporter-prometheus==0.63b1"
+          "value": "crm/requirements.txt: opentelemetry-exporter-prometheus==0.66b2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-exporter-prometheus==0.63b1"
+          "value": "shop/requirements.txt: opentelemetry-exporter-prometheus==0.66b2"
         },
         {
           "name": "octo:source",
@@ -3316,17 +3350,17 @@
     {
       "type": "library",
       "name": "opentelemetry-instrumentation-fastapi",
-      "purl": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.63b1",
-      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.63b1",
-      "version": "0.63b1",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.66b2",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.66b2",
+      "version": "0.66b2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-instrumentation-fastapi==0.63b1"
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-fastapi==0.66b2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-instrumentation-fastapi==0.63b1"
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-fastapi==0.66b2"
         },
         {
           "name": "octo:source",
@@ -3405,17 +3439,17 @@
     {
       "type": "library",
       "name": "opentelemetry-instrumentation-httpx",
-      "purl": "pkg:pypi/opentelemetry-instrumentation-httpx@0.63b1",
-      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-httpx@0.63b1",
-      "version": "0.63b1",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-httpx@0.66b2",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-httpx@0.66b2",
+      "version": "0.66b2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-instrumentation-httpx==0.63b1"
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-httpx==0.66b2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-instrumentation-httpx==0.63b1"
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-httpx==0.66b2"
         },
         {
           "name": "octo:source",
@@ -3486,17 +3520,17 @@
     {
       "type": "library",
       "name": "opentelemetry-instrumentation-logging",
-      "purl": "pkg:pypi/opentelemetry-instrumentation-logging@0.63b1",
-      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-logging@0.63b1",
-      "version": "0.63b1",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-logging@0.66b2",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-logging@0.66b2",
+      "version": "0.66b2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-instrumentation-logging==0.63b1"
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-logging==0.66b2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-instrumentation-logging==0.63b1"
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-logging==0.66b2"
         },
         {
           "name": "octo:source",
@@ -3543,17 +3577,17 @@
     {
       "type": "library",
       "name": "opentelemetry-instrumentation-sqlalchemy",
-      "purl": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.63b1",
-      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.63b1",
-      "version": "0.63b1",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.66b2",
+      "bom-ref": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.66b2",
+      "version": "0.66b2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-instrumentation-sqlalchemy==0.63b1"
+          "value": "crm/requirements.txt: opentelemetry-instrumentation-sqlalchemy==0.66b2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-instrumentation-sqlalchemy==0.63b1"
+          "value": "shop/requirements.txt: opentelemetry-instrumentation-sqlalchemy==0.66b2"
         },
         {
           "name": "octo:source",
@@ -3656,17 +3690,17 @@
     {
       "type": "library",
       "name": "opentelemetry-sdk",
-      "purl": "pkg:pypi/opentelemetry-sdk@1.42.1",
-      "bom-ref": "pkg:pypi/opentelemetry-sdk@1.42.1",
-      "version": "1.42.1",
+      "purl": "pkg:pypi/opentelemetry-sdk@1.45.2",
+      "bom-ref": "pkg:pypi/opentelemetry-sdk@1.45.2",
+      "version": "1.45.2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: opentelemetry-sdk==1.42.1"
+          "value": "crm/requirements.txt: opentelemetry-sdk==1.45.2"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: opentelemetry-sdk==1.42.1"
+          "value": "shop/requirements.txt: opentelemetry-sdk==1.45.2"
         },
         {
           "name": "octo:source",
@@ -3697,30 +3731,21 @@
     {
       "type": "library",
       "name": "oracledb",
-      "purl": "pkg:pypi/oracledb@3.4.2",
-      "bom-ref": "pkg:pypi/oracledb@3.4.2",
-      "version": "3.4.2",
+      "purl": "pkg:pypi/oracledb@4.0.2",
+      "bom-ref": "pkg:pypi/oracledb@4.0.2",
+      "version": "4.0.2",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: oracledb==3.4.2"
+          "value": "crm/requirements.txt: oracledb==4.0.2"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: oracledb==4.0.2"
         },
         {
           "name": "octo:source",
           "value": "crm/requirements.txt"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "oracledb",
-      "purl": "pkg:pypi/oracledb@4.0.1",
-      "bom-ref": "pkg:pypi/oracledb@4.0.1",
-      "version": "4.0.1",
-      "properties": [
-        {
-          "name": "octo:declaration",
-          "value": "shop/requirements.txt: oracledb==4.0.1"
         },
         {
           "name": "octo:source",
@@ -3812,17 +3837,17 @@
     {
       "type": "library",
       "name": "prometheus-client",
-      "purl": "pkg:pypi/prometheus-client@0.25.0",
-      "bom-ref": "pkg:pypi/prometheus-client@0.25.0",
-      "version": "0.25.0",
+      "purl": "pkg:pypi/prometheus-client@0.26.0",
+      "bom-ref": "pkg:pypi/prometheus-client@0.26.0",
+      "version": "0.26.0",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: prometheus-client==0.25.0"
+          "value": "crm/requirements.txt: prometheus-client==0.26.0"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: prometheus-client==0.25.0"
+          "value": "shop/requirements.txt: prometheus-client==0.26.0"
         },
         {
           "name": "octo:source",
@@ -3990,13 +4015,13 @@
     {
       "type": "library",
       "name": "pydantic-settings",
-      "purl": "pkg:pypi/pydantic-settings@2.14.1",
-      "bom-ref": "pkg:pypi/pydantic-settings@2.14.1",
-      "version": "2.14.1",
+      "purl": "pkg:pypi/pydantic-settings@2.15.0",
+      "bom-ref": "pkg:pypi/pydantic-settings@2.15.0",
+      "version": "2.15.0",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: pydantic-settings==2.14.1"
+          "value": "crm/requirements.txt: pydantic-settings==2.15.0"
         },
         {
           "name": "octo:source",
@@ -4024,13 +4049,21 @@
     {
       "type": "library",
       "name": "pyjwt",
-      "purl": "pkg:pypi/pyjwt@2.13.0",
-      "bom-ref": "pkg:pypi/pyjwt@2.13.0",
-      "version": "2.13.0",
+      "purl": "pkg:pypi/pyjwt@2.15.1",
+      "bom-ref": "pkg:pypi/pyjwt@2.15.1",
+      "version": "2.15.1",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: PyJWT[crypto]==2.13.0"
+          "value": "crm/requirements.txt: PyJWT[crypto]==2.15.1"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: PyJWT[crypto]==2.15.1"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
         },
         {
           "name": "octo:source",
@@ -4321,30 +4354,13 @@
     {
       "type": "library",
       "name": "python-dotenv",
-      "purl": "pkg:pypi/python-dotenv@1.2.2",
-      "bom-ref": "pkg:pypi/python-dotenv@1.2.2",
-      "version": "1.2.2",
+      "purl": "pkg:pypi/python-dotenv@1.2.3",
+      "bom-ref": "pkg:pypi/python-dotenv@1.2.3",
+      "version": "1.2.3",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: python-dotenv==1.2.2"
-        },
-        {
-          "name": "octo:source",
-          "value": "crm/requirements.txt"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "python-jose",
-      "purl": "pkg:pypi/python-jose@3.5.0",
-      "bom-ref": "pkg:pypi/python-jose@3.5.0",
-      "version": "3.5.0",
-      "properties": [
-        {
-          "name": "octo:declaration",
-          "value": "crm/requirements.txt: python-jose[cryptography]==3.5.0"
+          "value": "crm/requirements.txt: python-dotenv==1.2.3"
         },
         {
           "name": "octo:source",
@@ -4360,7 +4376,7 @@
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "requirements-docs.txt: python-multipart>=0.0.27"
+          "value": "requirements-docs.txt: python-multipart>=0.0.31"
         },
         {
           "name": "octo:source",
@@ -4371,13 +4387,13 @@
     {
       "type": "library",
       "name": "python-multipart",
-      "purl": "pkg:pypi/python-multipart@0.0.29",
-      "bom-ref": "pkg:pypi/python-multipart@0.0.29",
-      "version": "0.0.29",
+      "purl": "pkg:pypi/python-multipart@0.0.31",
+      "bom-ref": "pkg:pypi/python-multipart@0.0.31",
+      "version": "0.0.31",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "services/genai-studio/pyproject.toml: python-multipart==0.0.29"
+          "value": "services/genai-studio/pyproject.toml: python-multipart==0.0.31"
         },
         {
           "name": "octo:source",
@@ -4388,17 +4404,17 @@
     {
       "type": "library",
       "name": "python-multipart",
-      "purl": "pkg:pypi/python-multipart@0.0.30",
-      "bom-ref": "pkg:pypi/python-multipart@0.0.30",
-      "version": "0.0.30",
+      "purl": "pkg:pypi/python-multipart@0.0.32",
+      "bom-ref": "pkg:pypi/python-multipart@0.0.32",
+      "version": "0.0.32",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: python-multipart==0.0.30"
+          "value": "crm/requirements.txt: python-multipart==0.0.32"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: python-multipart==0.0.30"
+          "value": "shop/requirements.txt: python-multipart==0.0.32"
         },
         {
           "name": "octo:source",
@@ -4615,17 +4631,17 @@
     {
       "type": "library",
       "name": "sqlalchemy",
-      "purl": "pkg:pypi/sqlalchemy@2.0.50",
-      "bom-ref": "pkg:pypi/sqlalchemy@2.0.50",
-      "version": "2.0.50",
+      "purl": "pkg:pypi/sqlalchemy@2.0.52",
+      "bom-ref": "pkg:pypi/sqlalchemy@2.0.52",
+      "version": "2.0.52",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: sqlalchemy==2.0.50"
+          "value": "crm/requirements.txt: sqlalchemy==2.0.52"
         },
         {
           "name": "octo:declaration",
-          "value": "shop/requirements.txt: sqlalchemy[asyncio]==2.0.50"
+          "value": "shop/requirements.txt: sqlalchemy[asyncio]==2.0.52"
         },
         {
           "name": "octo:source",
@@ -4742,23 +4758,32 @@
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "crm/requirements.txt: uvicorn[standard]==0.48.0"
-        },
-        {
-          "name": "octo:declaration",
           "value": "services/genai-studio/pyproject.toml: uvicorn[standard]==0.48.0"
-        },
-        {
-          "name": "octo:declaration",
-          "value": "shop/requirements.txt: uvicorn[standard]==0.48.0"
-        },
-        {
-          "name": "octo:source",
-          "value": "crm/requirements.txt"
         },
         {
           "name": "octo:source",
           "value": "services/genai-studio/pyproject.toml"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "purl": "pkg:pypi/uvicorn@0.52.4",
+      "bom-ref": "pkg:pypi/uvicorn@0.52.4",
+      "version": "0.52.4",
+      "properties": [
+        {
+          "name": "octo:declaration",
+          "value": "crm/requirements.txt: uvicorn[standard]==0.52.4"
+        },
+        {
+          "name": "octo:declaration",
+          "value": "shop/requirements.txt: uvicorn[standard]==0.52.4"
+        },
+        {
+          "name": "octo:source",
+          "value": "crm/requirements.txt"
         },
         {
           "name": "octo:source",

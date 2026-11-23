@@ -49,3 +49,11 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Root cause. Redis 8.2's client constructor decorator contains a callable closure value that fakeredis 2.40.0 inspects as a Python function. fakeredis 2.36.1 has the same failure.
 - Fix. Pin Redis 8.0.0 with fakeredis 2.40.0 in the async worker, cache client and remediator manifests, and align the Shop/CRM consumer requirements. Redis 7.4.1 also passes the service suites but conflicts with the consumers' Redis 8 constraints.
 - Verification. Run the full async-worker, cache, remediator, Shop and CRM suites in separate environments; all pass with the selected pair. Keep dependency setup failures fatal.
+
+## KB-005. App security updates need coupled pins and a JWT backend replacement
+
+- Error. Requirements audits report vulnerable OTel API, multipart, JWT, settings, PDF and cryptography versions; the old OCI SDK excludes the fixed cryptography version.
+- Fix. Align OTel API/SDK/exporters and instrumentation, select OCI 2.184.2 with cryptography 50.0.0, and apply the consolidated app dependency updates. Replace the unfixed python-jose/ecdsa backend with PyJWT 2.15.1.
+- Compatibility. Preserve numeric-only issued-at policy; reject missing/empty audience under the approved stricter policy. Verify each live identity-provider client separately before deployment.
+- Framework regression. FastAPI included-router entries no longer expose the same path attributes. Verify the metrics GET operation through public OpenAPI instead of inspecting the internal route list.
+- Verification. Run the offline OIDC regressions, full isolated suites, blocking requirements audits and make verify. The dependency refresh document records the proposal ledger and acceptance limits.

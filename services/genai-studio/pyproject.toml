@@ -8,7 +8,7 @@ dependencies = [
     "uvicorn[standard]==0.48.0",
     "httpx==0.28.1",
     "pydantic>=2.9,<3.0",
-    "python-multipart==0.0.29",
+    "python-multipart==0.0.31",
     # LangChain / LangGraph on OCI Generative AI
     "langchain>=0.3.0",
     "langchain-core>=0.3.0",
