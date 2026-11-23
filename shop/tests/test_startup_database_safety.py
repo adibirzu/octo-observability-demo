@@ -87,6 +87,7 @@ def test_seeding_preserves_existing_accounts_and_catalog(local_engine, account_e
 
 
 def test_initial_seed_is_idempotent(local_engine):
+    database.init_tables()
     database.seed_data()
     first = snapshot(local_engine)
     assert first["users"] and first["products"]
@@ -97,7 +98,21 @@ def test_initial_seed_is_idempotent(local_engine):
 
 
 def test_deploy_assets_never_enable_destructive_bootstrap():
-    deploy = Path(__file__).resolve().parents[2] / "deploy"
-    for path in deploy.rglob("*"):
-        if path.is_file() and path.suffix in {".yaml", ".yml", ".tf", ".tftpl", ".sh", ".template"}:
-            assert "ALLOW_DESTRUCTIVE_DB_BOOTSTRAP" not in path.read_text(), path
+    import subprocess
+
+    root = Path(__file__).resolve().parents[2]
+    tracked = subprocess.check_output(
+        ["git", "ls-files", "--", "deploy", "shop/deploy", "crm/deploy",
+         "shop/Dockerfile", "crm/Dockerfile", "env.template"],
+        cwd=root, text=True,
+    ).splitlines()
+    assert tracked
+    for relative in tracked:
+        path = root / relative
+        if path.suffix == ".md":
+            continue
+        try:
+            content = path.read_text()
+        except UnicodeDecodeError:
+            continue
+        assert "ALLOW_DESTRUCTIVE_DB_BOOTSTRAP" not in content, relative

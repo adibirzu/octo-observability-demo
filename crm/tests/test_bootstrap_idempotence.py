@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 import secrets
+import importlib
 from types import SimpleNamespace
 
 import pytest
@@ -37,7 +38,7 @@ def local_database(monkeypatch):
             )
 
     monkeypatch.setattr(bootstrap, "engine", SimpleNamespace(begin=begin))
-    monkeypatch.setattr(database, "async_session_factory", sessions)
+    monkeypatch.setattr(importlib.import_module("server.database"), "async_session_factory", sessions)
     monkeypatch.setattr(bootstrap, "cfg", SimpleNamespace(
         bootstrap_admin_password=secrets.token_urlsafe(18), is_production=True,
         shop_public_url="https://shop.example.invalid", crm_base_url="https://crm.example.invalid",
