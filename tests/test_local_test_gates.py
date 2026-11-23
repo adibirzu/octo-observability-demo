@@ -47,19 +47,23 @@ def test_make_test_apps_propagates_suite_exit(tmp_path, suite, status):
     assert str(tmp_path / suite) in (tmp_path / "calls").read_text().splitlines()
 
 
+@pytest.mark.parametrize("root_name", ["plain", "root[brackets]"])
+@pytest.mark.parametrize("suite", SUITES)
 @pytest.mark.parametrize("status", [0, 1, 2, 5])
-def test_verify_counts_suite_failures(tmp_path, status):
+def test_verify_counts_suite_failures(tmp_path, status, suite, root_name):
+    test_root = tmp_path / root_name
+    test_root.mkdir()
     # Run the actual test-suite section in isolation from infrastructure validators.
     source = (ROOT / "deploy/verify.sh").read_text()
     section = source.split('section "Python test suites"', 1)[1].split(
         '# ── Template import smoke', 1
     )[0]
     for directory in SUITES:
-        tests = tmp_path / directory / "tests"
+        tests = test_root / directory / "tests"
         tests.mkdir(parents=True)
         (tests / "test_example.py").touch()
-    env = stub_python(tmp_path, "shop", status)
-    env["REPO_ROOT"] = str(tmp_path)
+    env = stub_python(test_root, suite, status)
+    env["REPO_ROOT"] = str(test_root)
     result = subprocess.run(
         ["bash", "-c", 'set -uo pipefail; errors=0; ok() { :; }; '
          'warn() { :; }; fail() { errors=$((errors + 1)); }; '
@@ -68,6 +72,7 @@ def test_verify_counts_suite_failures(tmp_path, status):
     )
     assert (result.returncode == 0) == (status == 0), result.stdout + result.stderr
 
+    assert str(test_root / suite) in (test_root / "calls").read_text().splitlines()
 
 def test_make_empty_python_suite_is_fatal(tmp_path):
     (tmp_path / "Makefile").write_text((ROOT / "Makefile").read_text())

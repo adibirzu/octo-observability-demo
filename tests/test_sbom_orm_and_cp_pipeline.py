@@ -188,7 +188,7 @@ sys.meta_path.insert(0, BlockJsonschema())
         capture_output=True, text=True, timeout=60,
     )
     assert verification.returncode != 0, verification.stdout + verification.stderr
-    assert "ModuleNotFoundError" in verification.stdout, verification.stdout
+    assert "No module named 'jsonschema'" in verification.stdout, verification.stdout
     assert re.search(r"FAIL[^\n]* root unified deploy pytest", verification.stdout), verification.stdout
 
 
