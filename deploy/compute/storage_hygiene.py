@@ -12,11 +12,17 @@ import subprocess
 import time
 
 DISPOSABLE = "octo.hygiene.disposable=true"
+ALLOWED_FILES = ("*.tmp", "*.part", "*.log.*")
 
 
 def run_commands(commands, apply, run):
     for command in commands:
-        print(json.dumps({"command": command, "apply": apply}))
+        scope = (
+            "host-wide"
+            if command[0] in {"journalctl", "dnf", "apt-get"}
+            else "disposable-container-storage"
+        )
+        print(json.dumps({"command": command, "scope": scope, "apply": apply}))
         if apply:
             run(command)
 
@@ -28,14 +34,30 @@ def clean_files(root, cutoff, pattern, apply):
         raise ValueError("cleanup root must not traverse symlinks")
     if not root.exists():
         return 0
+    patterns = (pattern,) if isinstance(pattern, str) else pattern
     total = 0
     # dir_fd and O_NOFOLLOW keep a replaced directory/symlink outside this boundary.
     fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
         device = os.fstat(fd).st_dev
         for name in os.listdir(fd):
-            if not fnmatch.fnmatch(name, pattern) or name.endswith(
-                (".db", ".sqlite", ".sqlite3", ".dbf")
+            if (
+                not any(fnmatch.fnmatch(name, allowed) for allowed in ALLOWED_FILES)
+                or not any(fnmatch.fnmatch(name, selected) for selected in patterns)
+                or name.endswith(
+                    (
+                        ".db",
+                        ".sqlite",
+                        ".sqlite3",
+                        ".dbf",
+                        ".sso",
+                        ".p12",
+                        ".pfx",
+                        ".jks",
+                        ".dmp",
+                        ".dump",
+                    )
+                )
             ):
                 continue
             info = os.stat(name, dir_fd=fd, follow_symlinks=False)
@@ -102,6 +124,52 @@ def size_report():
             print(read(["du", "-sk", directory]).strip())
 
 
+def runtime_commands(runtime, days):
+    commands = []
+    # Dangling only; no system prune, container prune, --all or app-volume sweep.
+    commands.append(
+        [
+            runtime,
+            "image",
+            "prune",
+            "--force",
+            "--filter",
+            "label=" + DISPOSABLE,
+            "--filter",
+            "until=" + str(days * 24) + "h",
+        ]
+    )
+    names = read(
+        [
+            runtime,
+            "volume",
+            "ls",
+            "--filter",
+            "label=" + DISPOSABLE,
+            "--format",
+            "{{.Name}}",
+        ]
+    ).splitlines()
+    for name in names:
+        if not name.startswith("hygiene-scratch-"):
+            continue
+        volume = json.loads(read([runtime, "volume", "inspect", name]))
+        used = read(
+            [
+                runtime,
+                "ps",
+                "--all",
+                "--filter",
+                "volume=" + name,
+                "--format",
+                "{{.ID}}",
+            ]
+        ).strip()
+        if disposable_volumes(volume, {name} if used else set()):
+            commands.append([runtime, "volume", "rm", name])
+    return commands
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true")
@@ -131,52 +199,17 @@ def main():
         else [r for r in ("docker", "podman") if shutil.which(r)]
     )
     for runtime in runtimes:
-        # Dangling only; no system prune, container prune, --all or app-volume sweep.
-        commands.append(
-            [
-                runtime,
-                "image",
-                "prune",
-                "--force",
-                "--filter",
-                "label=" + DISPOSABLE,
-                "--filter",
-                "until=" + str(args.days * 24) + "h",
-            ]
-        )
-        names = read(
-            [
-                runtime,
-                "volume",
-                "ls",
-                "--filter",
-                "label=" + DISPOSABLE,
-                "--format",
-                "{{.Name}}",
-            ]
-        ).splitlines()
-        for name in names:
-            if not name.startswith("hygiene-scratch-"):
-                continue
-            volume = json.loads(read([runtime, "volume", "inspect", name]))
-            used = read(
-                [
-                    runtime,
-                    "ps",
-                    "--all",
-                    "--filter",
-                    "volume=" + name,
-                    "--format",
-                    "{{.ID}}",
-                ]
-            ).strip()
-            if disposable_volumes(volume, {name} if used else set()):
-                commands.append([runtime, "volume", "rm", name])
+        try:
+            commands.extend(runtime_commands(runtime, args.days))
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            if args.apply:
+                raise
+            print(json.dumps({"runtime_unavailable": runtime, "apply": False}))
     run_commands(commands, args.apply, checked)
     cutoff = time.time() - args.days * 86400
     for root, pattern in [
         ("/var/log/octo/hygiene", "*.log.*"),
-        ("/var/tmp/octo-hygiene", "*"),
+        ("/var/tmp/octo-hygiene", ("*.tmp", "*.part")),
     ]:
         count = clean_files(root, cutoff, pattern, args.apply)
         print(

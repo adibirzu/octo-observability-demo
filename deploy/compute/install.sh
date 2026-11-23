@@ -552,6 +552,7 @@ if systemctl is-active --quiet firewalld 2>/dev/null; then
     firewall-cmd --reload
 fi
 
+install -d -o root -g root -m 0700 /var/log/octo/hygiene /var/tmp/octo-hygiene
 install -d -m 0755 /usr/local/libexec/octo
 install -m 0644 "${SCRIPT_DIR}/storage_hygiene.py" /usr/local/libexec/octo/storage_hygiene.py
 install -m 0644 "${SCRIPT_DIR}/systemd/octo-storage-hygiene.service" /etc/systemd/system/octo-storage-hygiene.service

@@ -45,9 +45,9 @@ def test_vm_age_cleanup_preserves_new_files_directories_and_symlinks(tmp_path):
     os.utime(data, (1, 1))
     link = tmp_path / "link.log.1"
     link.symlink_to(data)
-    assert vm.clean_files(tmp_path, 100, "*.log.*", False) == 3
+    assert vm.clean_files(tmp_path, 100, "*", False) == 3
     assert old.exists()
-    vm.clean_files(tmp_path, 100, "*.log.*", True)
+    vm.clean_files(tmp_path, 100, "*", True)
     assert not old.exists() and new.exists() and data.exists() and link.is_symlink()
 
 
@@ -406,3 +406,174 @@ def test_host_report_timer_sees_the_real_dedicated_temporary_directory():
     unit = (ROOT / "deploy/compute/systemd/octo-storage-hygiene.service").read_text()
     assert "PrivateTmp=true" not in unit
     assert "ProtectSystem=strict" in unit
+
+
+def test_vm_allowlist_preserves_wallets_dumps_and_extensionless_data(tmp_path):
+    vm = load("deploy/compute/storage_hygiene.py")
+    kept = [
+        "database.db",
+        "cwallet.sso",
+        "ewallet.p12",
+        "export.dmp",
+        "dump.sql",
+        "database",
+        "current.tmp",
+    ]
+    for name in kept + ["old.tmp", "old.part", "old.log.1"]:
+        item = tmp_path / name
+        item.write_text("data")
+        os.utime(item, (1000 if name == "current.tmp" else 1,) * 2)
+    assert vm.clean_files(tmp_path, 100, "*", False) == 12
+    vm.clean_files(tmp_path, 100, "*", True)
+    assert sorted(p.name for p in tmp_path.iterdir()) == sorted(kept)
+
+
+def test_vm_cleanup_directories_are_provisioned_private():
+    source = (ROOT / "deploy/compute/install.sh").read_text()
+    assert (
+        "install -d -o root -g root -m 0700 /var/log/octo/hygiene /var/tmp/octo-hygiene"
+        in source
+    )
+
+
+def test_vm_report_survives_unavailable_runtime(monkeypatch, capsys):
+    vm = load("deploy/compute/storage_hygiene.py")
+    monkeypatch.setattr("sys.argv", ["storage_hygiene.py", "--runtime", "docker"])
+    monkeypatch.setattr(vm, "size_report", lambda: None)
+    monkeypatch.setattr(vm.shutil, "which", lambda _: None)
+    monkeypatch.setattr(vm, "clean_files", lambda *args: 0)
+
+    def unavailable(command):
+        raise subprocess.CalledProcessError(1, command)
+
+    monkeypatch.setattr(vm, "read", unavailable)
+    vm.main()
+    assert '"runtime_unavailable": "docker"' in capsys.readouterr().out
+
+
+def test_vm_command_plan_labels_host_wide_actions(capsys):
+    vm = load("deploy/compute/storage_hygiene.py")
+    vm.run_commands(
+        [["journalctl", "--vacuum-time=14d"], ["dnf", "clean", "all"]],
+        False,
+        lambda _: None,
+    )
+    rows = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    assert all(row["scope"] == "host-wide" for row in rows)
+
+
+def test_node_image_gc_user_data_is_opt_in_and_wired_from_root():
+    import re
+
+    module = (ROOT / "deploy/terraform/modules/oke/main.tf").read_text()
+    root = (ROOT / "deploy/terraform/variables.tf").read_text()
+    for source, name in [
+        (module, "node_image_gc_bootstrap_enabled"),
+        (root, "oke_node_image_gc_bootstrap_enabled"),
+    ]:
+        assert re.search(
+            r'variable "' + name + r'"\s*\{[^}]*default\s*=\s*false', source
+        )
+    assert "node_metadata = var.node_image_gc_bootstrap_enabled ? {" in module
+    assert (
+        "node_image_gc_bootstrap_enabled = var.oke_node_image_gc_bootstrap_enabled"
+        in (ROOT / "deploy/terraform/main.tf").read_text()
+    )
+
+
+def helm_hygiene(*settings):
+    return subprocess.run(
+        [
+            "helm",
+            "template",
+            "test",
+            str(ROOT / "deploy/helm/octo-apm-demo"),
+            "--set",
+            "global.image.tenancy=example",
+            "--set",
+            "global.image.region=example",
+            "--set",
+            "global.dnsDomain=example.invalid",
+            "--set",
+            "storageHygiene.enabled=true",
+            *[item for value in settings for item in ["--set", value]],
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_chart_apply_requires_explicit_dedicated_namespaces():
+    result = helm_hygiene("storageHygiene.apply=true")
+    assert result.returncode != 0
+    assert "namespacesDedicated=true" in result.stderr
+
+
+def test_chart_apply_grants_only_namespaced_terminal_object_deletes():
+    result = helm_hygiene(
+        "storageHygiene.apply=true", "storageHygiene.namespacesDedicated=true"
+    )
+    assert result.returncode == 0, result.stderr
+    docs = [x for x in yaml.safe_load_all(result.stdout) if x]
+    hygiene = [
+        x for x in docs if "storage-hygiene" in x.get("metadata", {}).get("name", "")
+    ]
+    assert not any(x["kind"] in {"ClusterRole", "ClusterRoleBinding"} for x in hygiene)
+    roles = [x for x in hygiene if x["kind"] == "Role"]
+    assert roles
+    for role in roles:
+        assert role["metadata"]["namespace"]
+        for rule in role["rules"]:
+            if "delete" in rule["verbs"]:
+                assert set(rule["resources"]) <= {"pods", "jobs", "replicasets"}
+            if "persistentvolumeclaims" in rule["resources"]:
+                assert set(rule["verbs"]) <= {"get", "list"}
+    jobs = [x for x in hygiene if x["kind"] == "CronJob"]
+    assert jobs and all(
+        "--apply"
+        in x["spec"]["jobTemplate"]["spec"]["template"]["spec"]["containers"][0]["args"]
+        for x in jobs
+    )
+
+
+def test_cleanup_image_is_pinned_to_a_digest():
+    result = helm_hygiene()
+    assert result.returncode == 0
+    docs = [x for x in yaml.safe_load_all(result.stdout) if x]
+    images = [
+        x["spec"]["jobTemplate"]["spec"]["template"]["spec"]["containers"][0]["image"]
+        for x in docs
+        if x["kind"] == "CronJob" and "storage-hygiene" in x["metadata"]["name"]
+    ]
+    import re
+
+    assert images and all(
+        re.search(r"@sha256:[0-9a-f]{64}$", image) for image in images
+    )
+
+
+@pytest.mark.parametrize("flag,value", [("--days", "29"), ("--keep-images", "9")])
+def test_oci_cli_cannot_reduce_versioned_retention_floors(
+    monkeypatch, capsys, flag, value
+):
+    j = load("tools/storage_janitor.py")
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "storage_janitor.py",
+            "--compartment-id",
+            "demo",
+            "--project-tag",
+            "demo",
+            "--pack-root",
+            "/unused",
+            "--output",
+            "/unused",
+            flag,
+            value,
+        ],
+    )
+    with pytest.raises(SystemExit) as exc:
+        j.main()
+    assert exc.value.code == 2
+    assert "policy floor" in capsys.readouterr().err

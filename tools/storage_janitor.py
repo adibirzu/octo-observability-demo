@@ -197,8 +197,11 @@ def main():
         "--keep-images", type=int, default=policy["registry"]["keep_images"]
     )
     args = parser.parse_args()
-    if args.days < 1 or args.keep_images < 1:
-        parser.error("retention must be positive")
+    if (
+        args.days < policy["registry"]["minimum_age_days"]
+        or args.keep_images < policy["registry"]["keep_images"]
+    ):
+        parser.error("retention cannot be below the versioned policy floor")
     if not os.environ.get("OCI_CLI_PROFILE") or not os.environ.get("OCI_REGION"):
         parser.error("set the reviewed OCI_CLI_PROFILE and OCI_REGION explicitly")
     os.umask(0o077)

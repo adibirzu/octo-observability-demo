@@ -94,3 +94,11 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Local gates require compatible docs, plotting, and OpenTelemetry packages. Use a disposable workspace venv; install shop requirements from `shop/` because editable dependency paths are relative to that working directory.
 - A report timer must see the host's dedicated temporary directory. PrivateTmp hides that directory and produces an incomplete report.
 - Verification: storage-hygiene regression tests capture failures before these fixes. No live cleanup or configuration changes are part of local verification.
+
+### Storage hygiene review hardening
+
+- Preserve wallets, dumps, and extensionless data with a file allowlist even if a caller supplies a wildcard. Provision dedicated cleanup directories as root-owned mode 0700.
+- A missing Docker/Podman daemon must produce a report-only runtime_unavailable result, not suppress the host's remaining report.
+- Future-node image GC user data is opt-in. Review the boot default change from 93 GB to 100 GB in the authoritative saved plan.
+- Namespace cleanup apply requires explicit dedicated-namespace confirmation. Registry retention overrides cannot go below versioned policy floors.
+- Verification: these findings have failing-before behavioral tests, including apply-mode chart rendering. The image is pinned by a verified official multi-platform manifest digest.

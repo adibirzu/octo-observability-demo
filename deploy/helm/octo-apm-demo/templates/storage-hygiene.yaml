@@ -1,4 +1,7 @@
 {{- if .Values.storageHygiene.enabled }}
+{{- if and .Values.storageHygiene.apply (not .Values.storageHygiene.namespacesDedicated) }}
+{{- fail "storage hygiene apply requires storageHygiene.namespacesDedicated=true" }}
+{{- end }}
 {{- $root := . }}
 {{- $namespaces := list }}
 {{- if .Values.shop.enabled }}{{ $namespaces = append $namespaces .Values.shop.namespace }}{{ end }}

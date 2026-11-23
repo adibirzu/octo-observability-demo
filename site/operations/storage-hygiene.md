@@ -23,7 +23,9 @@ accounting. Do not subtract them from the provisioned-volume quota.
     sudo python3 /usr/local/libexec/octo/storage_hygiene.py
     ```
 
-3. Review filesystem totals, directory sizes, eligible file bytes, container usage, and the printed command plan.
+3. Review filesystem totals, directory sizes, eligible file bytes, and the printed command plan.
+   Journal vacuum and package-cache cleaning are host-wide actions, identified as such in the plan.
+   An unavailable container runtime is reported as `runtime_unavailable`; report mode continues without its cleanup plan.
    The script reads rootful Docker and Podman stores. Run a separate report as the service user for any rootless store.
 4. Keep app data, databases, wallets, bind mounts, and persistent container volumes outside the dedicated cleanup directories.
    Only explicitly disposable scratch volumes can use the name prefix `hygiene-scratch-` and the label
@@ -35,10 +37,12 @@ accounting. Do not subtract them from the provisioned-volume quota.
 The default age is 14 days and the minimum is seven. Cleanup vacuums archived journal files,
 clears package download caches, prunes only dangling images carrying the disposable label,
 and removes only unused explicitly disposable scratch volumes. It preserves stopped containers and their referenced volumes.
-It deletes aged regular files directly in `/var/tmp/octo-hygiene` and rotated
+It deletes only aged `*.tmp` and `*.part` regular files directly in `/var/tmp/octo-hygiene` and rotated
 `*.log.*` files directly in `/var/log/octo/hygiene`.
 It does not recurse or follow symlinks. These directories must contain only expendable content.
-Database filename extensions and hard-linked files are excluded as an additional check.
+The installer creates both dedicated directories owned by root with mode 0700.
+Wallets, dumps, extensionless files, known database filename extensions, and hard-linked files remain excluded.
+Even a caller-supplied wildcard cannot broaden the built-in file allowlist.
 
 The provisioning installer installs a daily **report-only** timer. Existing VMs do not receive the change
 automatically because their Terraform user-data is ignored after creation.
@@ -55,13 +59,15 @@ Journal and package-cache cleanup are irreversible. Repull images and rebuild pa
 3. Keep `storageHygiene.suspend=true` and `storageHygiene.apply=false` for the first reviewed installation.
 4. After installation approval, obtain separate approval to unsuspend the report CronJobs.
 5. Review their logs before requesting cleanup approval.
-6. To activate cleanup later, obtain approval for `storageHygiene.apply=true` and the corresponding namespaced delete RBAC.
+6. To activate cleanup later, confirm `storageHygiene.namespacesDedicated=true` and obtain approval for
+   `storageHygiene.apply=true` and the corresponding namespaced delete RBAC. The chart rejects apply mode without that confirmation.
 
 Each namespace has a separate service account. There is no ClusterRole or cross-namespace binding.
 Report mode grants only reads. Apply mode adds single-object delete on Jobs, pods, and ReplicaSets.
 The code selects objects labeled with the exact Helm release instance.
 Kubernetes RBAC cannot restrict delete by label, so each enabled namespace must be dedicated to the demo.
 System namespaces and the default namespace are rejected.
+The default Python cleanup image is pinned to a verified multi-platform manifest digest. No image was pulled or run for this change.
 
 The CronJobs run daily, forbid overlap, limit execution to ten minutes, and retain their own finished Job for one day.
 The default candidate age is seven days. Completed and failed Jobs must have an aged terminal condition and no active work.
@@ -109,7 +115,8 @@ It reads all pages and all attachment states in the exact compartment.
 It reports unattached AVAILABLE boot and block volumes, old AVAILABLE backups, and old images beyond the retained count.
 Image reporting requires both the explicit repository allowlist and a matching repository project tag.
 The versioned policy in `deploy/storage-hygiene-policy.json` sets report mode, a disabled provider policy,
-30 days, ten newest images per repository, and explicit ownership requirements. Unknown volume ownership is shown as unknown.
+a minimum of 30 days, at least ten newest images per repository, and explicit ownership requirements.
+CLI overrides can increase retention but cannot reduce these versioned floors. Unknown volume ownership is shown as unknown.
 Creator classes are tag-derived clues. They do not establish a person's identity or deletion authority.
 
 **No OCI delete path is implemented.** Every row has `deletion_authorized=false`.
@@ -128,13 +135,16 @@ Automatic provider-policy activation remains unavailable in this change.
 
 ## Review future-node storage
 
-The HCL defaults to a 100 GB boot volume for future workers and validates a 50 GB minimum.
+The HCL changes the repository default from 93 GB to 100 GB for future workers and validates a 50 GB minimum.
+Review the default change even when the deployment's private inputs retain a different explicit value.
 This is a template change; an existing disk cannot be shrunk through this procedure.
 The 100 GB proposal leaves room for an approximately 40 GiB working footprint, image churn,
 logs, and free space. Confirm current root and image filesystem readings privately before accepting that budget.
 An unreachable worker remains an unknown measurement.
 
-The OKE-managed node bootstrap passes image garbage collection thresholds of 75 percent high and 60 percent low
+The OKE-managed node bootstrap is opt-in. `oke_node_image_gc_bootstrap_enabled` defaults to false,
+so this change does not supply node user data until you explicitly enable it in a reviewed plan.
+When enabled, it passes image garbage collection thresholds of 75 percent high and 60 percent low
 through the supported `--kubelet-extra-args` mechanism.
 Those flags are deprecated upstream in favor of a kubelet configuration file but are supported by the reviewed OKE bootstrap.
 They apply only to future workers. Do not run the bootstrap manually on existing workers.
@@ -144,12 +154,15 @@ and the [kubelet flags](https://kubernetes.io/docs/reference/command-line-tools-
 
 1. Resolve the authoritative Terraform state owner and current live variable overrides.
 2. Set `oke_node_boot_volume_gbs=100` in the private deployment inputs.
-3. Generate a saved plan with the existing backend, credentials, and reviewed input files.
+3. After Adi's separate GO for the real stack's saved-plan run, generate that plan with its authoritative backend and private input files.
+   Enable `oke_node_image_gc_bootstrap_enabled=true` only if the same review explicitly includes the bootstrap change.
 4. Review the complete plan, including size, Kubernetes version, image, desired node count, and unrelated drift.
 5. Reject any plan that destroys a resource, cycles workers, or changes the desired node count without separate approval.
 6. Obtain approval for the precise future-node template change before applying that saved plan.
 7. Separately approve any node launch, with verified quota headroom, cost cap, and stop conditions.
 
+No live saved plan was generated for this PR. Local HCL formatting and validation are the available checks.
+The authoritative state owner is unavailable in this checkout. Do not infer it from a packaging script.
 No Terraform plan from an unowned or empty state is a live review.
 This change does not import resources, refresh another worktree's state, apply a plan, cycle nodes, or change quota policy.
 A smaller new boot disk still needs enough provisioned-storage headroom.
