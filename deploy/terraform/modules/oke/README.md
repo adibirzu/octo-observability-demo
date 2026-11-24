@@ -14,12 +14,15 @@ the root `terraform.tfvars`.
 | Service Gateway | Private connectivity to OCI services (OCIR, ATP wallet, object storage). |
 | Subnets | `k8s-api` (public), `workers` (private), `lb` (public), `pods` (private, /18). |
 | OKE cluster | Enhanced, VCN-native pod networking. |
-| Node pool | Default 3 × VM.Standard.E5.Flex · 2 OCPU · 16 GiB mem · 93 GiB boot volume. |
+| Node pool | Default 3 × VM.Standard.E5.Flex · 2 OCPU · 16 GiB mem · 100 GB boot volume. |
 
-**Why the bigger boot volume**: KB-OCTO-06 — the OKE default of 37 GiB
-runs out under image cache + container logs + overlay FS, and the
-kubelet starts evicting pods. 93 GiB is the smallest size that sustains
-our demo workload.
+The future-worker default changes from 93 GB to 100 GB. Existing boot disks are not shrunk.
+Review all private input overrides and the authoritative saved plan before changing a live pool.
+Image GC bootstrap is opt-in through `node_image_gc_bootstrap_enabled = true` in this module,
+or `oke_node_image_gc_bootstrap_enabled = true` at the root. Both default to false.
+When enabled, future-node user data passes image GC high/low thresholds of 75/60 percent through the OKE bootstrap.
+The saved-plan run against the real stack needs separate operator GO.
+See [storage hygiene](../../../../site/operations/storage-hygiene.md) for scope, validation, and approval steps.
 
 ## Inputs you must supply
 

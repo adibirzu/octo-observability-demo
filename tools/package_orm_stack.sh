@@ -25,7 +25,7 @@ cp "$upstream/"*.tf "$stack/modules-shared/"
     while IFS= read -r -d '' module_file; do
         mkdir -p "$stack/modules-shared/$(dirname "$module_file")"
         cp "$module_file" "$stack/modules-shared/$module_file"
-    done < <(find modules -type f -name '*.tf' ! -name backend.tf ! -path '*/.*' -print0)
+    done < <(find modules -type f \( -name '*.tf' -o -name 'cloud-init.sh' \) ! -name backend.tf ! -path '*/.*' -print0)
 )
 find "$stack" -name backend.tf -type f -delete
 sed -i.bak 's#source = "\.\./terraform"#source = "./modules-shared"#' "$stack/main.tf"

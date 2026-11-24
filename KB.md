@@ -85,3 +85,25 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Fix: install the Shop development requirements from the Shop directory, plus PyYAML, before package contract tests. Keep the schema-failure regression and its exact-cause assertion.
 - Verification: the original minimal environment reproduces the failure; the declared package verification environment runs the same regression successfully.
 - Status: local reproduction and repair; no release, image publication or provider action.
+
+## Storage hygiene collection and local validation
+
+- OCI boot attachment listing requires an availability domain even though boot volume listing can span ADs. Enumerate the selected compartment's ADs, list all boot attachments per AD, and join across the scoped inventory before calling a volume unattached.
+- Successful OCI CLI empty-list calls can emit no stdout. Treat this separately from a nonzero response and retain exit receipts.
+- Node-pool creator tags are service-principal clues. Match the exact current pool ID privately before calling their resources demo-owned.
+- Local gates require compatible docs, plotting, and OpenTelemetry packages. Use a disposable workspace venv; install shop requirements from `shop/` because editable dependency paths are relative to that working directory.
+- A report timer must see the host's dedicated temporary directory. PrivateTmp hides that directory and produces an incomplete report.
+- Verification: storage-hygiene regression tests capture failures before these fixes. No live cleanup or configuration changes are part of local verification.
+
+### Storage hygiene review hardening
+
+- Preserve wallets, dumps, and extensionless data with a file allowlist even if a caller supplies a wildcard. Provision dedicated cleanup directories as root-owned mode 0700.
+- A missing Docker/Podman daemon must produce a report-only runtime_unavailable result, not suppress the host's remaining report.
+- Future-node image GC user data is opt-in. Review the boot default change from 93 GB to 100 GB in the authoritative saved plan.
+- Namespace cleanup apply requires explicit dedicated-namespace confirmation. Registry retention overrides cannot go below versioned policy floors.
+- Verification: these findings have failing-before behavioral tests, including apply-mode chart rendering. The image is pinned by a verified official multi-platform manifest digest.
+
+- Kubernetes cleanup compares parsed timestamps, includes init-container terminations, and treats null revisionHistoryLimit as the Kubernetes default of ten. Empty first-page continuation tokens are omitted.
+- Per-object 404/409 delete races are logged and skipped; other API failures stop the pass. Stress-runner release labels make its objects selectable without changing its immutable Deployment selector.
+- Recheck hard-link count immediately before unlink. Registry policy ownership requirements must remain true, and only an exact instance-principal prefix identifies an instance creator.
+- Verification: additional Gemini review findings have failing-before tests for all changed behaviors.

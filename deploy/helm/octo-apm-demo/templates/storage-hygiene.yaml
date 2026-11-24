@@ -1,0 +1,137 @@
+{{- if .Values.storageHygiene.enabled }}
+{{- if and .Values.storageHygiene.apply (not .Values.storageHygiene.namespacesDedicated) }}
+{{- fail "storage hygiene apply requires storageHygiene.namespacesDedicated=true" }}
+{{- end }}
+{{- $root := . }}
+{{- $namespaces := list }}
+{{- if .Values.shop.enabled }}{{ $namespaces = append $namespaces .Values.shop.namespace }}{{ end }}
+{{- if .Values.crm.enabled }}{{ $namespaces = append $namespaces .Values.crm.namespace }}{{ end }}
+{{- if .Values.javaGateway.enabled }}{{ $namespaces = append $namespaces (default .Values.shop.namespace .Values.javaGateway.namespace) }}{{ end }}
+{{- if .Values.workflowGateway.enabled }}{{ $namespaces = append $namespaces (default .Values.shop.namespace .Values.workflowGateway.namespace) }}{{ end }}
+{{- if .Values.stressRunner.enabled }}{{ $namespaces = append $namespaces .Values.stressRunner.namespace }}{{ end }}
+{{- range $namespace := uniq $namespaces }}
+{{- if or (eq $namespace "") (eq $namespace "default") (hasPrefix "kube-" $namespace) }}
+{{- fail "storage hygiene requires an explicit demo namespace outside system namespaces" }}
+{{- end }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $root.Release.Name }}-storage-hygiene
+  namespace: {{ $namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $root.Release.Name }}-storage-hygiene
+  namespace: {{ $namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"{{ if $root.Values.storageHygiene.apply }}, "delete"{{ end }}]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list"{{ if $root.Values.storageHygiene.apply }}, "delete"{{ end }}]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get", "list"{{ if $root.Values.storageHygiene.apply }}, "delete"{{ end }}]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $root.Release.Name }}-storage-hygiene
+  namespace: {{ $namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $root.Release.Name }}-storage-hygiene
+    namespace: {{ $namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $root.Release.Name }}-storage-hygiene
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $root.Release.Name }}-storage-hygiene
+  namespace: {{ $namespace }}
+data:
+  storage_cleanup.py: |
+{{ $root.Files.Get "files/storage_cleanup.py" | indent 4 }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $root.Release.Name }}-storage-hygiene
+  namespace: {{ $namespace }}
+spec:
+  schedule: {{ $root.Values.storageHygiene.schedule | quote }}
+  suspend: {{ $root.Values.storageHygiene.suspend }}
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ $root.Values.storageHygiene.ttlSecondsAfterFinished }}
+      activeDeadlineSeconds: 600
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "octo.labels" $root | nindent 12 }}
+        spec:
+          serviceAccountName: {{ $root.Release.Name }}-storage-hygiene
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: cleanup
+              image: {{ $root.Values.storageHygiene.image | quote }}
+              imagePullPolicy: IfNotPresent
+              command: ["python3", "/cleanup/storage_cleanup.py"]
+              args:
+                - "--age-days"
+                - {{ $root.Values.storageHygiene.ageDays | quote }}
+                {{- if $root.Values.storageHygiene.apply }}
+                - "--apply"
+                {{- end }}
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: DEMO_SELECTOR
+                  value: {{ printf "app.kubernetes.io/instance=%s" $root.Release.Name | quote }}
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  cpu: 100m
+                  memory: 96Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: script
+                  mountPath: /cleanup
+                  readOnly: true
+          volumes:
+            - name: script
+              configMap:
+                name: {{ $root.Release.Name }}-storage-hygiene
+{{- end }}
+{{- end }}

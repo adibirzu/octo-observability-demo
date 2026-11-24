@@ -11,8 +11,8 @@ metadata:
     {{- include "octo.workflowGateway.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: workflow-gateway
 spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ $workflow.replicas }}
-  revisionHistoryLimit: 5
   progressDeadlineSeconds: 300
   strategy:
     type: RollingUpdate

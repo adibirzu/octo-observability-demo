@@ -552,6 +552,14 @@ if systemctl is-active --quiet firewalld 2>/dev/null; then
     firewall-cmd --reload
 fi
 
+install -d -o root -g root -m 0700 /var/log/octo/hygiene /var/tmp/octo-hygiene
+install -d -m 0755 /usr/local/libexec/octo
+install -m 0644 "${SCRIPT_DIR}/storage_hygiene.py" /usr/local/libexec/octo/storage_hygiene.py
+install -m 0644 "${SCRIPT_DIR}/systemd/octo-storage-hygiene.service" /etc/systemd/system/octo-storage-hygiene.service
+install -m 0644 "${SCRIPT_DIR}/systemd/octo-storage-hygiene.timer" /etc/systemd/system/octo-storage-hygiene.timer
+systemctl daemon-reload
+systemctl enable --now octo-storage-hygiene.timer
+
 install -m 0755 "${SCRIPT_DIR}/synthetic-users-job.sh" /usr/local/bin/octo-synthetic-users
 install -m 0644 "${SCRIPT_DIR}/systemd/octo-synthetic-users.service" /etc/systemd/system/octo-synthetic-users.service
 install -m 0644 "${SCRIPT_DIR}/systemd/octo-synthetic-users.timer" /etc/systemd/system/octo-synthetic-users.timer

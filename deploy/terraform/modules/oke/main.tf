@@ -8,7 +8,7 @@
 #   - Route tables + security lists for each subnet
 #   - OKE cluster (enhanced, VCN-native pod networking / OCI_VCN_IP_NATIVE)
 #   - One node pool: VM.Standard.E5.Flex, 2 OCPUs, 16 GiB mem, 3 nodes,
-#     boot volume 93 GB (KB-OCTO-06 — 37 GB default hits disk pressure)
+#     boot volume 100 GB (future nodes; review the previous 93 GB default in the plan)
 #
 # This module is OPT-IN. When the tenancy already has an OKE cluster,
 # pass create_oke = false and supply `existing_cluster_id` to the root.
@@ -71,12 +71,18 @@ variable "node_memory_gbs" {
   default = 16
 }
 
+variable "node_image_gc_bootstrap_enabled" {
+  type        = bool
+  default     = false
+  description = "Opt in to image GC bootstrap on future workers after saved-plan review."
+}
+
 variable "node_boot_volume_gbs" {
   type    = number
-  default = 93
+  default = 100
   validation {
     condition     = var.node_boot_volume_gbs >= 50
-    error_message = "node_boot_volume_gbs must be >= 50 GiB. Default 37 GiB hits disk-pressure evictions (KB-OCTO-06)."
+    error_message = "node_boot_volume_gbs must be >= 50 GiB. Use 100 GiB for future nodes; verify measured filesystem and image-cache headroom."
   }
 }
 
@@ -249,6 +255,10 @@ resource "oci_containerengine_node_pool" "this" {
     ocpus         = var.node_ocpus
     memory_in_gbs = var.node_memory_gbs
   }
+
+  node_metadata = var.node_image_gc_bootstrap_enabled ? {
+    user_data = base64encode(file("${path.module}/cloud-init.sh"))
+  } : null
 
   node_source_details {
     image_id                = var.node_image_id

@@ -258,18 +258,19 @@ module "stack_monitoring_atp" {
 }
 
 module "oke" {
-  source                    = "./modules/oke"
-  count                     = var.create_oke ? 1 : 0
-  compartment_id            = var.compartment_id
-  cluster_name              = var.oke_cluster_name
-  kubernetes_version        = var.oke_kubernetes_version
-  vcn_cidr                  = var.oke_vcn_cidr
-  node_pool_size            = var.oke_node_pool_size
-  node_ocpus                = var.oke_node_ocpus
-  node_memory_gbs           = var.oke_node_memory_gbs
-  node_boot_volume_gbs      = var.oke_node_boot_volume_gbs
-  node_image_id             = var.oke_node_image_id
-  availability_domain_names = var.oke_availability_domain_names
+  source                          = "./modules/oke"
+  count                           = var.create_oke ? 1 : 0
+  compartment_id                  = var.compartment_id
+  cluster_name                    = var.oke_cluster_name
+  kubernetes_version              = var.oke_kubernetes_version
+  vcn_cidr                        = var.oke_vcn_cidr
+  node_pool_size                  = var.oke_node_pool_size
+  node_ocpus                      = var.oke_node_ocpus
+  node_memory_gbs                 = var.oke_node_memory_gbs
+  node_boot_volume_gbs            = var.oke_node_boot_volume_gbs
+  node_image_id                   = var.oke_node_image_id
+  node_image_gc_bootstrap_enabled = var.oke_node_image_gc_bootstrap_enabled
+  availability_domain_names       = var.oke_availability_domain_names
 }
 
 output "atp" {

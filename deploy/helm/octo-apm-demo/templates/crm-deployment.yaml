@@ -10,6 +10,7 @@ metadata:
     {{- include "octo.crm.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: crm
 spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ $crm.replicas }}
   strategy:
     type: RollingUpdate

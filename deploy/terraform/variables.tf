@@ -186,9 +186,15 @@ variable "oke_node_memory_gbs" {
   default = 16
 }
 
+variable "oke_node_image_gc_bootstrap_enabled" {
+  type        = bool
+  default     = false
+  description = "Opt in to future-node image GC user data after saved-plan review."
+}
+
 variable "oke_node_boot_volume_gbs" {
   type    = number
-  default = 93
+  default = 100
 }
 
 variable "oke_node_image_id" {

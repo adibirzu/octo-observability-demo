@@ -1,0 +1,13 @@
+[Unit]
+Description=Report disposable host storage
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/libexec/octo/storage_hygiene.py
+User=root
+Group=root
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
