@@ -395,6 +395,38 @@ def test_offline_and_skip_online_advisory_steps_fail_closed_as_unavailable(tmp_p
 
 
 @pytest.mark.usefixtures("seatbelt")
+def test_online_profile_allows_only_selected_home_interpreter(tmp_path, monkeypatch):
+    gate = load_gate_module()
+    account = tmp_path / "account"
+    interpreter = account / "venv/bin/python3.11"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.symlink_to(Path(sys.executable).resolve())
+    private_file = interpreter.with_name("private.txt")
+    private_file.write_text("synthetic")
+    monkeypatch.setattr(gate.pwd, "getpwuid", lambda uid: SimpleNamespace(pw_dir=str(account)))
+    probe = (
+        "import pathlib, sys\n"
+        "try:\n"
+        "    pathlib.Path(sys.argv[1]).read_text()\n"
+        "except PermissionError:\n"
+        "    sys.exit(0)\n"
+        "sys.exit(9)\n"
+    )
+    step = gate.GateStep(
+        "python-probe", "lint", [str(interpreter), "-I", "-c", probe, str(private_file)],
+        online=True,
+    )
+    profile = gate.sandbox_profile_for_step(step, allow_online=True)
+    sandbox = gate.verify_sandbox_available()
+    nesting = subprocess.run([sandbox, "-p", profile, "/usr/bin/true"], capture_output=True)
+    if nesting.returncode == 71:
+        pytest.skip("Parent sandbox prevents the HTTPS advisory policy")
+    assert nesting.returncode == 0, nesting.stderr
+    result = subprocess.run([sandbox, "-p", profile, *step.command], capture_output=True)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.usefixtures("seatbelt")
 def test_seatbelt_network_denial_isolated_home_and_allow_online_scoping(tmp_path):
     module = load_gate_module()
     host_home = os.environ.get("HOME", "")
@@ -479,7 +511,7 @@ def test_seatbelt_network_denial_isolated_home_and_allow_online_scoping(tmp_path
         [
             "sandbox-exec",
             "-p",
-            module.SANDBOX_OUTBOUND_PROFILE,
+            online_profile,
             "/usr/bin/true",
         ],
         capture_output=True,

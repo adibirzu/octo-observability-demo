@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STACKS = ("resource-manager", "compute")
 REQUIRED_STACK_FILES = {"main.tf", "variables.tf", "schema.yaml"}
 TRIVY_VERSION = "0.76.2"
+TERRAFORM_VERSION = "1.14.3"
 
 
 class Unavailable(RuntimeError):
@@ -69,6 +70,10 @@ def verify_checksums(directory, paths):
 
 
 def stack_checks(directory, *, validate):
+    if validate:
+        terraform = json.loads(run("terraform", "version", "-json", capture_output=True).stdout)
+        if terraform.get("terraform_version") != TERRAFORM_VERSION:
+            raise Unavailable(f"Workflow requires Terraform {TERRAFORM_VERSION}")
     for stack in STACKS:
         run("bash", f"deploy/{stack}/stack-package.sh", "--output-dir", str(directory))
     archives = sorted(directory.glob("*.zip"))
@@ -138,6 +143,7 @@ def trivy_source(directory, *, vulnerabilities):
         summary = directory / "source-vulnerabilities.json"
         run(trivy, "fs", "--cache-dir", str(cache), *flags, "--scanners", "vuln",
             "--format", "json", "--output", str(raw_vulns), str(source))
+        print("Offline Trivy vulnerability scan completed", flush=True)
         extra = ("--vulnerabilities", str(raw_vulns), "--summary", str(summary))
         outputs.append(summary)
     run(sys.executable, "tools/public_sbom.py", "--input", str(raw),
@@ -164,7 +170,10 @@ def main(command):
     except (Unavailable, FileNotFoundError) as error:
         print(f"Check unavailable: {error}")
         return 69
-    except (ValueError, subprocess.SubprocessError) as error:
+    except ValueError as error:
+        print(f"Check failed: {error}")
+        return 1
+    except subprocess.SubprocessError as error:
         print(f"Check failed: {type(error).__name__}")
         return 1
     return 0

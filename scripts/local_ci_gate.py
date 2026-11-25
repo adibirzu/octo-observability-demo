@@ -393,9 +393,21 @@ def sandbox_profile_for_step(
             [f"(subpath {json.dumps(str(path))})" for path in directories]
             + [f"(literal {json.dumps(str(path))})" for path in credential_files]
         )
+        executables: set[Path] = set()
+        for command in step.all_commands():
+            executable = Path(command[0])
+            if executable.is_absolute() and executable.is_file() and os.access(executable, os.X_OK):
+                executables.update((executable, executable.resolve()))
+        metadata_paths = {root, *root.parents, root / ".gate"}
+        for executable in executables:
+            metadata_paths.update(executable.parents)
         ancestors = " ".join(
             f"(literal {json.dumps(str(path))})"
-            for path in (root, *root.parents, root / ".gate")
+            for path in sorted(metadata_paths)
+        )
+        executable_reads = "".join(
+            f" (allow file-read* (literal {json.dumps(str(path))}))"
+            for path in sorted(executables)
         )
         return (
             SANDBOX_OUTBOUND_PROFILE
@@ -403,6 +415,7 @@ def sandbox_profile_for_step(
             + f" (deny file-read* (subpath {json.dumps(str(home))}))"
             + f" (allow file-read-metadata {ancestors})"
             + f" (allow file-read* (subpath {json.dumps(str(root / '.gate/venv'))}))"
+            + executable_reads
             + f" (deny file-read* {read_filters})"
             + f" (deny file-read* (require-all (subpath {workspace}) "
               '(regex #".*/([.]env([.]|/|$)|[^/]+[.]env([.]|/|$)|[.]npmrc$|pip[.]conf$|'

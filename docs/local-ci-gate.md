@@ -1,12 +1,15 @@
 # Local CI gate
 
 Run the gate on macOS with Python 3.11, `sandbox-exec`, Git, Gitleaks, Node/npm,
-Go, Terraform, TFLint, Trivy 0.76.2, and the test and docs dependencies installed
+Go, Terraform 1.14.3, TFLint, Trivy 0.76.2, and the test and docs dependencies installed
 in the workspace's `.gate/venv`. The runner puts `.gate/venv/bin` and
 `.gate/bin` first on the path for local checks. Populate the workspace Go module
 cache in `.gate/gomodcache`, the Terraform filesystem mirror in
 `.gate/terraform-mirror`, and the Trivy advisory database in
 `.gate/trivy-cache/db` before running the offline checks that need them.
+For the Trivy cache, run the public database download separately with an
+empty home and Docker configuration. The gate itself uses the cached database
+without network access.
 Install the shop requirements from `shop/`. Put the CRM requirements in
 `.gate/venv/crm` and the GenAI Studio dependencies from its `pyproject.toml` in
 `.gate/venv/genai` (Python 3.12) to satisfy their independent Python pins.
@@ -23,7 +26,9 @@ and unstaged tracked changes. It reports only the count and file/line locations.
 Only the pip and npm advisory lookups use the network. Each lookup starts with
 an empty temporary home, distinct private package-manager configs, and only
 the dependency manifests for that check. Seatbelt blocks reads of host
-credentials and workspace environment files. TFLint and Terraform provider
+credentials and workspace environment files. An absolute interpreter path
+gets a file-specific read allowance for the launcher and its resolved target.
+TFLint and Terraform provider
 validation can use Unix sockets inside their own private temporary directory.
 All IP networking remains denied for those checks.
 
