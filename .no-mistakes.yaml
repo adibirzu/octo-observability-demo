@@ -1,0 +1,10 @@
+# Local workflow gate. Only advisory audits may use the network.
+# See docs/local-ci-gate.md for the workflow map and prerequisites.
+# CI skipping is a run flag (--skip=ci), not a repository configuration key.
+commands:
+  test: python3.11 scripts/local_ci_gate.py --mode all --allow-online --keep-going
+  lint: python3.11 scripts/local_ci_gate.py --mode lint --allow-online --keep-going
+auto_fix:
+  review: 0
+  test: 0
+  lint: 0

@@ -16,6 +16,12 @@ Add an entry after every error that needed investigation and a fix. Use the next
 - Prevention: <how to avoid it next time>
 ```
 
+## KB-009. Strict docs build fails offline at the Mermaid CDN probe
+
+- Error. MkDocs aborts with a warning when the Mermaid plugin probes its default URL without network access.
+- Fix. Configure the plugin to load a repository-local JavaScript module. The module imports the same pinned Mermaid version when a browser opens a diagram page.
+- Verification. Run `mkdocs build --strict` under a network-denying sandbox.
+
 ## KB-008. Startup reset and seed reconciliation can replace existing data
 
 - Component: Shop database initialization and CRM bootstrap.

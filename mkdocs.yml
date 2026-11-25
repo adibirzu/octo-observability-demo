@@ -40,7 +40,8 @@ hooks:
 
 plugins:
   - search
-  - mermaid2
+  - mermaid2:
+      javascript: assets/js/mermaid.mjs
 
 extra_javascript:
   - assets/js/placeholder-config.js
