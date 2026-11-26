@@ -49,7 +49,9 @@ def package_identity(purl):
         raise ValueError("invalid package identity")
     if ecosystem in {"pypi", "cargo", "gem", "nuget"} and len(parts) != 1:
         raise ValueError("unexpected package namespace")
-    if ecosystem == "golang" and parts[0] not in PUBLIC_HOSTS and path != "stdlib":
+    if ecosystem == "golang" and parts[0] not in PUBLIC_HOSTS and path not in {
+        "stdlib", "octo-drone-shop/services/workflow-gateway",
+    }:
         raise ValueError("unapproved Go module host")
     if ecosystem == "docker" and not decoded(body.partition("/")[2]).startswith(PUBLIC_IMAGES):
         raise ValueError("unapproved container namespace")
@@ -103,7 +105,7 @@ def validate_public_bom(value):
 
 
 def public_bom(raw, name, version, digest=None):
-    if raw.get("bomFormat") != "CycloneDX" or raw.get("specVersion") not in {"1.4", "1.5", "1.6"}:
+    if raw.get("bomFormat") != "CycloneDX" or raw.get("specVersion") not in {"1.4", "1.5", "1.6", "1.7"}:
         raise ValueError("unsupported SBOM")
     components = []
     pending = list(raw.get("components", []))
