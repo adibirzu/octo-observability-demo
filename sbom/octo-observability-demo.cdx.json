@@ -36,7 +36,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/apm-java-demo/pom.xml 06b09ea1a378f8da1bf9bd6d2f8d349722b1b2f769472fafff7c6334e44a0610"
+        "value": "services/apm-java-demo/pom.xml d48fcb0f127bb4f86d4a5bf0a9bda723690448d15714e19f542ede789fbb0def"
       },
       {
         "name": "octo:input-sha256",
@@ -1208,10 +1208,10 @@
     {
       "type": "library",
       "name": "spring-boot-starter-parent",
-      "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-parent@3.3.5?type=pom",
-      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-parent@3.3.5?type=pom",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-parent@3.5.16?type=pom",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-parent@3.5.16?type=pom",
       "group": "org.springframework.boot",
-      "version": "3.3.5",
+      "version": "3.5.16",
       "properties": [
         {
           "name": "octo:source",

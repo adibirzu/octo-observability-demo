@@ -153,3 +153,13 @@ kubectl exec -n octo-drone-shop octo-apm-java-demo-<pod> -- sh -c \
   'cd /opt/apm-agent && unzip -o /tmp/apm-agent.zip && exit'
 kubectl rollout restart deployment/octo-apm-java-demo -n octo-drone-shop
 ```
+
+## Security exception
+
+Spring Boot 3.5.16 includes Spring Framework 6.2.19, which is affected by
+[CVE-2026-47884](https://spring.io/security/cve-2026-47884/). The issue requires
+an application to use `XsltView` and a `/**` mapping that renders a view without
+an explicit view name. The 6.2.20 fix is available through enterprise support;
+the open-source fix is in 7.0.9. Spring Boot 3.5 open-source support has ended;
+a major upgrade is a separate task. Reassess this exception after upgrading and
+scanning the rebuilt image.
