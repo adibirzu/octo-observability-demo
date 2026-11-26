@@ -36,7 +36,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/apm-java-demo/pom.xml d48fcb0f127bb4f86d4a5bf0a9bda723690448d15714e19f542ede789fbb0def"
+        "value": "services/apm-java-demo/pom.xml e689bed1408148b9bead0ac14636a7db7ca1de1f2d22e668a25b25aaaeeee1f7"
       },
       {
         "name": "octo:input-sha256",
@@ -56,11 +56,11 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/browser-runner/package-lock.json cf60a65c7fd448e72db66a0e961c34a6d8066ce18e915be79479b51f7d3802ea"
+        "value": "services/browser-runner/package-lock.json 9bb376b93b89e44cffcc00c80cdd475c07d74e1501cd50c64b556fb3a453dd6d"
       },
       {
         "name": "octo:input-sha256",
-        "value": "services/browser-runner/package.json 38e92a8d1b409e72e5cb95162b8cbf259f6c510b09f2a35448386f893d8dfa84"
+        "value": "services/browser-runner/package.json 84cf94941f044886cae12ad5447ee2cf4d8758f036baeca59acccba9507e9a2d"
       },
       {
         "name": "octo:input-sha256",
@@ -112,11 +112,11 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "shop/package-lock.json 1bbdc404807feeece1bb933fd8d2ed1d313f712e2e5fd535fc764fadee67877b"
+        "value": "shop/package-lock.json 04de28cde4530c01003477ec2eb1882f807647d29eebac66cd34d95b93a7170b"
       },
       {
         "name": "octo:input-sha256",
-        "value": "shop/package.json a58164626a591135a4c9cd2396a016f67fa30d1a919faafb8707cfe1381ab924"
+        "value": "shop/package.json 91c3c4989f6380b9e26313a5d15829ab44faf95f6d8ddbc0428dd6516973f4b0"
       },
       {
         "name": "octo:input-sha256",
@@ -132,7 +132,7 @@
       },
       {
         "name": "octo:input-sha256",
-        "value": "shop/services/workflow-gateway/go.mod 5b8e956b19b93e2d55c1e7e62dcc06463609f8fe40d48d276446a7ad0cd19b4d"
+        "value": "shop/services/workflow-gateway/go.mod 1f26686a5009fe5bdbd40b011e40d3192942f53e6958be2ceb2fc6ad6f344c06"
       },
       {
         "name": "octo:input-sha256",
@@ -712,10 +712,10 @@
     {
       "type": "library",
       "name": "httpsnoop",
-      "purl": "pkg:golang/github.com/felixge/httpsnoop@v1.0.4",
-      "bom-ref": "pkg:golang/github.com/felixge/httpsnoop@v1.0.4",
+      "purl": "pkg:golang/github.com/felixge/httpsnoop@v1.1.0",
+      "bom-ref": "pkg:golang/github.com/felixge/httpsnoop@v1.1.0",
       "group": "github.com/felixge",
-      "version": "v1.0.4",
+      "version": "v1.1.0",
       "properties": [
         {
           "name": "octo:source",
@@ -726,10 +726,10 @@
     {
       "type": "library",
       "name": "logr",
-      "purl": "pkg:golang/github.com/go-logr/logr@v1.4.3",
-      "bom-ref": "pkg:golang/github.com/go-logr/logr@v1.4.3",
+      "purl": "pkg:golang/github.com/go-logr/logr@v1.4.4",
+      "bom-ref": "pkg:golang/github.com/go-logr/logr@v1.4.4",
       "group": "github.com/go-logr",
-      "version": "v1.4.3",
+      "version": "v1.4.4",
       "properties": [
         {
           "name": "octo:source",
@@ -796,10 +796,10 @@
     {
       "type": "library",
       "name": "client_golang",
-      "purl": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
-      "bom-ref": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
+      "purl": "pkg:golang/github.com/prometheus/client_golang@v1.24.1",
+      "bom-ref": "pkg:golang/github.com/prometheus/client_golang@v1.24.1",
       "group": "github.com/prometheus",
-      "version": "v1.23.2",
+      "version": "v1.24.1",
       "properties": [
         {
           "name": "octo:source",
@@ -824,10 +824,10 @@
     {
       "type": "library",
       "name": "common",
-      "purl": "pkg:golang/github.com/prometheus/common@v0.66.1",
-      "bom-ref": "pkg:golang/github.com/prometheus/common@v0.66.1",
+      "purl": "pkg:golang/github.com/prometheus/common@v0.70.1",
+      "bom-ref": "pkg:golang/github.com/prometheus/common@v0.70.1",
       "group": "github.com/prometheus",
-      "version": "v0.66.1",
+      "version": "v0.70.1",
       "properties": [
         {
           "name": "octo:source",
@@ -838,10 +838,10 @@
     {
       "type": "library",
       "name": "procfs",
-      "purl": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
-      "bom-ref": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
+      "purl": "pkg:golang/github.com/prometheus/procfs@v0.21.1",
+      "bom-ref": "pkg:golang/github.com/prometheus/procfs@v0.21.1",
       "group": "github.com/prometheus",
-      "version": "v0.16.1",
+      "version": "v0.21.1",
       "properties": [
         {
           "name": "octo:source",
@@ -880,10 +880,10 @@
     {
       "type": "library",
       "name": "otelhttp",
-      "purl": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.69.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.69.0",
+      "purl": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.70.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.70.0",
       "group": "go.opentelemetry.io/contrib/instrumentation/net/http",
-      "version": "v0.69.0",
+      "version": "v0.70.0",
       "properties": [
         {
           "name": "octo:source",
@@ -894,10 +894,10 @@
     {
       "type": "library",
       "name": "otlptracehttp",
-      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.44.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.44.0",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.45.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.45.0",
       "group": "go.opentelemetry.io/otel/exporters/otlp/otlptrace",
-      "version": "v1.44.0",
+      "version": "v1.45.0",
       "properties": [
         {
           "name": "octo:source",
@@ -908,10 +908,10 @@
     {
       "type": "library",
       "name": "otlptrace",
-      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.44.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.44.0",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.45.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.45.0",
       "group": "go.opentelemetry.io/otel/exporters/otlp",
-      "version": "v1.44.0",
+      "version": "v1.45.0",
       "properties": [
         {
           "name": "octo:source",
@@ -922,10 +922,10 @@
     {
       "type": "library",
       "name": "metric",
-      "purl": "pkg:golang/go.opentelemetry.io/otel/metric@v1.44.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/metric@v1.44.0",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/metric@v1.45.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/metric@v1.45.0",
       "group": "go.opentelemetry.io/otel",
-      "version": "v1.44.0",
+      "version": "v1.45.0",
       "properties": [
         {
           "name": "octo:source",
@@ -936,10 +936,10 @@
     {
       "type": "library",
       "name": "sdk",
-      "purl": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.44.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.44.0",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.45.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.45.0",
       "group": "go.opentelemetry.io/otel",
-      "version": "v1.44.0",
+      "version": "v1.45.0",
       "properties": [
         {
           "name": "octo:source",
@@ -950,10 +950,10 @@
     {
       "type": "library",
       "name": "trace",
-      "purl": "pkg:golang/go.opentelemetry.io/otel/trace@v1.44.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/trace@v1.44.0",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/trace@v1.45.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/trace@v1.45.0",
       "group": "go.opentelemetry.io/otel",
-      "version": "v1.44.0",
+      "version": "v1.45.0",
       "properties": [
         {
           "name": "octo:source",
@@ -964,10 +964,10 @@
     {
       "type": "library",
       "name": "otel",
-      "purl": "pkg:golang/go.opentelemetry.io/otel@v1.44.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/otel@v1.44.0",
+      "purl": "pkg:golang/go.opentelemetry.io/otel@v1.45.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel@v1.45.0",
       "group": "go.opentelemetry.io",
-      "version": "v1.44.0",
+      "version": "v1.45.0",
       "properties": [
         {
           "name": "octo:source",
@@ -978,24 +978,10 @@
     {
       "type": "library",
       "name": "otlp",
-      "purl": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.10.0",
-      "bom-ref": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.10.0",
+      "purl": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.11.0",
+      "bom-ref": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.11.0",
       "group": "go.opentelemetry.io/proto",
-      "version": "v1.10.0",
-      "properties": [
-        {
-          "name": "octo:source",
-          "value": "shop/services/workflow-gateway/go.mod"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "v2",
-      "purl": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
-      "bom-ref": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
-      "group": "go.yaml.in/yaml",
-      "version": "v2.4.2",
+      "version": "v1.11.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1006,10 +992,10 @@
     {
       "type": "library",
       "name": "net",
-      "purl": "pkg:golang/golang.org/x/net@v0.55.0",
-      "bom-ref": "pkg:golang/golang.org/x/net@v0.55.0",
+      "purl": "pkg:golang/golang.org/x/net@v0.57.0",
+      "bom-ref": "pkg:golang/golang.org/x/net@v0.57.0",
       "group": "golang.org/x",
-      "version": "v0.55.0",
+      "version": "v0.57.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1020,10 +1006,10 @@
     {
       "type": "library",
       "name": "sys",
-      "purl": "pkg:golang/golang.org/x/sys@v0.45.0",
-      "bom-ref": "pkg:golang/golang.org/x/sys@v0.45.0",
+      "purl": "pkg:golang/golang.org/x/sys@v0.47.0",
+      "bom-ref": "pkg:golang/golang.org/x/sys@v0.47.0",
       "group": "golang.org/x",
-      "version": "v0.45.0",
+      "version": "v0.47.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1034,10 +1020,10 @@
     {
       "type": "library",
       "name": "text",
-      "purl": "pkg:golang/golang.org/x/text@v0.37.0",
-      "bom-ref": "pkg:golang/golang.org/x/text@v0.37.0",
+      "purl": "pkg:golang/golang.org/x/text@v0.40.0",
+      "bom-ref": "pkg:golang/golang.org/x/text@v0.40.0",
       "group": "golang.org/x",
-      "version": "v0.37.0",
+      "version": "v0.40.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1048,10 +1034,10 @@
     {
       "type": "library",
       "name": "api",
-      "purl": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260526163538-3dc84a4a5aaa",
-      "bom-ref": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "purl": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260803160001-6ac0973c030d",
+      "bom-ref": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260803160001-6ac0973c030d",
       "group": "google.golang.org/genproto/googleapis",
-      "version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "version": "v0.0.0-20260803160001-6ac0973c030d",
       "properties": [
         {
           "name": "octo:source",
@@ -1062,10 +1048,10 @@
     {
       "type": "library",
       "name": "rpc",
-      "purl": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260526163538-3dc84a4a5aaa",
-      "bom-ref": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "purl": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260803160001-6ac0973c030d",
+      "bom-ref": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260803160001-6ac0973c030d",
       "group": "google.golang.org/genproto/googleapis",
-      "version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "version": "v0.0.0-20260803160001-6ac0973c030d",
       "properties": [
         {
           "name": "octo:source",
@@ -1076,10 +1062,10 @@
     {
       "type": "library",
       "name": "grpc",
-      "purl": "pkg:golang/google.golang.org/grpc@v1.81.1",
-      "bom-ref": "pkg:golang/google.golang.org/grpc@v1.81.1",
+      "purl": "pkg:golang/google.golang.org/grpc@v1.83.1",
+      "bom-ref": "pkg:golang/google.golang.org/grpc@v1.83.1",
       "group": "google.golang.org",
-      "version": "v1.81.1",
+      "version": "v1.83.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1132,10 +1118,10 @@
     {
       "type": "library",
       "name": "opentelemetry-api",
-      "purl": "pkg:maven/io.opentelemetry/opentelemetry-api@1.62.0",
-      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-api@1.62.0",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-api@1.67.0",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-api@1.67.0",
       "group": "io.opentelemetry",
-      "version": "1.62.0",
+      "version": "1.67.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1146,10 +1132,10 @@
     {
       "type": "library",
       "name": "opentelemetry-exporter-otlp",
-      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.62.0",
-      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.62.0",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.67.0",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.67.0",
       "group": "io.opentelemetry",
-      "version": "1.62.0",
+      "version": "1.67.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1160,10 +1146,10 @@
     {
       "type": "library",
       "name": "opentelemetry-sdk",
-      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.62.0",
-      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.62.0",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.67.0",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.67.0",
       "group": "io.opentelemetry",
-      "version": "1.62.0",
+      "version": "1.67.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1256,10 +1242,10 @@
     {
       "type": "library",
       "name": "aix-ppc64",
-      "purl": "pkg:npm/%40esbuild/aix-ppc64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/aix-ppc64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/aix-ppc64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/aix-ppc64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1270,10 +1256,10 @@
     {
       "type": "library",
       "name": "android-arm64",
-      "purl": "pkg:npm/%40esbuild/android-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/android-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/android-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/android-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1284,10 +1270,10 @@
     {
       "type": "library",
       "name": "android-arm",
-      "purl": "pkg:npm/%40esbuild/android-arm@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/android-arm@0.27.7",
+      "purl": "pkg:npm/%40esbuild/android-arm@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/android-arm@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1298,10 +1284,10 @@
     {
       "type": "library",
       "name": "android-x64",
-      "purl": "pkg:npm/%40esbuild/android-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/android-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/android-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/android-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1312,10 +1298,10 @@
     {
       "type": "library",
       "name": "darwin-arm64",
-      "purl": "pkg:npm/%40esbuild/darwin-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/darwin-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/darwin-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/darwin-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1326,10 +1312,10 @@
     {
       "type": "library",
       "name": "darwin-x64",
-      "purl": "pkg:npm/%40esbuild/darwin-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/darwin-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/darwin-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/darwin-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1340,10 +1326,10 @@
     {
       "type": "library",
       "name": "freebsd-arm64",
-      "purl": "pkg:npm/%40esbuild/freebsd-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/freebsd-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/freebsd-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/freebsd-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1354,10 +1340,10 @@
     {
       "type": "library",
       "name": "freebsd-x64",
-      "purl": "pkg:npm/%40esbuild/freebsd-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/freebsd-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/freebsd-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/freebsd-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1368,10 +1354,10 @@
     {
       "type": "library",
       "name": "linux-arm64",
-      "purl": "pkg:npm/%40esbuild/linux-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1382,10 +1368,10 @@
     {
       "type": "library",
       "name": "linux-arm",
-      "purl": "pkg:npm/%40esbuild/linux-arm@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-arm@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-arm@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-arm@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1396,10 +1382,10 @@
     {
       "type": "library",
       "name": "linux-ia32",
-      "purl": "pkg:npm/%40esbuild/linux-ia32@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-ia32@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-ia32@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-ia32@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1410,10 +1396,10 @@
     {
       "type": "library",
       "name": "linux-loong64",
-      "purl": "pkg:npm/%40esbuild/linux-loong64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-loong64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-loong64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-loong64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1424,10 +1410,10 @@
     {
       "type": "library",
       "name": "linux-mips64el",
-      "purl": "pkg:npm/%40esbuild/linux-mips64el@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-mips64el@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-mips64el@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-mips64el@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1438,10 +1424,10 @@
     {
       "type": "library",
       "name": "linux-ppc64",
-      "purl": "pkg:npm/%40esbuild/linux-ppc64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-ppc64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-ppc64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-ppc64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1452,10 +1438,10 @@
     {
       "type": "library",
       "name": "linux-riscv64",
-      "purl": "pkg:npm/%40esbuild/linux-riscv64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-riscv64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-riscv64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-riscv64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1466,10 +1452,10 @@
     {
       "type": "library",
       "name": "linux-s390x",
-      "purl": "pkg:npm/%40esbuild/linux-s390x@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-s390x@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-s390x@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-s390x@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1480,10 +1466,10 @@
     {
       "type": "library",
       "name": "linux-x64",
-      "purl": "pkg:npm/%40esbuild/linux-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/linux-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/linux-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/linux-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1494,10 +1480,10 @@
     {
       "type": "library",
       "name": "netbsd-arm64",
-      "purl": "pkg:npm/%40esbuild/netbsd-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/netbsd-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/netbsd-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/netbsd-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1508,10 +1494,10 @@
     {
       "type": "library",
       "name": "netbsd-x64",
-      "purl": "pkg:npm/%40esbuild/netbsd-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/netbsd-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/netbsd-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/netbsd-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1522,10 +1508,10 @@
     {
       "type": "library",
       "name": "openbsd-arm64",
-      "purl": "pkg:npm/%40esbuild/openbsd-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/openbsd-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/openbsd-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/openbsd-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1536,10 +1522,10 @@
     {
       "type": "library",
       "name": "openbsd-x64",
-      "purl": "pkg:npm/%40esbuild/openbsd-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/openbsd-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/openbsd-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/openbsd-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1550,10 +1536,10 @@
     {
       "type": "library",
       "name": "openharmony-arm64",
-      "purl": "pkg:npm/%40esbuild/openharmony-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/openharmony-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/openharmony-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/openharmony-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1564,10 +1550,10 @@
     {
       "type": "library",
       "name": "sunos-x64",
-      "purl": "pkg:npm/%40esbuild/sunos-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/sunos-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/sunos-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/sunos-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1578,10 +1564,10 @@
     {
       "type": "library",
       "name": "win32-arm64",
-      "purl": "pkg:npm/%40esbuild/win32-arm64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/win32-arm64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/win32-arm64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/win32-arm64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1592,10 +1578,10 @@
     {
       "type": "library",
       "name": "win32-ia32",
-      "purl": "pkg:npm/%40esbuild/win32-ia32@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/win32-ia32@0.27.7",
+      "purl": "pkg:npm/%40esbuild/win32-ia32@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/win32-ia32@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1606,10 +1592,10 @@
     {
       "type": "library",
       "name": "win32-x64",
-      "purl": "pkg:npm/%40esbuild/win32-x64@0.27.7",
-      "bom-ref": "pkg:npm/%40esbuild/win32-x64@0.27.7",
+      "purl": "pkg:npm/%40esbuild/win32-x64@0.28.1",
+      "bom-ref": "pkg:npm/%40esbuild/win32-x64@0.28.1",
       "group": "@esbuild",
-      "version": "0.27.7",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1626,7 +1612,7 @@
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "shop/package.json: ^1.60.0"
+          "value": "shop/package.json: ^1.61.0"
         },
         {
           "name": "octo:source",
@@ -1659,10 +1645,10 @@
     {
       "type": "library",
       "name": "test",
-      "purl": "pkg:npm/%40playwright/test@1.60.0",
-      "bom-ref": "pkg:npm/%40playwright/test@1.60.0",
+      "purl": "pkg:npm/%40playwright/test@1.61.0",
+      "bom-ref": "pkg:npm/%40playwright/test@1.61.0",
       "group": "@playwright",
-      "version": "1.60.0",
+      "version": "1.61.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1739,9 +1725,9 @@
     {
       "type": "library",
       "name": "esbuild",
-      "purl": "pkg:npm/esbuild@0.27.7",
-      "bom-ref": "pkg:npm/esbuild@0.27.7",
-      "version": "0.27.7",
+      "purl": "pkg:npm/esbuild@0.28.1",
+      "bom-ref": "pkg:npm/esbuild@0.28.1",
+      "version": "0.28.1",
       "properties": [
         {
           "name": "octo:source",
@@ -1785,19 +1771,6 @@
       "purl": "pkg:npm/fsevents@2.3.3",
       "bom-ref": "pkg:npm/fsevents@2.3.3",
       "version": "2.3.3",
-      "properties": [
-        {
-          "name": "octo:source",
-          "value": "services/browser-runner/package-lock.json"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "get-tsconfig",
-      "purl": "pkg:npm/get-tsconfig@4.14.0",
-      "bom-ref": "pkg:npm/get-tsconfig@4.14.0",
-      "version": "4.14.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1915,9 +1888,9 @@
     {
       "type": "library",
       "name": "playwright-core",
-      "purl": "pkg:npm/playwright-core@1.60.0",
-      "bom-ref": "pkg:npm/playwright-core@1.60.0",
-      "version": "1.60.0",
+      "purl": "pkg:npm/playwright-core@1.61.0",
+      "bom-ref": "pkg:npm/playwright-core@1.61.0",
+      "version": "1.61.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1949,9 +1922,9 @@
     {
       "type": "library",
       "name": "playwright",
-      "purl": "pkg:npm/playwright@1.60.0",
-      "bom-ref": "pkg:npm/playwright@1.60.0",
-      "version": "1.60.0",
+      "purl": "pkg:npm/playwright@1.61.0",
+      "bom-ref": "pkg:npm/playwright@1.61.0",
+      "version": "1.61.0",
       "properties": [
         {
           "name": "octo:source",
@@ -1991,19 +1964,6 @@
       "purl": "pkg:npm/real-require@0.2.0",
       "bom-ref": "pkg:npm/real-require@0.2.0",
       "version": "0.2.0",
-      "properties": [
-        {
-          "name": "octo:source",
-          "value": "services/browser-runner/package-lock.json"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "resolve-pkg-maps",
-      "purl": "pkg:npm/resolve-pkg-maps@1.0.0",
-      "bom-ref": "pkg:npm/resolve-pkg-maps@1.0.0",
-      "version": "1.0.0",
       "properties": [
         {
           "name": "octo:source",
@@ -2066,13 +2026,13 @@
     {
       "type": "library",
       "name": "tsx",
-      "purl": "pkg:npm/tsx@4.21.0",
-      "bom-ref": "pkg:npm/tsx@4.21.0",
-      "version": "4.21.0",
+      "purl": "pkg:npm/tsx@4.22.4",
+      "bom-ref": "pkg:npm/tsx@4.22.4",
+      "version": "4.22.4",
       "properties": [
         {
           "name": "octo:declaration",
-          "value": "services/browser-runner/package.json: 4.21.0"
+          "value": "services/browser-runner/package.json: 4.22.4"
         },
         {
           "name": "octo:source",
