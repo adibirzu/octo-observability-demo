@@ -1353,6 +1353,7 @@ function renderCheckoutEvidence(result) {
     const evidence = document.getElementById('checkoutEvidence');
     if (!evidence) return;
     if (!result) {
+        evidence.hidden = false;
         evidence.innerHTML = '<h3>Checkout receipt</h3><p>No checkout evidence yet. Place an order to see its correlation IDs.</p>';
         return;
     }
@@ -1397,7 +1398,7 @@ function renderCheckoutEvidence(result) {
         ['Security Triage Search', gatewayId ? `payment-gateway-security-triage → 'Payment Gateway Request ID' = '${gatewayId}'` : 'payment-gateway-security-triage → use Payment Gateway Request ID'],
     ];
     evidence.hidden = false;
-    evidence.innerHTML = `<h3>Checkout receipt</h3><p>Correlation details for this order</p>` + rows.map(([label, value]) => `
+    evidence.innerHTML = `<h3>Checkout receipt</h3><p>Captured data pivots</p>` + rows.map(([label, value]) => `
         <div class="evidence-row">
             <code>${esc(label)}: ${esc(value)}</code>
             <button class="btn copy-evidence-btn" type="button" data-copy="${esc(value)}">Copy</button>

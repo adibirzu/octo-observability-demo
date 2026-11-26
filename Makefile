@@ -191,6 +191,7 @@ test: test-contract test-docs test-apps ## Run the full local test gate
 
 .PHONY: test-apps
 test-apps: ## Per-app pytest suites in isolated processes (avoids shop/crm `server` package collision)
+	node shop/tests/test_checkout_receipt.js
 	@for app in shop crm services/* tools/traffic-generator deploy/wizard; do \
 	  [ -d "$$app/tests" ] || continue; \
 	  case "$$app" in services/browser-runner|services/otel-gateway) \
