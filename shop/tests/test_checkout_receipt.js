@@ -1,0 +1,16 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const source = fs.readFileSync('shop/server/templates/shop.html', 'utf8');
+const fn = source.slice(source.indexOf('function renderCheckoutEvidence('), source.indexOf('/* ── Checkout', source.indexOf('function renderCheckoutEvidence(')));
+const panel = {hidden: false, innerHTML: '', querySelectorAll: () => []};
+const context = {document: {getElementById: () => panel}, esc: value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;'), setTimeout};
+vm.runInNewContext(fn, context);
+context.renderCheckoutEvidence(null);
+assert.match(panel.innerHTML, /No checkout evidence yet/);
+context.renderCheckoutEvidence({order_id: 'order-123', trace_id: 'trace-123', payment: {gateway: {request_id: 'gateway-123'}}});
+assert.match(panel.innerHTML, /Checkout receipt/);
+for (const value of ['order-123', 'trace-123', 'gateway-123']) assert.match(panel.innerHTML, new RegExp(value));
+assert.match(panel.innerHTML, /copy-evidence-btn/);
+context.renderCheckoutEvidence({});
+assert.match(panel.innerHTML, /not returned/);
