@@ -1,0 +1,1356 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "studio",
+      "version": "c6db0a56cd91c76cccc609173d945249d321c56d",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0fec8ecc0bde388f301e8828b1df391120323beb666c63d7872b645db34688a3"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "octo:image-digest",
+        "value": "sha256:0fec8ecc0bde388f301e8828b1df391120323beb666c63d7872b645db34688a3"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "adduser",
+      "purl": "pkg:deb/debian/adduser@3.152",
+      "group": "debian",
+      "version": "3.152"
+    },
+    {
+      "type": "library",
+      "name": "apt",
+      "purl": "pkg:deb/debian/apt@3.0.4",
+      "group": "debian",
+      "version": "3.0.4"
+    },
+    {
+      "type": "library",
+      "name": "base-files",
+      "purl": "pkg:deb/debian/base-files@13.8%2Bdeb13u8",
+      "group": "debian",
+      "version": "13.8+deb13u8"
+    },
+    {
+      "type": "library",
+      "name": "base-passwd",
+      "purl": "pkg:deb/debian/base-passwd@3.6.7",
+      "group": "debian",
+      "version": "3.6.7"
+    },
+    {
+      "type": "library",
+      "name": "bash",
+      "purl": "pkg:deb/debian/bash@5.2.37-2%2Bb10",
+      "group": "debian",
+      "version": "5.2.37-2+b10"
+    },
+    {
+      "type": "library",
+      "name": "bsdutils",
+      "purl": "pkg:deb/debian/bsdutils@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "ca-certificates",
+      "purl": "pkg:deb/debian/ca-certificates@20250419%2Bdeb13u1",
+      "group": "debian",
+      "version": "20250419+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "coreutils",
+      "purl": "pkg:deb/debian/coreutils@9.7-3",
+      "group": "debian",
+      "version": "9.7-3"
+    },
+    {
+      "type": "library",
+      "name": "dash",
+      "purl": "pkg:deb/debian/dash@0.5.12-12",
+      "group": "debian",
+      "version": "0.5.12-12"
+    },
+    {
+      "type": "library",
+      "name": "debconf",
+      "purl": "pkg:deb/debian/debconf@1.5.91",
+      "group": "debian",
+      "version": "1.5.91"
+    },
+    {
+      "type": "library",
+      "name": "debian-archive-keyring",
+      "purl": "pkg:deb/debian/debian-archive-keyring@2025.1",
+      "group": "debian",
+      "version": "2025.1"
+    },
+    {
+      "type": "library",
+      "name": "debianutils",
+      "purl": "pkg:deb/debian/debianutils@5.23.2",
+      "group": "debian",
+      "version": "5.23.2"
+    },
+    {
+      "type": "library",
+      "name": "diffutils",
+      "purl": "pkg:deb/debian/diffutils@3.10-4",
+      "group": "debian",
+      "version": "3.10-4"
+    },
+    {
+      "type": "library",
+      "name": "dpkg",
+      "purl": "pkg:deb/debian/dpkg@1.22.22",
+      "group": "debian",
+      "version": "1.22.22"
+    },
+    {
+      "type": "library",
+      "name": "findutils",
+      "purl": "pkg:deb/debian/findutils@4.10.0-3",
+      "group": "debian",
+      "version": "4.10.0-3"
+    },
+    {
+      "type": "library",
+      "name": "gcc-14-base",
+      "purl": "pkg:deb/debian/gcc-14-base@14.2.0-19",
+      "group": "debian",
+      "version": "14.2.0-19"
+    },
+    {
+      "type": "library",
+      "name": "grep",
+      "purl": "pkg:deb/debian/grep@3.11-4",
+      "group": "debian",
+      "version": "3.11-4"
+    },
+    {
+      "type": "library",
+      "name": "gzip",
+      "purl": "pkg:deb/debian/gzip@1.13-1%2Bdeb13u1",
+      "group": "debian",
+      "version": "1.13-1+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "hostname",
+      "purl": "pkg:deb/debian/hostname@3.25",
+      "group": "debian",
+      "version": "3.25"
+    },
+    {
+      "type": "library",
+      "name": "init-system-helpers",
+      "purl": "pkg:deb/debian/init-system-helpers@1.69~deb13u1",
+      "group": "debian",
+      "version": "1.69~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libacl1",
+      "purl": "pkg:deb/debian/libacl1@2.3.2-2%2Bb1",
+      "group": "debian",
+      "version": "2.3.2-2+b1"
+    },
+    {
+      "type": "library",
+      "name": "libapt-pkg7.0",
+      "purl": "pkg:deb/debian/libapt-pkg7.0@3.0.4",
+      "group": "debian",
+      "version": "3.0.4"
+    },
+    {
+      "type": "library",
+      "name": "libattr1",
+      "purl": "pkg:deb/debian/libattr1@2.5.2-3",
+      "group": "debian",
+      "version": "2.5.2-3"
+    },
+    {
+      "type": "library",
+      "name": "libaudit-common",
+      "purl": "pkg:deb/debian/libaudit-common@4.0.2-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "4.0.2-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libaudit1",
+      "purl": "pkg:deb/debian/libaudit1@4.0.2-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "4.0.2-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libblkid1",
+      "purl": "pkg:deb/debian/libblkid1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libbsd0",
+      "purl": "pkg:deb/debian/libbsd0@0.12.2-2",
+      "group": "debian",
+      "version": "0.12.2-2"
+    },
+    {
+      "type": "library",
+      "name": "libbz2-1.0",
+      "purl": "pkg:deb/debian/libbz2-1.0@1.0.8-6",
+      "group": "debian",
+      "version": "1.0.8-6"
+    },
+    {
+      "type": "library",
+      "name": "libc-bin",
+      "purl": "pkg:deb/debian/libc-bin@2.41-12%2Bdeb13u5",
+      "group": "debian",
+      "version": "2.41-12+deb13u5"
+    },
+    {
+      "type": "library",
+      "name": "libc6",
+      "purl": "pkg:deb/debian/libc6@2.41-12%2Bdeb13u5",
+      "group": "debian",
+      "version": "2.41-12+deb13u5"
+    },
+    {
+      "type": "library",
+      "name": "libcap-ng0",
+      "purl": "pkg:deb/debian/libcap-ng0@0.8.5-4%2Bb1",
+      "group": "debian",
+      "version": "0.8.5-4+b1"
+    },
+    {
+      "type": "library",
+      "name": "libcap2",
+      "purl": "pkg:deb/debian/libcap2@2.75-10%2Bdeb13u1%2Bb3",
+      "group": "debian",
+      "version": "2.75-10+deb13u1+b3"
+    },
+    {
+      "type": "library",
+      "name": "libcrypt1",
+      "purl": "pkg:deb/debian/libcrypt1@4.4.38-1",
+      "group": "debian",
+      "version": "4.4.38-1"
+    },
+    {
+      "type": "library",
+      "name": "libdb5.3t64",
+      "purl": "pkg:deb/debian/libdb5.3t64@5.3.28%2Bdfsg2-9",
+      "group": "debian",
+      "version": "5.3.28+dfsg2-9"
+    },
+    {
+      "type": "library",
+      "name": "libdebconfclient0",
+      "purl": "pkg:deb/debian/libdebconfclient0@0.280",
+      "group": "debian",
+      "version": "0.280"
+    },
+    {
+      "type": "library",
+      "name": "libffi8",
+      "purl": "pkg:deb/debian/libffi8@3.4.8-2",
+      "group": "debian",
+      "version": "3.4.8-2"
+    },
+    {
+      "type": "library",
+      "name": "libgcc-s1",
+      "purl": "pkg:deb/debian/libgcc-s1@14.2.0-19",
+      "group": "debian",
+      "version": "14.2.0-19"
+    },
+    {
+      "type": "library",
+      "name": "libgdbm6t64",
+      "purl": "pkg:deb/debian/libgdbm6t64@1.24-2",
+      "group": "debian",
+      "version": "1.24-2"
+    },
+    {
+      "type": "library",
+      "name": "libgmp10",
+      "purl": "pkg:deb/debian/libgmp10@6.3.0%2Bdfsg-3",
+      "group": "debian",
+      "version": "6.3.0+dfsg-3"
+    },
+    {
+      "type": "library",
+      "name": "libhogweed6t64",
+      "purl": "pkg:deb/debian/libhogweed6t64@3.10.1-1",
+      "group": "debian",
+      "version": "3.10.1-1"
+    },
+    {
+      "type": "library",
+      "name": "liblastlog2-2",
+      "purl": "pkg:deb/debian/liblastlog2-2@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "liblz4-1",
+      "purl": "pkg:deb/debian/liblz4-1@1.10.0-4",
+      "group": "debian",
+      "version": "1.10.0-4"
+    },
+    {
+      "type": "library",
+      "name": "liblzma5",
+      "purl": "pkg:deb/debian/liblzma5@5.8.1-1%2Bdeb13u2",
+      "group": "debian",
+      "version": "5.8.1-1+deb13u2"
+    },
+    {
+      "type": "library",
+      "name": "libmd0",
+      "purl": "pkg:deb/debian/libmd0@1.1.0-2%2Bb1",
+      "group": "debian",
+      "version": "1.1.0-2+b1"
+    },
+    {
+      "type": "library",
+      "name": "libmount1",
+      "purl": "pkg:deb/debian/libmount1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libncursesw6",
+      "purl": "pkg:deb/debian/libncursesw6@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "libnettle8t64",
+      "purl": "pkg:deb/debian/libnettle8t64@3.10.1-1",
+      "group": "debian",
+      "version": "3.10.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libpam-modules-bin",
+      "purl": "pkg:deb/debian/libpam-modules-bin@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpam-modules",
+      "purl": "pkg:deb/debian/libpam-modules@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpam-runtime",
+      "purl": "pkg:deb/debian/libpam-runtime@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpam0g",
+      "purl": "pkg:deb/debian/libpam0g@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpcre2-8-0",
+      "purl": "pkg:deb/debian/libpcre2-8-0@10.46-1~deb13u3",
+      "group": "debian",
+      "version": "10.46-1~deb13u3"
+    },
+    {
+      "type": "library",
+      "name": "libreadline8t64",
+      "purl": "pkg:deb/debian/libreadline8t64@8.2-6",
+      "group": "debian",
+      "version": "8.2-6"
+    },
+    {
+      "type": "library",
+      "name": "libseccomp2",
+      "purl": "pkg:deb/debian/libseccomp2@2.6.0-2",
+      "group": "debian",
+      "version": "2.6.0-2"
+    },
+    {
+      "type": "library",
+      "name": "libselinux1",
+      "purl": "pkg:deb/debian/libselinux1@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsemanage-common",
+      "purl": "pkg:deb/debian/libsemanage-common@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsemanage2",
+      "purl": "pkg:deb/debian/libsemanage2@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsepol2",
+      "purl": "pkg:deb/debian/libsepol2@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsmartcols1",
+      "purl": "pkg:deb/debian/libsmartcols1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libsqlite3-0",
+      "purl": "pkg:deb/debian/libsqlite3-0@3.46.1-7%2Bdeb13u2",
+      "group": "debian",
+      "version": "3.46.1-7+deb13u2"
+    },
+    {
+      "type": "library",
+      "name": "libssl3t64",
+      "purl": "pkg:deb/debian/libssl3t64@3.5.9-1~deb13u1",
+      "group": "debian",
+      "version": "3.5.9-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libstdc++6",
+      "purl": "pkg:deb/debian/libstdc%2B%2B6@14.2.0-19",
+      "group": "debian",
+      "version": "14.2.0-19"
+    },
+    {
+      "type": "library",
+      "name": "libsystemd0",
+      "purl": "pkg:deb/debian/libsystemd0@257.13-1~deb13u1",
+      "group": "debian",
+      "version": "257.13-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libtinfo6",
+      "purl": "pkg:deb/debian/libtinfo6@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "libudev1",
+      "purl": "pkg:deb/debian/libudev1@257.13-1~deb13u1",
+      "group": "debian",
+      "version": "257.13-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libuuid1",
+      "purl": "pkg:deb/debian/libuuid1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libxxhash0",
+      "purl": "pkg:deb/debian/libxxhash0@0.8.3-2",
+      "group": "debian",
+      "version": "0.8.3-2"
+    },
+    {
+      "type": "library",
+      "name": "libzstd1",
+      "purl": "pkg:deb/debian/libzstd1@1.5.7%2Bdfsg-1",
+      "group": "debian",
+      "version": "1.5.7+dfsg-1"
+    },
+    {
+      "type": "library",
+      "name": "login.defs",
+      "purl": "pkg:deb/debian/login.defs@4.17.4-2",
+      "group": "debian",
+      "version": "4.17.4-2"
+    },
+    {
+      "type": "library",
+      "name": "login",
+      "purl": "pkg:deb/debian/login@4.16.0-2%2Breally2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "4.16.0-2+really2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "mawk",
+      "purl": "pkg:deb/debian/mawk@1.3.4.20250131-1",
+      "group": "debian",
+      "version": "1.3.4.20250131-1"
+    },
+    {
+      "type": "library",
+      "name": "mount",
+      "purl": "pkg:deb/debian/mount@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "ncurses-base",
+      "purl": "pkg:deb/debian/ncurses-base@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "ncurses-bin",
+      "purl": "pkg:deb/debian/ncurses-bin@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "netbase",
+      "purl": "pkg:deb/debian/netbase@6.5",
+      "group": "debian",
+      "version": "6.5"
+    },
+    {
+      "type": "library",
+      "name": "openssl-provider-legacy",
+      "purl": "pkg:deb/debian/openssl-provider-legacy@3.5.9-1~deb13u1",
+      "group": "debian",
+      "version": "3.5.9-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "openssl",
+      "purl": "pkg:deb/debian/openssl@3.5.9-1~deb13u1",
+      "group": "debian",
+      "version": "3.5.9-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "passwd",
+      "purl": "pkg:deb/debian/passwd@4.17.4-2",
+      "group": "debian",
+      "version": "4.17.4-2"
+    },
+    {
+      "type": "library",
+      "name": "perl-base",
+      "purl": "pkg:deb/debian/perl-base@5.40.1-6%2Bdeb13u1",
+      "group": "debian",
+      "version": "5.40.1-6+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "readline-common",
+      "purl": "pkg:deb/debian/readline-common@8.2-6",
+      "group": "debian",
+      "version": "8.2-6"
+    },
+    {
+      "type": "library",
+      "name": "sed",
+      "purl": "pkg:deb/debian/sed@4.9-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "4.9-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "sqv",
+      "purl": "pkg:deb/debian/sqv@1.3.0-3%2Bb2",
+      "group": "debian",
+      "version": "1.3.0-3+b2"
+    },
+    {
+      "type": "library",
+      "name": "sysvinit-utils",
+      "purl": "pkg:deb/debian/sysvinit-utils@3.14-4",
+      "group": "debian",
+      "version": "3.14-4"
+    },
+    {
+      "type": "library",
+      "name": "tar",
+      "purl": "pkg:deb/debian/tar@1.35%2Bdfsg-3.1",
+      "group": "debian",
+      "version": "1.35+dfsg-3.1"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "purl": "pkg:deb/debian/tzdata@2026f-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2026f-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "util-linux",
+      "purl": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "zlib1g",
+      "purl": "pkg:deb/debian/zlib1g@1.3.dfsg%2Breally1.3.1-1%2Bdeb13u1",
+      "group": "debian",
+      "version": "1.3.dfsg+really1.3.1-1+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "aiohappyeyeballs",
+      "purl": "pkg:pypi/aiohappyeyeballs@2.7.1",
+      "version": "2.7.1"
+    },
+    {
+      "type": "library",
+      "name": "aiohttp",
+      "purl": "pkg:pypi/aiohttp@3.14.5",
+      "version": "3.14.5"
+    },
+    {
+      "type": "library",
+      "name": "aiosignal",
+      "purl": "pkg:pypi/aiosignal@1.4.0",
+      "version": "1.4.0"
+    },
+    {
+      "type": "library",
+      "name": "annotated-doc",
+      "purl": "pkg:pypi/annotated-doc@0.0.7",
+      "version": "0.0.7"
+    },
+    {
+      "type": "library",
+      "name": "annotated-types",
+      "purl": "pkg:pypi/annotated-types@0.8.0",
+      "version": "0.8.0"
+    },
+    {
+      "type": "library",
+      "name": "anyio",
+      "purl": "pkg:pypi/anyio@4.16.0",
+      "version": "4.16.0"
+    },
+    {
+      "type": "library",
+      "name": "asgiref",
+      "purl": "pkg:pypi/asgiref@3.13.0",
+      "version": "3.13.0"
+    },
+    {
+      "type": "library",
+      "name": "asn1crypto",
+      "purl": "pkg:pypi/asn1crypto@1.5.1",
+      "version": "1.5.1"
+    },
+    {
+      "type": "library",
+      "name": "attrs",
+      "purl": "pkg:pypi/attrs@26.1.0",
+      "version": "26.1.0"
+    },
+    {
+      "type": "library",
+      "name": "backoff",
+      "purl": "pkg:pypi/backoff@2.2.1",
+      "version": "2.2.1"
+    },
+    {
+      "type": "library",
+      "name": "cachecontrol",
+      "purl": "pkg:pypi/cachecontrol@0.14.4",
+      "version": "0.14.4"
+    },
+    {
+      "type": "library",
+      "name": "certifi",
+      "purl": "pkg:pypi/certifi@2026.10.23",
+      "version": "2026.10.23"
+    },
+    {
+      "type": "library",
+      "name": "certifi",
+      "purl": "pkg:pypi/certifi@2026.11.20",
+      "version": "2026.11.20"
+    },
+    {
+      "type": "library",
+      "name": "cffi",
+      "purl": "pkg:pypi/cffi@2.1.1",
+      "version": "2.1.1"
+    },
+    {
+      "type": "library",
+      "name": "charset-normalizer",
+      "purl": "pkg:pypi/charset-normalizer@3.5.3",
+      "version": "3.5.3"
+    },
+    {
+      "type": "library",
+      "name": "circuitbreaker",
+      "purl": "pkg:pypi/circuitbreaker@2.1.3",
+      "version": "2.1.3"
+    },
+    {
+      "type": "library",
+      "name": "click",
+      "purl": "pkg:pypi/click@8.5.1",
+      "version": "8.5.1"
+    },
+    {
+      "type": "library",
+      "name": "contourpy",
+      "purl": "pkg:pypi/contourpy@1.4.0",
+      "version": "1.4.0"
+    },
+    {
+      "type": "library",
+      "name": "crc32c",
+      "purl": "pkg:pypi/crc32c@2.8",
+      "version": "2.8"
+    },
+    {
+      "type": "library",
+      "name": "cryptography",
+      "purl": "pkg:pypi/cryptography@50.0.2",
+      "version": "50.0.2"
+    },
+    {
+      "type": "library",
+      "name": "cycler",
+      "purl": "pkg:pypi/cycler@0.12.1",
+      "version": "0.12.1"
+    },
+    {
+      "type": "library",
+      "name": "distlib",
+      "purl": "pkg:pypi/distlib@0.4.4",
+      "version": "0.4.4"
+    },
+    {
+      "type": "library",
+      "name": "distro",
+      "purl": "pkg:pypi/distro@1.9.0",
+      "version": "1.9.0"
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "purl": "pkg:pypi/fastapi@0.136.3",
+      "version": "0.136.3"
+    },
+    {
+      "type": "library",
+      "name": "fonttools",
+      "purl": "pkg:pypi/fonttools@4.69.1",
+      "version": "4.69.1"
+    },
+    {
+      "type": "library",
+      "name": "frozenlist",
+      "purl": "pkg:pypi/frozenlist@1.8.0",
+      "version": "1.8.0"
+    },
+    {
+      "type": "library",
+      "name": "googleapis-common-protos",
+      "purl": "pkg:pypi/googleapis-common-protos@1.76.0",
+      "version": "1.76.0"
+    },
+    {
+      "type": "library",
+      "name": "h11",
+      "purl": "pkg:pypi/h11@0.16.0",
+      "version": "0.16.0"
+    },
+    {
+      "type": "library",
+      "name": "httpcore2",
+      "purl": "pkg:pypi/httpcore2@2.16.2",
+      "version": "2.16.2"
+    },
+    {
+      "type": "library",
+      "name": "httpcore",
+      "purl": "pkg:pypi/httpcore@1.0.9",
+      "version": "1.0.9"
+    },
+    {
+      "type": "library",
+      "name": "httptools",
+      "purl": "pkg:pypi/httptools@0.9.0",
+      "version": "0.9.0"
+    },
+    {
+      "type": "library",
+      "name": "httpx2",
+      "purl": "pkg:pypi/httpx2@2.16.2",
+      "version": "2.16.2"
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "purl": "pkg:pypi/httpx@0.28.1",
+      "version": "0.28.1"
+    },
+    {
+      "type": "library",
+      "name": "idna",
+      "purl": "pkg:pypi/idna@3.20",
+      "version": "3.20"
+    },
+    {
+      "type": "library",
+      "name": "jiter",
+      "purl": "pkg:pypi/jiter@0.19.0",
+      "version": "0.19.0"
+    },
+    {
+      "type": "library",
+      "name": "jsonpatch",
+      "purl": "pkg:pypi/jsonpatch@1.48",
+      "version": "1.48"
+    },
+    {
+      "type": "library",
+      "name": "jsonpointer",
+      "purl": "pkg:pypi/jsonpointer@3.12",
+      "version": "3.12"
+    },
+    {
+      "type": "library",
+      "name": "kiwisolver",
+      "purl": "pkg:pypi/kiwisolver@1.5.1",
+      "version": "1.5.1"
+    },
+    {
+      "type": "library",
+      "name": "langchain-core",
+      "purl": "pkg:pypi/langchain-core@1.8.5",
+      "version": "1.8.5"
+    },
+    {
+      "type": "library",
+      "name": "langchain-oci",
+      "purl": "pkg:pypi/langchain-oci@0.2.7",
+      "version": "0.2.7"
+    },
+    {
+      "type": "library",
+      "name": "langchain-openai",
+      "purl": "pkg:pypi/langchain-openai@1.8.5",
+      "version": "1.8.5"
+    },
+    {
+      "type": "library",
+      "name": "langchain-protocol",
+      "purl": "pkg:pypi/langchain-protocol@0.0.22",
+      "version": "0.0.22"
+    },
+    {
+      "type": "library",
+      "name": "langchain",
+      "purl": "pkg:pypi/langchain@1.5.2",
+      "version": "1.5.2"
+    },
+    {
+      "type": "library",
+      "name": "langfuse",
+      "purl": "pkg:pypi/langfuse@5.2.0",
+      "version": "5.2.0"
+    },
+    {
+      "type": "library",
+      "name": "langgraph-checkpoint",
+      "purl": "pkg:pypi/langgraph-checkpoint@4.3.2",
+      "version": "4.3.2"
+    },
+    {
+      "type": "library",
+      "name": "langgraph-prebuilt",
+      "purl": "pkg:pypi/langgraph-prebuilt@1.1.3",
+      "version": "1.1.3"
+    },
+    {
+      "type": "library",
+      "name": "langgraph-sdk",
+      "purl": "pkg:pypi/langgraph-sdk@0.4.14",
+      "version": "0.4.14"
+    },
+    {
+      "type": "library",
+      "name": "langgraph",
+      "purl": "pkg:pypi/langgraph@1.2.24",
+      "version": "1.2.24"
+    },
+    {
+      "type": "library",
+      "name": "langsmith",
+      "purl": "pkg:pypi/langsmith@0.16.2",
+      "version": "0.16.2"
+    },
+    {
+      "type": "library",
+      "name": "matplotlib",
+      "purl": "pkg:pypi/matplotlib@3.11.2",
+      "version": "3.11.2"
+    },
+    {
+      "type": "library",
+      "name": "msgpack",
+      "purl": "pkg:pypi/msgpack@1.2.4",
+      "version": "1.2.4"
+    },
+    {
+      "type": "library",
+      "name": "multidict",
+      "purl": "pkg:pypi/multidict@7.2.1",
+      "version": "7.2.1"
+    },
+    {
+      "type": "library",
+      "name": "numpy",
+      "purl": "pkg:pypi/numpy@2.5.5",
+      "version": "2.5.5"
+    },
+    {
+      "type": "library",
+      "name": "oci-openai",
+      "purl": "pkg:pypi/oci-openai@1.1.0",
+      "version": "1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "oci",
+      "purl": "pkg:pypi/oci@2.193.0",
+      "version": "2.193.0"
+    },
+    {
+      "type": "library",
+      "name": "openai",
+      "purl": "pkg:pypi/openai@3.60.0",
+      "version": "3.60.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-api",
+      "purl": "pkg:pypi/opentelemetry-api@1.45.2",
+      "version": "1.45.2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-http-transport",
+      "purl": "pkg:pypi/opentelemetry-exporter-http-transport@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-common",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-common@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-common",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-common@1.45.2",
+      "version": "1.45.2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-http",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.45.2",
+      "version": "1.45.2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-asgi",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-asgi@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-fastapi",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-httpx",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-httpx@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation",
+      "purl": "pkg:pypi/opentelemetry-instrumentation@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-proto",
+      "purl": "pkg:pypi/opentelemetry-proto@1.45.2",
+      "version": "1.45.2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:pypi/opentelemetry-sdk@1.45.2",
+      "version": "1.45.2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-semantic-conventions",
+      "purl": "pkg:pypi/opentelemetry-semantic-conventions@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-util-http",
+      "purl": "pkg:pypi/opentelemetry-util-http@0.66b2",
+      "version": "0.66b2"
+    },
+    {
+      "type": "library",
+      "name": "oracledb",
+      "purl": "pkg:pypi/oracledb@26.2.0",
+      "version": "26.2.0"
+    },
+    {
+      "type": "library",
+      "name": "orjson",
+      "purl": "pkg:pypi/orjson@3.13.0",
+      "version": "3.13.0"
+    },
+    {
+      "type": "library",
+      "name": "ormsgpack",
+      "purl": "pkg:pypi/ormsgpack@1.13.1",
+      "version": "1.13.1"
+    },
+    {
+      "type": "library",
+      "name": "packaging",
+      "purl": "pkg:pypi/packaging@26.3",
+      "version": "26.3"
+    },
+    {
+      "type": "library",
+      "name": "packaging",
+      "purl": "pkg:pypi/packaging@26.4",
+      "version": "26.4"
+    },
+    {
+      "type": "library",
+      "name": "pandas",
+      "purl": "pkg:pypi/pandas@3.1.1",
+      "version": "3.1.1"
+    },
+    {
+      "type": "library",
+      "name": "pillow",
+      "purl": "pkg:pypi/pillow@13.0.0",
+      "version": "13.0.0"
+    },
+    {
+      "type": "library",
+      "name": "pip",
+      "purl": "pkg:pypi/pip@26.3",
+      "version": "26.3"
+    },
+    {
+      "type": "library",
+      "name": "platformdirs",
+      "purl": "pkg:pypi/platformdirs@4.12.4",
+      "version": "4.12.4"
+    },
+    {
+      "type": "library",
+      "name": "propcache",
+      "purl": "pkg:pypi/propcache@0.5.4",
+      "version": "0.5.4"
+    },
+    {
+      "type": "library",
+      "name": "protobuf",
+      "purl": "pkg:pypi/protobuf@7.36.2",
+      "version": "7.36.2"
+    },
+    {
+      "type": "library",
+      "name": "pycparser",
+      "purl": "pkg:pypi/pycparser@3.12",
+      "version": "3.12"
+    },
+    {
+      "type": "library",
+      "name": "pydantic-core",
+      "purl": "pkg:pypi/pydantic-core@2.50.5",
+      "version": "2.50.5"
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "purl": "pkg:pypi/pydantic@2.14.4",
+      "version": "2.14.4"
+    },
+    {
+      "type": "library",
+      "name": "pygments",
+      "purl": "pkg:pypi/pygments@2.21.0",
+      "version": "2.21.0"
+    },
+    {
+      "type": "library",
+      "name": "pyjwt",
+      "purl": "pkg:pypi/pyjwt@2.15.1",
+      "version": "2.15.1"
+    },
+    {
+      "type": "library",
+      "name": "pyopenssl",
+      "purl": "pkg:pypi/pyopenssl@26.4.0",
+      "version": "26.4.0"
+    },
+    {
+      "type": "library",
+      "name": "pyparsing",
+      "purl": "pkg:pypi/pyparsing@3.3.3",
+      "version": "3.3.3"
+    },
+    {
+      "type": "library",
+      "name": "pyproject-hooks",
+      "purl": "pkg:pypi/pyproject-hooks@1.3.3",
+      "version": "1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "python-dateutil",
+      "purl": "pkg:pypi/python-dateutil@2.9.0.post0",
+      "version": "2.9.0.post0"
+    },
+    {
+      "type": "library",
+      "name": "python-dotenv",
+      "purl": "pkg:pypi/python-dotenv@1.2.4",
+      "version": "1.2.4"
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "purl": "pkg:pypi/python-multipart@0.0.29",
+      "version": "0.0.29"
+    },
+    {
+      "type": "library",
+      "name": "python-pkcs11",
+      "purl": "pkg:pypi/python-pkcs11@0.9.4",
+      "version": "0.9.4"
+    },
+    {
+      "type": "library",
+      "name": "pytz",
+      "purl": "pkg:pypi/pytz@2026.6",
+      "version": "2026.6"
+    },
+    {
+      "type": "library",
+      "name": "pyyaml",
+      "purl": "pkg:pypi/pyyaml@6.0.4",
+      "version": "6.0.4"
+    },
+    {
+      "type": "library",
+      "name": "regex",
+      "purl": "pkg:pypi/regex@2026.11.25",
+      "version": "2026.11.25"
+    },
+    {
+      "type": "library",
+      "name": "requests-toolbelt",
+      "purl": "pkg:pypi/requests-toolbelt@1.0.0",
+      "version": "1.0.0"
+    },
+    {
+      "type": "library",
+      "name": "requests",
+      "purl": "pkg:pypi/requests@2.34.2",
+      "version": "2.34.2"
+    },
+    {
+      "type": "library",
+      "name": "resolvelib",
+      "purl": "pkg:pypi/resolvelib@1.2.1",
+      "version": "1.2.1"
+    },
+    {
+      "type": "library",
+      "name": "rich",
+      "purl": "pkg:pypi/rich@15.0.0",
+      "version": "15.0.0"
+    },
+    {
+      "type": "library",
+      "name": "setuptools",
+      "purl": "pkg:pypi/setuptools@70.3.0",
+      "version": "70.3.0"
+    },
+    {
+      "type": "library",
+      "name": "six",
+      "purl": "pkg:pypi/six@1.17.0",
+      "version": "1.17.0"
+    },
+    {
+      "type": "library",
+      "name": "sniffio",
+      "purl": "pkg:pypi/sniffio@1.3.1",
+      "version": "1.3.1"
+    },
+    {
+      "type": "library",
+      "name": "starlette",
+      "purl": "pkg:pypi/starlette@1.10.0",
+      "version": "1.10.0"
+    },
+    {
+      "type": "library",
+      "name": "tenacity",
+      "purl": "pkg:pypi/tenacity@9.2.1",
+      "version": "9.2.1"
+    },
+    {
+      "type": "library",
+      "name": "tiktoken",
+      "purl": "pkg:pypi/tiktoken@0.14.0",
+      "version": "0.14.0"
+    },
+    {
+      "type": "library",
+      "name": "tomli-w",
+      "purl": "pkg:pypi/tomli-w@1.2.0",
+      "version": "1.2.0"
+    },
+    {
+      "type": "library",
+      "name": "tomli",
+      "purl": "pkg:pypi/tomli@2.3.2",
+      "version": "2.3.2"
+    },
+    {
+      "type": "library",
+      "name": "truststore",
+      "purl": "pkg:pypi/truststore@0.10.5",
+      "version": "0.10.5"
+    },
+    {
+      "type": "library",
+      "name": "typing-extensions",
+      "purl": "pkg:pypi/typing-extensions@4.16.0",
+      "version": "4.16.0"
+    },
+    {
+      "type": "library",
+      "name": "typing-inspection",
+      "purl": "pkg:pypi/typing-inspection@0.4.5",
+      "version": "0.4.5"
+    },
+    {
+      "type": "library",
+      "name": "urllib3",
+      "purl": "pkg:pypi/urllib3@2.8.0",
+      "version": "2.8.0"
+    },
+    {
+      "type": "library",
+      "name": "uuid-utils",
+      "purl": "pkg:pypi/uuid-utils@0.19.0",
+      "version": "0.19.0"
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "purl": "pkg:pypi/uvicorn@0.48.0",
+      "version": "0.48.0"
+    },
+    {
+      "type": "library",
+      "name": "uvloop",
+      "purl": "pkg:pypi/uvloop@0.23.0",
+      "version": "0.23.0"
+    },
+    {
+      "type": "library",
+      "name": "watchfiles",
+      "purl": "pkg:pypi/watchfiles@1.3.0",
+      "version": "1.3.0"
+    },
+    {
+      "type": "library",
+      "name": "websockets",
+      "purl": "pkg:pypi/websockets@17.4",
+      "version": "17.4"
+    },
+    {
+      "type": "library",
+      "name": "wrapt",
+      "purl": "pkg:pypi/wrapt@2.5.2",
+      "version": "2.5.2"
+    },
+    {
+      "type": "library",
+      "name": "xxhash",
+      "purl": "pkg:pypi/xxhash@4.1.0",
+      "version": "4.1.0"
+    },
+    {
+      "type": "library",
+      "name": "yarl",
+      "purl": "pkg:pypi/yarl@1.25.1",
+      "version": "1.25.1"
+    },
+    {
+      "type": "library",
+      "name": "zstandard",
+      "purl": "pkg:pypi/zstandard@0.25.0",
+      "version": "0.25.0"
+    }
+  ]
+}

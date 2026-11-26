@@ -1,0 +1,305 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "workflow-gateway",
+      "version": "c6db0a56cd91c76cccc609173d945249d321c56d",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "63185a154c752f060a9183749c83d76cde33b343b50e425851c5a018a6a0fa7e"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "octo:image-digest",
+        "value": "sha256:63185a154c752f060a9183749c83d76cde33b343b50e425851c5a018a6a0fa7e"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "base-files",
+      "purl": "pkg:deb/debian/base-files@12.4%2Bdeb12u15",
+      "group": "debian",
+      "version": "12.4+deb12u15"
+    },
+    {
+      "type": "library",
+      "name": "ca-certificates",
+      "purl": "pkg:deb/debian/ca-certificates@20250419~deb12u1",
+      "group": "debian",
+      "version": "20250419~deb12u1"
+    },
+    {
+      "type": "library",
+      "name": "libc6",
+      "purl": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u14",
+      "group": "debian",
+      "version": "2.36-9+deb12u14"
+    },
+    {
+      "type": "library",
+      "name": "libssl3",
+      "purl": "pkg:deb/debian/libssl3@3.0.20-1~deb12u2",
+      "group": "debian",
+      "version": "3.0.20-1~deb12u2"
+    },
+    {
+      "type": "library",
+      "name": "media-types",
+      "purl": "pkg:deb/debian/media-types@10.0.0",
+      "group": "debian",
+      "version": "10.0.0"
+    },
+    {
+      "type": "library",
+      "name": "netbase",
+      "purl": "pkg:deb/debian/netbase@6.4",
+      "group": "debian",
+      "version": "6.4"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "purl": "pkg:deb/debian/tzdata@2026b-0%2Bdeb12u1",
+      "group": "debian",
+      "version": "2026b-0+deb12u1"
+    },
+    {
+      "type": "library",
+      "name": "perks",
+      "purl": "pkg:golang/github.com/beorn7/perks@v1.0.1",
+      "group": "github.com/beorn7",
+      "version": "v1.0.1"
+    },
+    {
+      "type": "library",
+      "name": "v5",
+      "purl": "pkg:golang/github.com/cenkalti/backoff/v5@v5.0.3",
+      "group": "github.com/cenkalti/backoff",
+      "version": "v5.0.3"
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+      "group": "github.com/cespare/xxhash",
+      "version": "v2.3.0"
+    },
+    {
+      "type": "library",
+      "name": "httpsnoop",
+      "purl": "pkg:golang/github.com/felixge/httpsnoop@v1.0.4",
+      "group": "github.com/felixge",
+      "version": "v1.0.4"
+    },
+    {
+      "type": "library",
+      "name": "logr",
+      "purl": "pkg:golang/github.com/go-logr/logr@v1.4.3",
+      "group": "github.com/go-logr",
+      "version": "v1.4.3"
+    },
+    {
+      "type": "library",
+      "name": "stdr",
+      "purl": "pkg:golang/github.com/go-logr/stdr@v1.2.2",
+      "group": "github.com/go-logr",
+      "version": "v1.2.2"
+    },
+    {
+      "type": "library",
+      "name": "uuid",
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "group": "github.com/google",
+      "version": "v1.6.0"
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/github.com/grpc-ecosystem/grpc-gateway/v2@v2.29.0",
+      "group": "github.com/grpc-ecosystem/grpc-gateway",
+      "version": "v2.29.0"
+    },
+    {
+      "type": "library",
+      "name": "goautoneg",
+      "purl": "pkg:golang/github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+      "group": "github.com/munnerz",
+      "version": "v0.0.0-20191010083416-a7dc8b61c822"
+    },
+    {
+      "type": "library",
+      "name": "client_golang",
+      "purl": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
+      "group": "github.com/prometheus",
+      "version": "v1.23.2"
+    },
+    {
+      "type": "library",
+      "name": "client_model",
+      "purl": "pkg:golang/github.com/prometheus/client_model@v0.6.2",
+      "group": "github.com/prometheus",
+      "version": "v0.6.2"
+    },
+    {
+      "type": "library",
+      "name": "common",
+      "purl": "pkg:golang/github.com/prometheus/common@v0.66.1",
+      "group": "github.com/prometheus",
+      "version": "v0.66.1"
+    },
+    {
+      "type": "library",
+      "name": "procfs",
+      "purl": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
+      "group": "github.com/prometheus",
+      "version": "v0.16.1"
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/github.com/sijms/go-ora/v2@v2.9.0",
+      "group": "github.com/sijms/go-ora",
+      "version": "v2.9.0"
+    },
+    {
+      "type": "library",
+      "name": "sdk",
+      "purl": "pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1",
+      "group": "go.opentelemetry.io/auto",
+      "version": "v1.2.1"
+    },
+    {
+      "type": "library",
+      "name": "otelhttp",
+      "purl": "pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.69.0",
+      "group": "go.opentelemetry.io/contrib/instrumentation/net/http",
+      "version": "v0.69.0"
+    },
+    {
+      "type": "library",
+      "name": "otlptracehttp",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.44.0",
+      "group": "go.opentelemetry.io/otel/exporters/otlp/otlptrace",
+      "version": "v1.44.0"
+    },
+    {
+      "type": "library",
+      "name": "otlptrace",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.44.0",
+      "group": "go.opentelemetry.io/otel/exporters/otlp",
+      "version": "v1.44.0"
+    },
+    {
+      "type": "library",
+      "name": "metric",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/metric@v1.44.0",
+      "group": "go.opentelemetry.io/otel",
+      "version": "v1.44.0"
+    },
+    {
+      "type": "library",
+      "name": "sdk",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/sdk@v1.44.0",
+      "group": "go.opentelemetry.io/otel",
+      "version": "v1.44.0"
+    },
+    {
+      "type": "library",
+      "name": "trace",
+      "purl": "pkg:golang/go.opentelemetry.io/otel/trace@v1.44.0",
+      "group": "go.opentelemetry.io/otel",
+      "version": "v1.44.0"
+    },
+    {
+      "type": "library",
+      "name": "otel",
+      "purl": "pkg:golang/go.opentelemetry.io/otel@v1.44.0",
+      "group": "go.opentelemetry.io",
+      "version": "v1.44.0"
+    },
+    {
+      "type": "library",
+      "name": "otlp",
+      "purl": "pkg:golang/go.opentelemetry.io/proto/otlp@v1.10.0",
+      "group": "go.opentelemetry.io/proto",
+      "version": "v1.10.0"
+    },
+    {
+      "type": "library",
+      "name": "v2",
+      "purl": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
+      "group": "go.yaml.in/yaml",
+      "version": "v2.4.2"
+    },
+    {
+      "type": "library",
+      "name": "net",
+      "purl": "pkg:golang/golang.org/x/net@v0.55.0",
+      "group": "golang.org/x",
+      "version": "v0.55.0"
+    },
+    {
+      "type": "library",
+      "name": "sys",
+      "purl": "pkg:golang/golang.org/x/sys@v0.45.0",
+      "group": "golang.org/x",
+      "version": "v0.45.0"
+    },
+    {
+      "type": "library",
+      "name": "text",
+      "purl": "pkg:golang/golang.org/x/text@v0.37.0",
+      "group": "golang.org/x",
+      "version": "v0.37.0"
+    },
+    {
+      "type": "library",
+      "name": "api",
+      "purl": "pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "group": "google.golang.org/genproto/googleapis",
+      "version": "v0.0.0-20260526163538-3dc84a4a5aaa"
+    },
+    {
+      "type": "library",
+      "name": "rpc",
+      "purl": "pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "group": "google.golang.org/genproto/googleapis",
+      "version": "v0.0.0-20260526163538-3dc84a4a5aaa"
+    },
+    {
+      "type": "library",
+      "name": "grpc",
+      "purl": "pkg:golang/google.golang.org/grpc@v1.81.1",
+      "group": "google.golang.org",
+      "version": "v1.81.1"
+    },
+    {
+      "type": "library",
+      "name": "protobuf",
+      "purl": "pkg:golang/google.golang.org/protobuf@v1.36.11",
+      "group": "google.golang.org",
+      "version": "v1.36.11"
+    },
+    {
+      "type": "library",
+      "name": "workflow-gateway",
+      "purl": "pkg:golang/octo-drone-shop/services/workflow-gateway",
+      "group": "octo-drone-shop/services"
+    },
+    {
+      "type": "library",
+      "name": "stdlib",
+      "purl": "pkg:golang/stdlib@v1.25.14",
+      "version": "v1.25.14"
+    }
+  ]
+}

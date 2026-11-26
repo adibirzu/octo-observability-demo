@@ -293,3 +293,21 @@ def test_manifest_images_have_unique_public_release_artifact_names():
                    (".cdx.json", "-vulnerabilities.json", "-digest.txt", "-SHA256SUMS")}
         assert not names & outputs
         names.update(outputs)
+
+
+def test_export_current_scanner_inventory_with_local_gateway_module(tmp_path):
+    raw = bom({"type": "library", "purl": "pkg:golang/octo-drone-shop/services/workflow-gateway"})
+    raw["specVersion"] = "1.7"
+    result, output = run_export(tmp_path, raw)
+    assert result.returncode == 0, result.stderr
+    public = json.loads(output.read_text())
+    assert public["specVersion"] == "1.6"
+    assert public["components"][0]["purl"] == "pkg:golang/octo-drone-shop/services/workflow-gateway"
+
+
+def test_export_rejects_other_local_go_modules(tmp_path):
+    raw = bom({"type": "library", "purl": "pkg:golang/octo-drone-shop/private-module"})
+    raw["specVersion"] = "1.7"
+    result, output = run_export(tmp_path, raw)
+    assert result.returncode != 0
+    assert not output.exists()

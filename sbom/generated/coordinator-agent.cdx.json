@@ -1,0 +1,3458 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "coordinator-agent",
+      "version": "ac67bbe2cacf85097050dfea2993e52ffb501d89",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "533eca3a66003a8acf965ce53beffa757225ea1da067c6a760a322bdf081c7a6"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "octo:image-digest",
+        "value": "sha256:533eca3a66003a8acf965ce53beffa757225ea1da067c6a760a322bdf081c7a6"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "adduser",
+      "purl": "pkg:deb/debian/adduser@3.152",
+      "group": "debian",
+      "version": "3.152"
+    },
+    {
+      "type": "library",
+      "name": "apt",
+      "purl": "pkg:deb/debian/apt@3.0.4",
+      "group": "debian",
+      "version": "3.0.4"
+    },
+    {
+      "type": "library",
+      "name": "base-files",
+      "purl": "pkg:deb/debian/base-files@13.8%2Bdeb13u8",
+      "group": "debian",
+      "version": "13.8+deb13u8"
+    },
+    {
+      "type": "library",
+      "name": "base-passwd",
+      "purl": "pkg:deb/debian/base-passwd@3.6.7",
+      "group": "debian",
+      "version": "3.6.7"
+    },
+    {
+      "type": "library",
+      "name": "bash",
+      "purl": "pkg:deb/debian/bash@5.2.37-2%2Bb10",
+      "group": "debian",
+      "version": "5.2.37-2+b10"
+    },
+    {
+      "type": "library",
+      "name": "bsdutils",
+      "purl": "pkg:deb/debian/bsdutils@1%3A2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "ca-certificates-java",
+      "purl": "pkg:deb/debian/ca-certificates-java@20240118",
+      "group": "debian",
+      "version": "20240118"
+    },
+    {
+      "type": "library",
+      "name": "ca-certificates",
+      "purl": "pkg:deb/debian/ca-certificates@20250419%2Bdeb13u1",
+      "group": "debian",
+      "version": "20250419+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "coreutils",
+      "purl": "pkg:deb/debian/coreutils@9.7-3",
+      "group": "debian",
+      "version": "9.7-3"
+    },
+    {
+      "type": "library",
+      "name": "dash",
+      "purl": "pkg:deb/debian/dash@0.5.12-12",
+      "group": "debian",
+      "version": "0.5.12-12"
+    },
+    {
+      "type": "library",
+      "name": "debconf",
+      "purl": "pkg:deb/debian/debconf@1.5.91",
+      "group": "debian",
+      "version": "1.5.91"
+    },
+    {
+      "type": "library",
+      "name": "debian-archive-keyring",
+      "purl": "pkg:deb/debian/debian-archive-keyring@2025.1",
+      "group": "debian",
+      "version": "2025.1"
+    },
+    {
+      "type": "library",
+      "name": "debianutils",
+      "purl": "pkg:deb/debian/debianutils@5.23.2",
+      "group": "debian",
+      "version": "5.23.2"
+    },
+    {
+      "type": "library",
+      "name": "diffutils",
+      "purl": "pkg:deb/debian/diffutils@1%3A3.10-4",
+      "group": "debian",
+      "version": "1:3.10-4"
+    },
+    {
+      "type": "library",
+      "name": "dpkg",
+      "purl": "pkg:deb/debian/dpkg@1.22.22",
+      "group": "debian",
+      "version": "1.22.22"
+    },
+    {
+      "type": "library",
+      "name": "findutils",
+      "purl": "pkg:deb/debian/findutils@4.10.0-3",
+      "group": "debian",
+      "version": "4.10.0-3"
+    },
+    {
+      "type": "library",
+      "name": "gcc-14-base",
+      "purl": "pkg:deb/debian/gcc-14-base@14.2.0-19",
+      "group": "debian",
+      "version": "14.2.0-19"
+    },
+    {
+      "type": "library",
+      "name": "grep",
+      "purl": "pkg:deb/debian/grep@3.11-4",
+      "group": "debian",
+      "version": "3.11-4"
+    },
+    {
+      "type": "library",
+      "name": "gzip",
+      "purl": "pkg:deb/debian/gzip@1.13-1%2Bdeb13u1",
+      "group": "debian",
+      "version": "1.13-1+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "hostname",
+      "purl": "pkg:deb/debian/hostname@3.25",
+      "group": "debian",
+      "version": "3.25"
+    },
+    {
+      "type": "library",
+      "name": "init-system-helpers",
+      "purl": "pkg:deb/debian/init-system-helpers@1.69~deb13u1",
+      "group": "debian",
+      "version": "1.69~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "java-common",
+      "purl": "pkg:deb/debian/java-common@0.76",
+      "group": "debian",
+      "version": "0.76"
+    },
+    {
+      "type": "library",
+      "name": "libacl1",
+      "purl": "pkg:deb/debian/libacl1@2.3.2-2%2Bb1",
+      "group": "debian",
+      "version": "2.3.2-2+b1"
+    },
+    {
+      "type": "library",
+      "name": "libapt-pkg7.0",
+      "purl": "pkg:deb/debian/libapt-pkg7.0@3.0.4",
+      "group": "debian",
+      "version": "3.0.4"
+    },
+    {
+      "type": "library",
+      "name": "libattr1",
+      "purl": "pkg:deb/debian/libattr1@1%3A2.5.2-3",
+      "group": "debian",
+      "version": "1:2.5.2-3"
+    },
+    {
+      "type": "library",
+      "name": "libaudit-common",
+      "purl": "pkg:deb/debian/libaudit-common@1%3A4.0.2-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:4.0.2-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libaudit1",
+      "purl": "pkg:deb/debian/libaudit1@1%3A4.0.2-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:4.0.2-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libblkid1",
+      "purl": "pkg:deb/debian/libblkid1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libbsd0",
+      "purl": "pkg:deb/debian/libbsd0@0.12.2-2",
+      "group": "debian",
+      "version": "0.12.2-2"
+    },
+    {
+      "type": "library",
+      "name": "libbz2-1.0",
+      "purl": "pkg:deb/debian/libbz2-1.0@1.0.8-6",
+      "group": "debian",
+      "version": "1.0.8-6"
+    },
+    {
+      "type": "library",
+      "name": "libc-bin",
+      "purl": "pkg:deb/debian/libc-bin@2.41-12%2Bdeb13u5",
+      "group": "debian",
+      "version": "2.41-12+deb13u5"
+    },
+    {
+      "type": "library",
+      "name": "libc6",
+      "purl": "pkg:deb/debian/libc6@2.41-12%2Bdeb13u5",
+      "group": "debian",
+      "version": "2.41-12+deb13u5"
+    },
+    {
+      "type": "library",
+      "name": "libcap-ng0",
+      "purl": "pkg:deb/debian/libcap-ng0@0.8.5-4%2Bb1",
+      "group": "debian",
+      "version": "0.8.5-4+b1"
+    },
+    {
+      "type": "library",
+      "name": "libcap2",
+      "purl": "pkg:deb/debian/libcap2@1%3A2.75-10%2Bdeb13u1%2Bb3",
+      "group": "debian",
+      "version": "1:2.75-10+deb13u1+b3"
+    },
+    {
+      "type": "library",
+      "name": "libcrypt1",
+      "purl": "pkg:deb/debian/libcrypt1@1%3A4.4.38-1",
+      "group": "debian",
+      "version": "1:4.4.38-1"
+    },
+    {
+      "type": "library",
+      "name": "libdb5.3t64",
+      "purl": "pkg:deb/debian/libdb5.3t64@5.3.28%2Bdfsg2-9",
+      "group": "debian",
+      "version": "5.3.28+dfsg2-9"
+    },
+    {
+      "type": "library",
+      "name": "libdebconfclient0",
+      "purl": "pkg:deb/debian/libdebconfclient0@0.280",
+      "group": "debian",
+      "version": "0.280"
+    },
+    {
+      "type": "library",
+      "name": "libffi8",
+      "purl": "pkg:deb/debian/libffi8@3.4.8-2",
+      "group": "debian",
+      "version": "3.4.8-2"
+    },
+    {
+      "type": "library",
+      "name": "libgcc-s1",
+      "purl": "pkg:deb/debian/libgcc-s1@14.2.0-19",
+      "group": "debian",
+      "version": "14.2.0-19"
+    },
+    {
+      "type": "library",
+      "name": "libgdbm6t64",
+      "purl": "pkg:deb/debian/libgdbm6t64@1.24-2",
+      "group": "debian",
+      "version": "1.24-2"
+    },
+    {
+      "type": "library",
+      "name": "libgmp10",
+      "purl": "pkg:deb/debian/libgmp10@2%3A6.3.0%2Bdfsg-3",
+      "group": "debian",
+      "version": "2:6.3.0+dfsg-3"
+    },
+    {
+      "type": "library",
+      "name": "libhogweed6t64",
+      "purl": "pkg:deb/debian/libhogweed6t64@3.10.1-1",
+      "group": "debian",
+      "version": "3.10.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libjpeg62-turbo",
+      "purl": "pkg:deb/debian/libjpeg62-turbo@1%3A2.1.5-4",
+      "group": "debian",
+      "version": "1:2.1.5-4"
+    },
+    {
+      "type": "library",
+      "name": "liblastlog2-2",
+      "purl": "pkg:deb/debian/liblastlog2-2@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "liblcms2-2",
+      "purl": "pkg:deb/debian/liblcms2-2@2.16-2%2Bdeb13u2",
+      "group": "debian",
+      "version": "2.16-2+deb13u2"
+    },
+    {
+      "type": "library",
+      "name": "liblz4-1",
+      "purl": "pkg:deb/debian/liblz4-1@1.10.0-4",
+      "group": "debian",
+      "version": "1.10.0-4"
+    },
+    {
+      "type": "library",
+      "name": "liblzma5",
+      "purl": "pkg:deb/debian/liblzma5@5.8.1-1%2Bdeb13u2",
+      "group": "debian",
+      "version": "5.8.1-1+deb13u2"
+    },
+    {
+      "type": "library",
+      "name": "libmd0",
+      "purl": "pkg:deb/debian/libmd0@1.1.0-2%2Bb1",
+      "group": "debian",
+      "version": "1.1.0-2+b1"
+    },
+    {
+      "type": "library",
+      "name": "libmount1",
+      "purl": "pkg:deb/debian/libmount1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libncursesw6",
+      "purl": "pkg:deb/debian/libncursesw6@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "libnettle8t64",
+      "purl": "pkg:deb/debian/libnettle8t64@3.10.1-1",
+      "group": "debian",
+      "version": "3.10.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libnspr4",
+      "purl": "pkg:deb/debian/libnspr4@2%3A4.36-1",
+      "group": "debian",
+      "version": "2:4.36-1"
+    },
+    {
+      "type": "library",
+      "name": "libnss3",
+      "purl": "pkg:deb/debian/libnss3@2%3A3.110-1%2Bdeb13u5",
+      "group": "debian",
+      "version": "2:3.110-1+deb13u5"
+    },
+    {
+      "type": "library",
+      "name": "libpam-modules-bin",
+      "purl": "pkg:deb/debian/libpam-modules-bin@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpam-modules",
+      "purl": "pkg:deb/debian/libpam-modules@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpam-runtime",
+      "purl": "pkg:deb/debian/libpam-runtime@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpam0g",
+      "purl": "pkg:deb/debian/libpam0g@1.7.0-5",
+      "group": "debian",
+      "version": "1.7.0-5"
+    },
+    {
+      "type": "library",
+      "name": "libpcre2-8-0",
+      "purl": "pkg:deb/debian/libpcre2-8-0@10.46-1~deb13u3",
+      "group": "debian",
+      "version": "10.46-1~deb13u3"
+    },
+    {
+      "type": "library",
+      "name": "libpcsclite1",
+      "purl": "pkg:deb/debian/libpcsclite1@2.3.3-1",
+      "group": "debian",
+      "version": "2.3.3-1"
+    },
+    {
+      "type": "library",
+      "name": "libreadline8t64",
+      "purl": "pkg:deb/debian/libreadline8t64@8.2-6",
+      "group": "debian",
+      "version": "8.2-6"
+    },
+    {
+      "type": "library",
+      "name": "libseccomp2",
+      "purl": "pkg:deb/debian/libseccomp2@2.6.0-2",
+      "group": "debian",
+      "version": "2.6.0-2"
+    },
+    {
+      "type": "library",
+      "name": "libselinux1",
+      "purl": "pkg:deb/debian/libselinux1@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsemanage-common",
+      "purl": "pkg:deb/debian/libsemanage-common@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsemanage2",
+      "purl": "pkg:deb/debian/libsemanage2@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsepol2",
+      "purl": "pkg:deb/debian/libsepol2@3.8.1-1",
+      "group": "debian",
+      "version": "3.8.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libsmartcols1",
+      "purl": "pkg:deb/debian/libsmartcols1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libsqlite3-0",
+      "purl": "pkg:deb/debian/libsqlite3-0@3.46.1-7%2Bdeb13u2",
+      "group": "debian",
+      "version": "3.46.1-7+deb13u2"
+    },
+    {
+      "type": "library",
+      "name": "libssl3t64",
+      "purl": "pkg:deb/debian/libssl3t64@3.5.9-1~deb13u1",
+      "group": "debian",
+      "version": "3.5.9-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libstdc++6",
+      "purl": "pkg:deb/debian/libstdc%2B%2B6@14.2.0-19",
+      "group": "debian",
+      "version": "14.2.0-19"
+    },
+    {
+      "type": "library",
+      "name": "libsystemd0",
+      "purl": "pkg:deb/debian/libsystemd0@257.13-1~deb13u1",
+      "group": "debian",
+      "version": "257.13-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libtinfo6",
+      "purl": "pkg:deb/debian/libtinfo6@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "libudev1",
+      "purl": "pkg:deb/debian/libudev1@257.13-1~deb13u1",
+      "group": "debian",
+      "version": "257.13-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libuuid1",
+      "purl": "pkg:deb/debian/libuuid1@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "libxxhash0",
+      "purl": "pkg:deb/debian/libxxhash0@0.8.3-2",
+      "group": "debian",
+      "version": "0.8.3-2"
+    },
+    {
+      "type": "library",
+      "name": "libzstd1",
+      "purl": "pkg:deb/debian/libzstd1@1.5.7%2Bdfsg-1%2Bdeb13u1",
+      "group": "debian",
+      "version": "1.5.7+dfsg-1+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "login.defs",
+      "purl": "pkg:deb/debian/login.defs@1%3A4.17.4-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:4.17.4-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "login",
+      "purl": "pkg:deb/debian/login@1%3A4.16.0-2%2Breally2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:4.16.0-2+really2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "mawk",
+      "purl": "pkg:deb/debian/mawk@1.3.4.20250131-1",
+      "group": "debian",
+      "version": "1.3.4.20250131-1"
+    },
+    {
+      "type": "library",
+      "name": "mount",
+      "purl": "pkg:deb/debian/mount@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "ncurses-base",
+      "purl": "pkg:deb/debian/ncurses-base@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "ncurses-bin",
+      "purl": "pkg:deb/debian/ncurses-bin@6.5%2B20250216-2",
+      "group": "debian",
+      "version": "6.5+20250216-2"
+    },
+    {
+      "type": "library",
+      "name": "netbase",
+      "purl": "pkg:deb/debian/netbase@6.5",
+      "group": "debian",
+      "version": "6.5"
+    },
+    {
+      "type": "library",
+      "name": "openjdk-21-jre-headless",
+      "purl": "pkg:deb/debian/openjdk-21-jre-headless@21.0.13.1%2B2-1~deb13u1",
+      "group": "debian",
+      "version": "21.0.13.1+2-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "openssl-provider-legacy",
+      "purl": "pkg:deb/debian/openssl-provider-legacy@3.5.9-1~deb13u1",
+      "group": "debian",
+      "version": "3.5.9-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "openssl",
+      "purl": "pkg:deb/debian/openssl@3.5.9-1~deb13u1",
+      "group": "debian",
+      "version": "3.5.9-1~deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "passwd",
+      "purl": "pkg:deb/debian/passwd@1%3A4.17.4-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:4.17.4-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "perl-base",
+      "purl": "pkg:deb/debian/perl-base@5.40.1-6%2Bdeb13u1",
+      "group": "debian",
+      "version": "5.40.1-6+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "readline-common",
+      "purl": "pkg:deb/debian/readline-common@8.2-6",
+      "group": "debian",
+      "version": "8.2-6"
+    },
+    {
+      "type": "library",
+      "name": "sed",
+      "purl": "pkg:deb/debian/sed@4.9-2%2Bdeb13u1",
+      "group": "debian",
+      "version": "4.9-2+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "sqv",
+      "purl": "pkg:deb/debian/sqv@1.3.0-3%2Bb2",
+      "group": "debian",
+      "version": "1.3.0-3+b2"
+    },
+    {
+      "type": "library",
+      "name": "sysvinit-utils",
+      "purl": "pkg:deb/debian/sysvinit-utils@3.14-4",
+      "group": "debian",
+      "version": "3.14-4"
+    },
+    {
+      "type": "library",
+      "name": "tar",
+      "purl": "pkg:deb/debian/tar@1.35%2Bdfsg-3.1",
+      "group": "debian",
+      "version": "1.35+dfsg-3.1"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "purl": "pkg:deb/debian/tzdata@2026f-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2026f-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "util-linux",
+      "purl": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1",
+      "group": "debian",
+      "version": "2.41.5-0+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "zlib1g",
+      "purl": "pkg:deb/debian/zlib1g@1%3A1.3.dfsg%2Breally1.3.1-1%2Bdeb13u1",
+      "group": "debian",
+      "version": "1:1.3.dfsg+really1.3.1-1+deb13u1"
+    },
+    {
+      "type": "library",
+      "name": "itu",
+      "purl": "pkg:maven/com.ethlo.time/itu@1.14.0",
+      "group": "com.ethlo.time",
+      "version": "1.14.0"
+    },
+    {
+      "type": "library",
+      "name": "jackson-annotations",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.22",
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.22"
+    },
+    {
+      "type": "library",
+      "name": "jackson-core",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.22.3",
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "jackson-databind",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.22.3",
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "jackson-dataformat-yaml",
+      "purl": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.22.3",
+      "group": "com.fasterxml.jackson.dataformat",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "jackson-datatype-jsr310",
+      "purl": "pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.22.3",
+      "group": "com.fasterxml.jackson.datatype",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "jackson-jr-objects",
+      "purl": "pkg:maven/com.fasterxml.jackson.jr/jackson-jr-objects@2.22.3",
+      "group": "com.fasterxml.jackson.jr",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "jackson-jr-stree",
+      "purl": "pkg:maven/com.fasterxml.jackson.jr/jackson-jr-stree@2.22.3",
+      "group": "com.fasterxml.jackson.jr",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "jackson-module-jakarta-xmlbind-annotations",
+      "purl": "pkg:maven/com.fasterxml.jackson.module/jackson-module-jakarta-xmlbind-annotations@2.22.3",
+      "group": "com.fasterxml.jackson.module",
+      "version": "2.22.3"
+    },
+    {
+      "type": "library",
+      "name": "curvesapi",
+      "purl": "pkg:maven/com.github.virtuald/curvesapi@1.08",
+      "group": "com.github.virtuald",
+      "version": "1.08"
+    },
+    {
+      "type": "library",
+      "name": "json-base",
+      "purl": "pkg:maven/com.github.wnameless.json/json-base@2.5.1",
+      "group": "com.github.wnameless.json",
+      "version": "2.5.1"
+    },
+    {
+      "type": "library",
+      "name": "json-flattener",
+      "purl": "pkg:maven/com.github.wnameless.json/json-flattener@0.17.3",
+      "group": "com.github.wnameless.json",
+      "version": "0.17.3"
+    },
+    {
+      "type": "library",
+      "name": "failureaccess",
+      "purl": "pkg:maven/com.google.guava/failureaccess@1.0.3",
+      "group": "com.google.guava",
+      "version": "1.0.3"
+    },
+    {
+      "type": "library",
+      "name": "guava",
+      "purl": "pkg:maven/com.google.guava/guava@33.4.8-jre",
+      "group": "com.google.guava",
+      "version": "33.4.8-jre"
+    },
+    {
+      "type": "library",
+      "name": "JavaEWAH",
+      "purl": "pkg:maven/com.googlecode.javaewah/JavaEWAH@1.2.3",
+      "group": "com.googlecode.javaewah",
+      "version": "1.2.3"
+    },
+    {
+      "type": "library",
+      "name": "json-schema-validator",
+      "purl": "pkg:maven/com.networknt/json-schema-validator@2.0.0",
+      "group": "com.networknt",
+      "version": "2.0.0"
+    },
+    {
+      "type": "library",
+      "name": "opencsv",
+      "purl": "pkg:maven/com.opencsv/opencsv@5.11.2",
+      "group": "com.opencsv",
+      "version": "5.11.2"
+    },
+    {
+      "type": "library",
+      "name": "ojdbc11",
+      "purl": "pkg:maven/com.oracle.database.jdbc/ojdbc11@23.26.2.0.0",
+      "group": "com.oracle.database.jdbc",
+      "version": "23.26.2.0.0"
+    },
+    {
+      "type": "library",
+      "name": "orai18n",
+      "purl": "pkg:maven/com.oracle.database.nls.orai18n/orai18n@__Build-23",
+      "group": "com.oracle.database.nls.orai18n",
+      "version": "__Build-23"
+    },
+    {
+      "type": "library",
+      "name": "ucp11",
+      "purl": "pkg:maven/com.oracle.database.ucp/ucp11@23.26.2.0.0",
+      "group": "com.oracle.database.ucp",
+      "version": "23.26.2.0.0"
+    },
+    {
+      "type": "library",
+      "name": "xmlparserv2_sans_jaxp_services",
+      "purl": "pkg:maven/com.oracle.database.xml.xmlparserv2_sans_jaxp_services/xmlparserv2_sans_jaxp_services@23.0.0.0.0",
+      "group": "com.oracle.database.xml.xmlparserv2_sans_jaxp_services",
+      "version": "23.0.0.0.0"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-bastion",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-bastion@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-circuitbreaker",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-circuitbreaker@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-common-httpclient-jersey3",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-common-httpclient-jersey3@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-common-httpclient",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-common-httpclient@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-common",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-common@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-core",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-core@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-database",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-database@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-databasetools",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-databasetools@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-generativeai",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-generativeai@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-generativeaiinference",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-generativeaiinference@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-identity",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-identity@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-objectstorage-extensions",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-objectstorage-extensions@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-objectstorage-generated",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-objectstorage-generated@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-objectstorage",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-objectstorage@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-recovery",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-recovery@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-resourcesearch",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-resourcesearch@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-secrets",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-secrets@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "oci-java-sdk-workrequests",
+      "purl": "pkg:maven/com.oracle.oci.sdk/oci-java-sdk-workrequests@3.86.2",
+      "group": "com.oracle.oci.sdk",
+      "version": "3.86.2"
+    },
+    {
+      "type": "library",
+      "name": "cpat",
+      "purl": "pkg:maven/com.oracle.premigration.PremigrationApp/cpat@26.1.1-2",
+      "group": "com.oracle.premigration.PremigrationApp",
+      "version": "26.1.1-2"
+    },
+    {
+      "type": "library",
+      "name": "oraclepki",
+      "purl": "pkg:maven/com.oracle.security.oraclepki/oraclepki",
+      "group": "com.oracle.security.oraclepki"
+    },
+    {
+      "type": "library",
+      "name": "SparseBitSet",
+      "purl": "pkg:maven/com.zaxxer/SparseBitSet@1.3",
+      "group": "com.zaxxer",
+      "version": "1.3"
+    },
+    {
+      "type": "library",
+      "name": "commons-cli",
+      "purl": "pkg:maven/commons-cli/commons-cli@1.10.0",
+      "group": "commons-cli",
+      "version": "1.10.0"
+    },
+    {
+      "type": "library",
+      "name": "commons-codec",
+      "purl": "pkg:maven/commons-codec/commons-codec@1.20.0",
+      "group": "commons-codec",
+      "version": "1.20.0"
+    },
+    {
+      "type": "library",
+      "name": "commons-io",
+      "purl": "pkg:maven/commons-io/commons-io@2.21.0",
+      "group": "commons-io",
+      "version": "2.21.0"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-ai-enrichment",
+      "purl": "pkg:maven/dbtools-ai-enrichment/dbtools-ai-enrichment",
+      "group": "dbtools-ai-enrichment"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-apex",
+      "purl": "pkg:maven/dbtools-apex/dbtools-apex",
+      "group": "dbtools-apex"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-aq",
+      "purl": "pkg:maven/dbtools-aq/dbtools-aq",
+      "group": "dbtools-aq"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-arbori",
+      "purl": "pkg:maven/dbtools-arbori/dbtools-arbori",
+      "group": "dbtools-arbori"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-blockchain",
+      "purl": "pkg:maven/dbtools-blockchain/dbtools-blockchain",
+      "group": "dbtools-blockchain"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-common",
+      "purl": "pkg:maven/dbtools-common/dbtools-common",
+      "group": "dbtools-common"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-copy",
+      "purl": "pkg:maven/dbtools-copy/dbtools-copy",
+      "group": "dbtools-copy"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-core",
+      "purl": "pkg:maven/dbtools-core/dbtools-core",
+      "group": "dbtools-core"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-cpat",
+      "purl": "pkg:maven/dbtools-cpat/dbtools-cpat",
+      "group": "dbtools-cpat"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-data",
+      "purl": "pkg:maven/dbtools-data/dbtools-data",
+      "group": "dbtools-data"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-datapump",
+      "purl": "pkg:maven/dbtools-datapump/dbtools-datapump",
+      "group": "dbtools-datapump"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-dependency-extension",
+      "purl": "pkg:maven/dbtools-dependency-extension/dbtools-dependency-extension",
+      "group": "dbtools-dependency-extension"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-dg",
+      "purl": "pkg:maven/dbtools-dg/dbtools-dg",
+      "group": "dbtools-dg"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-diff",
+      "purl": "pkg:maven/dbtools-diff/dbtools-diff",
+      "group": "dbtools-diff"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-fleet-agent",
+      "purl": "pkg:maven/dbtools-fleet-agent/dbtools-fleet-agent",
+      "group": "dbtools-fleet-agent"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-http",
+      "purl": "pkg:maven/dbtools-http/dbtools-http",
+      "group": "dbtools-http"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-jobs",
+      "purl": "pkg:maven/dbtools-jobs/dbtools-jobs",
+      "group": "dbtools-jobs"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-liquibase",
+      "purl": "pkg:maven/dbtools-liquibase/dbtools-liquibase",
+      "group": "dbtools-liquibase"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-mcp",
+      "purl": "pkg:maven/dbtools-mcp/dbtools-mcp",
+      "group": "dbtools-mcp"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-mdb",
+      "purl": "pkg:maven/dbtools-mdb/dbtools-mdb",
+      "group": "dbtools-mdb"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-mle-command-extension",
+      "purl": "pkg:maven/dbtools-mle-command-extension/dbtools-mle-command-extension",
+      "group": "dbtools-mle-command-extension"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-model",
+      "purl": "pkg:maven/dbtools-model/dbtools-model",
+      "group": "dbtools-model"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-modeler-cli-ext",
+      "purl": "pkg:maven/dbtools-modeler-cli-ext/dbtools-modeler-cli-ext",
+      "group": "dbtools-modeler-cli-ext"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-modeler-common",
+      "purl": "pkg:maven/dbtools-modeler-common/dbtools-modeler-common",
+      "group": "dbtools-modeler-common"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-net",
+      "purl": "pkg:maven/dbtools-net/dbtools-net",
+      "group": "dbtools-net"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-nl2sql",
+      "purl": "pkg:maven/dbtools-nl2sql/dbtools-nl2sql",
+      "group": "dbtools-nl2sql"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-oci",
+      "purl": "pkg:maven/dbtools-oci/dbtools-oci",
+      "group": "dbtools-oci"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-opm",
+      "purl": "pkg:maven/dbtools-opm/dbtools-opm",
+      "group": "dbtools-opm"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-project",
+      "purl": "pkg:maven/dbtools-project/dbtools-project",
+      "group": "dbtools-project"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-rag",
+      "purl": "pkg:maven/dbtools-rag/dbtools-rag",
+      "group": "dbtools-rag"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-rest",
+      "purl": "pkg:maven/dbtools-rest/dbtools-rest",
+      "group": "dbtools-rest"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-sdks-installer",
+      "purl": "pkg:maven/dbtools-sdks-installer/dbtools-sdks-installer",
+      "group": "dbtools-sdks-installer"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-skills-core",
+      "purl": "pkg:maven/dbtools-skills-core/dbtools-skills-core",
+      "group": "dbtools-skills-core"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-skills",
+      "purl": "pkg:maven/dbtools-skills/dbtools-skills",
+      "group": "dbtools-skills"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-sqlcl-awr-extension",
+      "purl": "pkg:maven/dbtools-sqlcl-awr-extension/dbtools-sqlcl-awr-extension",
+      "group": "dbtools-sqlcl-awr-extension"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-sqlcl",
+      "purl": "pkg:maven/dbtools-sqlcl/dbtools-sqlcl@26.3.1.301.1413",
+      "group": "dbtools-sqlcl",
+      "version": "26.3.1.301.1413"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-win32",
+      "purl": "pkg:maven/dbtools-win32/dbtools-win32",
+      "group": "dbtools-win32"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-community-oci-genai",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-community-oci-genai@1.15.0-beta25",
+      "group": "dev.langchain4j",
+      "version": "1.15.0-beta25"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-core",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-core@1.15.0",
+      "group": "dev.langchain4j",
+      "version": "1.15.0"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-document-parser-apache-pdfbox",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-document-parser-apache-pdfbox@1.15.0-beta25",
+      "group": "dev.langchain4j",
+      "version": "1.15.0-beta25"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-document-parser-apache-poi",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-document-parser-apache-poi@1.15.0-beta25",
+      "group": "dev.langchain4j",
+      "version": "1.15.0-beta25"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-embeddings",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-embeddings@1.15.0-beta25",
+      "group": "dev.langchain4j",
+      "version": "1.15.0-beta25"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-http-client-jdk",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-http-client-jdk@1.15.0",
+      "group": "dev.langchain4j",
+      "version": "1.15.0"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-http-client",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-http-client@1.15.0",
+      "group": "dev.langchain4j",
+      "version": "1.15.0"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j-oracle",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j-oracle@1.20.0-beta30-oracle",
+      "group": "dev.langchain4j",
+      "version": "1.20.0-beta30-oracle"
+    },
+    {
+      "type": "library",
+      "name": "langchain4j",
+      "purl": "pkg:maven/dev.langchain4j/langchain4j@1.15.0",
+      "group": "dev.langchain4j",
+      "version": "1.15.0"
+    },
+    {
+      "type": "library",
+      "name": "emapi",
+      "purl": "pkg:maven/emapi/emapi",
+      "group": "emapi"
+    },
+    {
+      "type": "library",
+      "name": "resilience4j-circuitbreaker",
+      "purl": "pkg:maven/io.github.resilience4j.circuitbreaker/resilience4j-circuitbreaker@1.7.1",
+      "group": "io.github.resilience4j.circuitbreaker",
+      "version": "1.7.1"
+    },
+    {
+      "type": "library",
+      "name": "resilience4j-core",
+      "purl": "pkg:maven/io.github.resilience4j.core/resilience4j-core@1.7.1",
+      "group": "io.github.resilience4j.core",
+      "version": "1.7.1"
+    },
+    {
+      "type": "library",
+      "name": "jackcess",
+      "purl": "pkg:maven/io.github.spannm.jackcess/jackcess@5.1.5",
+      "group": "io.github.spannm.jackcess",
+      "version": "5.1.5"
+    },
+    {
+      "type": "library",
+      "name": "ucanaccess",
+      "purl": "pkg:maven/io.github.spannm/ucanaccess@5.1.5",
+      "group": "io.github.spannm",
+      "version": "5.1.5"
+    },
+    {
+      "type": "library",
+      "name": "reactor-core",
+      "purl": "pkg:maven/io.projectreactor.reactor-core/reactor-core@3.7.0",
+      "group": "io.projectreactor.reactor-core",
+      "version": "3.7.0"
+    },
+    {
+      "type": "library",
+      "name": "vavr-match",
+      "purl": "pkg:maven/io.vavr/vavr-match@0.10.2",
+      "group": "io.vavr",
+      "version": "0.10.2"
+    },
+    {
+      "type": "library",
+      "name": "vavr",
+      "purl": "pkg:maven/io.vavr/vavr@0.10.2",
+      "group": "io.vavr",
+      "version": "0.10.2"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.activation-api",
+      "purl": "pkg:maven/jakarta.activation/jakarta.activation-api@2.1.4",
+      "group": "jakarta.activation",
+      "version": "2.1.4"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.annotation-api",
+      "purl": "pkg:maven/jakarta.annotation/jakarta.annotation-api@2.1.1",
+      "group": "jakarta.annotation",
+      "version": "2.1.1"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.inject-api",
+      "purl": "pkg:maven/jakarta.inject/jakarta.inject-api@2.0.1",
+      "group": "jakarta.inject",
+      "version": "2.0.1"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.json-api",
+      "purl": "pkg:maven/jakarta.json/jakarta.json-api@2.1.3",
+      "group": "jakarta.json",
+      "version": "2.1.3"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.ws.rs-api",
+      "purl": "pkg:maven/jakarta.ws.rs/jakarta.ws.rs-api@3.0.0",
+      "group": "jakarta.ws.rs",
+      "version": "3.0.0"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.xml.bind-api",
+      "purl": "pkg:maven/jakarta.xml.bind/jakarta.xml.bind-api@4.0.2",
+      "group": "jakarta.xml.bind",
+      "version": "4.0.2"
+    },
+    {
+      "type": "library",
+      "name": "jdbcrest",
+      "purl": "pkg:maven/jdbcrest/jdbcrest",
+      "group": "jdbcrest"
+    },
+    {
+      "type": "library",
+      "name": "jrt-fs",
+      "purl": "pkg:maven/jrt-fs/jrt-fs@21.0.13.1",
+      "group": "jrt-fs",
+      "version": "21.0.13.1"
+    },
+    {
+      "type": "library",
+      "name": "low-level-api",
+      "purl": "pkg:maven/low-level-api/low-level-api",
+      "group": "low-level-api"
+    },
+    {
+      "type": "library",
+      "name": "apexlang-compiler",
+      "purl": "pkg:maven/oracle.apexlang/apexlang-compiler@26.2.0.239.1920",
+      "group": "oracle.apexlang",
+      "version": "26.2.0.239.1920"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-repackaged-mcp-core",
+      "purl": "pkg:maven/oracle.dbtools.repackaged/dbtools-repackaged-mcp-core@26.3.1.301.1413",
+      "group": "oracle.dbtools.repackaged",
+      "version": "26.3.1.301.1413"
+    },
+    {
+      "type": "library",
+      "name": "dbtools-repackaged-mcp-json-jackson2",
+      "purl": "pkg:maven/oracle.dbtools.repackaged/dbtools-repackaged-mcp-json-jackson2@26.3.1.301.1413",
+      "group": "oracle.dbtools.repackaged",
+      "version": "26.3.1.301.1413"
+    },
+    {
+      "type": "library",
+      "name": "orai18n-mapping",
+      "purl": "pkg:maven/orai18n-mapping/orai18n-mapping@__Build-21",
+      "group": "orai18n-mapping",
+      "version": "__Build-21"
+    },
+    {
+      "type": "library",
+      "name": "orai18n-utility",
+      "purl": "pkg:maven/orai18n-utility/orai18n-utility@__Build-21",
+      "group": "orai18n-utility",
+      "version": "__Build-21"
+    },
+    {
+      "type": "library",
+      "name": "orajsoda",
+      "purl": "pkg:maven/orajsoda/orajsoda",
+      "group": "orajsoda"
+    },
+    {
+      "type": "library",
+      "name": "ST4",
+      "purl": "pkg:maven/org.antlr/ST4@4.3.4",
+      "group": "org.antlr",
+      "version": "4.3.4"
+    },
+    {
+      "type": "library",
+      "name": "antlr-runtime",
+      "purl": "pkg:maven/org.antlr/antlr-runtime@3.5.3",
+      "group": "org.antlr",
+      "version": "3.5.3"
+    },
+    {
+      "type": "library",
+      "name": "antlr4-runtime",
+      "purl": "pkg:maven/org.antlr/antlr4-runtime@4.13.2",
+      "group": "org.antlr",
+      "version": "4.13.2"
+    },
+    {
+      "type": "library",
+      "name": "commons-collections4",
+      "purl": "pkg:maven/org.apache.commons/commons-collections4@4.5.0",
+      "group": "org.apache.commons",
+      "version": "4.5.0"
+    },
+    {
+      "type": "library",
+      "name": "commons-compress",
+      "purl": "pkg:maven/org.apache.commons/commons-compress@1.28.0",
+      "group": "org.apache.commons",
+      "version": "1.28.0"
+    },
+    {
+      "type": "library",
+      "name": "commons-lang3",
+      "purl": "pkg:maven/org.apache.commons/commons-lang3@3.18.0",
+      "group": "org.apache.commons",
+      "version": "3.18.0"
+    },
+    {
+      "type": "library",
+      "name": "commons-math3",
+      "purl": "pkg:maven/org.apache.commons/commons-math3@3.6.1",
+      "group": "org.apache.commons",
+      "version": "3.6.1"
+    },
+    {
+      "type": "library",
+      "name": "commons-text",
+      "purl": "pkg:maven/org.apache.commons/commons-text@1.13.1",
+      "group": "org.apache.commons",
+      "version": "1.13.1"
+    },
+    {
+      "type": "library",
+      "name": "httpclient5",
+      "purl": "pkg:maven/org.apache.httpcomponents.client5/httpclient5@5.6.4",
+      "group": "org.apache.httpcomponents.client5",
+      "version": "5.6.4"
+    },
+    {
+      "type": "library",
+      "name": "httpcore5-h2",
+      "purl": "pkg:maven/org.apache.httpcomponents.core5/httpcore5-h2@5.4.3",
+      "group": "org.apache.httpcomponents.core5",
+      "version": "5.4.3"
+    },
+    {
+      "type": "library",
+      "name": "httpcore5",
+      "purl": "pkg:maven/org.apache.httpcomponents.core5/httpcore5@5.4.3",
+      "group": "org.apache.httpcomponents.core5",
+      "version": "5.4.3"
+    },
+    {
+      "type": "library",
+      "name": "httpclient",
+      "purl": "pkg:maven/org.apache.httpcomponents/httpclient@4.5.13",
+      "group": "org.apache.httpcomponents",
+      "version": "4.5.13"
+    },
+    {
+      "type": "library",
+      "name": "httpcore",
+      "purl": "pkg:maven/org.apache.httpcomponents/httpcore@4.4.13",
+      "group": "org.apache.httpcomponents",
+      "version": "4.4.13"
+    },
+    {
+      "type": "library",
+      "name": "log4j-api",
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-api@2.25.5",
+      "group": "org.apache.logging.log4j",
+      "version": "2.25.5"
+    },
+    {
+      "type": "library",
+      "name": "opennlp-tools",
+      "purl": "pkg:maven/org.apache.opennlp/opennlp-tools@2.5.9",
+      "group": "org.apache.opennlp",
+      "version": "2.5.9"
+    },
+    {
+      "type": "library",
+      "name": "fontbox",
+      "purl": "pkg:maven/org.apache.pdfbox/fontbox@2.0.36",
+      "group": "org.apache.pdfbox",
+      "version": "2.0.36"
+    },
+    {
+      "type": "library",
+      "name": "pdfbox",
+      "purl": "pkg:maven/org.apache.pdfbox/pdfbox@2.0.36",
+      "group": "org.apache.pdfbox",
+      "version": "2.0.36"
+    },
+    {
+      "type": "library",
+      "name": "poi-ooxml-lite",
+      "purl": "pkg:maven/org.apache.poi/poi-ooxml-lite@5.5.1",
+      "group": "org.apache.poi",
+      "version": "5.5.1"
+    },
+    {
+      "type": "library",
+      "name": "poi-ooxml",
+      "purl": "pkg:maven/org.apache.poi/poi-ooxml@5.5.1",
+      "group": "org.apache.poi",
+      "version": "5.5.1"
+    },
+    {
+      "type": "library",
+      "name": "poi-scratchpad",
+      "purl": "pkg:maven/org.apache.poi/poi-scratchpad@5.5.1",
+      "group": "org.apache.poi",
+      "version": "5.5.1"
+    },
+    {
+      "type": "library",
+      "name": "poi",
+      "purl": "pkg:maven/org.apache.poi/poi@5.5.1",
+      "group": "org.apache.poi",
+      "version": "5.5.1"
+    },
+    {
+      "type": "library",
+      "name": "sshd-contrib",
+      "purl": "pkg:maven/org.apache.sshd/sshd-contrib@2.20.0",
+      "group": "org.apache.sshd",
+      "version": "2.20.0"
+    },
+    {
+      "type": "library",
+      "name": "sshd-osgi",
+      "purl": "pkg:maven/org.apache.sshd/sshd-osgi@2.20.0",
+      "group": "org.apache.sshd",
+      "version": "2.20.0"
+    },
+    {
+      "type": "library",
+      "name": "sshd-putty",
+      "purl": "pkg:maven/org.apache.sshd/sshd-putty@2.20.0",
+      "group": "org.apache.sshd",
+      "version": "2.20.0"
+    },
+    {
+      "type": "library",
+      "name": "sshd-scp",
+      "purl": "pkg:maven/org.apache.sshd/sshd-scp@2.20.0",
+      "group": "org.apache.sshd",
+      "version": "2.20.0"
+    },
+    {
+      "type": "library",
+      "name": "sshd-sftp",
+      "purl": "pkg:maven/org.apache.sshd/sshd-sftp@2.20.0",
+      "group": "org.apache.sshd",
+      "version": "2.20.0"
+    },
+    {
+      "type": "library",
+      "name": "ca-certificates-java",
+      "purl": "pkg:maven/org.debian.security.UpdateCertificates/ca-certificates-java",
+      "group": "org.debian.security.UpdateCertificates"
+    },
+    {
+      "type": "library",
+      "name": "org.eclipse.jgit",
+      "purl": "pkg:maven/org.eclipse.jgit/org.eclipse.jgit@7.3.0.202506031305-r",
+      "group": "org.eclipse.jgit",
+      "version": "7.3.0.202506031305-r"
+    },
+    {
+      "type": "library",
+      "name": "parsson",
+      "purl": "pkg:maven/org.eclipse.parsson/parsson@1.1.9",
+      "group": "org.eclipse.parsson",
+      "version": "1.1.9"
+    },
+    {
+      "type": "library",
+      "name": "aopalliance-repackaged",
+      "purl": "pkg:maven/org.glassfish.hk2.external/aopalliance-repackaged@3.0.3",
+      "group": "org.glassfish.hk2.external",
+      "version": "3.0.3"
+    },
+    {
+      "type": "library",
+      "name": "hk2-api",
+      "purl": "pkg:maven/org.glassfish.hk2/hk2-api@3.0.3",
+      "group": "org.glassfish.hk2",
+      "version": "3.0.3"
+    },
+    {
+      "type": "library",
+      "name": "hk2-locator",
+      "purl": "pkg:maven/org.glassfish.hk2/hk2-locator@3.0.3",
+      "group": "org.glassfish.hk2",
+      "version": "3.0.3"
+    },
+    {
+      "type": "library",
+      "name": "hk2-utils",
+      "purl": "pkg:maven/org.glassfish.hk2/hk2-utils@3.0.3",
+      "group": "org.glassfish.hk2",
+      "version": "3.0.3"
+    },
+    {
+      "type": "library",
+      "name": "osgi-resource-locator",
+      "purl": "pkg:maven/org.glassfish.hk2/osgi-resource-locator@1.0.3",
+      "group": "org.glassfish.hk2",
+      "version": "1.0.3"
+    },
+    {
+      "type": "library",
+      "name": "jersey-apache-connector",
+      "purl": "pkg:maven/org.glassfish.jersey.connectors/jersey-apache-connector@3.0.8",
+      "group": "org.glassfish.jersey.connectors",
+      "version": "3.0.8"
+    },
+    {
+      "type": "library",
+      "name": "jersey-client",
+      "purl": "pkg:maven/org.glassfish.jersey.core/jersey-client@3.0.8",
+      "group": "org.glassfish.jersey.core",
+      "version": "3.0.8"
+    },
+    {
+      "type": "library",
+      "name": "jersey-common",
+      "purl": "pkg:maven/org.glassfish.jersey.core/jersey-common@3.0.8",
+      "group": "org.glassfish.jersey.core",
+      "version": "3.0.8"
+    },
+    {
+      "type": "library",
+      "name": "jersey-entity-filtering",
+      "purl": "pkg:maven/org.glassfish.jersey.ext/jersey-entity-filtering@3.0.8",
+      "group": "org.glassfish.jersey.ext",
+      "version": "3.0.8"
+    },
+    {
+      "type": "library",
+      "name": "jersey-hk2",
+      "purl": "pkg:maven/org.glassfish.jersey.inject/jersey-hk2@3.0.8",
+      "group": "org.glassfish.jersey.inject",
+      "version": "3.0.8"
+    },
+    {
+      "type": "library",
+      "name": "jersey-media-json-jackson",
+      "purl": "pkg:maven/org.glassfish.jersey.media/jersey-media-json-jackson@3.0.8",
+      "group": "org.glassfish.jersey.media",
+      "version": "3.0.8"
+    },
+    {
+      "type": "library",
+      "name": "hsqldb",
+      "purl": "pkg:maven/org.hsqldb.util.DatabaseManagerSwing/hsqldb@private-2026%2F08%2F26-12%3A33%3A09",
+      "group": "org.hsqldb.util.DatabaseManagerSwing",
+      "version": "private-2026/08/26-12:33:09"
+    },
+    {
+      "type": "library",
+      "name": "javassist",
+      "purl": "pkg:maven/org.javassist/javassist@3.28.0-GA",
+      "group": "org.javassist",
+      "version": "3.28.0-GA"
+    },
+    {
+      "type": "library",
+      "name": "jansi-core",
+      "purl": "pkg:maven/org.jline/jansi-core@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-builtins",
+      "purl": "pkg:maven/org.jline/jline-builtins@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-console-ui",
+      "purl": "pkg:maven/org.jline/jline-console-ui@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-console",
+      "purl": "pkg:maven/org.jline/jline-console@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-native",
+      "purl": "pkg:maven/org.jline/jline-native@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-reader",
+      "purl": "pkg:maven/org.jline/jline-reader@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-shell",
+      "purl": "pkg:maven/org.jline/jline-shell@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-style",
+      "purl": "pkg:maven/org.jline/jline-style@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-terminal-jni",
+      "purl": "pkg:maven/org.jline/jline-terminal-jni@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jline-terminal",
+      "purl": "pkg:maven/org.jline/jline-terminal@4.3.1",
+      "group": "org.jline",
+      "version": "4.3.1"
+    },
+    {
+      "type": "library",
+      "name": "jsoup",
+      "purl": "pkg:maven/org.jsoup/jsoup@1.23.2",
+      "group": "org.jsoup",
+      "version": "1.23.2"
+    },
+    {
+      "type": "library",
+      "name": "liquibase-core",
+      "purl": "pkg:maven/org.liquibase/liquibase-core@4.33.0",
+      "group": "org.liquibase",
+      "version": "4.33.0"
+    },
+    {
+      "type": "library",
+      "name": "quartz",
+      "purl": "pkg:maven/org.quartz-scheduler/quartz@2.5.0",
+      "group": "org.quartz-scheduler",
+      "version": "2.5.0"
+    },
+    {
+      "type": "library",
+      "name": "reactive-streams",
+      "purl": "pkg:maven/org.reactivestreams/reactive-streams@1.0.4",
+      "group": "org.reactivestreams",
+      "version": "1.0.4"
+    },
+    {
+      "type": "library",
+      "name": "jcl-over-slf4j",
+      "purl": "pkg:maven/org.slf4j/jcl-over-slf4j@2.0.18",
+      "group": "org.slf4j",
+      "version": "2.0.18"
+    },
+    {
+      "type": "library",
+      "name": "slf4j-api",
+      "purl": "pkg:maven/org.slf4j/slf4j-api@2.0.18",
+      "group": "org.slf4j",
+      "version": "2.0.18"
+    },
+    {
+      "type": "library",
+      "name": "slf4j-jdk14",
+      "purl": "pkg:maven/org.slf4j/slf4j-jdk14@2.0.18",
+      "group": "org.slf4j",
+      "version": "2.0.18"
+    },
+    {
+      "type": "library",
+      "name": "snakeyaml",
+      "purl": "pkg:maven/org.yaml/snakeyaml@2.7",
+      "group": "org.yaml",
+      "version": "2.7"
+    },
+    {
+      "type": "library",
+      "name": "pushd-popd-dirs",
+      "purl": "pkg:maven/pushd-popd-dirs/pushd-popd-dirs",
+      "group": "pushd-popd-dirs"
+    },
+    {
+      "type": "library",
+      "name": "xmlbeans",
+      "purl": "pkg:maven/xmlbeans/xmlbeans",
+      "group": "xmlbeans"
+    },
+    {
+      "type": "library",
+      "name": "aiofile",
+      "purl": "pkg:pypi/aiofile@3.11.1",
+      "version": "3.11.1"
+    },
+    {
+      "type": "library",
+      "name": "aiofiles",
+      "purl": "pkg:pypi/aiofiles@25.1.0",
+      "version": "25.1.0"
+    },
+    {
+      "type": "library",
+      "name": "aiohappyeyeballs",
+      "purl": "pkg:pypi/aiohappyeyeballs@2.6.1",
+      "version": "2.6.1"
+    },
+    {
+      "type": "library",
+      "name": "aiohttp",
+      "purl": "pkg:pypi/aiohttp@3.14.5",
+      "version": "3.14.5"
+    },
+    {
+      "type": "library",
+      "name": "aiosignal",
+      "purl": "pkg:pypi/aiosignal@1.4.0",
+      "version": "1.4.0"
+    },
+    {
+      "type": "library",
+      "name": "altair",
+      "purl": "pkg:pypi/altair@6.0.0",
+      "version": "6.0.0"
+    },
+    {
+      "type": "library",
+      "name": "annotated-doc",
+      "purl": "pkg:pypi/annotated-doc@0.0.4",
+      "version": "0.0.4"
+    },
+    {
+      "type": "library",
+      "name": "annotated-types",
+      "purl": "pkg:pypi/annotated-types@0.7.0",
+      "version": "0.7.0"
+    },
+    {
+      "type": "library",
+      "name": "anthropic",
+      "purl": "pkg:pypi/anthropic@0.120.0",
+      "version": "0.120.0"
+    },
+    {
+      "type": "library",
+      "name": "anyio",
+      "purl": "pkg:pypi/anyio@4.15.1",
+      "version": "4.15.1"
+    },
+    {
+      "type": "library",
+      "name": "asgiref",
+      "purl": "pkg:pypi/asgiref@3.11.0",
+      "version": "3.11.0"
+    },
+    {
+      "type": "library",
+      "name": "asn1crypto",
+      "purl": "pkg:pypi/asn1crypto@1.5.1",
+      "version": "1.5.1"
+    },
+    {
+      "type": "library",
+      "name": "asyncer",
+      "purl": "pkg:pypi/asyncer@0.0.17",
+      "version": "0.0.17"
+    },
+    {
+      "type": "library",
+      "name": "attrs",
+      "purl": "pkg:pypi/attrs@25.4.0",
+      "version": "25.4.0"
+    },
+    {
+      "type": "library",
+      "name": "authlib",
+      "purl": "pkg:pypi/authlib@1.9.10",
+      "version": "1.9.10"
+    },
+    {
+      "type": "library",
+      "name": "backoff",
+      "purl": "pkg:pypi/backoff@2.2.1",
+      "version": "2.2.1"
+    },
+    {
+      "type": "library",
+      "name": "backports-tarfile",
+      "purl": "pkg:pypi/backports-tarfile@1.2.0",
+      "version": "1.2.0"
+    },
+    {
+      "type": "library",
+      "name": "beartype",
+      "purl": "pkg:pypi/beartype@0.22.9",
+      "version": "0.22.9"
+    },
+    {
+      "type": "library",
+      "name": "bidict",
+      "purl": "pkg:pypi/bidict@0.23.1",
+      "version": "0.23.1"
+    },
+    {
+      "type": "library",
+      "name": "cachetools",
+      "purl": "pkg:pypi/cachetools@6.2.4",
+      "version": "6.2.4"
+    },
+    {
+      "type": "library",
+      "name": "caio",
+      "purl": "pkg:pypi/caio@0.9.25",
+      "version": "0.9.25"
+    },
+    {
+      "type": "library",
+      "name": "certifi",
+      "purl": "pkg:pypi/certifi@2026.11.20",
+      "version": "2026.11.20"
+    },
+    {
+      "type": "library",
+      "name": "cffi",
+      "purl": "pkg:pypi/cffi@2.0.0",
+      "version": "2.0.0"
+    },
+    {
+      "type": "library",
+      "name": "chainlit",
+      "purl": "pkg:pypi/chainlit@2.12.0",
+      "version": "2.12.0"
+    },
+    {
+      "type": "library",
+      "name": "charset-normalizer",
+      "purl": "pkg:pypi/charset-normalizer@3.4.4",
+      "version": "3.4.4"
+    },
+    {
+      "type": "library",
+      "name": "chevron",
+      "purl": "pkg:pypi/chevron@0.14.0",
+      "version": "0.14.0"
+    },
+    {
+      "type": "library",
+      "name": "circuitbreaker",
+      "purl": "pkg:pypi/circuitbreaker@2.1.3",
+      "version": "2.1.3"
+    },
+    {
+      "type": "library",
+      "name": "click",
+      "purl": "pkg:pypi/click@8.3.3",
+      "version": "8.3.3"
+    },
+    {
+      "type": "library",
+      "name": "colorama",
+      "purl": "pkg:pypi/colorama@0.4.6",
+      "version": "0.4.6"
+    },
+    {
+      "type": "library",
+      "name": "crc32c",
+      "purl": "pkg:pypi/crc32c@2.8",
+      "version": "2.8"
+    },
+    {
+      "type": "library",
+      "name": "cryptography",
+      "purl": "pkg:pypi/cryptography@50.0.0",
+      "version": "50.0.0"
+    },
+    {
+      "type": "library",
+      "name": "cuid",
+      "purl": "pkg:pypi/cuid@0.4",
+      "version": "0.4"
+    },
+    {
+      "type": "library",
+      "name": "cyclopts",
+      "purl": "pkg:pypi/cyclopts@4.4.3",
+      "version": "4.4.3"
+    },
+    {
+      "type": "library",
+      "name": "dataclasses-json",
+      "purl": "pkg:pypi/dataclasses-json@0.6.7",
+      "version": "0.6.7"
+    },
+    {
+      "type": "library",
+      "name": "deprecated",
+      "purl": "pkg:pypi/deprecated@1.3.1",
+      "version": "1.3.1"
+    },
+    {
+      "type": "library",
+      "name": "distro",
+      "purl": "pkg:pypi/distro@1.9.0",
+      "version": "1.9.0"
+    },
+    {
+      "type": "library",
+      "name": "dnspython",
+      "purl": "pkg:pypi/dnspython@2.9.2",
+      "version": "2.9.2"
+    },
+    {
+      "type": "library",
+      "name": "docstring-parser",
+      "purl": "pkg:pypi/docstring-parser@0.17.0",
+      "version": "0.17.0"
+    },
+    {
+      "type": "library",
+      "name": "docutils",
+      "purl": "pkg:pypi/docutils@0.22.4",
+      "version": "0.22.4"
+    },
+    {
+      "type": "library",
+      "name": "email-validator",
+      "purl": "pkg:pypi/email-validator@2.3.0",
+      "version": "2.3.0"
+    },
+    {
+      "type": "library",
+      "name": "exceptiongroup",
+      "purl": "pkg:pypi/exceptiongroup@1.3.1",
+      "version": "1.3.1"
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "purl": "pkg:pypi/fastapi@0.140.0",
+      "version": "0.140.0"
+    },
+    {
+      "type": "library",
+      "name": "fastmcp-slim",
+      "purl": "pkg:pypi/fastmcp-slim@3.4.4",
+      "version": "3.4.4"
+    },
+    {
+      "type": "library",
+      "name": "fastmcp",
+      "purl": "pkg:pypi/fastmcp@3.4.4",
+      "version": "3.4.4"
+    },
+    {
+      "type": "library",
+      "name": "filetype",
+      "purl": "pkg:pypi/filetype@1.2.0",
+      "version": "1.2.0"
+    },
+    {
+      "type": "library",
+      "name": "frozenlist",
+      "purl": "pkg:pypi/frozenlist@1.8.0",
+      "version": "1.8.0"
+    },
+    {
+      "type": "library",
+      "name": "gitdb",
+      "purl": "pkg:pypi/gitdb@4.0.12",
+      "version": "4.0.12"
+    },
+    {
+      "type": "library",
+      "name": "gitpython",
+      "purl": "pkg:pypi/gitpython@3.2.1",
+      "version": "3.2.1"
+    },
+    {
+      "type": "library",
+      "name": "google-api-core",
+      "purl": "pkg:pypi/google-api-core@2.33.0",
+      "version": "2.33.0"
+    },
+    {
+      "type": "library",
+      "name": "google-api-python-client",
+      "purl": "pkg:pypi/google-api-python-client@2.195.0",
+      "version": "2.195.0"
+    },
+    {
+      "type": "library",
+      "name": "google-auth-httplib2",
+      "purl": "pkg:pypi/google-auth-httplib2@0.3.1",
+      "version": "0.3.1"
+    },
+    {
+      "type": "library",
+      "name": "google-auth",
+      "purl": "pkg:pypi/google-auth@2.49.1",
+      "version": "2.49.1"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-appengine-logging",
+      "purl": "pkg:pypi/google-cloud-appengine-logging@1.10.0",
+      "version": "1.10.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-audit-log",
+      "purl": "pkg:pypi/google-cloud-audit-log@0.6.0",
+      "version": "0.6.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-bigquery",
+      "purl": "pkg:pypi/google-cloud-bigquery@3.40.1",
+      "version": "3.40.1"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-billing-budgets",
+      "purl": "pkg:pypi/google-cloud-billing-budgets@1.20.0",
+      "version": "1.20.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-billing",
+      "purl": "pkg:pypi/google-cloud-billing@1.20.0",
+      "version": "1.20.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-compute",
+      "purl": "pkg:pypi/google-cloud-compute@1.50.0",
+      "version": "1.50.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-core",
+      "purl": "pkg:pypi/google-cloud-core@2.5.0",
+      "version": "2.5.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-logging",
+      "purl": "pkg:pypi/google-cloud-logging@3.15.0",
+      "version": "3.15.0"
+    },
+    {
+      "type": "library",
+      "name": "google-cloud-resource-manager",
+      "purl": "pkg:pypi/google-cloud-resource-manager@1.17.0",
+      "version": "1.17.0"
+    },
+    {
+      "type": "library",
+      "name": "google-crc32c",
+      "purl": "pkg:pypi/google-crc32c@1.8.0",
+      "version": "1.8.0"
+    },
+    {
+      "type": "library",
+      "name": "google-resumable-media",
+      "purl": "pkg:pypi/google-resumable-media@2.8.0",
+      "version": "2.8.0"
+    },
+    {
+      "type": "library",
+      "name": "googleapis-common-protos",
+      "purl": "pkg:pypi/googleapis-common-protos@1.75.0",
+      "version": "1.75.0"
+    },
+    {
+      "type": "library",
+      "name": "greenlet",
+      "purl": "pkg:pypi/greenlet@3.3.0",
+      "version": "3.3.0"
+    },
+    {
+      "type": "library",
+      "name": "griffelib",
+      "purl": "pkg:pypi/griffelib@2.1.0",
+      "version": "2.1.0"
+    },
+    {
+      "type": "library",
+      "name": "grpc-google-iam-v1",
+      "purl": "pkg:pypi/grpc-google-iam-v1@0.14.4",
+      "version": "0.14.4"
+    },
+    {
+      "type": "library",
+      "name": "grpcio-status",
+      "purl": "pkg:pypi/grpcio-status@1.83.0",
+      "version": "1.83.0"
+    },
+    {
+      "type": "library",
+      "name": "grpcio",
+      "purl": "pkg:pypi/grpcio@1.83.0",
+      "version": "1.83.0"
+    },
+    {
+      "type": "library",
+      "name": "h11",
+      "purl": "pkg:pypi/h11@0.16.0",
+      "version": "0.16.0"
+    },
+    {
+      "type": "library",
+      "name": "httpcore",
+      "purl": "pkg:pypi/httpcore@1.0.9",
+      "version": "1.0.9"
+    },
+    {
+      "type": "library",
+      "name": "httplib2",
+      "purl": "pkg:pypi/httplib2@0.32.0",
+      "version": "0.32.0"
+    },
+    {
+      "type": "library",
+      "name": "httptools",
+      "purl": "pkg:pypi/httptools@0.7.1",
+      "version": "0.7.1"
+    },
+    {
+      "type": "library",
+      "name": "httpx-sse",
+      "purl": "pkg:pypi/httpx-sse@0.4.3",
+      "version": "0.4.3"
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "purl": "pkg:pypi/httpx@0.28.1",
+      "version": "0.28.1"
+    },
+    {
+      "type": "library",
+      "name": "idna",
+      "purl": "pkg:pypi/idna@3.18",
+      "version": "3.18"
+    },
+    {
+      "type": "library",
+      "name": "importlib-metadata",
+      "purl": "pkg:pypi/importlib-metadata@8.7.1",
+      "version": "8.7.1"
+    },
+    {
+      "type": "library",
+      "name": "inflection",
+      "purl": "pkg:pypi/inflection@0.5.1",
+      "version": "0.5.1"
+    },
+    {
+      "type": "library",
+      "name": "itsdangerous",
+      "purl": "pkg:pypi/itsdangerous@2.2.0",
+      "version": "2.2.0"
+    },
+    {
+      "type": "library",
+      "name": "jaraco-classes",
+      "purl": "pkg:pypi/jaraco-classes@3.4.0",
+      "version": "3.4.0"
+    },
+    {
+      "type": "library",
+      "name": "jaraco-context",
+      "purl": "pkg:pypi/jaraco-context@6.1.2",
+      "version": "6.1.2"
+    },
+    {
+      "type": "library",
+      "name": "jaraco-functools",
+      "purl": "pkg:pypi/jaraco-functools@4.4.0",
+      "version": "4.4.0"
+    },
+    {
+      "type": "library",
+      "name": "jeepney",
+      "purl": "pkg:pypi/jeepney@0.9.0",
+      "version": "0.9.0"
+    },
+    {
+      "type": "library",
+      "name": "jinja2",
+      "purl": "pkg:pypi/jinja2@3.1.6",
+      "version": "3.1.6"
+    },
+    {
+      "type": "library",
+      "name": "jiter",
+      "purl": "pkg:pypi/jiter@0.12.0",
+      "version": "0.12.0"
+    },
+    {
+      "type": "library",
+      "name": "joserfc",
+      "purl": "pkg:pypi/joserfc@1.8.0",
+      "version": "1.8.0"
+    },
+    {
+      "type": "library",
+      "name": "jsonpatch",
+      "purl": "pkg:pypi/jsonpatch@1.33",
+      "version": "1.33"
+    },
+    {
+      "type": "library",
+      "name": "jsonpointer",
+      "purl": "pkg:pypi/jsonpointer@3.0.0",
+      "version": "3.0.0"
+    },
+    {
+      "type": "library",
+      "name": "jsonref",
+      "purl": "pkg:pypi/jsonref@1.1.0",
+      "version": "1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "jsonschema-path",
+      "purl": "pkg:pypi/jsonschema-path@0.3.4",
+      "version": "0.3.4"
+    },
+    {
+      "type": "library",
+      "name": "jsonschema-specifications",
+      "purl": "pkg:pypi/jsonschema-specifications@2025.9.1",
+      "version": "2025.9.1"
+    },
+    {
+      "type": "library",
+      "name": "jsonschema",
+      "purl": "pkg:pypi/jsonschema@4.25.1",
+      "version": "4.25.1"
+    },
+    {
+      "type": "library",
+      "name": "keyring",
+      "purl": "pkg:pypi/keyring@25.7.0",
+      "version": "25.7.0"
+    },
+    {
+      "type": "library",
+      "name": "langchain-anthropic",
+      "purl": "pkg:pypi/langchain-anthropic@1.5.2",
+      "version": "1.5.2"
+    },
+    {
+      "type": "library",
+      "name": "langchain-classic",
+      "purl": "pkg:pypi/langchain-classic@1.0.8",
+      "version": "1.0.8"
+    },
+    {
+      "type": "library",
+      "name": "langchain-community",
+      "purl": "pkg:pypi/langchain-community@0.4.2",
+      "version": "0.4.2"
+    },
+    {
+      "type": "library",
+      "name": "langchain-core",
+      "purl": "pkg:pypi/langchain-core@1.6.7",
+      "version": "1.6.7"
+    },
+    {
+      "type": "library",
+      "name": "langchain-oci",
+      "purl": "pkg:pypi/langchain-oci@0.2.7",
+      "version": "0.2.7"
+    },
+    {
+      "type": "library",
+      "name": "langchain-openai",
+      "purl": "pkg:pypi/langchain-openai@1.4.1",
+      "version": "1.4.1"
+    },
+    {
+      "type": "library",
+      "name": "langchain-protocol",
+      "purl": "pkg:pypi/langchain-protocol@0.0.18",
+      "version": "0.0.18"
+    },
+    {
+      "type": "library",
+      "name": "langchain-text-splitters",
+      "purl": "pkg:pypi/langchain-text-splitters@1.1.2",
+      "version": "1.1.2"
+    },
+    {
+      "type": "library",
+      "name": "langchain",
+      "purl": "pkg:pypi/langchain@1.4.3",
+      "version": "1.4.3"
+    },
+    {
+      "type": "library",
+      "name": "langfuse",
+      "purl": "pkg:pypi/langfuse@4.17.0",
+      "version": "4.17.0"
+    },
+    {
+      "type": "library",
+      "name": "langgraph-checkpoint",
+      "purl": "pkg:pypi/langgraph-checkpoint@4.1.1",
+      "version": "4.1.1"
+    },
+    {
+      "type": "library",
+      "name": "langgraph-prebuilt",
+      "purl": "pkg:pypi/langgraph-prebuilt@1.1.0",
+      "version": "1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "langgraph-sdk",
+      "purl": "pkg:pypi/langgraph-sdk@0.4.6",
+      "version": "0.4.6"
+    },
+    {
+      "type": "library",
+      "name": "langgraph",
+      "purl": "pkg:pypi/langgraph@1.2.14",
+      "version": "1.2.14"
+    },
+    {
+      "type": "library",
+      "name": "langsmith",
+      "purl": "pkg:pypi/langsmith@0.10.10",
+      "version": "0.10.10"
+    },
+    {
+      "type": "library",
+      "name": "lazify",
+      "purl": "pkg:pypi/lazify@0.4.0",
+      "version": "0.4.0"
+    },
+    {
+      "type": "library",
+      "name": "literalai",
+      "purl": "pkg:pypi/literalai@0.1.201",
+      "version": "0.1.201"
+    },
+    {
+      "type": "library",
+      "name": "markdown-it-py",
+      "purl": "pkg:pypi/markdown-it-py@4.0.0",
+      "version": "4.0.0"
+    },
+    {
+      "type": "library",
+      "name": "markupsafe",
+      "purl": "pkg:pypi/markupsafe@3.0.3",
+      "version": "3.0.3"
+    },
+    {
+      "type": "library",
+      "name": "marshmallow",
+      "purl": "pkg:pypi/marshmallow@3.26.2",
+      "version": "3.26.2"
+    },
+    {
+      "type": "library",
+      "name": "mcp",
+      "purl": "pkg:pypi/mcp@1.30.0",
+      "version": "1.30.0"
+    },
+    {
+      "type": "library",
+      "name": "mdurl",
+      "purl": "pkg:pypi/mdurl@0.1.2",
+      "version": "0.1.2"
+    },
+    {
+      "type": "library",
+      "name": "more-itertools",
+      "purl": "pkg:pypi/more-itertools@10.8.0",
+      "version": "10.8.0"
+    },
+    {
+      "type": "library",
+      "name": "msal",
+      "purl": "pkg:pypi/msal@1.37.0",
+      "version": "1.37.0"
+    },
+    {
+      "type": "library",
+      "name": "msgpack",
+      "purl": "pkg:pypi/msgpack@1.2.4",
+      "version": "1.2.4"
+    },
+    {
+      "type": "library",
+      "name": "multidict",
+      "purl": "pkg:pypi/multidict@6.7.0",
+      "version": "6.7.0"
+    },
+    {
+      "type": "library",
+      "name": "mypy-extensions",
+      "purl": "pkg:pypi/mypy-extensions@1.1.0",
+      "version": "1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "narwhals",
+      "purl": "pkg:pypi/narwhals@2.15.0",
+      "version": "2.15.0"
+    },
+    {
+      "type": "library",
+      "name": "neo4j",
+      "purl": "pkg:pypi/neo4j@6.0.3",
+      "version": "6.0.3"
+    },
+    {
+      "type": "library",
+      "name": "nest-asyncio",
+      "purl": "pkg:pypi/nest-asyncio@1.6.0",
+      "version": "1.6.0"
+    },
+    {
+      "type": "library",
+      "name": "numpy",
+      "purl": "pkg:pypi/numpy@2.4.6",
+      "version": "2.4.6"
+    },
+    {
+      "type": "library",
+      "name": "oci-openai",
+      "purl": "pkg:pypi/oci-openai@1.1.0",
+      "version": "1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "oci",
+      "purl": "pkg:pypi/oci@2.187.2",
+      "version": "2.187.2"
+    },
+    {
+      "type": "library",
+      "name": "openai",
+      "purl": "pkg:pypi/openai@2.48.0",
+      "version": "2.48.0"
+    },
+    {
+      "type": "library",
+      "name": "openapi-pydantic",
+      "purl": "pkg:pypi/openapi-pydantic@0.5.1",
+      "version": "0.5.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-api",
+      "purl": "pkg:pypi/opentelemetry-api@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-http-transport",
+      "purl": "pkg:pypi/opentelemetry-exporter-http-transport@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-common",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-common@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-common",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-common@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-grpc",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-grpc@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-proto-http",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp-proto-http@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp",
+      "purl": "pkg:pypi/opentelemetry-exporter-otlp@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-agno",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-agno@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-alephalpha",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-alephalpha@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-anthropic",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-anthropic@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-asgi",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-asgi@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-bedrock",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-bedrock@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-chromadb",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-chromadb@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-cohere",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-cohere@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-crewai",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-crewai@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-fastapi",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-fastapi@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-google-generativeai",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-google-generativeai@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-groq",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-groq@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-haystack",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-haystack@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-httpx",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-httpx@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-lancedb",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-lancedb@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-langchain",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-langchain@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-llamaindex",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-llamaindex@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-logging",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-logging@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-marqo",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-marqo@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-mcp",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-mcp@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-milvus",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-milvus@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-mistralai",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-mistralai@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-ollama",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-ollama@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-openai-agents",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-openai-agents@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-openai",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-openai@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-pinecone",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-pinecone@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-qdrant",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-qdrant@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-redis",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-redis@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-replicate",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-replicate@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-requests",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-requests@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-sagemaker",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-sagemaker@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-sqlalchemy",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-sqlalchemy@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-threading",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-threading@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-together",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-together@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-transformers",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-transformers@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-urllib3",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-urllib3@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-vertexai",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-vertexai@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-voyageai",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-voyageai@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-watsonx",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-watsonx@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-weaviate",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-weaviate@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation-writer",
+      "purl": "pkg:pypi/opentelemetry-instrumentation-writer@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-instrumentation",
+      "purl": "pkg:pypi/opentelemetry-instrumentation@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-proto",
+      "purl": "pkg:pypi/opentelemetry-proto@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:pypi/opentelemetry-sdk@1.45.1",
+      "version": "1.45.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-semantic-conventions-ai",
+      "purl": "pkg:pypi/opentelemetry-semantic-conventions-ai@0.5.1",
+      "version": "0.5.1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-semantic-conventions",
+      "purl": "pkg:pypi/opentelemetry-semantic-conventions@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-util-http",
+      "purl": "pkg:pypi/opentelemetry-util-http@0.66b1",
+      "version": "0.66b1"
+    },
+    {
+      "type": "library",
+      "name": "oracledb",
+      "purl": "pkg:pypi/oracledb@3.4.1",
+      "version": "3.4.1"
+    },
+    {
+      "type": "library",
+      "name": "orjson",
+      "purl": "pkg:pypi/orjson@3.11.9",
+      "version": "3.11.9"
+    },
+    {
+      "type": "library",
+      "name": "ormsgpack",
+      "purl": "pkg:pypi/ormsgpack@1.12.1",
+      "version": "1.12.1"
+    },
+    {
+      "type": "library",
+      "name": "packaging",
+      "purl": "pkg:pypi/packaging@25.0",
+      "version": "25.0"
+    },
+    {
+      "type": "library",
+      "name": "packaging",
+      "purl": "pkg:pypi/packaging@26.4",
+      "version": "26.4"
+    },
+    {
+      "type": "library",
+      "name": "pandas",
+      "purl": "pkg:pypi/pandas@2.3.3",
+      "version": "2.3.3"
+    },
+    {
+      "type": "library",
+      "name": "pathable",
+      "purl": "pkg:pypi/pathable@0.4.4",
+      "version": "0.4.4"
+    },
+    {
+      "type": "library",
+      "name": "pillow",
+      "purl": "pkg:pypi/pillow@13.0.0",
+      "version": "13.0.0"
+    },
+    {
+      "type": "library",
+      "name": "pip",
+      "purl": "pkg:pypi/pip@24.0",
+      "version": "24.0"
+    },
+    {
+      "type": "library",
+      "name": "platformdirs",
+      "purl": "pkg:pypi/platformdirs@4.5.1",
+      "version": "4.5.1"
+    },
+    {
+      "type": "library",
+      "name": "prometheus-client",
+      "purl": "pkg:pypi/prometheus-client@0.23.1",
+      "version": "0.23.1"
+    },
+    {
+      "type": "library",
+      "name": "propcache",
+      "purl": "pkg:pypi/propcache@0.4.1",
+      "version": "0.4.1"
+    },
+    {
+      "type": "library",
+      "name": "proto-plus",
+      "purl": "pkg:pypi/proto-plus@1.27.2",
+      "version": "1.27.2"
+    },
+    {
+      "type": "library",
+      "name": "protobuf",
+      "purl": "pkg:pypi/protobuf@7.35.1",
+      "version": "7.35.1"
+    },
+    {
+      "type": "library",
+      "name": "py-key-value-aio",
+      "purl": "pkg:pypi/py-key-value-aio@0.4.5",
+      "version": "0.4.5"
+    },
+    {
+      "type": "library",
+      "name": "pyarrow",
+      "purl": "pkg:pypi/pyarrow@24.0.0",
+      "version": "24.0.0"
+    },
+    {
+      "type": "library",
+      "name": "pyasn1-modules",
+      "purl": "pkg:pypi/pyasn1-modules@0.4.2",
+      "version": "0.4.2"
+    },
+    {
+      "type": "library",
+      "name": "pyasn1",
+      "purl": "pkg:pypi/pyasn1@0.6.5",
+      "version": "0.6.5"
+    },
+    {
+      "type": "library",
+      "name": "pycparser",
+      "purl": "pkg:pypi/pycparser@2.23",
+      "version": "2.23"
+    },
+    {
+      "type": "library",
+      "name": "pydantic-core",
+      "purl": "pkg:pypi/pydantic-core@2.41.5",
+      "version": "2.41.5"
+    },
+    {
+      "type": "library",
+      "name": "pydantic-settings",
+      "purl": "pkg:pypi/pydantic-settings@2.14.2",
+      "version": "2.14.2"
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "purl": "pkg:pypi/pydantic@2.12.5",
+      "version": "2.12.5"
+    },
+    {
+      "type": "library",
+      "name": "pydeck",
+      "purl": "pkg:pypi/pydeck@0.9.1",
+      "version": "0.9.1"
+    },
+    {
+      "type": "library",
+      "name": "pygments",
+      "purl": "pkg:pypi/pygments@2.20.0",
+      "version": "2.20.0"
+    },
+    {
+      "type": "library",
+      "name": "pyjwt",
+      "purl": "pkg:pypi/pyjwt@2.15.1",
+      "version": "2.15.1"
+    },
+    {
+      "type": "library",
+      "name": "pyopenssl",
+      "purl": "pkg:pypi/pyopenssl@26.4.0",
+      "version": "26.4.0"
+    },
+    {
+      "type": "library",
+      "name": "pyparsing",
+      "purl": "pkg:pypi/pyparsing@3.3.2",
+      "version": "3.3.2"
+    },
+    {
+      "type": "library",
+      "name": "pyperclip",
+      "purl": "pkg:pypi/pyperclip@1.11.0",
+      "version": "1.11.0"
+    },
+    {
+      "type": "library",
+      "name": "python-dateutil",
+      "purl": "pkg:pypi/python-dateutil@2.9.0.post0",
+      "version": "2.9.0.post0"
+    },
+    {
+      "type": "library",
+      "name": "python-dotenv",
+      "purl": "pkg:pypi/python-dotenv@1.2.2",
+      "version": "1.2.2"
+    },
+    {
+      "type": "library",
+      "name": "python-engineio",
+      "purl": "pkg:pypi/python-engineio@4.13.3",
+      "version": "4.13.3"
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "purl": "pkg:pypi/python-multipart@0.0.32",
+      "version": "0.0.32"
+    },
+    {
+      "type": "library",
+      "name": "python-pkcs11",
+      "purl": "pkg:pypi/python-pkcs11@0.9.4",
+      "version": "0.9.4"
+    },
+    {
+      "type": "library",
+      "name": "python-socketio",
+      "purl": "pkg:pypi/python-socketio@5.16.3",
+      "version": "5.16.3"
+    },
+    {
+      "type": "library",
+      "name": "pytz",
+      "purl": "pkg:pypi/pytz@2025.2",
+      "version": "2025.2"
+    },
+    {
+      "type": "library",
+      "name": "pyyaml",
+      "purl": "pkg:pypi/pyyaml@6.0.3",
+      "version": "6.0.3"
+    },
+    {
+      "type": "library",
+      "name": "redis",
+      "purl": "pkg:pypi/redis@7.1.0",
+      "version": "7.1.0"
+    },
+    {
+      "type": "library",
+      "name": "referencing",
+      "purl": "pkg:pypi/referencing@0.36.2",
+      "version": "0.36.2"
+    },
+    {
+      "type": "library",
+      "name": "regex",
+      "purl": "pkg:pypi/regex@2025.11.3",
+      "version": "2025.11.3"
+    },
+    {
+      "type": "library",
+      "name": "reportlab",
+      "purl": "pkg:pypi/reportlab@4.5.1",
+      "version": "4.5.1"
+    },
+    {
+      "type": "library",
+      "name": "requests-toolbelt",
+      "purl": "pkg:pypi/requests-toolbelt@1.0.0",
+      "version": "1.0.0"
+    },
+    {
+      "type": "library",
+      "name": "requests",
+      "purl": "pkg:pypi/requests@2.34.2",
+      "version": "2.34.2"
+    },
+    {
+      "type": "library",
+      "name": "rich-rst",
+      "purl": "pkg:pypi/rich-rst@1.3.2",
+      "version": "1.3.2"
+    },
+    {
+      "type": "library",
+      "name": "rich",
+      "purl": "pkg:pypi/rich@14.2.0",
+      "version": "14.2.0"
+    },
+    {
+      "type": "library",
+      "name": "rpds-py",
+      "purl": "pkg:pypi/rpds-py@0.30.0",
+      "version": "0.30.0"
+    },
+    {
+      "type": "library",
+      "name": "secretstorage",
+      "purl": "pkg:pypi/secretstorage@3.5.0",
+      "version": "3.5.0"
+    },
+    {
+      "type": "library",
+      "name": "simple-websocket",
+      "purl": "pkg:pypi/simple-websocket@1.1.0",
+      "version": "1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "six",
+      "purl": "pkg:pypi/six@1.17.0",
+      "version": "1.17.0"
+    },
+    {
+      "type": "library",
+      "name": "slack-bolt",
+      "purl": "pkg:pypi/slack-bolt@1.27.0",
+      "version": "1.27.0"
+    },
+    {
+      "type": "library",
+      "name": "slack-sdk",
+      "purl": "pkg:pypi/slack-sdk@3.39.0",
+      "version": "3.39.0"
+    },
+    {
+      "type": "library",
+      "name": "smmap",
+      "purl": "pkg:pypi/smmap@5.0.2",
+      "version": "5.0.2"
+    },
+    {
+      "type": "library",
+      "name": "sniffio",
+      "purl": "pkg:pypi/sniffio@1.3.1",
+      "version": "1.3.1"
+    },
+    {
+      "type": "library",
+      "name": "sqlalchemy",
+      "purl": "pkg:pypi/sqlalchemy@2.0.45",
+      "version": "2.0.45"
+    },
+    {
+      "type": "library",
+      "name": "sse-starlette",
+      "purl": "pkg:pypi/sse-starlette@3.1.1",
+      "version": "3.1.1"
+    },
+    {
+      "type": "library",
+      "name": "starlette",
+      "purl": "pkg:pypi/starlette@1.3.1",
+      "version": "1.3.1"
+    },
+    {
+      "type": "library",
+      "name": "streamlit",
+      "purl": "pkg:pypi/streamlit@1.67.0",
+      "version": "1.67.0"
+    },
+    {
+      "type": "library",
+      "name": "structlog",
+      "purl": "pkg:pypi/structlog@25.5.0",
+      "version": "25.5.0"
+    },
+    {
+      "type": "library",
+      "name": "syncer",
+      "purl": "pkg:pypi/syncer@2.0.3",
+      "version": "2.0.3"
+    },
+    {
+      "type": "library",
+      "name": "tenacity",
+      "purl": "pkg:pypi/tenacity@9.1.2",
+      "version": "9.1.2"
+    },
+    {
+      "type": "library",
+      "name": "tiktoken",
+      "purl": "pkg:pypi/tiktoken@0.12.0",
+      "version": "0.12.0"
+    },
+    {
+      "type": "library",
+      "name": "tomli",
+      "purl": "pkg:pypi/tomli@2.4.1",
+      "version": "2.4.1"
+    },
+    {
+      "type": "library",
+      "name": "tqdm",
+      "purl": "pkg:pypi/tqdm@4.67.1",
+      "version": "4.67.1"
+    },
+    {
+      "type": "library",
+      "name": "traceloop-sdk",
+      "purl": "pkg:pypi/traceloop-sdk@0.57.0",
+      "version": "0.57.0"
+    },
+    {
+      "type": "library",
+      "name": "typing-extensions",
+      "purl": "pkg:pypi/typing-extensions@4.16.0",
+      "version": "4.16.0"
+    },
+    {
+      "type": "library",
+      "name": "typing-inspect",
+      "purl": "pkg:pypi/typing-inspect@0.9.0",
+      "version": "0.9.0"
+    },
+    {
+      "type": "library",
+      "name": "typing-inspection",
+      "purl": "pkg:pypi/typing-inspection@0.4.2",
+      "version": "0.4.2"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "purl": "pkg:pypi/tzdata@2025.3",
+      "version": "2025.3"
+    },
+    {
+      "type": "library",
+      "name": "uncalled-for",
+      "purl": "pkg:pypi/uncalled-for@0.3.2",
+      "version": "0.3.2"
+    },
+    {
+      "type": "library",
+      "name": "uritemplate",
+      "purl": "pkg:pypi/uritemplate@4.2.0",
+      "version": "4.2.0"
+    },
+    {
+      "type": "library",
+      "name": "urllib3",
+      "purl": "pkg:pypi/urllib3@2.8.0",
+      "version": "2.8.0"
+    },
+    {
+      "type": "library",
+      "name": "uuid-utils",
+      "purl": "pkg:pypi/uuid-utils@0.12.0",
+      "version": "0.12.0"
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "purl": "pkg:pypi/uvicorn@0.40.0",
+      "version": "0.40.0"
+    },
+    {
+      "type": "library",
+      "name": "uvloop",
+      "purl": "pkg:pypi/uvloop@0.22.1",
+      "version": "0.22.1"
+    },
+    {
+      "type": "library",
+      "name": "watchdog",
+      "purl": "pkg:pypi/watchdog@6.0.0",
+      "version": "6.0.0"
+    },
+    {
+      "type": "library",
+      "name": "watchfiles",
+      "purl": "pkg:pypi/watchfiles@1.1.1",
+      "version": "1.1.1"
+    },
+    {
+      "type": "library",
+      "name": "websockets",
+      "purl": "pkg:pypi/websockets@15.0.1",
+      "version": "15.0.1"
+    },
+    {
+      "type": "library",
+      "name": "wrapt",
+      "purl": "pkg:pypi/wrapt@1.17.3",
+      "version": "1.17.3"
+    },
+    {
+      "type": "library",
+      "name": "wsproto",
+      "purl": "pkg:pypi/wsproto@1.3.2",
+      "version": "1.3.2"
+    },
+    {
+      "type": "library",
+      "name": "xxhash",
+      "purl": "pkg:pypi/xxhash@3.6.0",
+      "version": "3.6.0"
+    },
+    {
+      "type": "library",
+      "name": "yarl",
+      "purl": "pkg:pypi/yarl@1.25.1",
+      "version": "1.25.1"
+    },
+    {
+      "type": "library",
+      "name": "zipp",
+      "purl": "pkg:pypi/zipp@3.23.0",
+      "version": "3.23.0"
+    },
+    {
+      "type": "library",
+      "name": "zstandard",
+      "purl": "pkg:pypi/zstandard@0.25.0",
+      "version": "0.25.0"
+    }
+  ]
+}

@@ -1,0 +1,1538 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "java-apm",
+      "version": "6b8f651ce1492c794c82b41dd3ecb6d7f38082c6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2943e4d100db38a48187245c01a7cd4d542b4d3460ca1cc8dc4c4294066e382d"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "octo:image-digest",
+        "value": "sha256:2943e4d100db38a48187245c01a7cd4d542b4d3460ca1cc8dc4c4294066e382d"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "adduser",
+      "purl": "pkg:deb/ubuntu/adduser@3.153ubuntu1",
+      "group": "ubuntu",
+      "version": "3.153ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "apt",
+      "purl": "pkg:deb/ubuntu/apt@3.2.1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "3.2.1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "base-files",
+      "purl": "pkg:deb/ubuntu/base-files@14ubuntu6.3",
+      "group": "ubuntu",
+      "version": "14ubuntu6.3"
+    },
+    {
+      "type": "library",
+      "name": "base-passwd",
+      "purl": "pkg:deb/ubuntu/base-passwd@3.6.8",
+      "group": "ubuntu",
+      "version": "3.6.8"
+    },
+    {
+      "type": "library",
+      "name": "bash",
+      "purl": "pkg:deb/ubuntu/bash@5.3-2ubuntu1",
+      "group": "ubuntu",
+      "version": "5.3-2ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "bsdutils",
+      "purl": "pkg:deb/ubuntu/bsdutils@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "ca-certificates",
+      "purl": "pkg:deb/ubuntu/ca-certificates@20260816ubuntu0.26.04.2",
+      "group": "ubuntu",
+      "version": "20260816ubuntu0.26.04.2"
+    },
+    {
+      "type": "library",
+      "name": "coreutils-from-uutils",
+      "purl": "pkg:deb/ubuntu/coreutils-from-uutils@0.0.0~ubuntu25",
+      "group": "ubuntu",
+      "version": "0.0.0~ubuntu25"
+    },
+    {
+      "type": "library",
+      "name": "coreutils",
+      "purl": "pkg:deb/ubuntu/coreutils@9.5-1ubuntu2%2B0.0.0~ubuntu25",
+      "group": "ubuntu",
+      "version": "9.5-1ubuntu2+0.0.0~ubuntu25"
+    },
+    {
+      "type": "library",
+      "name": "curl",
+      "purl": "pkg:deb/ubuntu/curl@8.18.0-1ubuntu2.8",
+      "group": "ubuntu",
+      "version": "8.18.0-1ubuntu2.8"
+    },
+    {
+      "type": "library",
+      "name": "dash",
+      "purl": "pkg:deb/ubuntu/dash@0.5.12-12ubuntu3",
+      "group": "ubuntu",
+      "version": "0.5.12-12ubuntu3"
+    },
+    {
+      "type": "library",
+      "name": "debconf",
+      "purl": "pkg:deb/ubuntu/debconf@1.5.92",
+      "group": "ubuntu",
+      "version": "1.5.92"
+    },
+    {
+      "type": "library",
+      "name": "debianutils",
+      "purl": "pkg:deb/ubuntu/debianutils@5.23.2build1",
+      "group": "ubuntu",
+      "version": "5.23.2build1"
+    },
+    {
+      "type": "library",
+      "name": "diffutils",
+      "purl": "pkg:deb/ubuntu/diffutils@3.12-1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "3.12-1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "dirmngr",
+      "purl": "pkg:deb/ubuntu/dirmngr@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "dpkg",
+      "purl": "pkg:deb/ubuntu/dpkg@1.23.7ubuntu1",
+      "group": "ubuntu",
+      "version": "1.23.7ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "e2fsprogs",
+      "purl": "pkg:deb/ubuntu/e2fsprogs@1.47.2-3ubuntu4",
+      "group": "ubuntu",
+      "version": "1.47.2-3ubuntu4"
+    },
+    {
+      "type": "library",
+      "name": "findutils",
+      "purl": "pkg:deb/ubuntu/findutils@4.10.0-3build2",
+      "group": "ubuntu",
+      "version": "4.10.0-3build2"
+    },
+    {
+      "type": "library",
+      "name": "fontconfig-config",
+      "purl": "pkg:deb/ubuntu/fontconfig-config@2.17.1-3ubuntu1",
+      "group": "ubuntu",
+      "version": "2.17.1-3ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "fontconfig",
+      "purl": "pkg:deb/ubuntu/fontconfig@2.17.1-3ubuntu1",
+      "group": "ubuntu",
+      "version": "2.17.1-3ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "fonts-dejavu-core",
+      "purl": "pkg:deb/ubuntu/fonts-dejavu-core@2.37-8build1",
+      "group": "ubuntu",
+      "version": "2.37-8build1"
+    },
+    {
+      "type": "library",
+      "name": "fonts-dejavu-mono",
+      "purl": "pkg:deb/ubuntu/fonts-dejavu-mono@2.37-8build1",
+      "group": "ubuntu",
+      "version": "2.37-8build1"
+    },
+    {
+      "type": "library",
+      "name": "gcc-16-base",
+      "purl": "pkg:deb/ubuntu/gcc-16-base@16-20260322-1ubuntu1",
+      "group": "ubuntu",
+      "version": "16-20260322-1ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "gnu-coreutils",
+      "purl": "pkg:deb/ubuntu/gnu-coreutils@9.7-3ubuntu2.1",
+      "group": "ubuntu",
+      "version": "9.7-3ubuntu2.1"
+    },
+    {
+      "type": "library",
+      "name": "gnupg",
+      "purl": "pkg:deb/ubuntu/gnupg@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "gpg-agent",
+      "purl": "pkg:deb/ubuntu/gpg-agent@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "gpg",
+      "purl": "pkg:deb/ubuntu/gpg@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "gpgconf",
+      "purl": "pkg:deb/ubuntu/gpgconf@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "gpgsm",
+      "purl": "pkg:deb/ubuntu/gpgsm@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "gpgv",
+      "purl": "pkg:deb/ubuntu/gpgv@2.4.8-4ubuntu3.1",
+      "group": "ubuntu",
+      "version": "2.4.8-4ubuntu3.1"
+    },
+    {
+      "type": "library",
+      "name": "grep",
+      "purl": "pkg:deb/ubuntu/grep@3.12-1",
+      "group": "ubuntu",
+      "version": "3.12-1"
+    },
+    {
+      "type": "library",
+      "name": "gzip",
+      "purl": "pkg:deb/ubuntu/gzip@1.14-1~exp2ubuntu1.1",
+      "group": "ubuntu",
+      "version": "1.14-1~exp2ubuntu1.1"
+    },
+    {
+      "type": "library",
+      "name": "hostname",
+      "purl": "pkg:deb/ubuntu/hostname@3.25build1",
+      "group": "ubuntu",
+      "version": "3.25build1"
+    },
+    {
+      "type": "library",
+      "name": "init-system-helpers",
+      "purl": "pkg:deb/ubuntu/init-system-helpers@1.69",
+      "group": "ubuntu",
+      "version": "1.69"
+    },
+    {
+      "type": "library",
+      "name": "libacl1",
+      "purl": "pkg:deb/ubuntu/libacl1@2.3.2-2",
+      "group": "ubuntu",
+      "version": "2.3.2-2"
+    },
+    {
+      "type": "library",
+      "name": "libapt-pkg7.0",
+      "purl": "pkg:deb/ubuntu/libapt-pkg7.0@3.2.1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "3.2.1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libassuan9",
+      "purl": "pkg:deb/ubuntu/libassuan9@3.0.2-2build1",
+      "group": "ubuntu",
+      "version": "3.0.2-2build1"
+    },
+    {
+      "type": "library",
+      "name": "libattr1",
+      "purl": "pkg:deb/ubuntu/libattr1@2.5.2-4ubuntu0.1",
+      "group": "ubuntu",
+      "version": "2.5.2-4ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libaudit-common",
+      "purl": "pkg:deb/ubuntu/libaudit-common@4.1.2-1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "4.1.2-1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libaudit1",
+      "purl": "pkg:deb/ubuntu/libaudit1@4.1.2-1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "4.1.2-1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libblkid1",
+      "purl": "pkg:deb/ubuntu/libblkid1@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "libbrotli1",
+      "purl": "pkg:deb/ubuntu/libbrotli1@1.2.0-3ubuntu0.1",
+      "group": "ubuntu",
+      "version": "1.2.0-3ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libbsd0",
+      "purl": "pkg:deb/ubuntu/libbsd0@0.12.2-2build2",
+      "group": "ubuntu",
+      "version": "0.12.2-2build2"
+    },
+    {
+      "type": "library",
+      "name": "libbz2-1.0",
+      "purl": "pkg:deb/ubuntu/libbz2-1.0@1.0.8-6ubuntu0.1",
+      "group": "ubuntu",
+      "version": "1.0.8-6ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libc-bin",
+      "purl": "pkg:deb/ubuntu/libc-bin@2.43-2ubuntu2.7",
+      "group": "ubuntu",
+      "version": "2.43-2ubuntu2.7"
+    },
+    {
+      "type": "library",
+      "name": "libc-gconv-modules-extra",
+      "purl": "pkg:deb/ubuntu/libc-gconv-modules-extra@2.43-2ubuntu2.7",
+      "group": "ubuntu",
+      "version": "2.43-2ubuntu2.7"
+    },
+    {
+      "type": "library",
+      "name": "libc6",
+      "purl": "pkg:deb/ubuntu/libc6@2.43-2ubuntu2.7",
+      "group": "ubuntu",
+      "version": "2.43-2ubuntu2.7"
+    },
+    {
+      "type": "library",
+      "name": "libcap-ng0",
+      "purl": "pkg:deb/ubuntu/libcap-ng0@0.8.5-4build5",
+      "group": "ubuntu",
+      "version": "0.8.5-4build5"
+    },
+    {
+      "type": "library",
+      "name": "libcom-err2",
+      "purl": "pkg:deb/ubuntu/libcom-err2@1.47.2-3ubuntu4",
+      "group": "ubuntu",
+      "version": "1.47.2-3ubuntu4"
+    },
+    {
+      "type": "library",
+      "name": "libcrypt1",
+      "purl": "pkg:deb/ubuntu/libcrypt1@4.5.1-1",
+      "group": "ubuntu",
+      "version": "4.5.1-1"
+    },
+    {
+      "type": "library",
+      "name": "libcurl4t64",
+      "purl": "pkg:deb/ubuntu/libcurl4t64@8.18.0-1ubuntu2.8",
+      "group": "ubuntu",
+      "version": "8.18.0-1ubuntu2.8"
+    },
+    {
+      "type": "library",
+      "name": "libdb5.3t64",
+      "purl": "pkg:deb/ubuntu/libdb5.3t64@5.3.28%2Bdfsg2-10ubuntu1",
+      "group": "ubuntu",
+      "version": "5.3.28+dfsg2-10ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "libdebconfclient0",
+      "purl": "pkg:deb/ubuntu/libdebconfclient0@0.280ubuntu1",
+      "group": "ubuntu",
+      "version": "0.280ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "libexpat1",
+      "purl": "pkg:deb/ubuntu/libexpat1@2.7.4-1ubuntu0.2",
+      "group": "ubuntu",
+      "version": "2.7.4-1ubuntu0.2"
+    },
+    {
+      "type": "library",
+      "name": "libext2fs2t64",
+      "purl": "pkg:deb/ubuntu/libext2fs2t64@1.47.2-3ubuntu4",
+      "group": "ubuntu",
+      "version": "1.47.2-3ubuntu4"
+    },
+    {
+      "type": "library",
+      "name": "libffi8",
+      "purl": "pkg:deb/ubuntu/libffi8@3.5.2-4",
+      "group": "ubuntu",
+      "version": "3.5.2-4"
+    },
+    {
+      "type": "library",
+      "name": "libfontconfig1",
+      "purl": "pkg:deb/ubuntu/libfontconfig1@2.17.1-3ubuntu1",
+      "group": "ubuntu",
+      "version": "2.17.1-3ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "libfreetype6",
+      "purl": "pkg:deb/ubuntu/libfreetype6@2.14.2%2Bdfsg-1ubuntu0.2",
+      "group": "ubuntu",
+      "version": "2.14.2+dfsg-1ubuntu0.2"
+    },
+    {
+      "type": "library",
+      "name": "libgcc-s1",
+      "purl": "pkg:deb/ubuntu/libgcc-s1@16-20260322-1ubuntu1",
+      "group": "ubuntu",
+      "version": "16-20260322-1ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "libgcrypt20",
+      "purl": "pkg:deb/ubuntu/libgcrypt20@1.12.0-2ubuntu1.1",
+      "group": "ubuntu",
+      "version": "1.12.0-2ubuntu1.1"
+    },
+    {
+      "type": "library",
+      "name": "libgmp10",
+      "purl": "pkg:deb/ubuntu/libgmp10@6.3.0%2Bdfsg-5ubuntu2",
+      "group": "ubuntu",
+      "version": "6.3.0+dfsg-5ubuntu2"
+    },
+    {
+      "type": "library",
+      "name": "libgnutls30t64",
+      "purl": "pkg:deb/ubuntu/libgnutls30t64@3.8.12-2ubuntu1.1",
+      "group": "ubuntu",
+      "version": "3.8.12-2ubuntu1.1"
+    },
+    {
+      "type": "library",
+      "name": "libgpg-error0",
+      "purl": "pkg:deb/ubuntu/libgpg-error0@1.58-2",
+      "group": "ubuntu",
+      "version": "1.58-2"
+    },
+    {
+      "type": "library",
+      "name": "libgssapi-krb5-2",
+      "purl": "pkg:deb/ubuntu/libgssapi-krb5-2@1.22.1-2ubuntu4.1",
+      "group": "ubuntu",
+      "version": "1.22.1-2ubuntu4.1"
+    },
+    {
+      "type": "library",
+      "name": "libhogweed6t64",
+      "purl": "pkg:deb/ubuntu/libhogweed6t64@3.10.2-1",
+      "group": "ubuntu",
+      "version": "3.10.2-1"
+    },
+    {
+      "type": "library",
+      "name": "libidn2-0",
+      "purl": "pkg:deb/ubuntu/libidn2-0@2.3.8-4build1",
+      "group": "ubuntu",
+      "version": "2.3.8-4build1"
+    },
+    {
+      "type": "library",
+      "name": "libk5crypto3",
+      "purl": "pkg:deb/ubuntu/libk5crypto3@1.22.1-2ubuntu4.1",
+      "group": "ubuntu",
+      "version": "1.22.1-2ubuntu4.1"
+    },
+    {
+      "type": "library",
+      "name": "libkeyutils1",
+      "purl": "pkg:deb/ubuntu/libkeyutils1@1.6.3-6ubuntu3",
+      "group": "ubuntu",
+      "version": "1.6.3-6ubuntu3"
+    },
+    {
+      "type": "library",
+      "name": "libkrb5-3",
+      "purl": "pkg:deb/ubuntu/libkrb5-3@1.22.1-2ubuntu4.1",
+      "group": "ubuntu",
+      "version": "1.22.1-2ubuntu4.1"
+    },
+    {
+      "type": "library",
+      "name": "libkrb5support0",
+      "purl": "pkg:deb/ubuntu/libkrb5support0@1.22.1-2ubuntu4.1",
+      "group": "ubuntu",
+      "version": "1.22.1-2ubuntu4.1"
+    },
+    {
+      "type": "library",
+      "name": "libksba8",
+      "purl": "pkg:deb/ubuntu/libksba8@1.6.7-2build1",
+      "group": "ubuntu",
+      "version": "1.6.7-2build1"
+    },
+    {
+      "type": "library",
+      "name": "libldap-common",
+      "purl": "pkg:deb/ubuntu/libldap-common@2.6.10%2Bdfsg-1ubuntu5",
+      "group": "ubuntu",
+      "version": "2.6.10+dfsg-1ubuntu5"
+    },
+    {
+      "type": "library",
+      "name": "libldap2",
+      "purl": "pkg:deb/ubuntu/libldap2@2.6.10%2Bdfsg-1ubuntu5",
+      "group": "ubuntu",
+      "version": "2.6.10+dfsg-1ubuntu5"
+    },
+    {
+      "type": "library",
+      "name": "liblz4-1",
+      "purl": "pkg:deb/ubuntu/liblz4-1@1.10.0-8",
+      "group": "ubuntu",
+      "version": "1.10.0-8"
+    },
+    {
+      "type": "library",
+      "name": "liblzma5",
+      "purl": "pkg:deb/ubuntu/liblzma5@5.8.3-1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "5.8.3-1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libmd0",
+      "purl": "pkg:deb/ubuntu/libmd0@1.1.0-2build4",
+      "group": "ubuntu",
+      "version": "1.1.0-2build4"
+    },
+    {
+      "type": "library",
+      "name": "libmount1",
+      "purl": "pkg:deb/ubuntu/libmount1@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "libncursesw6",
+      "purl": "pkg:deb/ubuntu/libncursesw6@6.6%2B20251231-1",
+      "group": "ubuntu",
+      "version": "6.6+20251231-1"
+    },
+    {
+      "type": "library",
+      "name": "libnettle8t64",
+      "purl": "pkg:deb/ubuntu/libnettle8t64@3.10.2-1",
+      "group": "ubuntu",
+      "version": "3.10.2-1"
+    },
+    {
+      "type": "library",
+      "name": "libnghttp2-14",
+      "purl": "pkg:deb/ubuntu/libnghttp2-14@1.68.0-2ubuntu0.2",
+      "group": "ubuntu",
+      "version": "1.68.0-2ubuntu0.2"
+    },
+    {
+      "type": "library",
+      "name": "libnpth0t64",
+      "purl": "pkg:deb/ubuntu/libnpth0t64@1.8-3build1",
+      "group": "ubuntu",
+      "version": "1.8-3build1"
+    },
+    {
+      "type": "library",
+      "name": "libp11-kit0",
+      "purl": "pkg:deb/ubuntu/libp11-kit0@0.26.2-2",
+      "group": "ubuntu",
+      "version": "0.26.2-2"
+    },
+    {
+      "type": "library",
+      "name": "libpam-modules-bin",
+      "purl": "pkg:deb/ubuntu/libpam-modules-bin@1.7.0-5ubuntu3.2",
+      "group": "ubuntu",
+      "version": "1.7.0-5ubuntu3.2"
+    },
+    {
+      "type": "library",
+      "name": "libpam-modules",
+      "purl": "pkg:deb/ubuntu/libpam-modules@1.7.0-5ubuntu3.2",
+      "group": "ubuntu",
+      "version": "1.7.0-5ubuntu3.2"
+    },
+    {
+      "type": "library",
+      "name": "libpam-runtime",
+      "purl": "pkg:deb/ubuntu/libpam-runtime@1.7.0-5ubuntu3.2",
+      "group": "ubuntu",
+      "version": "1.7.0-5ubuntu3.2"
+    },
+    {
+      "type": "library",
+      "name": "libpam0g",
+      "purl": "pkg:deb/ubuntu/libpam0g@1.7.0-5ubuntu3.2",
+      "group": "ubuntu",
+      "version": "1.7.0-5ubuntu3.2"
+    },
+    {
+      "type": "library",
+      "name": "libpcre2-8-0",
+      "purl": "pkg:deb/ubuntu/libpcre2-8-0@10.46-1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "10.46-1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libpng16-16t64",
+      "purl": "pkg:deb/ubuntu/libpng16-16t64@1.6.57-1ubuntu0.1",
+      "group": "ubuntu",
+      "version": "1.6.57-1ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libproc2-0",
+      "purl": "pkg:deb/ubuntu/libproc2-0@4.0.4-9ubuntu1",
+      "group": "ubuntu",
+      "version": "4.0.4-9ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "libpsl5t64",
+      "purl": "pkg:deb/ubuntu/libpsl5t64@0.21.2-1.1build2",
+      "group": "ubuntu",
+      "version": "0.21.2-1.1build2"
+    },
+    {
+      "type": "library",
+      "name": "libreadline8t64",
+      "purl": "pkg:deb/ubuntu/libreadline8t64@8.3-4",
+      "group": "ubuntu",
+      "version": "8.3-4"
+    },
+    {
+      "type": "library",
+      "name": "librtmp1",
+      "purl": "pkg:deb/ubuntu/librtmp1@2.4%2B20151223.gitfa8646d.1-3",
+      "group": "ubuntu",
+      "version": "2.4+20151223.gitfa8646d.1-3"
+    },
+    {
+      "type": "library",
+      "name": "libsasl2-2",
+      "purl": "pkg:deb/ubuntu/libsasl2-2@2.1.28%2Bdfsg1-9ubuntu3",
+      "group": "ubuntu",
+      "version": "2.1.28+dfsg1-9ubuntu3"
+    },
+    {
+      "type": "library",
+      "name": "libsasl2-modules-db",
+      "purl": "pkg:deb/ubuntu/libsasl2-modules-db@2.1.28%2Bdfsg1-9ubuntu3",
+      "group": "ubuntu",
+      "version": "2.1.28+dfsg1-9ubuntu3"
+    },
+    {
+      "type": "library",
+      "name": "libseccomp2",
+      "purl": "pkg:deb/ubuntu/libseccomp2@2.6.0-2ubuntu5",
+      "group": "ubuntu",
+      "version": "2.6.0-2ubuntu5"
+    },
+    {
+      "type": "library",
+      "name": "libselinux1",
+      "purl": "pkg:deb/ubuntu/libselinux1@3.9-4build1",
+      "group": "ubuntu",
+      "version": "3.9-4build1"
+    },
+    {
+      "type": "library",
+      "name": "libsemanage-common",
+      "purl": "pkg:deb/ubuntu/libsemanage-common@3.9-1build1",
+      "group": "ubuntu",
+      "version": "3.9-1build1"
+    },
+    {
+      "type": "library",
+      "name": "libsemanage2",
+      "purl": "pkg:deb/ubuntu/libsemanage2@3.9-1build1",
+      "group": "ubuntu",
+      "version": "3.9-1build1"
+    },
+    {
+      "type": "library",
+      "name": "libsepol2",
+      "purl": "pkg:deb/ubuntu/libsepol2@3.9-2",
+      "group": "ubuntu",
+      "version": "3.9-2"
+    },
+    {
+      "type": "library",
+      "name": "libsmartcols1",
+      "purl": "pkg:deb/ubuntu/libsmartcols1@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "libsqlite3-0",
+      "purl": "pkg:deb/ubuntu/libsqlite3-0@3.46.1-9ubuntu0.3",
+      "group": "ubuntu",
+      "version": "3.46.1-9ubuntu0.3"
+    },
+    {
+      "type": "library",
+      "name": "libss2",
+      "purl": "pkg:deb/ubuntu/libss2@1.47.2-3ubuntu4",
+      "group": "ubuntu",
+      "version": "1.47.2-3ubuntu4"
+    },
+    {
+      "type": "library",
+      "name": "libssh2-1t64",
+      "purl": "pkg:deb/ubuntu/libssh2-1t64@1.11.1-1ubuntu0.26.04.4",
+      "group": "ubuntu",
+      "version": "1.11.1-1ubuntu0.26.04.4"
+    },
+    {
+      "type": "library",
+      "name": "libssl3t64",
+      "purl": "pkg:deb/ubuntu/libssl3t64@3.5.5-1ubuntu3.7",
+      "group": "ubuntu",
+      "version": "3.5.5-1ubuntu3.7"
+    },
+    {
+      "type": "library",
+      "name": "libstdc++6",
+      "purl": "pkg:deb/ubuntu/libstdc%2B%2B6@16-20260322-1ubuntu1",
+      "group": "ubuntu",
+      "version": "16-20260322-1ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "libsystemd0",
+      "purl": "pkg:deb/ubuntu/libsystemd0@259.9-0ubuntu0.1",
+      "group": "ubuntu",
+      "version": "259.9-0ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libtasn1-6",
+      "purl": "pkg:deb/ubuntu/libtasn1-6@4.21.0-2",
+      "group": "ubuntu",
+      "version": "4.21.0-2"
+    },
+    {
+      "type": "library",
+      "name": "libtinfo6",
+      "purl": "pkg:deb/ubuntu/libtinfo6@6.6%2B20251231-1",
+      "group": "ubuntu",
+      "version": "6.6+20251231-1"
+    },
+    {
+      "type": "library",
+      "name": "libudev1",
+      "purl": "pkg:deb/ubuntu/libudev1@259.9-0ubuntu0.1",
+      "group": "ubuntu",
+      "version": "259.9-0ubuntu0.1"
+    },
+    {
+      "type": "library",
+      "name": "libunistring5",
+      "purl": "pkg:deb/ubuntu/libunistring5@1.3-2build1",
+      "group": "ubuntu",
+      "version": "1.3-2build1"
+    },
+    {
+      "type": "library",
+      "name": "libuuid1",
+      "purl": "pkg:deb/ubuntu/libuuid1@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "libxxhash0",
+      "purl": "pkg:deb/ubuntu/libxxhash0@0.8.3-2build1",
+      "group": "ubuntu",
+      "version": "0.8.3-2build1"
+    },
+    {
+      "type": "library",
+      "name": "libzstd1",
+      "purl": "pkg:deb/ubuntu/libzstd1@1.5.7%2Bdfsg-3",
+      "group": "ubuntu",
+      "version": "1.5.7+dfsg-3"
+    },
+    {
+      "type": "library",
+      "name": "locales",
+      "purl": "pkg:deb/ubuntu/locales@2.43-2ubuntu2.7",
+      "group": "ubuntu",
+      "version": "2.43-2ubuntu2.7"
+    },
+    {
+      "type": "library",
+      "name": "login.defs",
+      "purl": "pkg:deb/ubuntu/login.defs@4.17.4-2ubuntu3",
+      "group": "ubuntu",
+      "version": "4.17.4-2ubuntu3"
+    },
+    {
+      "type": "library",
+      "name": "login",
+      "purl": "pkg:deb/ubuntu/login@4.16.0-2%2Breally2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "4.16.0-2+really2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "logsave",
+      "purl": "pkg:deb/ubuntu/logsave@1.47.2-3ubuntu4",
+      "group": "ubuntu",
+      "version": "1.47.2-3ubuntu4"
+    },
+    {
+      "type": "library",
+      "name": "mawk",
+      "purl": "pkg:deb/ubuntu/mawk@1.3.4.20260129-1",
+      "group": "ubuntu",
+      "version": "1.3.4.20260129-1"
+    },
+    {
+      "type": "library",
+      "name": "mount",
+      "purl": "pkg:deb/ubuntu/mount@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "ncurses-base",
+      "purl": "pkg:deb/ubuntu/ncurses-base@6.6%2B20251231-1",
+      "group": "ubuntu",
+      "version": "6.6+20251231-1"
+    },
+    {
+      "type": "library",
+      "name": "ncurses-bin",
+      "purl": "pkg:deb/ubuntu/ncurses-bin@6.6%2B20251231-1",
+      "group": "ubuntu",
+      "version": "6.6+20251231-1"
+    },
+    {
+      "type": "library",
+      "name": "openssl-provider-legacy",
+      "purl": "pkg:deb/ubuntu/openssl-provider-legacy@3.5.5-1ubuntu3.7",
+      "group": "ubuntu",
+      "version": "3.5.5-1ubuntu3.7"
+    },
+    {
+      "type": "library",
+      "name": "openssl",
+      "purl": "pkg:deb/ubuntu/openssl@3.5.5-1ubuntu3.7",
+      "group": "ubuntu",
+      "version": "3.5.5-1ubuntu3.7"
+    },
+    {
+      "type": "library",
+      "name": "p11-kit-modules",
+      "purl": "pkg:deb/ubuntu/p11-kit-modules@0.26.2-2",
+      "group": "ubuntu",
+      "version": "0.26.2-2"
+    },
+    {
+      "type": "library",
+      "name": "p11-kit",
+      "purl": "pkg:deb/ubuntu/p11-kit@0.26.2-2",
+      "group": "ubuntu",
+      "version": "0.26.2-2"
+    },
+    {
+      "type": "library",
+      "name": "passwd",
+      "purl": "pkg:deb/ubuntu/passwd@4.17.4-2ubuntu3",
+      "group": "ubuntu",
+      "version": "4.17.4-2ubuntu3"
+    },
+    {
+      "type": "library",
+      "name": "perl-base",
+      "purl": "pkg:deb/ubuntu/perl-base@5.40.1-7ubuntu0.3",
+      "group": "ubuntu",
+      "version": "5.40.1-7ubuntu0.3"
+    },
+    {
+      "type": "library",
+      "name": "pinentry-curses",
+      "purl": "pkg:deb/ubuntu/pinentry-curses@1.3.2-3ubuntu1",
+      "group": "ubuntu",
+      "version": "1.3.2-3ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "procps",
+      "purl": "pkg:deb/ubuntu/procps@4.0.4-9ubuntu1",
+      "group": "ubuntu",
+      "version": "4.0.4-9ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "readline-common",
+      "purl": "pkg:deb/ubuntu/readline-common@8.3-4",
+      "group": "ubuntu",
+      "version": "8.3-4"
+    },
+    {
+      "type": "library",
+      "name": "rust-coreutils",
+      "purl": "pkg:deb/ubuntu/rust-coreutils@0.10.0-1ubuntu2~26.04.1",
+      "group": "ubuntu",
+      "version": "0.10.0-1ubuntu2~26.04.1"
+    },
+    {
+      "type": "library",
+      "name": "sed",
+      "purl": "pkg:deb/ubuntu/sed@4.9-2ubuntu1",
+      "group": "ubuntu",
+      "version": "4.9-2ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "sensible-utils",
+      "purl": "pkg:deb/ubuntu/sensible-utils@0.0.26build1",
+      "group": "ubuntu",
+      "version": "0.0.26build1"
+    },
+    {
+      "type": "library",
+      "name": "sysvinit-utils",
+      "purl": "pkg:deb/ubuntu/sysvinit-utils@3.15-5ubuntu1",
+      "group": "ubuntu",
+      "version": "3.15-5ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "tar",
+      "purl": "pkg:deb/ubuntu/tar@1.35%2Bdfsg-4ubuntu0.4",
+      "group": "ubuntu",
+      "version": "1.35+dfsg-4ubuntu0.4"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "purl": "pkg:deb/ubuntu/tzdata@2026e-0ubuntu0.26.04.1",
+      "group": "ubuntu",
+      "version": "2026e-0ubuntu0.26.04.1"
+    },
+    {
+      "type": "library",
+      "name": "ubuntu-keyring",
+      "purl": "pkg:deb/ubuntu/ubuntu-keyring@2023.11.28.1build1",
+      "group": "ubuntu",
+      "version": "2023.11.28.1build1"
+    },
+    {
+      "type": "library",
+      "name": "unzip",
+      "purl": "pkg:deb/ubuntu/unzip@6.0-29ubuntu1",
+      "group": "ubuntu",
+      "version": "6.0-29ubuntu1"
+    },
+    {
+      "type": "library",
+      "name": "util-linux",
+      "purl": "pkg:deb/ubuntu/util-linux@2.41.3-3ubuntu2.2",
+      "group": "ubuntu",
+      "version": "2.41.3-3ubuntu2.2"
+    },
+    {
+      "type": "library",
+      "name": "wget",
+      "purl": "pkg:deb/ubuntu/wget@1.25.0-2ubuntu4.4",
+      "group": "ubuntu",
+      "version": "1.25.0-2ubuntu4.4"
+    },
+    {
+      "type": "library",
+      "name": "zlib1g",
+      "purl": "pkg:deb/ubuntu/zlib1g@1.3.dfsg%2Breally1.3.1-1ubuntu3.2",
+      "group": "ubuntu",
+      "version": "1.3.dfsg+really1.3.1-1ubuntu3.2"
+    },
+    {
+      "type": "library",
+      "name": "go-flags",
+      "purl": "pkg:golang/github.com/canonical/go-flags@v0.0.0-20230403090104-105d09a091b8",
+      "group": "github.com/canonical",
+      "version": "v0.0.0-20230403090104-105d09a091b8"
+    },
+    {
+      "type": "library",
+      "name": "pebble",
+      "purl": "pkg:golang/github.com/canonical/pebble@v1.33.3-0.20261021134118-f036f355de35",
+      "group": "github.com/canonical",
+      "version": "v1.33.3-0.20261021134118-f036f355de35"
+    },
+    {
+      "type": "library",
+      "name": "x-go",
+      "purl": "pkg:golang/github.com/canonical/x-go@v0.0.0-20230522092633-7947a7587f5b",
+      "group": "github.com/canonical",
+      "version": "v0.0.0-20230522092633-7947a7587f5b"
+    },
+    {
+      "type": "library",
+      "name": "crypt",
+      "purl": "pkg:golang/github.com/gehirninc/crypt@v0.0.0-20230320061759-8cc1b52080c5",
+      "group": "github.com/gehirninc",
+      "version": "v0.0.0-20230320061759-8cc1b52080c5"
+    },
+    {
+      "type": "library",
+      "name": "websocket",
+      "purl": "pkg:golang/github.com/gorilla/websocket@v1.5.3",
+      "group": "github.com/gorilla",
+      "version": "v1.5.3"
+    },
+    {
+      "type": "library",
+      "name": "sys",
+      "purl": "pkg:golang/golang.org/x/sys@v0.48.0",
+      "group": "golang.org/x",
+      "version": "v0.48.0"
+    },
+    {
+      "type": "library",
+      "name": "term",
+      "purl": "pkg:golang/golang.org/x/term@v0.46.0",
+      "group": "golang.org/x",
+      "version": "v0.46.0"
+    },
+    {
+      "type": "library",
+      "name": "tomb.v2",
+      "purl": "pkg:golang/gopkg.in/tomb.v2@v2.0.0-20161208151619-d5d1b5820637",
+      "group": "gopkg.in",
+      "version": "v2.0.0-20161208151619-d5d1b5820637"
+    },
+    {
+      "type": "library",
+      "name": "yaml.v2",
+      "purl": "pkg:golang/gopkg.in/yaml.v2@v2.4.0",
+      "group": "gopkg.in",
+      "version": "v2.4.0"
+    },
+    {
+      "type": "library",
+      "name": "yaml.v3",
+      "purl": "pkg:golang/gopkg.in/yaml.v3@v3.0.1",
+      "group": "gopkg.in",
+      "version": "v3.0.1"
+    },
+    {
+      "type": "library",
+      "name": "stdlib",
+      "purl": "pkg:golang/stdlib@v1.27.3",
+      "version": "v1.27.3"
+    },
+    {
+      "type": "library",
+      "name": "logback-classic",
+      "purl": "pkg:maven/ch.qos.logback/logback-classic@1.5.34",
+      "group": "ch.qos.logback",
+      "version": "1.5.34"
+    },
+    {
+      "type": "library",
+      "name": "logback-core",
+      "purl": "pkg:maven/ch.qos.logback/logback-core@1.5.34",
+      "group": "ch.qos.logback",
+      "version": "1.5.34"
+    },
+    {
+      "type": "library",
+      "name": "jackson-annotations",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.23",
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.23"
+    },
+    {
+      "type": "library",
+      "name": "jackson-core",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.23.0",
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.23.0"
+    },
+    {
+      "type": "library",
+      "name": "jackson-databind",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.23.0",
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.23.0"
+    },
+    {
+      "type": "library",
+      "name": "jackson-datatype-jdk8",
+      "purl": "pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jdk8@2.23.0",
+      "group": "com.fasterxml.jackson.datatype",
+      "version": "2.23.0"
+    },
+    {
+      "type": "library",
+      "name": "jackson-datatype-jsr310",
+      "purl": "pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.23.0",
+      "group": "com.fasterxml.jackson.datatype",
+      "version": "2.23.0"
+    },
+    {
+      "type": "library",
+      "name": "jackson-module-parameter-names",
+      "purl": "pkg:maven/com.fasterxml.jackson.module/jackson-module-parameter-names@2.23.0",
+      "group": "com.fasterxml.jackson.module",
+      "version": "2.23.0"
+    },
+    {
+      "type": "library",
+      "name": "apm-java-demo",
+      "purl": "pkg:maven/com.octo/apm-java-demo@1.0.0",
+      "group": "com.octo",
+      "version": "1.0.0"
+    },
+    {
+      "type": "library",
+      "name": "ons",
+      "purl": "pkg:maven/com.oracle.database.ha/ons@23.7.0.25.01",
+      "group": "com.oracle.database.ha",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "simplefan",
+      "purl": "pkg:maven/com.oracle.database.ha/simplefan@23.7.0.25.01",
+      "group": "com.oracle.database.ha",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "ojdbc11",
+      "purl": "pkg:maven/com.oracle.database.jdbc/ojdbc11@23.7.0.25.01",
+      "group": "com.oracle.database.jdbc",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "rsi",
+      "purl": "pkg:maven/com.oracle.database.jdbc/rsi@23.7.0.25.01",
+      "group": "com.oracle.database.jdbc",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "ucp11",
+      "purl": "pkg:maven/com.oracle.database.jdbc/ucp11@23.7.0.25.01",
+      "group": "com.oracle.database.jdbc",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "orai18n",
+      "purl": "pkg:maven/com.oracle.database.nls/orai18n@23.7.0.25.01",
+      "group": "com.oracle.database.nls",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "oraclepki",
+      "purl": "pkg:maven/com.oracle.database.security/oraclepki@23.7.0.25.01",
+      "group": "com.oracle.database.security",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "xdb",
+      "purl": "pkg:maven/com.oracle.database.xml/xdb@23.7.0.25.01",
+      "group": "com.oracle.database.xml",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "xmlparserv2",
+      "purl": "pkg:maven/com.oracle.database.xml/xmlparserv2@23.7.0.25.01",
+      "group": "com.oracle.database.xml",
+      "version": "23.7.0.25.01"
+    },
+    {
+      "type": "library",
+      "name": "okhttp-jvm",
+      "purl": "pkg:maven/com.squareup.okhttp3/okhttp-jvm@5.3.2",
+      "group": "com.squareup.okhttp3",
+      "version": "5.3.2"
+    },
+    {
+      "type": "library",
+      "name": "okio-jvm",
+      "purl": "pkg:maven/com.squareup.okio/okio-jvm@3.16.4",
+      "group": "com.squareup.okio",
+      "version": "3.16.4"
+    },
+    {
+      "type": "library",
+      "name": "FastInfoset",
+      "purl": "pkg:maven/com.sun.xml.fastinfoset/FastInfoset@1.2.10",
+      "group": "com.sun.xml.fastinfoset",
+      "version": "1.2.10"
+    },
+    {
+      "type": "library",
+      "name": "micrometer-commons",
+      "purl": "pkg:maven/io.micrometer/micrometer-commons@1.15.12",
+      "group": "io.micrometer",
+      "version": "1.15.12"
+    },
+    {
+      "type": "library",
+      "name": "micrometer-core",
+      "purl": "pkg:maven/io.micrometer/micrometer-core@1.15.12",
+      "group": "io.micrometer",
+      "version": "1.15.12"
+    },
+    {
+      "type": "library",
+      "name": "micrometer-jakarta9",
+      "purl": "pkg:maven/io.micrometer/micrometer-jakarta9@1.15.12",
+      "group": "io.micrometer",
+      "version": "1.15.12"
+    },
+    {
+      "type": "library",
+      "name": "micrometer-observation",
+      "purl": "pkg:maven/io.micrometer/micrometer-observation@1.15.12",
+      "group": "io.micrometer",
+      "version": "1.15.12"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-api",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-api@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-common",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-common@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-context",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-context@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-common",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-common@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp-common",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp-common@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-otlp",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-otlp@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-exporter-sender-okhttp",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-exporter-sender-okhttp@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk-common",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk-common@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk-extension-autoconfigure-spi",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk-extension-autoconfigure-spi@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk-logs",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk-logs@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk-metrics",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk-metrics@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk-trace",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk-trace@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-sdk@1.62.0",
+      "group": "io.opentelemetry",
+      "version": "1.62.0"
+    },
+    {
+      "type": "library",
+      "name": "jakarta.annotation-api",
+      "purl": "pkg:maven/jakarta.annotation/jakarta.annotation-api@2.1.1",
+      "group": "jakarta.annotation",
+      "version": "2.1.1"
+    },
+    {
+      "type": "library",
+      "name": "log4j-api",
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-api@2.24.3",
+      "group": "org.apache.logging.log4j",
+      "version": "2.24.3"
+    },
+    {
+      "type": "library",
+      "name": "log4j-to-slf4j",
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-to-slf4j@2.24.3",
+      "group": "org.apache.logging.log4j",
+      "version": "2.24.3"
+    },
+    {
+      "type": "library",
+      "name": "tomcat-embed-core",
+      "purl": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-core@10.1.62",
+      "group": "org.apache.tomcat.embed",
+      "version": "10.1.62"
+    },
+    {
+      "type": "library",
+      "name": "tomcat-embed-el",
+      "purl": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-el@10.1.62",
+      "group": "org.apache.tomcat.embed",
+      "version": "10.1.62"
+    },
+    {
+      "type": "library",
+      "name": "tomcat-embed-websocket",
+      "purl": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-websocket@10.1.62",
+      "group": "org.apache.tomcat.embed",
+      "version": "10.1.62"
+    },
+    {
+      "type": "library",
+      "name": "HdrHistogram",
+      "purl": "pkg:maven/org.hdrhistogram/HdrHistogram@2.2.2",
+      "group": "org.hdrhistogram",
+      "version": "2.2.2"
+    },
+    {
+      "type": "library",
+      "name": "kotlin-stdlib",
+      "purl": "pkg:maven/org.jetbrains.kotlin/kotlin-stdlib@1.9.25",
+      "group": "org.jetbrains.kotlin",
+      "version": "1.9.25"
+    },
+    {
+      "type": "library",
+      "name": "annotations",
+      "purl": "pkg:maven/org.jetbrains/annotations@13.0",
+      "group": "org.jetbrains",
+      "version": "13.0"
+    },
+    {
+      "type": "library",
+      "name": "LatencyUtils",
+      "purl": "pkg:maven/org.latencyutils/LatencyUtils@2.0.3",
+      "group": "org.latencyutils",
+      "version": "2.0.3"
+    },
+    {
+      "type": "library",
+      "name": "jul-to-slf4j",
+      "purl": "pkg:maven/org.slf4j/jul-to-slf4j@2.0.18",
+      "group": "org.slf4j",
+      "version": "2.0.18"
+    },
+    {
+      "type": "library",
+      "name": "slf4j-api",
+      "purl": "pkg:maven/org.slf4j/slf4j-api@2.0.18",
+      "group": "org.slf4j",
+      "version": "2.0.18"
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-actuator-autoconfigure",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-actuator-autoconfigure@3.5.16",
+      "group": "org.springframework.boot",
+      "version": "3.5.16"
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-actuator",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-actuator@3.5.16",
+      "group": "org.springframework.boot",
+      "version": "3.5.16"
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-autoconfigure",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-autoconfigure@3.5.16",
+      "group": "org.springframework.boot",
+      "version": "3.5.16"
+    },
+    {
+      "type": "library",
+      "name": "spring-boot-jarmode-tools",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-jarmode-tools@3.5.16",
+      "group": "org.springframework.boot",
+      "version": "3.5.16"
+    },
+    {
+      "type": "library",
+      "name": "spring-boot",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot@3.5.16",
+      "group": "org.springframework.boot",
+      "version": "3.5.16"
+    },
+    {
+      "type": "library",
+      "name": "spring-aop",
+      "purl": "pkg:maven/org.springframework/spring-aop@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-beans",
+      "purl": "pkg:maven/org.springframework/spring-beans@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-context",
+      "purl": "pkg:maven/org.springframework/spring-context@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-core",
+      "purl": "pkg:maven/org.springframework/spring-core@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-expression",
+      "purl": "pkg:maven/org.springframework/spring-expression@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-jcl",
+      "purl": "pkg:maven/org.springframework/spring-jcl@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-web",
+      "purl": "pkg:maven/org.springframework/spring-web@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "spring-webmvc",
+      "purl": "pkg:maven/org.springframework/spring-webmvc@6.2.19",
+      "group": "org.springframework",
+      "version": "6.2.19"
+    },
+    {
+      "type": "library",
+      "name": "snakeyaml",
+      "purl": "pkg:maven/org.yaml/snakeyaml@2.4",
+      "group": "org.yaml",
+      "version": "2.4"
+    }
+  ]
+}
