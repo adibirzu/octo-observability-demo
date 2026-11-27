@@ -193,6 +193,7 @@ def test_observability_360_endpoint_returns_customer_demo_contract(monkeypatch) 
     monkeypatch.setattr(observability_dashboard, "_integration_health_summary", integration_health)
     monkeypatch.setattr(observability_dashboard, "_security_summary", security)
     monkeypatch.setattr(observability_dashboard, "_order_sync_health", order_sync)
+    monkeypatch.setattr(observability_dashboard, "async_session_factory", None)
     monkeypatch.setattr(observability_dashboard, "push_log", lambda *args, **kwargs: None)
 
     app = FastAPI()
@@ -206,6 +207,7 @@ def test_observability_360_endpoint_returns_customer_demo_contract(monkeypatch) 
     assert "service_health" in payload
     assert "correlation" not in payload
     assert "pillars" not in payload
+    assert payload["charts"]["signal_trend"] == {"samples": []}
 
     payload_text = response.text.lower()
     assert "ocid1." not in payload_text

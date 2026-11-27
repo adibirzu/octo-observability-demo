@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import time
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from fastapi import APIRouter, Request
-from sqlalchemy import func, select, text, cast, Float
+from sqlalchemy import case, func, select, text, cast, Float
 
 from server.config import cfg
 from server.database import (
@@ -43,6 +43,8 @@ async def observability_360(request: Request):
         integration_health = await _integration_health_summary()
         security_summary = await _security_summary()
         sync_health = await _order_sync_health()
+        observed_at = datetime.now(timezone.utc).replace(tzinfo=None)
+        signal_trend = await _order_sync_trend(observed_at)
         pillars = _observability_pillars()
 
         elapsed_ms = round((time.time() - start) * 1000, 2)
@@ -55,7 +57,7 @@ async def observability_360(request: Request):
         })
 
         return {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": observed_at.isoformat() + "Z",
             **_customer_observability_dashboard(
                 app_health=app_health,
                 db_health=db_health,
@@ -63,6 +65,7 @@ async def observability_360(request: Request):
                 security=security_summary,
                 order_sync=sync_health,
                 pillars=pillars,
+                signal_trend=signal_trend,
             ),
             "dashboard_meta": {
                 "query_time_ms": elapsed_ms,
@@ -328,6 +331,7 @@ def _customer_observability_dashboard(
     security: dict,
     order_sync: dict,
     pillars: dict,
+    signal_trend: list[dict[str, str | int | None]] | None = None,
 ) -> dict:
     """Build the browser-facing, customer-safe observability demo payload."""
     entities = app_health.get("entities") or {}
@@ -415,6 +419,7 @@ def _customer_observability_dashboard(
                 {"label": "In progress", "value": backlog, "tone": "warm"},
             ],
             "signal_coverage": signal_cards,
+            "signal_trend": {"samples": signal_trend or []},
         },
         "customer_journey": [
             {
@@ -719,6 +724,48 @@ async def _security_summary() -> dict:
         }
     except Exception as e:
         return {"status": "error", "error": str(e)}
+
+
+async def _order_sync_trend(now_utc: datetime) -> list[dict[str, str | int | None]]:
+    """Count successful handoffs in UTC hours with timestamped audit activity."""
+    if async_session_factory is None:
+        return []
+
+    current_hour = now_utc.replace(minute=0, second=0, microsecond=0)
+    hours = [current_hour - timedelta(hours=age) for age in reversed(range(24))]
+    created_at = OrderSyncAudit.created_at
+    # CASE ranges keep the grouping portable across Oracle and PostgreSQL.
+    bucket = case(
+        *((created_at < end, index) for index, end in enumerate(hours[1:])),
+        else_=len(hours) - 1,
+    ).label("bucket")
+    events = (
+        select(bucket, OrderSyncAudit.sync_status)
+        .where(created_at >= hours[0], created_at <= now_utc)
+        .subquery()
+    )
+    successful = func.count(case((events.c.sync_status == "success", 1)))
+    statement = select(events.c.bucket, successful).group_by(events.c.bucket)
+
+    counts: dict[int, int] = {}
+    try:
+        async with async_session_factory() as session:
+            for index, count in await session.execute(statement):
+                if (
+                    type(index) is not int or not 0 <= index < len(hours)
+                    or type(count) is not int or count < 0 or index in counts
+                ):
+                    return []
+                counts[index] = count
+    except Exception:
+        return []
+
+    if not counts:
+        return []
+    return [
+        {"time": hour.isoformat() + "Z", "value": counts.get(index)}
+        for index, hour in enumerate(hours)
+    ]
 
 
 async def _order_sync_health() -> dict:
