@@ -72,6 +72,12 @@
     </div>
 </section>
 
+<section class="observability-panel" aria-labelledby="signal-trend-title">
+    <div class="section-heading"><div><p class="section-kicker">MELT evidence</p>
+        <h3 id="signal-trend-title">Signal Trend</h3></div></div>
+    <div id="signal-trend" aria-live="polite">Missing: No trend samples supplied.</div>
+</section>
+
 <div class="observability-layout wide-left">
     <section class="observability-panel">
         <div class="section-heading">
@@ -600,6 +606,43 @@ function renderOrderFlow(items) {
     chart.innerHTML = `<div class="flow-stack">${segments}</div><div class="flow-legend">${legend}</div>`;
 }
 
+function renderSignalTrend(trend) {
+    const card = document.getElementById('signal-trend');
+    const samples = trend && trend.samples;
+    if (!Array.isArray(samples) || !samples.length || samples.length > 24 ||
+        samples.some((sample) => !sample || typeof sample.time !== 'string' ||
+            !sample.time.trim() || sample.time.length > 80 ||
+            (sample.value !== null && (typeof sample.value !== 'number' || !Number.isFinite(sample.value))))) {
+        card.innerHTML = '<span class="panel-chip">Missing</span><p>No valid bounded trend samples supplied.</p>';
+        return;
+    }
+    const values = samples.filter((sample) => sample.value !== null).map((sample) => sample.value);
+    if (!values.length) {
+        card.innerHTML = '<span class="panel-chip">Missing</span><p>No observed trend values supplied.</p>';
+        return;
+    }
+    const status = values.length === samples.length ? 'Observed' : 'Partial';
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const scale = Math.max(Math.abs(min), Math.abs(max), 1);
+    const low = min / scale;
+    const span = max / scale - low;
+    const points = samples.map((sample, index) => sample.value === null ? null : [
+        samples.length === 1 ? 50 : index * 100 / (samples.length - 1),
+        span ? 45 - ((sample.value / scale - low) / span) * 40 : 25
+    ]);
+    const marks = points.map((point, index) => {
+        if (!point) return '';
+        const previous = points[index - 1];
+        const line = previous ? `<line x1="${previous[0]}" y1="${previous[1]}" x2="${point[0]}" y2="${point[1]}" />` : '';
+        return `${line}<circle cx="${point[0]}" cy="${point[1]}" r="1.5" />`;
+    }).join('');
+    const summary = samples.map((sample) => `${escapeHtml(sample.time)}: ${sample.value === null ? 'missing' : sample.value}`).join('; ');
+    card.innerHTML = `<span class="panel-chip">${status}</span>
+        <svg viewBox="-2 0 104 50" width="100%" height="100" aria-hidden="true" style="stroke:var(--accent, currentColor);fill:currentColor;stroke-width:1">${marks}</svg>
+        <p>Signal samples (${values.length} of ${samples.length} observed): ${summary}</p>`;
+}
+
 function renderSignals(items) {
     const grid = document.getElementById('signal-grid');
     if (!items || !items.length) {
@@ -668,6 +711,7 @@ function renderObservabilityDemo(payload) {
     renderBusinessMix((payload.charts || {}).business_mix || []);
     renderOrderFlow((payload.charts || {}).order_flow || []);
     renderSignals((payload.charts || {}).signal_coverage || []);
+    renderSignalTrend((payload.charts || {}).signal_trend);
     renderJourney(payload.customer_journey || []);
     renderServiceHealth(payload.service_health || {});
     document.getElementById('last-updated').textContent = payload.timestamp

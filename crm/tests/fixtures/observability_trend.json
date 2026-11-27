@@ -1,0 +1,5 @@
+{
+  "missing": {"samples": []},
+  "partial": {"samples": [{"time": "09:00", "value": 2}, {"time": "09:05", "value": null}, {"time": "09:10", "value": 4}]},
+  "observed": {"samples": [{"time": "09:00", "value": 2}, {"time": "09:05", "value": 3}, {"time": "09:10", "value": 4}]}
+}
