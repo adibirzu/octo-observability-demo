@@ -83,13 +83,13 @@ Each lab follows the same shape so you can scan ahead and plan:
 | **Troubleshooting** | The three most common things that go sideways. |
 | **Read more** | Underlying docs, OCI service references, related code paths. |
 
-## The 18 labs
+## The 19 labs
 
 The arc covers all six observability pillars: **application telemetry**
 (labs 01–04), **metrics, alarms & gateways** (05–06), **Log Analytics
 correlation** (02, 07), **infrastructure & DB health** (08, 11, 17),
 **security log use-cases** (06), **GenAI monitoring** (12–16), and two
-**end-to-end root-cause capstones** (10, 18).
+**end-to-end root-cause labs** (10, 18), followed by a six-pillar capstone (19).
 
 | # | Lab | Time | Pre-reqs |
 |---|---|---|---|
@@ -111,10 +111,11 @@ correlation** (02, 07), **infrastructure & DB health** (08, 11, 17),
 | 16 | [GenAI RAG retrieval lineage](lab-16-genai-rag-retrieval-lineage.md) | 25 min | lab 12; AI Studio enabled |
 | 17 | [Root cause: APM → Log Analytics → OPSI → DBM](lab-17-root-cause-apm-logan.md) | 35 min | labs 01-03; OPSI/DBM enabled |
 | 18 | [Root cause: failed payment with APM](lab-18-payment-failure-rca-apm.md) | 35 min | labs 01-03, 10, 17 |
+| 19 | [Six-pillar workshop capstone](lab-19-six-pillar-capstone.md) | 40 min | lab 18; offline |
 
-**Total:** ~9.5 hours across 18 labs. **Recommended split:** labs 1-5 day one
-(~2.5h), labs 6-11 day two (~3.5h), GenAI labs 12-16 + root-cause labs 17-18 as
-a focused add-on (~3h).
+**Total:** ~10 hours across 19 labs. **Recommended split:** labs 1-5 day one
+(~2.5h), labs 6-11 day two (~3.5h), GenAI labs 12-16 + root-cause labs 17-18 and capstone 19 as
+a focused add-on (~3.5h).
 
 ---
 
