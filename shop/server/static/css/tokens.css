@@ -8,6 +8,7 @@
  */
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap");
 
+/* BEGIN SHARED DESIGN TOKENS */
 :root {
   /* ---- Canonical brand ---- */
   --color-surface: #07111c;
@@ -39,6 +40,10 @@
   --font-body: "Inter", sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
 
+}
+/* END SHARED DESIGN TOKENS */
+
+:root {
   /* ---- base.html surface aliases (back-compat; identical resolved values) ---- */
   --bg: var(--color-surface);
   --bg-soft: var(--color-surface-soft);
