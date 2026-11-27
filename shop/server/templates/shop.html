@@ -426,16 +426,19 @@
     .checkout-observability-guide ul { margin: 0; padding-left: 18px; }
     .checkout-evidence {
         display: grid;
-        gap: 7px;
-        margin-top: 8px;
-        padding: 10px 12px;
+        gap: 10px;
+        margin-top: 12px;
+        padding: 16px;
         border-radius: var(--shop-radius-md);
         background: rgba(7, 9, 12, 0.64);
         border: 1px solid var(--shop-line);
+        border-top: 3px solid var(--shop-accent, #66d9c8);
         color: var(--shop-muted);
         font-size: 0.76rem;
         overflow-wrap: anywhere;
     }
+    .checkout-evidence h3 { margin: 0; color: var(--shop-ink); font-size: 1rem; }
+    .checkout-evidence p { margin: 0; line-height: 1.5; }
     .checkout-evidence code {
         display: block;
         white-space: normal;
@@ -797,7 +800,7 @@
                     <button class="btn" type="submit" id="checkoutSubmitButton" data-testid="place-order-button">Place Order</button>
                 </form>
                 <div class="helper" id="checkoutStatus" data-testid="checkout-status" style="margin-top:6px;"></div>
-                <div class="checkout-evidence" id="checkoutEvidence" data-testid="checkout-evidence" hidden></div>
+                <section class="checkout-evidence" id="checkoutEvidence" data-testid="checkout-evidence" aria-live="polite"><h3>Checkout receipt</h3><p>No checkout evidence yet. Place an order to see its correlation IDs.</p></section>
             </div>
 
             <!-- Authorized dealers -->
@@ -1348,7 +1351,12 @@ function checkoutErrorMessage(result, statusCode) {
 
 function renderCheckoutEvidence(result) {
     const evidence = document.getElementById('checkoutEvidence');
-    if (!evidence || !result) return;
+    if (!evidence) return;
+    if (!result) {
+        evidence.hidden = false;
+        evidence.innerHTML = '<h3>Checkout receipt</h3><p>No checkout evidence yet. Place an order to see its correlation IDs.</p>';
+        return;
+    }
     const traceId = result.trace_id || '';
     const orderId = result.order_id || '';
     const gatewayId = result.payment?.gateway?.request_id || result.payment?.gateway_request_id || '';
@@ -1390,7 +1398,7 @@ function renderCheckoutEvidence(result) {
         ['Security Triage Search', gatewayId ? `payment-gateway-security-triage → 'Payment Gateway Request ID' = '${gatewayId}'` : 'payment-gateway-security-triage → use Payment Gateway Request ID'],
     ];
     evidence.hidden = false;
-    evidence.innerHTML = `<strong>Captured data pivots</strong>` + rows.map(([label, value]) => `
+    evidence.innerHTML = `<h3>Checkout receipt</h3><p>Captured data pivots</p>` + rows.map(([label, value]) => `
         <div class="evidence-row">
             <code>${esc(label)}: ${esc(value)}</code>
             <button class="btn copy-evidence-btn" type="button" data-copy="${esc(value)}">Copy</button>
@@ -1414,6 +1422,7 @@ function renderCheckoutEvidence(result) {
 async function submitCheckout(e) {
     e.preventDefault();
     if (state.checkoutInFlight) return;
+    renderCheckoutEvidence(null);
     ensurePurchaseJourney('checkout_submit');
     state.checkoutInFlight = true;
     const formEl = e.currentTarget;
