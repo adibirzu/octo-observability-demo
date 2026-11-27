@@ -303,15 +303,15 @@ a {
 
 .content-body {
     display: grid;
-    gap: 18px;
+    gap: var(--space-md);
 }
 
 .hero-panel,
 .card,
 .login-card {
-    background: var(--bg-panel);
-    border: 1px solid var(--line);
-    border-radius: 26px;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
 }
 
@@ -646,13 +646,13 @@ a {
 .btn {
     align-items: center;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     display: inline-flex;
     font: inherit;
     font-size: 0.9rem;
     font-weight: 600;
-    gap: 8px;
+    gap: var(--space-xs);
     min-height: 42px;
     padding: 0 1rem;
     transition: 0.18s ease;
@@ -663,7 +663,7 @@ a {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #6dd7e4, #3aa3d1);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
     color: #03131e;
 }
 
