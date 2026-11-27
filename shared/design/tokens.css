@@ -1,0 +1,32 @@
+:root {
+  /* ---- Canonical brand ---- */
+  --color-surface: #07111c;
+  --color-surface-soft: #0d1824;
+  --color-panel: rgba(9, 20, 34, 0.78);
+  --color-text: #eef6ff;
+  --color-text-muted: #95a8bd;
+  --color-line: rgba(140, 190, 230, 0.14);
+  --color-accent: #6cd2e0;
+  --color-accent-strong: #2da7d7;
+  --color-warn: #ffbd59;
+  --color-danger: #ff6b7a;
+  --color-success: #5be59f;
+  --shadow: 0 24px 60px rgba(3, 10, 18, 0.48);
+
+  /* ---- Scale ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --space-xs: 6px;
+  --space-sm: 12px;
+  --space-md: 18px;
+  --space-lg: 28px;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+
+  /* ---- Fonts ---- */
+  --font-display: "Orbitron", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+}
