@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 
@@ -298,4 +299,75 @@ def test_release_readiness_documents_offline_and_live_promotion_gates() -> None:
             "Playwright E2E",
         ),
         "release readiness docs",
+    )
+
+
+def assert_gateway_toolchain_compatible(module: str, dockerfile: str) -> None:
+    version_pattern = r"(\d+)\.(\d+)(?:\.(\d+))?(?:(beta|rc)(\d+))?"
+
+    def parse_version(value: str) -> tuple[int, int, int, int, int]:
+        match = re.fullmatch(version_pattern, value)
+        assert match, f"Invalid Go version: {value}"
+        major, minor, patch, prerelease, number = match.groups()
+        return (
+            int(major), int(minor), int(patch or 0),
+            {"beta": 0, "rc": 1, None: 2}[prerelease], int(number or 0),
+        )
+
+    go = re.findall(r"(?m)^\s*go\s+(\S+)\s*(?://.*)?$", module)
+    toolchain = re.findall(r"(?m)^\s*toolchain\s+(\S+)\s*(?://.*)?$", module)
+    assert len(go) == 1 and len(toolchain) <= 1, "Invalid go.mod directives"
+    required = parse_version(go[0])
+    if toolchain and toolchain[0] != "local":
+        assert toolchain[0].startswith("go"), "Invalid toolchain directive"
+        required = max(required, parse_version(toolchain[0][2:]))
+
+    builders = re.findall(
+        r"(?im)^\s*FROM\s+(?:--platform=\S+\s+)?(\S+)\s+AS\s+builder\s*(?:#.*)?$",
+        dockerfile,
+    )
+    assert len(builders) == 1, "Expected one Go builder stage"
+    image = re.fullmatch(
+        r"golang:(" + version_pattern + r")(?:-[a-zA-Z0-9][a-zA-Z0-9_.-]*)?(?:@sha256:[a-fA-F0-9]+)?",
+        builders[0],
+    )
+    assert image, f"Invalid or floating Go builder image: {builders[0]}"
+    builder = parse_version(image.group(1))
+    # An unpatched tag selects the current patch in that minor series.
+    if image.group(4) is None and image.group(5) is None:
+        compatible = builder[:2] >= required[:2]
+    else:
+        compatible = builder >= required
+    assert compatible, f"Go builder {builders[0]} does not satisfy required Go version {required}"
+
+
+def test_gateway_toolchain_version_contract() -> None:
+    cases = (
+        ("go 1.26.0", "golang:1.25-alpine", False),
+        ("go 1.25.0\ntoolchain go1.26.0", "golang:1.25-alpine", False),
+        ("go 1.25.0", "golang:1.25-alpine", True),
+        ("go 1.25.0", "golang:1.25-bookworm", True),
+        ("go 1.25.3", "golang:1.25.2-alpine", False),
+        ("go 1.25.2", "golang:1.25.3-alpine", True),
+        ("go 1.25.0\ntoolchain go1.25.4", "golang:1.25.3-alpine", False),
+        ("go 1.25.0\ntoolchain local", "golang:1.25-alpine", True),
+        ("go 1.25.0\ntoolchain go1.26rc1", "golang:1.26rc2-alpine", True),
+        ("go 1.25.0\ntoolchain go1.26rc2", "golang:1.26rc1-alpine", False),
+        *(("go 1.25.0", image, False) for image in (
+            "golang:latest", "golang:alpine", "golang:1-alpine", "golang", "golang@sha256:abc", "golang:1.25bad"
+        )),
+    )
+    for module, image, valid in cases:
+        try:
+            assert_gateway_toolchain_compatible(module, f"FROM {image} AS builder")
+        except AssertionError:
+            assert not valid, (module, image)
+        else:
+            assert valid, (module, image)
+
+
+def test_gateway_toolchain_matches_live_builder() -> None:
+    assert_gateway_toolchain_compatible(
+        read_text("shop/services/workflow-gateway/go.mod"),
+        read_text("shop/services/workflow-gateway/Dockerfile"),
     )
