@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import shlex
 import stat
 import subprocess
 import sys
@@ -29,8 +30,107 @@ def test_active_workflow_jobs_are_mapped_and_only_audits_have_network():
     assert {name for name, step in steps.items() if step.online} == {
         "pip-audit-shop", "pip-audit-crm", "npm-audit-shop", "npm-audit-browser-runner"
     }
+    assert steps["playwright-visual-receipt"].skipped
     assert steps["orm-native-image-build"].skipped
     assert steps["ocir-publish"].skipped
+
+
+EXPECTED_VISUAL_PLAYWRIGHT_TOKENS = [
+    "npx",
+    "--no-install",
+    "playwright",
+    "test",
+    "-c",
+    "playwright.visual.config.ts",
+    "--update-snapshots=none",
+]
+FORBIDDEN_VISUAL_SHELL_OPERATORS = ("&&", "||", ";", "|", "`", "$(")
+
+
+def assert_strict_visual_test_run_commands(runs: list[str]) -> None:
+    playwright_test_runs = [
+        cmd for cmd in runs
+        if "playwright.visual.config.ts" in cmd
+        or ("playwright" in cmd and "test" in cmd)
+    ]
+    assert len(playwright_test_runs) == 1, (
+        f"Expected exactly 1 visual playwright test run command, found {playwright_test_runs!r}"
+    )
+    visual_cmd = playwright_test_runs[0].strip()
+    assert "\n" not in visual_cmd and "\r" not in visual_cmd, (
+        f"Visual test command must be a single line: {visual_cmd!r}"
+    )
+    for op in FORBIDDEN_VISUAL_SHELL_OPERATORS:
+        assert op not in visual_cmd, (
+            f"Forbidden shell operator {op!r} in visual test command: {visual_cmd!r}"
+        )
+    tokens = shlex.split(visual_cmd)
+    assert tokens == EXPECTED_VISUAL_PLAYWRIGHT_TOKENS, (
+        f"Visual test command tokens {tokens!r} != {EXPECTED_VISUAL_PLAYWRIGHT_TOKENS!r}"
+    )
+
+
+def test_tests_workflow_visual_regression_job_contract():
+    workflow = yaml.safe_load((ROOT / ".github/workflows/tests.yml").read_text())
+    assert workflow.get("permissions") == {"contents": "read"}
+    visual = workflow["jobs"]["visual"]
+    runs_on = str(visual["runs-on"])
+    assert runs_on == "macos-15"
+    assert visual.get("permissions") == {"contents": "read"}
+    assert visual.get("defaults", {}).get("run", {}).get("working-directory") == "shop"
+
+    steps = visual["steps"]
+    runs = [step.get("run", "") for step in steps if "run" in step]
+    if runs_on.startswith("macos-"):
+        assert any("playwright install chromium" in cmd for cmd in runs)
+        assert not any("--with-deps" in cmd for cmd in runs)
+        platform_suffix = "darwin"
+    elif runs_on.startswith("ubuntu-"):
+        assert any("playwright install --with-deps chromium" in cmd for cmd in runs)
+        platform_suffix = "linux"
+    else:
+        raise AssertionError(f"Unsupported visual job runner: {runs_on}")
+
+    assert_strict_visual_test_run_commands(runs)
+    for bad_suffix in (
+        " --update-snapshots=changed",
+        " --update-snapshots=all",
+        " -u",
+        " && true",
+    ):
+        mutated_runs = [
+            f"{cmd.strip()}{bad_suffix}"
+            if "playwright.visual.config.ts" in cmd
+            else cmd
+            for cmd in runs
+        ]
+        with pytest.raises(AssertionError):
+            assert_strict_visual_test_run_commands(mutated_runs)
+
+    uploads = [
+        step for step in steps
+        if str(step.get("uses", "")).startswith("actions/upload-artifact@")
+    ]
+    assert len(uploads) == 1
+    assert uploads[0].get("if") == "failure()"
+    assert uploads[0]["with"]["path"] == "shop/test-results/visual/**/*-diff.png"
+
+    visual_cfg = (ROOT / "shop/playwright.visual.config.ts").read_text()
+    assert "testDir: './tests/visual'" in visual_cfg
+    assert "workers: 1" in visual_cfg
+    assert "retries: 0" in visual_cfg
+    assert "checkout-receipt.visual.spec.ts" in visual_cfg
+
+    assert not (ROOT / "shop/tests/e2e/checkout-receipt.visual.spec.ts").exists()
+    assert (ROOT / "shop/tests/visual/checkout-receipt.visual.spec.ts").is_file()
+
+    snapshot_dir = (
+        ROOT / "shop/tests/visual/checkout-receipt.visual.spec.ts-snapshots"
+    )
+    assert snapshot_dir.is_dir()
+    for viewport in ("wide", "narrow"):
+        snap = snapshot_dir / f"checkout-receipt-{viewport}-chromium-{platform_suffix}.png"
+        assert snap.is_file() and snap.stat().st_size > 0, f"Missing baseline {snap}"
 
 
 def test_audit_environment_uses_distinct_private_empty_configs(tmp_path):
