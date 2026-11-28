@@ -1,7 +1,7 @@
 /**
- * Dedicated Playwright configuration for deterministic checkout receipt visual regression tests.
+ * Dedicated Playwright configuration for deterministic checkout receipt and CRM Signal Trend visual regression tests.
  *
- * Runs offline against local shop template assets with intercepted routes, fixed viewports,
+ * Runs offline against local shop and CRM template assets with intercepted routes, fixed viewports,
  * zero external/provider requests, single worker, and zero retries.
  */
 
@@ -9,7 +9,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/visual',
-  testMatch: 'checkout-receipt.visual.spec.ts',
+  testMatch: ['checkout-receipt.visual.spec.ts', 'crm-signal-trend.visual.spec.ts'],
   snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{arg}-{projectName}-{platform}{ext}',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,

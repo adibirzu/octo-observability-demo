@@ -31,6 +31,7 @@ def test_active_workflow_jobs_are_mapped_and_only_audits_have_network():
         "pip-audit-shop", "pip-audit-crm", "npm-audit-shop", "npm-audit-browser-runner"
     }
     assert steps["playwright-visual-receipt"].skipped
+    assert steps["playwright-visual-crm-trend"].skipped
     assert steps["orm-native-image-build"].skipped
     assert steps["ocir-publish"].skipped
 
@@ -120,9 +121,12 @@ def test_tests_workflow_visual_regression_job_contract():
     assert "workers: 1" in visual_cfg
     assert "retries: 0" in visual_cfg
     assert "checkout-receipt.visual.spec.ts" in visual_cfg
+    assert "crm-signal-trend.visual.spec.ts" in visual_cfg
 
     assert not (ROOT / "shop/tests/e2e/checkout-receipt.visual.spec.ts").exists()
+    assert not (ROOT / "shop/tests/e2e/crm-signal-trend.visual.spec.ts").exists()
     assert (ROOT / "shop/tests/visual/checkout-receipt.visual.spec.ts").is_file()
+    assert (ROOT / "shop/tests/visual/crm-signal-trend.visual.spec.ts").is_file()
 
     snapshot_dir = (
         ROOT / "shop/tests/visual/checkout-receipt.visual.spec.ts-snapshots"
@@ -131,6 +135,15 @@ def test_tests_workflow_visual_regression_job_contract():
     for viewport in ("wide", "narrow"):
         snap = snapshot_dir / f"checkout-receipt-{viewport}-chromium-{platform_suffix}.png"
         assert snap.is_file() and snap.stat().st_size > 0, f"Missing baseline {snap}"
+
+    crm_snapshot_dir = (
+        ROOT / "shop/tests/visual/crm-signal-trend.visual.spec.ts-snapshots"
+    )
+    assert crm_snapshot_dir.is_dir()
+    for state in ("ordered-samples", "observed-zero", "null-gaps", "missing"):
+        for viewport in ("wide", "narrow"):
+            snap = crm_snapshot_dir / f"crm-signal-trend-{state}-{viewport}-chromium-{platform_suffix}.png"
+            assert snap.is_file() and snap.stat().st_size > 0, f"Missing baseline {snap}"
 
 
 def test_audit_environment_uses_distinct_private_empty_configs(tmp_path):
