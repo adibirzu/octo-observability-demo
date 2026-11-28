@@ -125,8 +125,15 @@ def test_tests_workflow_visual_regression_job_contract():
 
     assert not (ROOT / "shop/tests/e2e/checkout-receipt.visual.spec.ts").exists()
     assert not (ROOT / "shop/tests/e2e/crm-signal-trend.visual.spec.ts").exists()
+    assert (ROOT / "shop/tests/visual/visual-harness.ts").is_file()
     assert (ROOT / "shop/tests/visual/checkout-receipt.visual.spec.ts").is_file()
     assert (ROOT / "shop/tests/visual/crm-signal-trend.visual.spec.ts").is_file()
+    for spec_name in ("checkout-receipt.visual.spec.ts", "crm-signal-trend.visual.spec.ts"):
+        spec_src = (ROOT / "shop/tests/visual" / spec_name).read_text(encoding="utf-8")
+        assert "./visual-harness" in spec_src, f"{spec_name} must import shared visual-harness"
+        assert "function extractJinjaBlock" not in spec_src, (
+            f"{spec_name} must not duplicate extractJinjaBlock"
+        )
 
     snapshot_dir = (
         ROOT / "shop/tests/visual/checkout-receipt.visual.spec.ts-snapshots"

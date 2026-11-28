@@ -10,18 +10,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { test, expect, Page } from '@playwright/test';
+import {
+  assertNoUnexpandedJinjaTokens,
+  buildDeterministicVisualStyle,
+  extractJinjaBlock,
+  loadSanitizedCssFile,
+  mountOfflineVisualPage,
+} from './visual-harness';
 
-const CRM_ORIGIN = 'http://shop.example.test';
 const CRM_SERVER_DIR = path.resolve(__dirname, '../../../crm/server');
 const CRM_BASE_TEMPLATE_PATH = path.join(CRM_SERVER_DIR, 'templates/base.html');
 const CRM_OBSERVABILITY_TEMPLATE_PATH = path.join(CRM_SERVER_DIR, 'templates/observability.html');
 const CRM_STYLE_CSS_PATH = path.join(CRM_SERVER_DIR, 'static/css/style.css');
 const CRM_APP_JS_PATH = path.join(CRM_SERVER_DIR, 'static/js/app.js');
-
-const TRANSPARENT_PNG_1X1 = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-  'base64',
-);
 
 interface TrendSample {
   time: string;
@@ -121,14 +122,6 @@ const TREND_STATE_CASES: readonly TrendStateCase[] = [
   },
 ];
 
-function extractJinjaBlock(template: string, blockName: string): string {
-  const pattern = new RegExp(
-    `\\{%\\s*block\\s+${blockName}\\s*%\\}([\\s\\S]*?)\\{%\\s*endblock(?:\\s+${blockName})?\\s*%\\}`,
-  );
-  const match = template.match(pattern);
-  return match ? match[1] : '';
-}
-
 function buildCrmObservabilityHtml(): string {
   const baseSource = fs.readFileSync(CRM_BASE_TEMPLATE_PATH, 'utf8');
   const obsSource = fs.readFileSync(CRM_OBSERVABILITY_TEMPLATE_PATH, 'utf8');
@@ -137,7 +130,7 @@ function buildCrmObservabilityHtml(): string {
   const contentBlock = extractJinjaBlock(obsSource, 'content');
   const scriptsBlock = extractJinjaBlock(obsSource, 'scripts');
 
-  let html = baseSource
+  const html = baseSource
     .replace(/\{%\s*if\s+rum_configured\s*%\}[\s\S]*?\{%\s*endif\s*%\}/g, '')
     .replace(/\{%\s*if\s+apm_console_url\s*%\}[\s\S]*?\{%\s*endif\s*%\}/g, '')
     .replace(/\{%\s*if\s+log_analytics_console_url\s*%\}[\s\S]*?\{%\s*endif\s*%\}/g, '')
@@ -167,53 +160,40 @@ function buildCrmObservabilityHtml(): string {
     .replace(/\{\{\s*db_management_console_url\s*\|\s*tojson\s*\}\}/g, '""')
     .replace(/\{\{\s*log_analytics_console_url\s*\|\s*tojson\s*\}\}/g, '""');
 
-  if (/\{%\s*|\s*%\}|\{\{\s*[a-zA-Z_][\w.| ]*\s*\}\}/.test(html)) {
-    throw new Error('Unexpanded Jinja tokens remained in rendered CRM observability template');
-  }
-
+  assertNoUnexpandedJinjaTokens(html, 'CRM observability');
   return html;
 }
 
-function buildSanitizedCrmCss(): string {
-  const rawCss = fs.readFileSync(CRM_STYLE_CSS_PATH, 'utf8');
-  return rawCss.replace(/^\s*@import\s+url\([^)]+\);\s*$/gm, '');
-}
-
 const RENDERED_CRM_OBSERVABILITY_HTML = buildCrmObservabilityHtml();
-const SANITIZED_CRM_CSS = buildSanitizedCrmCss();
+const SANITIZED_CRM_CSS = loadSanitizedCssFile(CRM_STYLE_CSS_PATH);
 const CRM_APP_JS = fs.readFileSync(CRM_APP_JS_PATH, 'utf8');
 
-const DETERMINISTIC_VISUAL_STYLE = `
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    caret-color: transparent !important;
-  }
-  body,
-  button,
-  input,
-  select,
-  textarea,
-  .btn,
-  .sidebar-header h2,
-  h1,
-  h2,
-  h3,
-  h4,
-  p,
-  span,
-  strong {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
-  }
-  code,
-  pre,
-  .code-output,
-  .panel-chip,
-  .section-kicker,
-  .eyebrow {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace !important;
-  }
-`;
+const DETERMINISTIC_VISUAL_STYLE = buildDeterministicVisualStyle({
+  sansSelectors: [
+    'body',
+    'button',
+    'input',
+    'select',
+    'textarea',
+    '.btn',
+    '.sidebar-header h2',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'p',
+    'span',
+    'strong',
+  ],
+  monoSelectors: [
+    'code',
+    'pre',
+    '.code-output',
+    '.panel-chip',
+    '.section-kicker',
+    '.eyebrow',
+  ],
+});
 
 function buildSyntheticObservability360Payload(trend: { samples?: TrendSample[] } | null) {
   return {
@@ -274,111 +254,63 @@ async function mountDeterministicCrmObservability(
   viewport: { width: number; height: number },
   stateCase: TrendStateCase,
 ): Promise<string[]> {
-  const blockedExternalUrls: string[] = [];
   const payload = buildSyntheticObservability360Payload(stateCase.trend);
 
-  await page.setViewportSize(viewport);
-
-  await page.route('**/*', async (route) => {
-    const requestUrl = route.request().url();
-    const parsed = new URL(requestUrl);
-
-    if (parsed.origin !== CRM_ORIGIN) {
-      blockedExternalUrls.push(requestUrl);
-      await route.abort('blockedbyclient');
-      return;
-    }
-
-    if (parsed.pathname === '/observability') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'text/html; charset=utf-8',
-        body: RENDERED_CRM_OBSERVABILITY_HTML,
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/static/css/style.css') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'text/css; charset=utf-8',
-        body: `${SANITIZED_CRM_CSS}\n${DETERMINISTIC_VISUAL_STYLE}`,
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/static/js/app.js') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/javascript; charset=utf-8',
-        body: CRM_APP_JS,
-      });
-      return;
-    }
-
-    if (
-      parsed.pathname === '/static/js/observability.js' ||
-      parsed.pathname === '/static/js/rum-advanced.js'
-    ) {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/javascript; charset=utf-8',
-        body: '/* offline stub */',
-      });
-      return;
-    }
-
-    if (parsed.pathname.startsWith('/static/img/')) {
-      await route.fulfill({
-        status: 200,
-        contentType: 'image/png',
-        body: TRANSPARENT_PNG_1X1,
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/observability/360') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(payload),
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/auth/session') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ authenticated: false }),
-      });
-      return;
-    }
-
-    if (
-      parsed.pathname === '/api/analytics/track' ||
-      parsed.pathname === '/api/observability/frontend'
-    ) {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ status: 'ok' }),
-      });
-      return;
-    }
-
-    await route.fulfill({
-      status: 404,
-      contentType: 'application/json',
-      body: JSON.stringify({ error: `Unmapped offline path: ${parsed.pathname}` }),
-    });
-  });
-
-  await page.goto(`${CRM_ORIGIN}/observability`, { waitUntil: 'networkidle' });
-  await page.evaluate(async () => {
-    if (document.fonts && document.fonts.ready) {
-      await document.fonts.ready;
-    }
+  const blockedExternalUrls = await mountOfflineVisualPage({
+    page,
+    viewport,
+    entryPath: '/observability',
+    resolvePath: (pathname) => {
+      if (pathname === '/observability') {
+        return {
+          contentType: 'text/html; charset=utf-8',
+          body: RENDERED_CRM_OBSERVABILITY_HTML,
+        };
+      }
+      if (pathname === '/static/css/style.css') {
+        return {
+          contentType: 'text/css; charset=utf-8',
+          body: `${SANITIZED_CRM_CSS}\n${DETERMINISTIC_VISUAL_STYLE}`,
+        };
+      }
+      if (pathname === '/static/js/app.js') {
+        return {
+          contentType: 'application/javascript; charset=utf-8',
+          body: CRM_APP_JS,
+        };
+      }
+      if (
+        pathname === '/static/js/observability.js' ||
+        pathname === '/static/js/rum-advanced.js'
+      ) {
+        return {
+          contentType: 'application/javascript; charset=utf-8',
+          body: '/* offline stub */',
+        };
+      }
+      if (pathname === '/api/observability/360') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify(payload),
+        };
+      }
+      if (pathname === '/api/auth/session') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify({ authenticated: false }),
+        };
+      }
+      if (
+        pathname === '/api/analytics/track' ||
+        pathname === '/api/observability/frontend'
+      ) {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify({ status: 'ok' }),
+        };
+      }
+      return null;
+    },
   });
 
   const trendSection = page.locator('section[aria-labelledby="signal-trend-title"]');
