@@ -29,8 +29,36 @@ def test_active_workflow_jobs_are_mapped_and_only_audits_have_network():
     assert {name for name, step in steps.items() if step.online} == {
         "pip-audit-shop", "pip-audit-crm", "npm-audit-shop", "npm-audit-browser-runner"
     }
+    assert steps["playwright-visual-receipt"].skipped
     assert steps["orm-native-image-build"].skipped
     assert steps["ocir-publish"].skipped
+
+
+def test_tests_workflow_visual_regression_job_contract():
+    workflow = yaml.safe_load((ROOT / ".github/workflows/tests.yml").read_text())
+    assert workflow.get("permissions") == {"contents": "read"}
+    visual = workflow["jobs"]["visual"]
+    assert visual["runs-on"] == "ubuntu-latest"
+    assert visual.get("permissions") == {"contents": "read"}
+    assert visual.get("defaults", {}).get("run", {}).get("working-directory") == "shop"
+
+    steps = visual["steps"]
+    runs = [step.get("run", "") for step in steps if "run" in step]
+    assert any("playwright install --with-deps chromium" in cmd for cmd in runs)
+    assert any("playwright test -c playwright.visual.config.ts" in cmd for cmd in runs)
+
+    uploads = [
+        step for step in steps
+        if str(step.get("uses", "")).startswith("actions/upload-artifact@")
+    ]
+    assert len(uploads) == 1
+    assert uploads[0].get("if") == "failure()"
+    assert uploads[0]["with"]["path"] == "shop/test-results/visual/"
+
+    visual_cfg = (ROOT / "shop/playwright.visual.config.ts").read_text()
+    assert "workers: 1" in visual_cfg
+    assert "retries: 0" in visual_cfg
+    assert "checkout-receipt.visual.spec.ts" in visual_cfg
 
 
 def test_audit_environment_uses_distinct_private_empty_configs(tmp_path):

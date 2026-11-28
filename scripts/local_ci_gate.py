@@ -42,6 +42,7 @@ ALLOWED_ENV_KEYS: tuple[str, ...] = (
 WORKFLOW_CHECKS = {
     "tests.yml:tests": ("sbom-generate-check", "pytest-contract", "pytest-shop"),
     "tests.yml:crm": ("pytest-crm",),
+    "tests.yml:visual": ("playwright-visual-receipt",),
     "orm-and-sbom-release.yml:package": (
         "pytest-contract", "sbom-generate-check", "sbom-public-check",
         "release-matrix", "orm-archives", "orm-terraform-validate",
@@ -61,6 +62,7 @@ WORKFLOW_CHECKS = {
 }
 
 HOSTED_ONLY = {
+    "playwright-visual-receipt": "Requires Chromium MachPortRendezvousServer outside Seatbelt or a Linux CI runner",
     "orm-artifact-upload": "GitHub artifact upload requires an Actions run",
     "orm-native-image-build": "Requires a native Linux amd64 builder and approved inputs",
     "orm-image-scans": "Requires the exact native Linux amd64 images from the build",
