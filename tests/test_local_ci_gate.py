@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import shlex
 import stat
 import subprocess
 import sys
@@ -34,6 +35,41 @@ def test_active_workflow_jobs_are_mapped_and_only_audits_have_network():
     assert steps["ocir-publish"].skipped
 
 
+EXPECTED_VISUAL_PLAYWRIGHT_TOKENS = [
+    "npx",
+    "--no-install",
+    "playwright",
+    "test",
+    "-c",
+    "playwright.visual.config.ts",
+    "--update-snapshots=none",
+]
+FORBIDDEN_VISUAL_SHELL_OPERATORS = ("&&", "||", ";", "|", "`", "$(")
+
+
+def assert_strict_visual_test_run_commands(runs: list[str]) -> None:
+    playwright_test_runs = [
+        cmd for cmd in runs
+        if "playwright.visual.config.ts" in cmd
+        or ("playwright" in cmd and "test" in cmd)
+    ]
+    assert len(playwright_test_runs) == 1, (
+        f"Expected exactly 1 visual playwright test run command, found {playwright_test_runs!r}"
+    )
+    visual_cmd = playwright_test_runs[0].strip()
+    assert "\n" not in visual_cmd and "\r" not in visual_cmd, (
+        f"Visual test command must be a single line: {visual_cmd!r}"
+    )
+    for op in FORBIDDEN_VISUAL_SHELL_OPERATORS:
+        assert op not in visual_cmd, (
+            f"Forbidden shell operator {op!r} in visual test command: {visual_cmd!r}"
+        )
+    tokens = shlex.split(visual_cmd)
+    assert tokens == EXPECTED_VISUAL_PLAYWRIGHT_TOKENS, (
+        f"Visual test command tokens {tokens!r} != {EXPECTED_VISUAL_PLAYWRIGHT_TOKENS!r}"
+    )
+
+
 def test_tests_workflow_visual_regression_job_contract():
     workflow = yaml.safe_load((ROOT / ".github/workflows/tests.yml").read_text())
     assert workflow.get("permissions") == {"contents": "read"}
@@ -55,10 +91,21 @@ def test_tests_workflow_visual_regression_job_contract():
     else:
         raise AssertionError(f"Unsupported visual job runner: {runs_on}")
 
-    assert any(
-        "playwright test -c playwright.visual.config.ts --update-snapshots=none" in cmd
-        for cmd in runs
-    )
+    assert_strict_visual_test_run_commands(runs)
+    for bad_suffix in (
+        " --update-snapshots=changed",
+        " --update-snapshots=all",
+        " -u",
+        " && true",
+    ):
+        mutated_runs = [
+            f"{cmd.strip()}{bad_suffix}"
+            if "playwright.visual.config.ts" in cmd
+            else cmd
+            for cmd in runs
+        ]
+        with pytest.raises(AssertionError):
+            assert_strict_visual_test_run_commands(mutated_runs)
 
     uploads = [
         step for step in steps
