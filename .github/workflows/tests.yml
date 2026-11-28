@@ -68,7 +68,7 @@ jobs:
         run: python -m pytest -q tests
 
   visual:
-    name: Receipt card visual regression
+    name: Visual regression (checkout receipt and CRM signal trend)
     runs-on: macos-15
     permissions:
       contents: read
@@ -86,7 +86,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Install Playwright Chromium
         run: npx --no-install playwright install chromium
-      - name: Run checkout receipt visual regression tests
+      - name: Run deterministic visual regression tests
         run: npx --no-install playwright test -c playwright.visual.config.ts --update-snapshots=none
       - name: Upload visual regression diff artifacts on failure
         if: failure()

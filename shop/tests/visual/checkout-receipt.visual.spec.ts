@@ -10,17 +10,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { test, expect, Page } from '@playwright/test';
+import {
+  assertNoUnexpandedJinjaTokens,
+  buildDeterministicVisualStyle,
+  extractJinjaBlock,
+  loadSanitizedCssFile,
+  mountOfflineVisualPage,
+} from './visual-harness';
 
-const SHOP_ORIGIN = 'http://shop.example.test';
 const SERVER_DIR = path.resolve(__dirname, '../../server');
 const BASE_TEMPLATE_PATH = path.join(SERVER_DIR, 'templates/base.html');
 const SHOP_TEMPLATE_PATH = path.join(SERVER_DIR, 'templates/shop.html');
 const TOKENS_CSS_PATH = path.join(SERVER_DIR, 'static/css/tokens.css');
-
-const TRANSPARENT_PNG_1X1 = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-  'base64',
-);
 
 const SYNTHETIC_STOREFRONT = {
   products: [
@@ -109,14 +110,6 @@ const SYNTHETIC_CHECKOUT_RECEIPT = {
   },
 };
 
-function extractJinjaBlock(template: string, blockName: string): string {
-  const pattern = new RegExp(
-    `\\{%\\s*block\\s+${blockName}\\s*%\\}([\\s\\S]*?)\\{%\\s*endblock(?:\\s+${blockName})?\\s*%\\}`,
-  );
-  const match = template.match(pattern);
-  return match ? match[1] : '';
-}
-
 function buildShopHtml(): string {
   const baseSource = fs.readFileSync(BASE_TEMPLATE_PATH, 'utf8');
   const shopSource = fs.readFileSync(SHOP_TEMPLATE_PATH, 'utf8');
@@ -125,7 +118,7 @@ function buildShopHtml(): string {
   const contentBlock = extractJinjaBlock(shopSource, 'content');
   const scriptsBlock = extractJinjaBlock(shopSource, 'scripts');
 
-  let html = baseSource
+  const html = baseSource
     .replace(/\{%\s*if\s+rum_configured[\s\S]*?\{%\s*endif\s*%\}/g, '')
     .replace(/\{%\s*if\s+module\s*==\s*'shop'\s*%\}class="active"\s*\{%\s*endif\s*%\}/g, 'class="active" ')
     .replace(/\{%\s*if\s+module\s*==[^%]*%\}[^%]*\{%\s*endif\s*%\}/g, '')
@@ -139,176 +132,110 @@ function buildShopHtml(): string {
     .replace(/\{\{\s*java_apm_enabled\s*\|\s*tojson\s*\}\}/g, 'true')
     .replace(/\{\{\s*payment_gateway_simulation_enabled\s*\|\s*tojson\s*\}\}/g, 'true');
 
-  if (/\{%\s*|\s*%\}|\{\{\s*[a-zA-Z_][\w.| ]*\s*\}\}/.test(html)) {
-    throw new Error('Unexpanded Jinja tokens remained in rendered shop template');
-  }
-
+  assertNoUnexpandedJinjaTokens(html, 'shop');
   return html;
 }
 
-function buildSanitizedTokensCss(): string {
-  const rawCss = fs.readFileSync(TOKENS_CSS_PATH, 'utf8');
-  // Strip external Google Fonts @import so rendering never touches the network.
-  return rawCss.replace(/^\s*@import\s+url\([^)]+\);\s*$/gm, '');
-}
-
 const RENDERED_SHOP_HTML = buildShopHtml();
-const SANITIZED_TOKENS_CSS = buildSanitizedTokensCss();
+const SANITIZED_TOKENS_CSS = loadSanitizedCssFile(TOKENS_CSS_PATH);
 
-const DETERMINISTIC_VISUAL_STYLE = `
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    caret-color: transparent !important;
-  }
-  body,
-  button,
-  input,
-  select,
-  textarea,
-  .btn,
-  .brand-copy strong,
-  h1,
-  h2,
-  h3,
-  h4,
-  .product-price {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
-  }
-  code,
-  .chip,
-  .hero-kicker,
-  .mono-label,
-  .hero-metric strong,
-  .payment-card-preview strong {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace !important;
-  }
+const DETERMINISTIC_VISUAL_STYLE = buildDeterministicVisualStyle({
+  sansSelectors: [
+    'body',
+    'button',
+    'input',
+    'select',
+    'textarea',
+    '.btn',
+    '.brand-copy strong',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    '.product-price',
+  ],
+  monoSelectors: [
+    'code',
+    '.chip',
+    '.hero-kicker',
+    '.mono-label',
+    '.hero-metric strong',
+    '.payment-card-preview strong',
+  ],
+  extraCss: `
   .topbar {
     position: static !important;
   }
-`;
+  `,
+});
 
 async function mountDeterministicShop(
   page: Page,
   viewport: { width: number; height: number },
 ): Promise<string[]> {
-  const blockedExternalUrls: string[] = [];
-
-  await page.setViewportSize(viewport);
-
-  await page.route('**/*', async (route) => {
-    const requestUrl = route.request().url();
-    const parsed = new URL(requestUrl);
-
-    if (parsed.origin !== SHOP_ORIGIN) {
-      blockedExternalUrls.push(requestUrl);
-      await route.abort('blockedbyclient');
-      return;
-    }
-
-    if (parsed.pathname === '/shop') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'text/html; charset=utf-8',
-        body: RENDERED_SHOP_HTML,
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/static/css/tokens.css') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'text/css; charset=utf-8',
-        body: `${SANITIZED_TOKENS_CSS}\n${DETERMINISTIC_VISUAL_STYLE}`,
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/static/js/rum-advanced.js') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/javascript; charset=utf-8',
-        body: '/* offline stub */',
-      });
-      return;
-    }
-
-    if (parsed.pathname.startsWith('/static/img/')) {
-      await route.fulfill({
-        status: 200,
-        contentType: 'image/png',
-        body: TRANSPARENT_PNG_1X1,
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/shop/storefront') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(SYNTHETIC_STOREFRONT),
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/cart') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(SYNTHETIC_CART),
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/shop/locations') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          shops: [
-            {
-              name: 'OCTO Synthetic Flight Hub',
-              address: '100 Telemetry Way, Demo City, DC 00100',
-            },
-          ],
-        }),
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/analytics/track') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ status: 'ok' }),
-      });
-      return;
-    }
-
-    if (parsed.pathname === '/api/shop/checkout') {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(SYNTHETIC_CHECKOUT_RECEIPT),
-      });
-      return;
-    }
-
-    await route.fulfill({
-      status: 404,
-      contentType: 'application/json',
-      body: JSON.stringify({ error: `Unmapped offline path: ${parsed.pathname}` }),
-    });
+  return mountOfflineVisualPage({
+    page,
+    viewport,
+    entryPath: '/shop',
+    resolvePath: (pathname) => {
+      if (pathname === '/shop') {
+        return {
+          contentType: 'text/html; charset=utf-8',
+          body: RENDERED_SHOP_HTML,
+        };
+      }
+      if (pathname === '/static/css/tokens.css') {
+        return {
+          contentType: 'text/css; charset=utf-8',
+          body: `${SANITIZED_TOKENS_CSS}\n${DETERMINISTIC_VISUAL_STYLE}`,
+        };
+      }
+      if (pathname === '/static/js/rum-advanced.js') {
+        return {
+          contentType: 'application/javascript; charset=utf-8',
+          body: '/* offline stub */',
+        };
+      }
+      if (pathname === '/api/shop/storefront') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify(SYNTHETIC_STOREFRONT),
+        };
+      }
+      if (pathname === '/api/cart') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify(SYNTHETIC_CART),
+        };
+      }
+      if (pathname === '/api/shop/locations') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify({
+            shops: [
+              {
+                name: 'OCTO Synthetic Flight Hub',
+                address: '100 Telemetry Way, Demo City, DC 00100',
+              },
+            ],
+          }),
+        };
+      }
+      if (pathname === '/api/analytics/track') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify({ status: 'ok' }),
+        };
+      }
+      if (pathname === '/api/shop/checkout') {
+        return {
+          contentType: 'application/json',
+          body: JSON.stringify(SYNTHETIC_CHECKOUT_RECEIPT),
+        };
+      }
+      return null;
+    },
   });
-
-  await page.goto(`${SHOP_ORIGIN}/shop`, { waitUntil: 'networkidle' });
-  await page.evaluate(async () => {
-    if (document.fonts && document.fonts.ready) {
-      await document.fonts.ready;
-    }
-  });
-
-  return blockedExternalUrls;
 }
 
 async function populateSyntheticReceipt(page: Page): Promise<void> {
