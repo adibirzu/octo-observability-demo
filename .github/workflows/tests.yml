@@ -69,7 +69,7 @@ jobs:
 
   visual:
     name: Receipt card visual regression
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     permissions:
       contents: read
     defaults:
@@ -85,13 +85,13 @@ jobs:
       - name: Install shop E2E dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Install Playwright Chromium
-        run: npx --no-install playwright install --with-deps chromium
+        run: npx --no-install playwright install chromium
       - name: Run checkout receipt visual regression tests
-        run: npx --no-install playwright test -c playwright.visual.config.ts
+        run: npx --no-install playwright test -c playwright.visual.config.ts --update-snapshots=none
       - name: Upload visual regression diff artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-visual-diff
-          path: shop/test-results/visual/
-          if-no-files-found: warn
+          path: shop/test-results/visual/**/*-diff.png
+          if-no-files-found: ignore

@@ -8,7 +8,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests/e2e',
+  testDir: './tests/visual',
   testMatch: 'checkout-receipt.visual.spec.ts',
   snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{arg}-{projectName}-{platform}{ext}',
   fullyParallel: false,
